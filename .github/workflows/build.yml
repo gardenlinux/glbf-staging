@@ -69,10 +69,29 @@ jobs:
             exit 1
           fi
 
+  restore-inputs:
+    runs-on: ubuntu-latest
+    needs: [build-glbx]
+    steps:
+      - name: Check out the config repo
+        uses: actions/checkout@v4
+      - name: Fetch the glbx binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: glbx-bin-${{ github.run_id }}
+          path: bin
+      - run: chmod +x bin/glbx bin/exec_env_stub
+      - name: Log in to ghcr
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Download the recorded inputs (source archives and tooling .debs)
+        run: bin/glbx restore-cache --conf-dir . --arch "$GLBX_ARCH"
+      - name: Publish the inputs to ghcr for the node jobs to pull
+        run: bin/glbx publish --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+
   node-0:
     name: "debian-pkg-build:acl:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:acl:amd64"
     steps:
@@ -88,7 +107,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -98,7 +117,7 @@ jobs:
   node-1:
     name: "debian-pkg-build:attr:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:attr:amd64"
     steps:
@@ -114,7 +133,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -124,7 +143,7 @@ jobs:
   node-2:
     name: "debian-pkg-build:base-files:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:base-files:amd64"
     steps:
@@ -140,7 +159,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -150,7 +169,7 @@ jobs:
   node-3:
     name: "debian-pkg-build:base-passwd:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:base-passwd:amd64"
     steps:
@@ -166,7 +185,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -176,7 +195,7 @@ jobs:
   node-4:
     name: "debian-pkg-build:bash:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:bash:amd64"
     steps:
@@ -192,7 +211,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -202,7 +221,7 @@ jobs:
   node-5:
     name: "debian-pkg-build:bzip2:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:bzip2:amd64"
     steps:
@@ -218,7 +237,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -228,7 +247,7 @@ jobs:
   node-6:
     name: "debian-pkg-build:cdebconf:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:cdebconf:amd64"
     steps:
@@ -244,7 +263,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -254,7 +273,7 @@ jobs:
   node-7:
     name: "debian-pkg-build:coreutils:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:coreutils:amd64"
     steps:
@@ -270,7 +289,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -280,7 +299,7 @@ jobs:
   node-8:
     name: "debian-pkg-build:debianutils:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:debianutils:amd64"
     steps:
@@ -296,7 +315,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -306,7 +325,7 @@ jobs:
   node-9:
     name: "debian-pkg-build:dpkg:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:dpkg:amd64"
     steps:
@@ -322,7 +341,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -332,7 +351,7 @@ jobs:
   node-10:
     name: "debian-pkg-build:gcc-16:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:gcc-16:amd64"
     steps:
@@ -348,7 +367,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -358,7 +377,7 @@ jobs:
   node-11:
     name: "debian-binary-pkg:gcc-16:gcc-16-base:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-10]
+    needs: [build-glbx, check-graph, restore-inputs, node-10]
     env:
       NODE_KEY: "debian-binary-pkg:gcc-16:gcc-16-base:amd64"
     steps:
@@ -374,7 +393,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -384,7 +403,7 @@ jobs:
   node-12:
     name: "debian-binary-pkg:gcc-16:libgcc-s1:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-10]
+    needs: [build-glbx, check-graph, restore-inputs, node-10]
     env:
       NODE_KEY: "debian-binary-pkg:gcc-16:libgcc-s1:amd64"
     steps:
@@ -400,7 +419,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -410,7 +429,7 @@ jobs:
   node-13:
     name: "debian-pkg-build:glibc:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:glibc:amd64"
     steps:
@@ -426,7 +445,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -436,7 +455,7 @@ jobs:
   node-14:
     name: "debian-binary-pkg:glibc:libc-gconv-modules-extra:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-11, node-12, node-13]
+    needs: [build-glbx, check-graph, restore-inputs, node-11, node-12, node-13]
     env:
       NODE_KEY: "debian-binary-pkg:glibc:libc-gconv-modules-extra:amd64"
     steps:
@@ -452,7 +471,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -462,7 +481,7 @@ jobs:
   node-15:
     name: "debian-binary-pkg:glibc:libc6:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-11, node-12, node-13]
+    needs: [build-glbx, check-graph, restore-inputs, node-11, node-12, node-13]
     env:
       NODE_KEY: "debian-binary-pkg:glibc:libc6:amd64"
     steps:
@@ -478,7 +497,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -488,7 +507,7 @@ jobs:
   node-16:
     name: "debian-binary-pkg:attr:libattr1:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-1, node-14, node-15]
+    needs: [build-glbx, check-graph, restore-inputs, node-1, node-14, node-15]
     env:
       NODE_KEY: "debian-binary-pkg:attr:libattr1:amd64"
     steps:
@@ -504,7 +523,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -514,7 +533,7 @@ jobs:
   node-17:
     name: "debian-binary-pkg:acl:libacl1:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-0, node-14, node-15, node-16]
+    needs: [build-glbx, check-graph, restore-inputs, node-0, node-14, node-15, node-16]
     env:
       NODE_KEY: "debian-binary-pkg:acl:libacl1:amd64"
     steps:
@@ -530,7 +549,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -540,7 +559,7 @@ jobs:
   node-18:
     name: "debian-binary-pkg:bzip2:libbz2-1.0:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-5, node-14, node-15]
+    needs: [build-glbx, check-graph, restore-inputs, node-5, node-14, node-15]
     env:
       NODE_KEY: "debian-binary-pkg:bzip2:libbz2-1.0:amd64"
     steps:
@@ -556,7 +575,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -566,7 +585,7 @@ jobs:
   node-19:
     name: "debian-binary-pkg:cdebconf:libdebconfclient0:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-6, node-14, node-15]
+    needs: [build-glbx, check-graph, restore-inputs, node-6, node-14, node-15]
     env:
       NODE_KEY: "debian-binary-pkg:cdebconf:libdebconfclient0:amd64"
     steps:
@@ -582,7 +601,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -592,7 +611,7 @@ jobs:
   node-20:
     name: "debian-binary-pkg:debianutils:debianutils:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-8, node-14, node-15]
+    needs: [build-glbx, check-graph, restore-inputs, node-8, node-14, node-15]
     env:
       NODE_KEY: "debian-binary-pkg:debianutils:debianutils:amd64"
     steps:
@@ -608,7 +627,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -618,7 +637,7 @@ jobs:
   node-21:
     name: "debian-pkg-build:gmp:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:gmp:amd64"
     steps:
@@ -634,7 +653,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -644,7 +663,7 @@ jobs:
   node-22:
     name: "debian-binary-pkg:gmp:libgmp10:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-14, node-15, node-21]
+    needs: [build-glbx, check-graph, restore-inputs, node-14, node-15, node-21]
     env:
       NODE_KEY: "debian-binary-pkg:gmp:libgmp10:amd64"
     steps:
@@ -660,7 +679,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -670,7 +689,7 @@ jobs:
   node-23:
     name: "debian-pkg-build:libcap2:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:libcap2:amd64"
     steps:
@@ -686,7 +705,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -696,7 +715,7 @@ jobs:
   node-24:
     name: "debian-binary-pkg:libcap2:libcap2:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-14, node-15, node-23]
+    needs: [build-glbx, check-graph, restore-inputs, node-14, node-15, node-23]
     env:
       NODE_KEY: "debian-binary-pkg:libcap2:libcap2:amd64"
     steps:
@@ -712,7 +731,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -722,7 +741,7 @@ jobs:
   node-25:
     name: "debian-pkg-build:libmd:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:libmd:amd64"
     steps:
@@ -738,7 +757,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -748,7 +767,7 @@ jobs:
   node-26:
     name: "debian-binary-pkg:libmd:libmd0:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-14, node-15, node-25]
+    needs: [build-glbx, check-graph, restore-inputs, node-14, node-15, node-25]
     env:
       NODE_KEY: "debian-binary-pkg:libmd:libmd0:amd64"
     steps:
@@ -764,7 +783,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -774,7 +793,7 @@ jobs:
   node-27:
     name: "debian-pkg-build:libselinux:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:libselinux:amd64"
     steps:
@@ -790,7 +809,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -800,7 +819,7 @@ jobs:
   node-28:
     name: "debian-pkg-build:libzstd:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:libzstd:amd64"
     steps:
@@ -816,7 +835,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -826,7 +845,7 @@ jobs:
   node-29:
     name: "debian-binary-pkg:libzstd:libzstd1:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-14, node-15, node-28]
+    needs: [build-glbx, check-graph, restore-inputs, node-14, node-15, node-28]
     env:
       NODE_KEY: "debian-binary-pkg:libzstd:libzstd1:amd64"
     steps:
@@ -842,7 +861,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -852,7 +871,7 @@ jobs:
   node-30:
     name: "debian-pkg-build:mawk:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:mawk:amd64"
     steps:
@@ -868,7 +887,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -878,7 +897,7 @@ jobs:
   node-31:
     name: "debian-binary-pkg:mawk:mawk:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-14, node-15, node-30]
+    needs: [build-glbx, check-graph, restore-inputs, node-14, node-15, node-30]
     env:
       NODE_KEY: "debian-binary-pkg:mawk:mawk:amd64"
     steps:
@@ -894,7 +913,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -904,7 +923,7 @@ jobs:
   node-32:
     name: "debian-binary-pkg:base-files:base-files:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-2, node-14, node-15, node-31]
+    needs: [build-glbx, check-graph, restore-inputs, node-2, node-14, node-15, node-31]
     env:
       NODE_KEY: "debian-binary-pkg:base-files:base-files:amd64"
     steps:
@@ -920,7 +939,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -930,7 +949,7 @@ jobs:
   node-33:
     name: "debian-pkg-build:ncurses:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:ncurses:amd64"
     steps:
@@ -946,7 +965,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -956,7 +975,7 @@ jobs:
   node-34:
     name: "debian-binary-pkg:ncurses:libtinfo6:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-14, node-15, node-33]
+    needs: [build-glbx, check-graph, restore-inputs, node-14, node-15, node-33]
     env:
       NODE_KEY: "debian-binary-pkg:ncurses:libtinfo6:amd64"
     steps:
@@ -972,7 +991,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -982,7 +1001,7 @@ jobs:
   node-35:
     name: "debian-binary-pkg:bash:bash:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-4, node-14, node-15, node-20, node-32, node-34]
+    needs: [build-glbx, check-graph, restore-inputs, node-4, node-14, node-15, node-20, node-32, node-34]
     env:
       NODE_KEY: "debian-binary-pkg:bash:bash:amd64"
     steps:
@@ -998,7 +1017,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1008,7 +1027,7 @@ jobs:
   node-36:
     name: "debian-pkg-build:openssl:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:openssl:amd64"
     steps:
@@ -1024,7 +1043,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1034,7 +1053,7 @@ jobs:
   node-37:
     name: "debian-pkg-build:pcre2:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:pcre2:amd64"
     steps:
@@ -1050,7 +1069,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1060,7 +1079,7 @@ jobs:
   node-38:
     name: "debian-binary-pkg:pcre2:libpcre2-8-0:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-14, node-15, node-37]
+    needs: [build-glbx, check-graph, restore-inputs, node-14, node-15, node-37]
     env:
       NODE_KEY: "debian-binary-pkg:pcre2:libpcre2-8-0:amd64"
     steps:
@@ -1076,7 +1095,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1086,7 +1105,7 @@ jobs:
   node-39:
     name: "debian-binary-pkg:libselinux:libselinux1:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-14, node-15, node-27, node-38]
+    needs: [build-glbx, check-graph, restore-inputs, node-14, node-15, node-27, node-38]
     env:
       NODE_KEY: "debian-binary-pkg:libselinux:libselinux1:amd64"
     steps:
@@ -1102,7 +1121,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1112,7 +1131,7 @@ jobs:
   node-40:
     name: "debian-binary-pkg:base-passwd:base-passwd:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-3, node-14, node-15, node-19, node-39]
+    needs: [build-glbx, check-graph, restore-inputs, node-3, node-14, node-15, node-19, node-39]
     env:
       NODE_KEY: "debian-binary-pkg:base-passwd:base-passwd:amd64"
     steps:
@@ -1128,7 +1147,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1138,7 +1157,7 @@ jobs:
   node-41:
     name: "debian-pkg-build:systemd:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:systemd:amd64"
     steps:
@@ -1154,7 +1173,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1164,7 +1183,7 @@ jobs:
   node-42:
     name: "debian-binary-pkg:systemd:libsystemd0:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-14, node-15, node-24, node-29, node-39, node-41]
+    needs: [build-glbx, check-graph, restore-inputs, node-14, node-15, node-24, node-29, node-39, node-41]
     env:
       NODE_KEY: "debian-binary-pkg:systemd:libsystemd0:amd64"
     steps:
@@ -1180,7 +1199,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1190,7 +1209,7 @@ jobs:
   node-43:
     name: "debian-pkg-build:tar:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:tar:amd64"
     steps:
@@ -1206,7 +1225,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1216,7 +1235,7 @@ jobs:
   node-44:
     name: "debian-binary-pkg:tar:tar:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-14, node-15, node-17, node-39, node-43]
+    needs: [build-glbx, check-graph, restore-inputs, node-14, node-15, node-17, node-39, node-43]
     env:
       NODE_KEY: "debian-binary-pkg:tar:tar:amd64"
     steps:
@@ -1232,7 +1251,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1242,7 +1261,7 @@ jobs:
   node-45:
     name: "debian-pkg-build:xz-utils:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:xz-utils:amd64"
     steps:
@@ -1258,7 +1277,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1268,7 +1287,7 @@ jobs:
   node-46:
     name: "debian-binary-pkg:xz-utils:liblzma5:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-14, node-15, node-45]
+    needs: [build-glbx, check-graph, restore-inputs, node-14, node-15, node-45]
     env:
       NODE_KEY: "debian-binary-pkg:xz-utils:liblzma5:amd64"
     steps:
@@ -1284,7 +1303,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1294,7 +1313,7 @@ jobs:
   node-47:
     name: "debian-pkg-build:zlib:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph]
+    needs: [build-glbx, check-graph, restore-inputs]
     env:
       NODE_KEY: "debian-pkg-build:zlib:amd64"
     steps:
@@ -1310,7 +1329,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1320,7 +1339,7 @@ jobs:
   node-48:
     name: "debian-binary-pkg:zlib:zlib1g:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-14, node-15, node-47]
+    needs: [build-glbx, check-graph, restore-inputs, node-14, node-15, node-47]
     env:
       NODE_KEY: "debian-binary-pkg:zlib:zlib1g:amd64"
     steps:
@@ -1336,7 +1355,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1346,7 +1365,7 @@ jobs:
   node-49:
     name: "debian-binary-pkg:dpkg:dpkg:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-9, node-14, node-15, node-18, node-26, node-29, node-39, node-44, node-46, node-48]
+    needs: [build-glbx, check-graph, restore-inputs, node-9, node-14, node-15, node-18, node-26, node-29, node-39, node-44, node-46, node-48]
     env:
       NODE_KEY: "debian-binary-pkg:dpkg:dpkg:amd64"
     steps:
@@ -1362,7 +1381,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1372,7 +1391,7 @@ jobs:
   node-50:
     name: "debian-binary-pkg:openssl:libssl3t64:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-14, node-15, node-29, node-36, node-48]
+    needs: [build-glbx, check-graph, restore-inputs, node-14, node-15, node-29, node-36, node-48]
     env:
       NODE_KEY: "debian-binary-pkg:openssl:libssl3t64:amd64"
     steps:
@@ -1388,7 +1407,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1398,7 +1417,7 @@ jobs:
   node-51:
     name: "debian-binary-pkg:openssl:openssl-provider-legacy:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-14, node-15, node-29, node-36, node-48]
+    needs: [build-glbx, check-graph, restore-inputs, node-14, node-15, node-29, node-36, node-48]
     env:
       NODE_KEY: "debian-binary-pkg:openssl:openssl-provider-legacy:amd64"
     steps:
@@ -1414,7 +1433,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1424,7 +1443,7 @@ jobs:
   node-52:
     name: "debian-binary-pkg:coreutils:coreutils:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-7, node-14, node-15, node-16, node-17, node-22, node-24, node-39, node-42, node-50, node-51]
+    needs: [build-glbx, check-graph, restore-inputs, node-7, node-14, node-15, node-16, node-17, node-22, node-24, node-39, node-42, node-50, node-51]
     env:
       NODE_KEY: "debian-binary-pkg:coreutils:coreutils:amd64"
     steps:
@@ -1440,7 +1459,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |
@@ -1450,7 +1469,7 @@ jobs:
   node-53:
     name: "rootfs:amd64"
     runs-on: ubuntu-latest
-    needs: [build-glbx, check-graph, node-32, node-35, node-40, node-49, node-52]
+    needs: [build-glbx, check-graph, restore-inputs, node-32, node-35, node-40, node-49, node-52]
     env:
       NODE_KEY: "rootfs:amd64"
     steps:
@@ -1466,7 +1485,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse \
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
       - name: Publish this node to ghcr
         run: |

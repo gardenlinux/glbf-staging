@@ -108,6 +108,25 @@ jobs:
             echo '::error::committed .github/workflows/build.yml is stale; run .github/generate-workflow.sh and commit'
             exit 1
           fi
+
+  restore-inputs:
+    runs-on: ubuntu-latest
+    needs: [build-glbx]
+    steps:
+      - name: Check out the config repo
+        uses: actions/checkout@v4
+      - name: Fetch the glbx binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: glbx-bin-${{ github.run_id }}
+          path: bin
+      - run: chmod +x bin/glbx bin/exec_env_stub
+      - name: Log in to ghcr
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Download the recorded inputs (source archives and tooling .debs)
+        run: bin/glbx restore-cache --conf-dir . --arch "$GLBX_ARCH"
+      - name: Publish the inputs to ghcr for the node jobs to pull
+        run: bin/glbx publish --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
 EOF
 
 	# One job per graph node. glbx emits the graph; jq turns it into YAML in a
@@ -123,7 +142,7 @@ EOF
 			| .key as $i
 			| .value as $key
 			| ([$edges[] | select(.to == $key) | $id[.from]] | sort) as $preds
-			| (["build-glbx", "check-graph"] + ($preds | map("node-\(.)"))) as $needs
+			| (["build-glbx", "check-graph", "restore-inputs"] + ($preds | map("node-\(.)"))) as $needs
 			| "
   node-\($i):
     name: \"\($key)\"
@@ -144,7 +163,7 @@ EOF
         run: echo \"${{ secrets.GITHUB_TOKEN }}\" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
-          bin/glbx build --target \"$NODE_KEY\" --no-recurse \\
+          bin/glbx build --target \"$NODE_KEY\" --no-recurse --stream \\
             --conf-dir . --stub bin/exec_env_stub --arch \"$GLBX_ARCH\"
       - name: Publish this node to ghcr
         run: |
