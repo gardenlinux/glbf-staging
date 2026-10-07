@@ -129,6 +129,55 @@ jobs:
         run: bin/glbx restore-cache --conf-dir . --arch "$GLBX_ARCH"
       - name: Publish the inputs to ghcr for the node jobs to pull
         run: bin/glbx publish --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+
+  diagnose-sandbox:
+    runs-on: ubuntu-latest
+    needs: [build-glbx]
+    steps:
+      - name: Fetch the glbx binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: glbx-bin-${{ github.run_id }}
+          path: bin
+      - run: chmod +x bin/glbx bin/exec_env_stub
+      - name: Permissions and ownership along the path to the stub
+        run: |
+          echo "## whoami / id"; id
+          echo "## stub + bin dir"; ls -lah bin/ || true
+          echo "## path chain to the stub"
+          p="$PWD/bin/exec_env_stub"; d="$p"
+          while [ "$d" != "/" ]; do ls -lahd "$d" || true; d="$(dirname "$d")"; done
+          echo "## file type"; file bin/exec_env_stub || true
+      - name: Mount flags of the filesystem holding the stub (noexec/nosuid?)
+        run: |
+          echo "## findmnt for the workspace"
+          findmnt -no SOURCE,TARGET,FSTYPE,OPTIONS --target "$PWD" || true
+          echo "## /proc/mounts entries covering the workspace and /home"
+          grep -E ' /home| '"$(stat -c %m "$PWD")"' ' /proc/mounts || true
+      - name: Unprivileged userns + mountns support on the runner
+        run: |
+          echo "## sysctls"
+          sysctl kernel.unprivileged_userns_clone 2>/dev/null || echo "(no kernel.unprivileged_userns_clone)"
+          cat /proc/sys/user/max_user_namespaces 2>/dev/null || true
+          echo "## subuid/subgid for the runner user"
+          cat /etc/subuid /etc/subgid 2>/dev/null || true
+          echo "## newuidmap present?"; command -v newuidmap newgidmap || true
+          echo "## AppArmor (userns restriction on Ubuntu 24.04?)"
+          cat /proc/sys/kernel/apparmor_restrict_unprivileged_userns 2>/dev/null || echo "(no apparmor userns sysctl)"
+      - name: Can an unprivileged user+mount namespace exec the stub at all?
+        run: |
+          stub="$PWD/bin/exec_env_stub"
+          echo "## unshare --user --map-root-user --mount, then exec the stub"
+          unshare --user --map-root-user --mount -- "$stub" --help >/tmp/ns.out 2>&1
+          rc=$?
+          echo "unshare+exec rc=$rc"
+          head -5 /tmp/ns.out || true
+          echo "## for contrast: unshare without --mount"
+          unshare --user --map-root-user -- "$stub" --help >/tmp/ns2.out 2>&1
+          echo "no-mount rc=$?"; head -3 /tmp/ns2.out || true
+      - name: glbx exec-chroot --explore smoke (expected to fail without a rootfs, but shows how far the sandbox gets)
+        run: |
+          GLBX_STUB_PATH="$PWD/bin/exec_env_stub" bin/glbx exec-chroot --explore 0000000000000000000000000000000000000000000000000000000000000000 /bin/true 2>&1 | head -40 || echo "exec-chroot rc=$?"
 EOF
 
 	# One job per graph node. glbx emits the graph; jq turns it into YAML in a
