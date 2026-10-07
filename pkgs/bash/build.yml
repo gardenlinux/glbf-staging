@@ -1,0 +1,4 @@
+build_profiles: [nocheck, noudeb]
+build_options: [nocheck]
+runtime_depends:
+  bash: [ncurses:libtinfo6, base-files:base-files, debianutils:debianutils, glibc:libc6]

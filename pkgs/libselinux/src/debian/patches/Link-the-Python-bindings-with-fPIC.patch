@@ -1,0 +1,23 @@
+From: =?utf-8?q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
+Date: Sat, 11 Jul 2026 11:55:57 +0200
+Subject: Link the Python bindings with -fPIC
+
+Pass -fPIC explicitly, like the libselinux.so and Ruby bindings link
+rules already do, to pass LTO builds.
+---
+ src/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Makefile b/src/Makefile
+index 9ecdbd4..4decb19 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -151,7 +151,7 @@ all: $(LIBSO)
+ endif
+ 
+ pywrap: all selinuxswig_python_exception.i
+-	CFLAGS="$(CPPFLAGS) $(CFLAGS) $(SWIG_CFLAGS)" $(PYTHON) -m build --no-isolation --wheel .
++	CFLAGS="$(CPPFLAGS) $(CFLAGS) $(SWIG_CFLAGS) -fPIC" $(PYTHON) -m build --no-isolation --wheel .
+ 
+ rubywrap: all $(SWIGRUBYSO)
+ 

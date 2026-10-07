@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+sed -e '
+	/^PATH=/d;
+	/^\$PROG -W version/ s/$/ 2>\&1/;
+' <test/mawktest >"${AUTOPKGTEST_TMP}/mawktest"
+chmod +x "${AUTOPKGTEST_TMP}/mawktest"
+cd test
+export MAWK=mawk
+"${AUTOPKGTEST_TMP}/mawktest"

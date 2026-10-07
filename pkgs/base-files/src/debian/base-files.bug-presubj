@@ -1,0 +1,9 @@
+*** CAVEAT ***
+
+If your bug report is actually a request to include a new file for a
+specific license in the /usr/share/common-licenses/ directory, please
+file it against the debian-policy package, not base-files.
+
+For more information, see the answer to the question “Why isn't
+license "foo" included in common-licenses?” in the
+/usr/share/doc/base-files/FAQ file.

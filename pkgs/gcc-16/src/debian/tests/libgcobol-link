@@ -1,0 +1,30 @@
+#!/bin/sh
+# autopkgtest check: Build and run a simple program against libgcobol,
+# to verify basic compile-time and run-time linking functionality.
+
+set -e
+
+BV=$(sed '/^Depends: gcc-\([0-9.]\+\).*/!d;s//\1/;q' debian/tests/control)
+GCOB=gcobol-$BV
+
+cd "$AUTOPKGTEST_TMP"
+cat <<EOF > hello.cob
+
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. hello.
+        
+        PROCEDURE DIVISION.
+        DISPLAY "Howdy!".
+        
+
+
+
+
+EOF
+
+$GCOB hello.cob
+echo "build: OK"
+ldd a.out
+[ -x a.out ]
+./a.out
+echo "run: OK"

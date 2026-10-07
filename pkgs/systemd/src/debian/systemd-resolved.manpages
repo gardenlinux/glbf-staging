@@ -1,0 +1,14 @@
+#!/usr/bin/dh-exec
+debian/tmp/usr/share/man/man1/resolvconf.1
+debian/tmp/usr/share/man/man1/resolvectl.1
+debian/tmp/usr/share/man/man5/dnssec-trust-anchors.d.5
+debian/tmp/usr/share/man/man5/org.freedesktop.resolve1.5
+debian/tmp/usr/share/man/man5/resolved.conf.5
+debian/tmp/usr/share/man/man5/resolved.conf.d.5
+debian/tmp/usr/share/man/man5/systemd.dns-delegate.5
+debian/tmp/usr/share/man/man5/systemd.dnssd.5
+debian/tmp/usr/share/man/man5/systemd.negative.5
+debian/tmp/usr/share/man/man5/systemd.positive.5
+debian/tmp/usr/share/man/man5/systemd.rr.5
+debian/tmp/usr/share/man/man8/systemd-resolved.8
+debian/tmp/usr/share/man/man8/systemd-resolved.service.8

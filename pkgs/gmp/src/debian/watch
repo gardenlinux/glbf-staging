@@ -1,0 +1,3 @@
+version=4
+opts=repacksuffix=+dfsg,dversionmangle=s/\+dfsg\d*$// \
+  https://gmplib.org/ (?:|.*/)gmp(?:[_\-]v?|)(\d\S*)\.(?:tar\.xz|txz|tar\.bz2|tbz2|tar\.gz|tgz)

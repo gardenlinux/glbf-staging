@@ -1,0 +1,108 @@
+# DP: Proposed patch for PR rtl-optimization/123853
+
+From b087da9b65d5a1489c59c7f5cea17a1b511aed0e Mon Sep 17 00:00:00 2001
+From: Mikael Pettersson <mikpelinux@gmail.com>
+Date: Sat, 6 Jun 2026 17:37:48 +0200
+Subject: [PATCH] m68k: prevent moves with pre-dec src overlapping with dst
+ (PR123853)
+
+Since gcc-15 combine can produce moves from a PRE_DEC MEM to an
+address that uses the same register, causing wrong code on m68k.
+In particular the glibc build is broken.  This adjusts the m68k
+backend to reject such moves.
+
+On the test case in https://gcc.gnu.org/bugzilla/show_bug.cgi?id=123853#c11
+the difference is
+
+-       move.l -(%a0),(%a0,%d0.l)
++       lea (%a0,%d0.l),%a1
++       move.l -(%a0),(%a1)
+
+which is exactly what we want.
+
+Testing in progress.
+
+gcc/
+
+	2026-06-06  Mikael Pettersson  <mikpelinux@gmail.com>
+
+	PR rtl-optimization/123853
+	* config/m68k/m68k-protos.h (check_move_simode): Declare.
+	* config/m68k/m68k.cc (check_move_simode): New, reject moves
+	where SRC is auto-inc/dec MEM whose REG occurs in DST.
+	* config/m68k/m68k.md (*movsi_m68k): Add check_move_simode
+	to condition.
+	(*movsi_m68k2): Likewise.
+---
+ gcc/config/m68k/m68k-protos.h |  1 +
+ gcc/config/m68k/m68k.cc       | 25 +++++++++++++++++++++++++
+ gcc/config/m68k/m68k.md       |  4 ++--
+ 3 files changed, 28 insertions(+), 2 deletions(-)
+
+--- a/src/gcc/config/m68k/m68k-protos.h
++++ b/src/gcc/config/m68k/m68k-protos.h
+@@ -26,6 +26,7 @@ extern HOST_WIDE_INT m68k_initial_elimination_offset (int from, int to);
+ extern void split_di (rtx[], int, rtx[], rtx[]);
+ 
+ extern bool valid_mov3q_const (HOST_WIDE_INT);
++extern bool check_move_simode (const rtx *);
+ extern const char *output_move_simode (rtx *);
+ extern const char *output_move_himode (rtx *);
+ extern const char *output_move_qimode (rtx *);
+--- a/src/gcc/config/m68k/m68k.cc
++++ b/src/gcc/config/m68k/m68k.cc
+@@ -3227,6 +3227,31 @@ valid_mov3q_const (HOST_WIDE_INT i)
+   return TARGET_ISAB && (i == -1 || IN_RANGE (i, 1, 7));
+ }
+ 
++/* Return true if OPERANDS[] are valid for output_move_simode.
++   In particular, if SRC is a MEM with auto-inc/dec adressing and
++   its REG is mentioned in DST, it's invalid.  See PR123853.  */
++
++bool
++check_move_simode (const rtx *operands)
++{
++  rtx src = operands[1];
++  if (MEM_P (src))
++    {
++      rtx src1 = XEXP (src, 0);
++      if (GET_CODE (src1) == PRE_DEC || GET_CODE (src1) == POST_INC)
++	{
++	  rtx src2 = XEXP (src1, 0);
++	  if (REG_P (src2))
++	    {
++	      rtx dst = operands[0];
++	      if (reg_overlap_mentioned_p (src2, dst))
++		return false;
++	    }
++	}
++    }
++  return true;
++}
++
+ /* Return an instruction to move CONST_INT OPERANDS[1] into OPERANDS[0].
+    I is the value of OPERANDS[1].  */
+ 
+--- a/src/gcc/config/m68k/m68k.md
++++ b/src/gcc/config/m68k/m68k.md
+@@ -993,7 +993,7 @@
+   ;; We don't allow f-regs since fixed point cannot go in them.
+   [(set (match_operand:SI 0 "nonimmediate_operand" "=g,d,a<")
+         (match_operand:SI 1 "general_src_operand" "damSnT,n,i"))]
+-  "!TARGET_COLDFIRE && reload_completed"
++  "!TARGET_COLDFIRE && reload_completed && check_move_simode (operands)"
+ {
+   return output_move_simode (operands);
+ }
+@@ -1006,7 +1006,7 @@
+   [(set (match_operand:SI 0 "nonimmediate_operand" "=g,d,a<")
+         (match_operand:SI 1 "general_src_operand" "damSKT,n,i"))]
+ 
+-  "!TARGET_COLDFIRE"
++  "!TARGET_COLDFIRE && check_move_simode (operands)"
+ {
+   return output_move_simode (operands);
+ }
+-- 
+2.54.0
+

@@ -1,0 +1,86 @@
+#! /usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all optimize=+lto
+
+include /usr/share/dpkg/architecture.mk
+libdir := /usr/lib/$(DEB_HOST_MULTIARCH)
+
+DPKG_EXPORT_BUILDTOOLS := 1
+include /usr/share/dpkg/buildtools.mk
+# for cross compilation
+ifneq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
+  export _PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata__$(DEB_HOST_MULTIARCH)
+  # When ruby_env is expanded, $* is the ruby interpreter.
+  ruby_env = RUBYLIB=$(libdir)/ruby-crossbuild/$$($* -e "puts RbConfig::CONFIG['ruby_version']")
+endif
+
+# Use of lstat64 requires this macro.
+export DEB_CPPFLAGS_MAINT_APPEND += -D_LARGEFILE64_SOURCE
+
+# Upstream recommends using this flag
+DEB_CFLAGS_MAINT_APPEND = -fno-semantic-interposition
+# Enable Wall and Wextra to spot basic irregularities.
+export DEB_CFLAGS_MAINT_APPEND += -Wall -Wextra
+
+DOPACKAGES := $(shell dh_listpackages)
+ifneq ($(filter python3-selinux,$(DOPACKAGES)),)
+  PY3VERSIONS := $(shell py3versions -rv)
+endif
+ifneq ($(filter ruby-selinux,$(DOPACKAGES)),)
+  RUBY_VERSIONS := $(shell dh_ruby --print-supported)
+endif
+
+%:
+	dh $@
+
+## Set up some variables to be passed to the upstream Makefile
+extra_make_args := ARCH=$(patsubst i%86,i386,$(DEB_HOST_GNU_CPU))
+extra_make_args += USE_PCRE2=y
+
+override_dh_auto_build: $(PY3VERSIONS:%=build-python-%) $(RUBY_VERSIONS:%=build-ruby-%) build-all
+
+build-all:
+	$(MAKE) all $(extra_make_args)
+
+build-python-%: build-all
+	$(MAKE) pywrap $(extra_make_args) PYTHON=python$*
+
+build-ruby-%: build-all
+	$(ruby_env) $(MAKE) rubywrap $(extra_make_args) RUBY=$*
+
+destdir := '$(CURDIR)/debian/tmp'
+
+override_dh_auto_install: $(PY3VERSIONS:%=install-python-%) \
+                          $(RUBY_VERSIONS:%=install-ruby-%)
+	$(MAKE) install $(extra_make_args) DESTDIR=$(destdir) \
+	  LIBDIR=$(libdir) \
+	  SHLIBDIR=$(libdir)
+  # Patch the python installations.
+	find $(destdir) -name direct_url.json -delete
+	find $(destdir) -name RECORD -exec sed -i '/\/direct_url.json,/d' {} +
+
+install-python-%:
+  # Drop wheels from other Python versions so upstream's `pip install dist/*.whl` only sees this one.
+	rm -f src/dist/*.whl
+	$(MAKE) install-pywrap $(extra_make_args) PYTHON=python$* DESTDIR=$(destdir) DEB_PYTHON_INSTALL_LAYOUT=deb
+
+install-ruby-%:
+	$(ruby_env) \
+	$(MAKE) install-rubywrap $(extra_make_args) RUBY=$* DESTDIR=$(destdir)
+
+execute_before_dh_installdeb-arch:
+	sed -e"s/#DEB_HOST_MULTIARCH#/$(DEB_HOST_MULTIARCH)/g" debian/libselinux1.triggers.in > debian/libselinux1.triggers
+
+override_dh_auto_clean: $(PY3VERSIONS:%=clean-python-%) \
+                        $(RUBY_VERSIONS:%=clean-ruby-%)
+	$(MAKE) distclean $(extra_make_args) PYTHON=true
+
+clean-python-%:
+	$(MAKE) clean-pywrap $(extra_make_args) PYTHON=python$*
+
+clean-ruby-%:
+	$(ruby_env) \
+	$(MAKE) clean-rubywrap $(extra_make_args) RUBY=$*

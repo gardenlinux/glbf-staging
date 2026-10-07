@@ -1,0 +1,4 @@
+build_profiles: [nocheck, noudeb]
+build_options: [nocheck]
+runtime_depends:
+  libmd0: [glibc:libc6]

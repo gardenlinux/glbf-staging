@@ -1,0 +1,61 @@
+From: Russell Coker <russell@coker.com.au>
+Date: Tue, 6 Aug 2024 23:13:58 +1000
+Subject: default
+
+Made it default to "default" not "targeted"
+---
+ man/man5/user_contexts.5      | 2 +-
+ man/man8/sefcontext_compile.8 | 6 +++---
+ src/selinux_config.c          | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/man/man5/user_contexts.5 b/man/man5/user_contexts.5
+index fc53d6c..1ba2258 100644
+--- a/man/man5/user_contexts.5
++++ b/man/man5/user_contexts.5
+@@ -60,7 +60,7 @@ This consists of a \fIrole\fB:\fItype\fR[\fB:\fIrange\fR] entry that represents
+ .RE
+ .
+ .SH "EXAMPLE"
+-# Example for xguest_u at /etc/selinux/targeted/contexts/users/xguest_u
++# Example for xguest_u at /etc/selinux/default/contexts/users/xguest_u
+ .br
+ system_r:crond_t:s0			xguest_r:xguest_t:s0
+ .br
+diff --git a/man/man8/sefcontext_compile.8 b/man/man8/sefcontext_compile.8
+index 4eae173..6dc3ab7 100644
+--- a/man/man8/sefcontext_compile.8
++++ b/man/man8/sefcontext_compile.8
+@@ -47,16 +47,16 @@ On error -1 is returned.  On success 0 is returned.
+ .SH "EXAMPLES"
+ .B Example 1:
+ .br
+-sefcontext_compile /etc/selinux/targeted/contexts/files/file_contexts
++sefcontext_compile /etc/selinux/default/contexts/files/file_contexts
+ .sp
+ Results in the following file being generated:
+ .RS
+-/etc/selinux/targeted/contexts/files/file_contexts.bin
++/etc/selinux/default/contexts/files/file_contexts.bin
+ .RE
+ .sp
+ .B Example 2:
+ .br
+-sefcontext_compile -o new_fc.bin /etc/selinux/targeted/contexts/files/file_contexts
++sefcontext_compile -o new_fc.bin /etc/selinux/default/contexts/files/file_contexts
+ .sp
+ Results in the following file being generated in the cwd:
+ .RS
+diff --git a/src/selinux_config.c b/src/selinux_config.c
+index 8a0b8c1..3a7dede 100644
+--- a/src/selinux_config.c
++++ b/src/selinux_config.c
+@@ -13,7 +13,7 @@
+ #include "selinux_internal.h"
+ #include "get_default_type_internal.h"
+ 
+-#define SELINUXDEFAULT "targeted"
++#define SELINUXDEFAULT "default"
+ #define SELINUXTYPETAG "SELINUXTYPE="
+ #define SELINUXTAG "SELINUX="
+ #define REQUIRESEUSERS "REQUIRESEUSERS="
