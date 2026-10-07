@@ -61,6 +61,10 @@ env:
   # ghcr.io/<owner>/<repo>/objstore — the shared pull-through cache and the only
   # channel between node jobs. Resolved from the run's own repository.
   GLBX_REGISTRY: ghcr.io/${{ github.repository }}/objstore
+  # Credentials glbx redeems a registry bearer token with. The automatic
+  # GITHUB_TOKEN has push access to the repository's own package namespace.
+  GLBX_REGISTRY_USER: ${{ github.actor }}
+  GLBX_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
 
@@ -121,8 +125,6 @@ jobs:
           name: glbx-bin-${{ github.run_id }}
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Log in to ghcr
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Download the recorded inputs (source archives and tooling .debs)
         run: bin/glbx restore-cache --conf-dir . --arch "$GLBX_ARCH"
       - name: Publish the inputs to ghcr for the node jobs to pull
@@ -159,8 +161,6 @@ EOF
           name: glbx-bin-${{ github.run_id }}
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Log in to ghcr
-        run: echo \"${{ secrets.GITHUB_TOKEN }}\" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build this node (dependencies must be cache hits)
         run: |
           bin/glbx build --target \"$NODE_KEY\" --no-recurse --stream \\
