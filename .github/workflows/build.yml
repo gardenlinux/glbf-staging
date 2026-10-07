@@ -32,11 +32,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out glbx
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: gardenlinux/glbx
           ref: ${{ inputs.glbx-ref || 'main' }}
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: stable
       - name: Build glbx and the sandbox stub
@@ -44,9 +44,9 @@ jobs:
           go build -o bin/glbx ./cmd/glbx
           go build -o bin/exec_env_stub ./cmd/exec_env_stub
       - name: Share the binaries with the node jobs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin/
           retention-days: 1
 
@@ -55,11 +55,11 @@ jobs:
     needs: [build-glbx]
     steps:
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
       - name: Regenerate the workflow from the current sources and compare
@@ -78,11 +78,11 @@ jobs:
     needs: [build-glbx]
     steps:
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
       - name: Download the recorded inputs (source archives and tooling .debs)
@@ -97,21 +97,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:acl:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:acl:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:acl:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -123,21 +123,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:attr:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:attr:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:attr:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -149,21 +149,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:base-files:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:base-files:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:base-files:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -175,21 +175,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:base-passwd:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:base-passwd:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:base-passwd:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -201,21 +201,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:bash:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:bash:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:bash:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -227,21 +227,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:bzip2:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:bzip2:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:bzip2:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -253,21 +253,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:cdebconf:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:cdebconf:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:cdebconf:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -279,21 +279,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:coreutils:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:coreutils:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:coreutils:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -305,21 +305,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:debianutils:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:debianutils:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:debianutils:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -331,21 +331,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:dpkg:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:dpkg:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:dpkg:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -357,21 +357,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:gcc-16:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:gcc-16:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:gcc-16:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -383,21 +383,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:gcc-16:gcc-16-base:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:gcc-16:gcc-16-base:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:gcc-16:gcc-16-base:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -409,21 +409,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:gcc-16:libgcc-s1:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:gcc-16:libgcc-s1:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:gcc-16:libgcc-s1:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -435,21 +435,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:glibc:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:glibc:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:glibc:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -461,21 +461,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:glibc:libc-gconv-modules-extra:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:glibc:libc-gconv-modules-extra:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:glibc:libc-gconv-modules-extra:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -487,21 +487,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:glibc:libc6:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:glibc:libc6:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:glibc:libc6:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -513,21 +513,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:attr:libattr1:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:attr:libattr1:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:attr:libattr1:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -539,21 +539,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:acl:libacl1:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:acl:libacl1:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:acl:libacl1:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -565,21 +565,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:bzip2:libbz2-1.0:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:bzip2:libbz2-1.0:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:bzip2:libbz2-1.0:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -591,21 +591,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:cdebconf:libdebconfclient0:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:cdebconf:libdebconfclient0:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:cdebconf:libdebconfclient0:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -617,21 +617,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:debianutils:debianutils:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:debianutils:debianutils:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:debianutils:debianutils:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -643,21 +643,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:gmp:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:gmp:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:gmp:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -669,21 +669,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:gmp:libgmp10:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:gmp:libgmp10:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:gmp:libgmp10:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -695,21 +695,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:libcap2:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:libcap2:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:libcap2:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -721,21 +721,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:libcap2:libcap2:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:libcap2:libcap2:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:libcap2:libcap2:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -747,21 +747,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:libmd:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:libmd:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:libmd:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -773,21 +773,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:libmd:libmd0:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:libmd:libmd0:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:libmd:libmd0:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -799,21 +799,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:libselinux:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:libselinux:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:libselinux:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -825,21 +825,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:libzstd:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:libzstd:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:libzstd:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -851,21 +851,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:libzstd:libzstd1:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:libzstd:libzstd1:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:libzstd:libzstd1:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -877,21 +877,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:mawk:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:mawk:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:mawk:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -903,21 +903,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:mawk:mawk:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:mawk:mawk:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:mawk:mawk:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -929,21 +929,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:base-files:base-files:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:base-files:base-files:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:base-files:base-files:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -955,21 +955,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:ncurses:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:ncurses:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:ncurses:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -981,21 +981,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:ncurses:libtinfo6:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:ncurses:libtinfo6:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:ncurses:libtinfo6:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1007,21 +1007,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:bash:bash:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:bash:bash:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:bash:bash:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1033,21 +1033,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:openssl:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:openssl:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:openssl:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1059,21 +1059,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:pcre2:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:pcre2:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:pcre2:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1085,21 +1085,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:pcre2:libpcre2-8-0:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:pcre2:libpcre2-8-0:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:pcre2:libpcre2-8-0:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1111,21 +1111,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:libselinux:libselinux1:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:libselinux:libselinux1:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:libselinux:libselinux1:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1137,21 +1137,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:base-passwd:base-passwd:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:base-passwd:base-passwd:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:base-passwd:base-passwd:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1163,21 +1163,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:systemd:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:systemd:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:systemd:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1189,21 +1189,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:systemd:libsystemd0:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:systemd:libsystemd0:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:systemd:libsystemd0:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1215,21 +1215,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:tar:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:tar:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:tar:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1241,21 +1241,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:tar:tar:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:tar:tar:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:tar:tar:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1267,21 +1267,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:xz-utils:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:xz-utils:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:xz-utils:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1293,21 +1293,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:xz-utils:liblzma5:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:xz-utils:liblzma5:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:xz-utils:liblzma5:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1319,21 +1319,21 @@ jobs:
     env:
       NODE_KEY: "debian-pkg-build:zlib:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-pkg-build:zlib:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-pkg-build:zlib:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1345,21 +1345,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:zlib:zlib1g:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:zlib:zlib1g:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:zlib:zlib1g:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1371,21 +1371,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:dpkg:dpkg:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:dpkg:dpkg:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:dpkg:dpkg:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1397,21 +1397,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:openssl:libssl3t64:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:openssl:libssl3t64:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:openssl:libssl3t64:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1423,21 +1423,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:openssl:openssl-provider-legacy:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:openssl:openssl-provider-legacy:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:openssl:openssl-provider-legacy:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1449,21 +1449,21 @@ jobs:
     env:
       NODE_KEY: "debian-binary-pkg:coreutils:coreutils:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build debian-binary-pkg:coreutils:coreutils:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish debian-binary-pkg:coreutils:coreutils:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
@@ -1475,21 +1475,21 @@ jobs:
     env:
       NODE_KEY: "rootfs:amd64"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build rootfs:amd64
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish this node to ghcr
+      - name: Publish rootfs:amd64 to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"

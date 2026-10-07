@@ -72,11 +72,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out glbx
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: gardenlinux/glbx
           ref: ${{ inputs.glbx-ref || 'main' }}
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: stable
       - name: Build glbx and the sandbox stub
@@ -84,9 +84,9 @@ jobs:
           go build -o bin/glbx ./cmd/glbx
           go build -o bin/exec_env_stub ./cmd/exec_env_stub
       - name: Share the binaries with the node jobs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin/
           retention-days: 1
 
@@ -95,11 +95,11 @@ jobs:
     needs: [build-glbx]
     steps:
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
       - name: Regenerate the workflow from the current sources and compare
@@ -118,11 +118,11 @@ jobs:
     needs: [build-glbx]
     steps:
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
       - name: Download the recorded inputs (source archives and tooling .debs)
@@ -153,21 +153,21 @@ EOF
     env:
       NODE_KEY: \"\($key)\"
     steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Check out the config repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
-          name: glbx-bin-${{ github.run_id }}
+          name: glbx-bin
           path: bin
       - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Allow unprivileged user namespaces (Ubuntu 24.04 restricts them via AppArmor)
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Build this node (dependencies must be cache hits)
+      - name: Build \($key)
         run: |
           bin/glbx build --target \"$NODE_KEY\" --no-recurse --stream \\
             --conf-dir . --stub bin/exec_env_stub --arch \"$GLBX_ARCH\"
-      - name: Publish this node to ghcr
+      - name: Publish \($key) to ghcr
         run: |
           bin/glbx publish --target \"$NODE_KEY\" \\
             --conf-dir . --stub bin/exec_env_stub --arch \"$GLBX_ARCH\""
