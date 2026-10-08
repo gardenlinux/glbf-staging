@@ -1,0 +1,4 @@
+build_profiles: [nocheck, noudeb]
+build_options: [nocheck]
+runtime_depends:
+  libcap2: [glibc:libc6]
