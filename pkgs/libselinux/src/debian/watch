@@ -1,0 +1,5 @@
+Version: 5
+Uversion-Mangle: auto
+Pgp-Mode: auto
+Source: https://github.com/SELinuxProject/selinux/wiki/Releases
+Matching-Pattern: (?:.*)/releases/download/(?:\d\.\d[\.\d]?)/@PACKAGE@@ANY_VERSION@@ARCHIVE_EXT@
