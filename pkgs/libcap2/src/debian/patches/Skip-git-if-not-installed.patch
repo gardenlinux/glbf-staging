@@ -1,0 +1,25 @@
+From: Christian Kastner <ckk@debian.org>
+Date: Tue, 6 Feb 2024 20:12:02 +0100
+Subject: Skip git if not installed
+
+This is only used during the clean stage. For a typical Debian package build,
+git will not be installed.
+
+Bug-Debian: https://bugs.debian.org/1046986
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 24196a0..7f56aea 100644
+--- a/Makefile
++++ b/Makefile
+@@ -46,7 +46,7 @@ distclean: clean
+ 	$(BUILD_FGREP) "#define LIBPSX_MAJOR $(VERSION)" psx/psx_syscall.h
+ 	$(BUILD_FGREP) "#define LIBPSX_MINOR $(MINOR)" psx/psx_syscall.h
+ 	@echo "Now validate that everything is checked in to a clean tree.."
+-	test -z "$$(git status --ignored -s)"
++	test -z "$$(test -x /usr/bin/git && git status --ignored -s)"
+ 	@echo "All good!"
+ 
+ release: distclean
