@@ -1,0 +1,6 @@
+sources:
+    - file: attr_2.6.0.orig.tar.xz
+      sha256: 6c8a2148a7b85043b68492bce43316b0e2e214fc4e628c7ede078e76e216330b
+      urls:
+        - https://deb.debian.org/debian/pool/main/a/attr/attr_2.6.0.orig.tar.xz
+        - https://snapshot.debian.org/file/48c3ec9dc5322bce4cae0719dc4e347cf0d189b3/attr_2.6.0.orig.tar.xz

@@ -1,0 +1,231 @@
+From d4639c778f0cd8dfdbf0625a926090a014bb30e2 Mon Sep 17 00:00:00 2001
+From: Frans Spiesschaert <Frans.Spiesschaert@yucom.be>
+Date: Sun, 13 Oct 2024 23:50:58 +0200
+Subject: [PATCH attr 1/7] po: Update Dutch translation
+
+Origin: vendor
+Bug-Debian: https://bugs.debian.org/1065512
+Forwarded: no
+Signed-off-by: Guillem Jover <guillem@hadrons.org>
+---
+ po/nl.po | 91 ++++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 48 insertions(+), 43 deletions(-)
+
+diff --git a/po/nl.po b/po/nl.po
+index 84af65b..2cfb406 100644
+--- a/po/nl.po
++++ b/po/nl.po
+@@ -17,10 +17,10 @@
+ #
+ msgid ""
+ msgstr ""
+-"Project-Id-Version: attr 2.4.18\n"
++"Project-Id-Version: attr 2.5.2\n"
+ "Report-Msgid-Bugs-To: acl-devel@nongnu.org\n"
+-"POT-Creation-Date: 2026-06-26 14:32+0200\n"
+-"PO-Revision-Date: 2019-07-17 23:53+0200\n"
++"POT-Creation-Date: 2026-06-29 18:08+0200\n"
++"PO-Revision-Date: 2024-02-25 22:54+0100\n"
+ "Last-Translator: Frans Spiesschaert <Frans.Spiesschaert@yucom.be>\n"
+ "Language-Team: Debian Dutch l10n Team <debian-l10n-dutch@lists.debian.org>\n"
+ "Language: nl\n"
+@@ -28,6 +28,7 @@ msgstr ""
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ "Plural-Forms: nplurals=2; plural=(n != 1);\n"
++"X-Generator: Poedit 2.2.1\n"
+ 
+ #: libattr/attr_copy_fd.c:76 libattr/attr_copy_file.c:75
+ #, c-format
+@@ -37,18 +38,18 @@ msgstr "attributen tonen van %s"
+ #: libattr/attr_copy_fd.c:118 libattr/attr_copy_file.c:117
+ #, c-format
+ msgid "getting attribute %s of %s"
+-msgstr "verkrijgen van attribuut %s van %s"
++msgstr "attribuut van %s van %s verkrijgen"
+ 
+ #: libattr/attr_copy_fd.c:131 libattr/attr_copy_fd.c:150
+ #: libattr/attr_copy_file.c:130 libattr/attr_copy_file.c:149
+ #, c-format
+ msgid "setting attributes for %s"
+-msgstr "attributen zetten voor %s"
++msgstr "attributen instellen voor %s"
+ 
+ #: libattr/attr_copy_fd.c:138 libattr/attr_copy_file.c:137
+ #, c-format
+ msgid "setting attribute %s for %s"
+-msgstr "attribuut %s zetten voor %s"
++msgstr "attribuut %s instellen voor %s"
+ 
+ #: tools/attr.c:50
+ #, c-format
+@@ -59,10 +60,13 @@ msgid ""
+ "       %s [-LRq]  -l pathname                          # list attrs \n"
+ "      -s reads a value from stdin and -g writes a value to stdout\n"
+ msgstr ""
+-"Gebruik: %s [-LRSq] -s attr-naam [-V attr-waarde] padnaam # zet waarde\n"
+-"         %s [-LRSq] -g attr-naam padnaam                  # vraag waarde op\n"
+-"         %s [-LRSq] -r attr-naam padnaam                  # verwijder attr\n"
+-"         %s [-LRq]  -l padnaam                            # toon attrn\n"
++"Gebruik: %s [-LRSq] -s attr-naam [-V attr-waarde] padnaam # waarde "
++"instellen\n"
++"         %s [-LRSq] -g attr-naam padnaam                  # waarde "
++"verkrijgen\n"
++"         %s [-LRSq] -r attr-naam padnaam                  # attr "
++"verwijderen\n"
++"         %s [-LRq]  -l padnaam                            # attrn tonen\n"
+ "         -s leest een waarde van stdin en -g schrijft een waarde naar "
+ "stdout\n"
+ 
+@@ -84,22 +88,22 @@ msgstr "Niet herkende optie: %c\n"
+ #: tools/attr.c:148
+ #, c-format
+ msgid "A filename to operate on is required\n"
+-msgstr "Er is een bestandsnaam vereist\n"
++msgstr "Een bestandsnaam om op te werken is vereist\n"
+ 
+ #: tools/attr.c:180
+ #, c-format
+ msgid "Could not set \"%s\" for %s\n"
+-msgstr "Kon \"%s\" niet zetten voor %s\n"
++msgstr "Kon \"%s\" niet instellen voor %s\n"
+ 
+ #: tools/attr.c:185
+ #, c-format
+ msgid "Attribute \"%s\" set to a %d byte value for %s:\n"
+-msgstr "Attribuut \"%s\" gezet op een %d-bytewaarde voor %s:\n"
++msgstr "Attribuut \"%s\" ingesteld op een %d-bytewaarde voor %s:\n"
+ 
+ #: tools/attr.c:203
+ #, c-format
+ msgid "Could not get \"%s\" for %s\n"
+-msgstr "Kon \"%s\" niet krijgen voor %s\n"
++msgstr "Kon \"%s\" niet verkrijgen voor %s\n"
+ 
+ #: tools/attr.c:208
+ #, c-format
+@@ -138,7 +142,7 @@ msgstr "%s: de leidende '/' in absolute padnamen wordt verwijderd\n"
+ #: tools/getfattr.c:392
+ #, c-format
+ msgid "%s %s -- get extended attributes\n"
+-msgstr "%s %s -- verkrijg uitgebreide attributen\n"
++msgstr "%s %s -- uitgebreide attributen verkrijgen\n"
+ 
+ #: tools/getfattr.c:394 tools/setfattr.c:252 tools/setfattr.c:377
+ #, c-format
+@@ -146,7 +150,7 @@ msgid "Usage: %s %s\n"
+ msgstr "Gebruik: %s %s\n"
+ 
+ #: tools/getfattr.c:397
+-#, fuzzy, c-format
++#, c-format
+ msgid ""
+ "  -n, --name=name         get the named extended attribute value\n"
+ "  -d, --dump              get all extended attribute values\n"
+@@ -162,19 +166,20 @@ msgid ""
+ "      --version           print version and exit\n"
+ "      --help              this help text\n"
+ msgstr ""
+-"  -n, --name=naam       verkrijg de uitgebreide attribuutwaarde voor naam\n"
+-"  -d, --dump            verkrijg alle uitgebreide attribuutwaarden\n"
+-"  -e, --encoding=...    codeer waarden (als 'text', 'hex' of 'base64')\n"
+-"      --match=patroon   verkrijg enkel attributen met namen die overeenkomen "
+-"met het patroon\n"
+-"      --only-values     print enkel de waarden\n"
+-"  -h, --no-dereference  zoek niet de verwijzing van symbolische koppelingen\n"
+-"      --absolute-names  laat de leidende '/' in padnamen staan\n"
+-"  -R, --recursive       ga recursief in submappen\n"
+-"  -L, --logical         logisch, volg symbolische koppelingen\n"
+-"  -P  --physical        fysisch, volg geen symbolische koppelingen\n"
+-"      --version         print versie en sluit af\n"
+-"      --help            deze helptekst\n"
++"  -n, --name=naam       de uitgebreide attribuutwaarde voor naam verkrijgen\n"
++"  -d, --dump            alle uitgebreide attribuutwaarden verkrijgen\n"
++"  -e, --encoding=...    waarden coderen (als 'text', 'hex' of 'base64')\n"
++"  -m, --match=patroon   attributen ophalen met naam die overeenkomt met "
++"patroon\n"
++"      --only-values     enkel de naakte waarden weergeven\n"
++"  -h, --no-dereference  symbolische koppelingen niet ontleden\n"
++"      --absolute-names  leidende '/' in padnamen niet verwijderen\n"
++"  -R, --recursive       recursief onderliggende mappen binnengaan\n"
++"  -L, --logical         logische benadering, symbolische koppelingen volgen\n"
++"  -P  --physical        fysieke benadering, symbolische koppelingen niet "
++"volgen\n"
++"      --version         versie weergeven en afsluiten\n"
++"      --help            deze hulptekst\n"
+ 
+ #: tools/getfattr.c:498
+ #, c-format
+@@ -188,18 +193,19 @@ msgid ""
+ "Try `%s --help' for more information.\n"
+ msgstr ""
+ "Gebruik: %s %s\n"
+-"Probeer `%s --help' voor meer informatie.\n"
++"Gebruik `%s --help' voor meer informatie.\n"
+ 
+ #: tools/setfattr.c:131
+ #, c-format
+ msgid "%s: %s: No filename found in line %d, aborting\n"
+-msgstr "%s: %s: geen bestandsnaam gevonden op regel %d, afbreken\n"
++msgstr "%s: %s: geen bestandsnaam gevonden op regel %d, er wordt gestopt\n"
+ 
+ #: tools/setfattr.c:135
+ #, c-format
+ msgid "%s: No filename found in line %d of standard input, aborting\n"
+ msgstr ""
+-"%s: geen bestandsnaam gevonden op regel %d van standaardinvoer, afbreken\n"
++"%s: geen bestandsnaam gevonden op regel %d van standaardinvoer, er wordt "
++"gestopt\n"
+ 
+ #: tools/setfattr.c:155
+ #, c-format
+@@ -223,7 +229,7 @@ msgstr ""
+ #: tools/setfattr.c:251
+ #, c-format
+ msgid "%s %s -- set extended attributes\n"
+-msgstr "%s %s -- zet uitgebreide attributen\n"
++msgstr "%s %s -- uitgebreide attributen instellen\n"
+ 
+ #: tools/setfattr.c:253 tools/setfattr.c:254 tools/setfattr.c:378
+ #: tools/setfattr.c:379
+@@ -244,15 +250,14 @@ msgid ""
+ "      --version           print version and exit\n"
+ "      --help              this help text\n"
+ msgstr ""
+-"  -n, --name=naam       zet de waarde van het genoemde uitgebreide "
+-"attribuut\n"
+-"  -x, --remove=naam     verwijder het genoemde uitgebreide attribuut\n"
+-"  -v, --value=waarde    gebruik waarde als de attribuutwaarde\n"
+-"  -h, --no-dereference  zoek niet naar verwijzingen van symbolische "
+-"koppelingen\n"
+-"      --restore=bestand herstel uitgebreide attributen\n"
++"  -n, --name=naam       de waarde v/h benoemde uitgebreide attribuut "
++"instellen\n"
++"  -x, --remove=naam     het benoemde uitgebreide attribuut verwijderen\n"
++"  -v, --value=waarde    de waarde gebruiken als de attribuutwaarde\n"
++"  -h, --no-dereference  symbolische koppelingen niet ontleden\n"
++"      --restore=bestand uitgebreide attributen herstellen\n"
+ "      --raw             attribuutwaarde is niet gecodeerd\n"
+-"      --version         print versie en sluit af\n"
++"      --version         versie weergeven en afsluiten\n"
+ "      --help            deze hulptekst\n"
+ 
+ #: tools/setfattr.c:380
+@@ -260,7 +265,7 @@ msgstr ""
+ msgid "Try `%s --help' for more information.\n"
+ msgstr ""
+ "Gebruik: %s %s\n"
+-"Probeer `%s --help' voor meer informatie.\n"
++"Gebruik `%s --help' voor meer informatie.\n"
+ 
+ #, c-format
+ #~ msgid ""
+@@ -270,4 +275,4 @@ msgstr ""
+ #~ msgstr ""
+ #~ "Gebruik: %s %s\n"
+ #~ "         %s %s\n"
+-#~ "Probeer `%s --help' voor meer informatie.\n"
++#~ "Gebruik `%s --help' voor meer informatie.\n"
+-- 
+2.53.0
+
