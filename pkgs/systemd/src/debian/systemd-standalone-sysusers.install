@@ -1,0 +1,3 @@
+#!/usr/bin/dh-exec
+usr/bin/systemd-sysusers.standalone => usr/bin/systemd-sysusers
+usr/lib/sysusers.d/basic.conf usr/lib/sysusers.d/

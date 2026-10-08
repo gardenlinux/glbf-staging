@@ -1,0 +1,6 @@
+#!/usr/bin/dh-exec
+usr/lib/systemd/systemd-imds*
+usr/lib/systemd/system-generators/systemd-imds-generator
+usr/lib/systemd/system/systemd-imds*
+usr/lib/sysusers.d/systemd-imds.conf
+usr/share/polkit-1/actions/io.systemd.imds.policy
