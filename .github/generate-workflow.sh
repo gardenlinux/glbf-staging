@@ -129,6 +129,32 @@ jobs:
         run: bin/glbx restore-cache --conf-dir . --arch "$GLBX_ARCH"
       - name: Publish the inputs to ghcr for the node jobs to pull
         run: bin/glbx publish --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+
+  plan:
+    runs-on: ubuntu-latest
+    needs: [build-glbx, check-graph]
+    outputs:
+      # A JSON object { "<node Key>": true|false } — true means the node's
+      # output is already in the registry, so its job skips. Node jobs read this
+      # with fromJSON(needs.plan.outputs.built)[<their NODE_KEY>].
+      built: ${{ steps.check.outputs.built }}
+    steps:
+      - name: Check out the config repo
+        uses: actions/checkout@v5
+      - name: Fetch the glbx binaries
+        uses: actions/download-artifact@v7
+        with:
+          name: glbx-bin
+          path: bin
+      - run: chmod +x bin/glbx bin/exec_env_stub
+      - name: Determine which nodes already exist in the registry
+        id: check
+        run: |
+          bin/glbx graph --format=json --check-built \
+            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH" > /tmp/graph.json
+          built="$(jq -c '.builtStatus' /tmp/graph.json)"
+          echo "built=$built" >> "$GITHUB_OUTPUT"
+          echo "already built: $(jq '[.builtStatus[] | select(.)] | length' /tmp/graph.json) / $(jq '.nodes | length' /tmp/graph.json)"
 EOF
 
 	# One job per graph node. glbx emits the graph; jq turns it into YAML in a
@@ -136,7 +162,7 @@ EOF
 	# the job name and env (so the UI stays legible and --target gets the exact
 	# Key), and each node's incoming edges become needs: on the predecessor jobs.
 	"$GLBX" graph --format=json --conf-dir "$CONF_DIR" --stub "$STUB" --arch "$ARCH" 2>/dev/null \
-		| jq -r '
+		| jq -r --arg q "'" '
 			(.nodes | to_entries | map({(.value): .key}) | add) as $id
 			| .edges as $edges
 			| .nodes
@@ -144,12 +170,14 @@ EOF
 			| .key as $i
 			| .value as $key
 			| ([$edges[] | select(.to == $key) | $id[.from]] | sort) as $preds
-			| (["build-glbx", "check-graph", "restore-inputs"] + ($preds | map("node-\(.)"))) as $needs
+			| (["build-glbx", "check-graph", "restore-inputs", "plan"] + ($preds | map("node-\(.)"))) as $needs
 			| "
   node-\($i):
     name: \"\($key)\"
     runs-on: ubuntu-latest
     needs: [\($needs | join(", "))]
+    # Skip when this node is already present in the registry.
+    if: \"${{ fromJSON(needs.plan.outputs.built)[\($q)\($key)\($q)] != true }}\"
     env:
       NODE_KEY: \"\($key)\"
     steps:
