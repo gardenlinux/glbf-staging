@@ -1,0 +1,6 @@
+usr/sbin
+usr/share/man/man1
+usr/share/man/man7
+usr/share/man/man8/setcap.8
+usr/share/man/man8/getpcaps.8
+usr/share/man/man8/getcap.8

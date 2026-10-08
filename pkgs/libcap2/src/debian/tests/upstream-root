@@ -1,0 +1,45 @@
+#!/bin/sh
+set -e
+# NB: -e is required.
+
+
+# These tests are taken from the "sudotest" targets from the various Makefiles.
+# Unfortunately, it seems to be easier to just copy them here, rather than
+# patching up the Makefiles to work with binaries built for autopkgtest.
+
+TESTARCH=`dpkg-architecture -qDEB_HOST_MULTIARCH`
+TESTDIR="/usr/lib/${TESTARCH}/libcap2/tests"
+
+echo "@@@ Running upstream tests (root required) @@@"
+
+if [ "`id -u`" -ne 0 ]
+then
+	echo "These tests must be run as root. Aborting." >&2
+	exit 1
+fi
+
+echo "## Preparation ##"
+cp pam_cap/capability.conf pam_cap/sudotest.conf "$AUTOPKGTEST_TMP"/
+cp -f "${TESTDIR}"/* "$AUTOPKGTEST_TMP"/
+cd "$AUTOPKGTEST_TMP"
+
+echo "## libcap2 tests ##"
+# From <src>/tests/Makefile
+echo exit | "$TESTDIR"/uns_test
+./libcap_launch_test
+./exploit || echo "exploit failed"
+./noexploit
+
+echo "## libpsx tests ##"
+# From <src>/tests/Makefile
+./libcap_psx_launch_test
+
+echo "## PAM tests ##"
+# From <src>/pam_cap/Makefile
+./test_pam_cap root 0x0 0x0 0x0 config=./capability.conf
+./test_pam_cap root 0x0 0x0 0x0 config=./sudotest.conf
+./test_pam_cap alpha 0x0 0x0 0x0 config=./capability.conf
+./test_pam_cap alpha 0x0 0x1 0x80 config=./sudotest.conf
+./test_pam_cap beta 0x0 0x1 0x0 config=./sudotest.conf
+./test_pam_cap gamma 0x0 0x0 0x81 config=./sudotest.conf
+./test_pam_cap delta 0x41 0x80 0x41 config=./sudotest.conf
