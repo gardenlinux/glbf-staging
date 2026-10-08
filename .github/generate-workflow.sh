@@ -176,8 +176,13 @@ EOF
     name: \"\($key)\"
     runs-on: ubuntu-latest
     needs: [\($needs | join(", "))]
-    # Skip when this node is already present in the registry.
-    if: \"${{ fromJSON(needs.plan.outputs.built)[\($q)\($key)\($q)] != true }}\"
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: \"${{ !cancelled() && !failure() && (needs.plan.outputs.built == \($q)\($q) || fromJSON(needs.plan.outputs.built)[\($q)\($key)\($q)] != true) }}\"
     env:
       NODE_KEY: \"\($key)\"
     steps:
