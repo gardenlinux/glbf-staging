@@ -1,0 +1,249 @@
+PR ada/114065, patches v15
+
+--- a/src/gcc/ada/libgnarl/a-exetim__posix.adb
++++ b/src/gcc/ada/libgnarl/a-exetim__posix.adb
+@@ -35,6 +35,7 @@ with Ada.Task_Identification;  use Ada.T
+ with Ada.Unchecked_Conversion;
+ 
+ with System.C_Time;
++with System.OS_Constants;
+ with System.Tasking;
+ with System.OS_Interface; use System.OS_Interface;
+ with System.Task_Primitives.Operations; use System.Task_Primitives.Operations;
+@@ -115,7 +116,8 @@ package body Ada.Execution_Time is
+         (clock_id : Interfaces.C.int;
+          tp       : access System.C_Time.timespec)
+          return Interfaces.C.int;
+-      pragma Import (C, clock_gettime, "clock_gettime");
++      pragma Import (C, clock_gettime,
++                     System.OS_Constants.Y2038_clock_gettime);
+       --  Function from the POSIX.1b Realtime Extensions library
+ 
+       function pthread_getcpuclockid
+--- a/src/gcc/ada/libgnarl/s-osinte__gnu.ads
++++ b/src/gcc/ada/libgnarl/s-osinte__gnu.ads
+@@ -43,6 +43,7 @@ with Ada.Unchecked_Conversion;
+ with Interfaces.C;
+ 
+ with System.C_Time;
++with System.OS_Constants;
+ with System.OS_Locks;
+ 
+ package System.OS_Interface is
+@@ -211,7 +212,7 @@ package System.OS_Interface is
+    --  Indicates whether time slicing is supported (i.e SCHED_RR is supported)
+ 
+    function nanosleep (rqtp, rmtp : access C_Time.timespec) return int;
+-   pragma Import (C, nanosleep, "nanosleep");
++   pragma Import (C, nanosleep, OS_Constants.Y2038_nanosleep);
+ 
+    type clockid_t is new int;
+    CLOCK_REALTIME : constant clockid_t := 0;
+@@ -221,12 +222,12 @@ package System.OS_Interface is
+      (clock_id : clockid_t;
+       tp       : access C_Time.timespec)
+       return int;
+-   pragma Import (C, clock_gettime, "clock_gettime");
++   pragma Import (C, clock_gettime, OS_Constants.Y2038_clock_gettime);
+ 
+    function clock_getres
+      (clock_id : clockid_t;
+       res      : access C_Time.timespec) return int;
+-   pragma Import (C, clock_getres, "clock_getres");
++   pragma Import (C, clock_getres, OS_Constants.Y2038_clock_getres);
+ 
+    --  From: /usr/include/unistd.h
+    function sysconf (name : int) return long;
+@@ -480,7 +481,8 @@ package System.OS_Interface is
+      (cond    : access pthread_cond_t;
+       mutex   : access pthread_mutex_t;
+       abstime : access C_Time.timespec) return int;
+-   pragma Import (C, pthread_cond_timedwait, "pthread_cond_timedwait");
++   pragma Import (C, pthread_cond_timedwait,
++                  OS_Constants.Y2038_pthread_cond_timedwait);
+ 
+    Relative_Timed_Wait : constant Boolean := False;
+    --  pthread_cond_timedwait requires an absolute delay time
+--- a/src/gcc/ada/libgnarl/s-osinte__kfreebsd-gnu.ads
++++ b/src/gcc/ada/libgnarl/s-osinte__kfreebsd-gnu.ads
+@@ -43,6 +43,7 @@ with Ada.Unchecked_Conversion;
+ with Interfaces.C;
+ 
+ with System.C_Time;
++with System.OS_Constants;
+ with System.OS_Locks;
+ 
+ package System.OS_Interface is
+@@ -206,7 +207,7 @@ package System.OS_Interface is
+    --  Indicates whether time slicing is supported (i.e SCHED_RR is supported)
+ 
+    function nanosleep (rqtp, rmtp : access C_Time.timespec) return int;
+-   pragma Import (C, nanosleep, "nanosleep");
++   pragma Import (C, nanosleep, OS_Constants.Y2038_nanosleep);
+ 
+    type clockid_t is new int;
+    CLOCK_REALTIME : constant clockid_t := 0;
+@@ -215,12 +216,12 @@ package System.OS_Interface is
+      (clock_id : clockid_t;
+       tp       : access C_Time.timespec)
+       return int;
+-   pragma Import (C, clock_gettime, "clock_gettime");
++   pragma Import (C, clock_gettime, OS_Constants.Y2038_clock_gettime);
+ 
+    function clock_getres
+      (clock_id : clockid_t;
+       res      : access C_Time.timespec) return int;
+-   pragma Import (C, clock_getres, "clock_getres");
++   pragma Import (C, clock_getres, OS_Constants.Y2038_clock_getres);
+ 
+    function sysconf (name : int) return long;
+    pragma Import (C, sysconf);
+@@ -423,7 +424,8 @@ package System.OS_Interface is
+      (cond    : access pthread_cond_t;
+       mutex   : access pthread_mutex_t;
+       abstime : access C_Time.timespec) return int;
+-   pragma Import (C, pthread_cond_timedwait, "pthread_cond_timedwait");
++   pragma Import (C, pthread_cond_timedwait,
++                  OS_Constants.Y2038_pthread_cond_timedwait);
+ 
+    --------------------------
+    -- POSIX.1c  Section 13 --
+--- a/src/gcc/ada/libgnarl/s-osinte__linux.ads
++++ b/src/gcc/ada/libgnarl/s-osinte__linux.ads
+@@ -232,12 +232,12 @@ package System.OS_Interface is
+ 
+    function clock_gettime
+      (clock_id : clockid_t; tp : access C_Time.timespec) return int;
+-   pragma Import (C, clock_gettime, "clock_gettime");
++   pragma Import (C, clock_gettime, OS_Constants.Y2038_clock_gettime);
+ 
+    function clock_getres
+      (clock_id : clockid_t;
+       res      : access C_Time.timespec) return int;
+-   pragma Import (C, clock_getres, "clock_getres");
++   pragma Import (C, clock_getres, OS_Constants.Y2038_clock_getres);
+ 
+    function sysconf (name : int) return long;
+    pragma Import (C, sysconf);
+@@ -448,7 +448,8 @@ package System.OS_Interface is
+      (cond    : access pthread_cond_t;
+       mutex   : access pthread_mutex_t;
+       abstime : access C_Time.timespec) return int;
+-   pragma Import (C, pthread_cond_timedwait, "pthread_cond_timedwait");
++   pragma Import (C, pthread_cond_timedwait,
++                  OS_Constants.Y2038_pthread_cond_timedwait);
+ 
+    --------------------------
+    -- POSIX.1c  Section 13 --
+--- a/src/gcc/ada/libgnat/g-spogwa.adb
++++ b/src/gcc/ada/libgnat/g-spogwa.adb
+@@ -42,7 +42,8 @@ is
+       writefds  : access FD_Set_Type;
+       exceptfds : access FD_Set_Type;
+       timeout   : access System.C_Time.timeval) return Integer
+-     with Import => True, Convention => Stdcall, External_Name => "select";
++     with Import => True, Convention => Stdcall,
++       External_Name => System.OS_Constants.Y2038_select;
+ 
+    Timeout_V : aliased System.C_Time.timeval;
+    Timeout_A : access System.C_Time.timeval;
+--- a/src/gcc/ada/libgnat/s-osprim__posix.adb
++++ b/src/gcc/ada/libgnat/s-osprim__posix.adb
+@@ -31,6 +31,7 @@
+ 
+ --  This version is for POSIX-like operating systems
+ with System.C_Time;
++with System.OS_Constants;
+ 
+ package body System.OS_Primitives is
+ 
+@@ -41,7 +42,7 @@ package body System.OS_Primitives is
+ 
+    function nanosleep (rqtp, rmtp : not null access C_Time.timespec)
+                       return Integer;
+-   pragma Import (C, nanosleep, "nanosleep");
++   pragma Import (C, nanosleep, OS_Constants.Y2038_nanosleep);
+ 
+    -----------
+    -- Clock --
+@@ -56,7 +57,7 @@ package body System.OS_Primitives is
+       function gettimeofday
+         (Tv : access C_Time.timeval;
+          Tz : System.Address := System.Null_Address) return Integer;
+-      pragma Import (C, gettimeofday, "gettimeofday");
++      pragma Import (C, gettimeofday, OS_Constants.Y2038_gettimeofday);
+ 
+    begin
+       --  The return codes for gettimeofday are as follows (from man pages):
+--- a/src/gcc/ada/libgnat/s-osprim__posix2008.adb
++++ b/src/gcc/ada/libgnat/s-osprim__posix2008.adb
+@@ -45,7 +45,7 @@ package body System.OS_Primitives is
+ 
+    function nanosleep (rqtp, rmtp : not null access C_Time.timespec)
+                       return Integer;
+-   pragma Import (C, nanosleep, "nanosleep");
++   pragma Import (C, nanosleep, OS_Constants.Y2038_nanosleep);
+ 
+    -----------
+    -- Clock --
+@@ -62,7 +62,7 @@ package body System.OS_Primitives is
+       function clock_gettime
+         (clock_id : clockid_t;
+          tp       : access C_Time.timespec) return int;
+-      pragma Import (C, clock_gettime, "clock_gettime");
++      pragma Import (C, clock_gettime, OS_Constants.Y2038_clock_gettime);
+ 
+    begin
+       Result := clock_gettime (CLOCK_REALTIME, TS'Unchecked_Access);
+--- a/src/gcc/ada/s-oscons-tmplt.c
++++ b/src/gcc/ada/s-oscons-tmplt.c
+@@ -1777,6 +1777,49 @@ CND(SIZEOF_tv_nsec, "tv_nsec");
+ 
+ /*
+ 
++   --  On 32 bits architectures, glibc and musl also support representing time
++   --  types on 64 bits.  The usual names are reserved symbols for the 32 bits
++   --  function for backwards compatibility, so distinct symbols are necessary
++   --  for the current version.  In other contexts, define Y2038_foo as "foo"
++   --  so that other files may safely Import with External_Name => Y2038_foo.
++*/
++#if defined(__USE_TIME64_REDIRECTS) || (__TIMESIZE == 32 && __USE_TIME_BITS64)
++/* glibc */
++#  define Y2038_clock_getres           "__clock_getres64"
++#  define Y2038_clock_gettime          "__clock_gettime64"
++#  define Y2038_gettimeofday           "__gettimeofday64"
++#  define Y2038_nanosleep              "__nanosleep64"
++#  define Y2038_pthread_cond_timedwait "__pthread_cond_timedwait64"
++#  define Y2038_pthread_cond_wait      "__pthread_cond_wait64"
++#  define Y2038_select                 "__select64"
++#elif defined(_REDIR_TIME64)
++/* musl */
++#  define Y2038_clock_getres           "__clock_getres_time64"
++#  define Y2038_clock_gettime          "__clock_gettime64"
++#  define Y2038_gettimeofday           "__gettimeofday_time64"
++#  define Y2038_nanosleep              "__nanosleep_time64"
++#  define Y2038_pthread_cond_timedwait "__pthread_cond_timedwait_time64"
++#  define Y2038_pthread_cond_wait      "__pthread_cond_wait_time64"
++#  define Y2038_select                 "__select_time64"
++#else
++#  define Y2038_clock_getres           "clock_getres"
++#  define Y2038_clock_gettime          "clock_gettime"
++#  define Y2038_gettimeofday           "gettimeofday"
++#  define Y2038_nanosleep              "nanosleep"
++#  define Y2038_pthread_cond_timedwait "pthread_cond_timedwait"
++#  define Y2038_pthread_cond_wait      "pthread_cond_wait"
++#  define Y2038_select                 "select"
++#endif
++CST(Y2038_clock_getres, "")
++CST(Y2038_clock_gettime, "")
++CST(Y2038_gettimeofday, "")
++CST(Y2038_nanosleep, "")
++CST(Y2038_pthread_cond_timedwait, "")
++CST(Y2038_pthread_cond_wait, "")
++CST(Y2038_select, "")
++
++/*
++
+    --  Sizes of various data types
+ */
+ 
