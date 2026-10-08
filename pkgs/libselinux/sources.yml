@@ -1,0 +1,6 @@
+sources:
+    - file: libselinux_3.11.orig.tar.gz
+      sha256: 73d419c6e20e874adaa4019372cbd097eecf4d276e13f27ec5e67d35c0bd203c
+      urls:
+        - https://deb.debian.org/debian/pool/main/libs/libselinux/libselinux_3.11.orig.tar.gz
+        - https://snapshot.debian.org/file/751ee0c6b87f2f1113631d728cb721ec2727d821/libselinux_3.11.orig.tar.gz

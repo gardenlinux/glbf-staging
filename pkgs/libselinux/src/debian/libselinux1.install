@@ -1,0 +1,2 @@
+usr/lib/${DEB_HOST_MULTIARCH}/*.so.*
+debian/selinux_compile_fcontexts usr/libexec/libselinux
