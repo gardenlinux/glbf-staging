@@ -1,0 +1,567 @@
+mawk (1.3.4.20260302-2) unstable; urgency=medium
+
+  * debian/tests/control: Drop the allow-stderr restriction; the
+    upstream test suite no longer writes to stderr with current mawk, so
+    the 2020 autopkgtest regression is gone. (Closes: #948929)
+
+ -- Boyuan Yang <byang@debian.org>  Wed, 16 Sep 2026 17:38:04 -0400
+
+mawk (1.3.4.20260302-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Boyuan Yang <byang@debian.org>  Thu, 05 Mar 2026 23:00:12 -0500
+
+mawk (1.3.4.20260129-1) unstable; urgency=medium
+
+  * New upstream release. (Closes: #1105498)
+  * debian/copyright: Refresh information.
+  * debian/control: Bump Standards-Version to 4.7.3.
+
+ -- Boyuan Yang <byang@debian.org>  Tue, 03 Feb 2026 15:30:40 -0500
+
+mawk (1.3.4.20250131-2) unstable; urgency=medium
+
+  * debian/watch: Update to version 5.
+  * debian/upstream/metadata: Add fields for bug tracker and documentation.
+  * debian/control: Bump Standards-Version to 4.7.2.
+
+ -- Boyuan Yang <byang@debian.org>  Sun, 21 Dec 2025 10:20:03 -0500
+
+mawk (1.3.4.20250131-1) unstable; urgency=medium
+
+  * New upstream snapshot.
+
+ -- Boyuan Yang <byang@debian.org>  Tue, 04 Feb 2025 08:40:44 -0500
+
+mawk (1.3.4.20240905-1) unstable; urgency=medium
+
+  * New upstream snapshot.
+  * Upload to unstable.
+
+ -- Boyuan Yang <byang@debian.org>  Thu, 12 Sep 2024 17:55:13 -0400
+
+mawk (1.3.4.20240827-1~exp1) experimental; urgency=medium
+
+  * New upstream snapshot.
+  * debian/patches/: Drop all patches for a test build in Experimental.
+
+ -- Boyuan Yang <byang@debian.org>  Thu, 29 Aug 2024 17:09:31 -0400
+
+mawk (1.3.4.20240819-3) unstable; urgency=medium
+
+  * debian/patches/0003-Fix-Debian-bug-1079389.patch: Apply upstream-proposed
+    patch to fix incorrect result from sub(). (Closes: #1079389)
+
+ -- Boyuan Yang <byang@debian.org>  Sun, 25 Aug 2024 13:06:40 -0400
+
+mawk (1.3.4.20240819-2) unstable; urgency=medium
+
+  * debian/patches/0002-Disable-long-lines-test-as-suggested-upstream.patch:
+    Disable test as suggested upstream due to memory requirement.
+
+ -- Boyuan Yang <byang@debian.org>  Wed, 21 Aug 2024 18:22:35 -0400
+
+mawk (1.3.4.20240819-1) unstable; urgency=medium
+
+  * New upstream snapshot 1.3.4.20240819.
+  * debian/patches/0001-Temp-fix-for-test.patch: Add an ad-hoc fix
+    for mawktest.
+  * debian/patches/0001-aclocal.m4-Avoid-arc4random-for-now.patch:
+    Dropped, the mawk upstream now disables arc4random by default.
+
+ -- Boyuan Yang <byang@debian.org>  Wed, 21 Aug 2024 09:19:44 -0400
+
+mawk (1.3.4.20240622-2) unstable; urgency=medium
+
+  * debian/patches/0001-aclocal.m4-Avoid-arc4random-for-now.patch:
+    Add patch to avoid using arc4random as suggested upstream.
+    (Closes: #1075717)
+
+ -- Boyuan Yang <byang@debian.org>  Fri, 19 Jul 2024 21:33:53 -0400
+
+mawk (1.3.4.20240622-1) unstable; urgency=medium
+
+  * New upstream snapshot 1.3.4.20240622.
+    + Fix buffer overread in scan.c with mawk -f <large file>.
+      (Closes: #1074280)
+  * debian/control: Move package description to the source package
+    section.
+  * debian/control: Bump Standards-Version to 4.7.0.
+
+ -- Boyuan Yang <byang@debian.org>  Tue, 25 Jun 2024 19:34:29 -0400
+
+mawk (1.3.4.20240123-1) unstable; urgency=medium
+
+  * New upstream snapshot 1.3.4.20240123.
+
+ -- Boyuan Yang <byang@debian.org>  Fri, 26 Jan 2024 09:47:02 -0500
+
+mawk (1.3.4.20231126-1) unstable; urgency=medium
+
+  * New upstream snapshot 1.3.4.20231126.
+
+ -- Boyuan Yang <byang@debian.org>  Thu, 30 Nov 2023 20:16:14 -0500
+
+mawk (1.3.4.20231102-1) unstable; urgency=medium
+
+  * New upstream snapshot 1.3.4.20231102.
+
+ -- Boyuan Yang <byang@debian.org>  Tue, 14 Nov 2023 13:21:53 -0500
+
+mawk (1.3.4.20230808-1) unstable; urgency=medium
+
+  * New upstream snapshot 1.3.4.20230808.
+
+ -- Boyuan Yang <byang@debian.org>  Sun, 20 Aug 2023 21:33:16 -0400
+
+mawk (1.3.4.20230730-1) unstable; urgency=medium
+
+  * New upstream snapshot 1.3.4.20230730.
+  * debian/watch: Enable auto pgp mode to check digital signature.
+  * debian/upstream/signing-key.asc: Import author's PGP key.
+  * debian/rules: Drop unneeded unusual mandir override.
+
+ -- Boyuan Yang <byang@debian.org>  Thu, 03 Aug 2023 17:06:29 -0400
+
+mawk (1.3.4.20230525-1) unstable; urgency=medium
+
+  * Upload to unstable.
+
+ -- Boyuan Yang <byang@debian.org>  Wed, 14 Jun 2023 20:37:46 -0400
+
+mawk (1.3.4.20230525-1~exp1) experimental; urgency=medium
+
+  * New upstream snapshot 1.3.4.20230525.
+
+ -- Boyuan Yang <byang@debian.org>  Fri, 02 Jun 2023 15:56:26 -0400
+
+mawk (1.3.4.20230404-1~exp1) experimental; urgency=medium
+
+  * New upstream snapshot 1.3.4.20230404.
+
+ -- Boyuan Yang <byang@debian.org>  Mon, 10 Apr 2023 15:31:30 -0400
+
+mawk (1.3.4.20230322-1~exp1) experimental; urgency=medium
+
+  * New upstream snapshot 1.3.4.20230322.
+
+ -- Boyuan Yang <byang@debian.org>  Tue, 04 Apr 2023 15:25:53 -0400
+
+mawk (1.3.4.20230203-1~exp1) experimental; urgency=medium
+
+  * New upstream snapshot 1.3.4.20230203.
+  * debian/control: Bump Standards-Version to 4.6.2.
+  * debian/copyright: Update information.
+
+ -- Boyuan Yang <byang@debian.org>  Wed, 08 Feb 2023 20:16:50 -0500
+
+mawk (1.3.4.20210824-1~exp1) experimental; urgency=medium
+
+  * New upstream snapshot 1.3.4.20210824.
+  * debian/watch: Fix upstream monitoring script.
+  * debian/copyright: Update information.
+  * debian/control: Bump Standards-Version to 4.6.1.
+
+ -- Boyuan Yang <byang@debian.org>  Tue, 18 Oct 2022 16:33:29 -0400
+
+mawk (1.3.4.20200120-3.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Trim trailing whitespace.
+  * Set upstream metadata fields: Repository.
+  * debian/copyright: Convert to machine-readable format.
+
+ -- Bastian Germann <bage@debian.org>  Fri, 17 Jun 2022 17:35:26 +0200
+
+mawk (1.3.4.20200120-3) unstable; urgency=medium
+
+  * Rebuild before Ubuntu 22.04 release.
+  * debian/control:
+    + Bump Standards-Version to 4.6.0.
+    + Bump debhelper compat to v13.
+  * debian/rules: Drop useless --as-needed linker flag.
+  * debian/mawk.alternatives: Use declarative alternative rules.
+  * debian/{*.postinst,prerm}: Dropped due to declarative rules.
+
+ -- Boyuan Yang <byang@debian.org>  Sun, 23 Jan 2022 16:57:23 -0500
+
+mawk (1.3.4.20200120-2) unstable; urgency=high
+
+  * debian/copyright: Refresh dates.
+  * debian/watch: Add watch file to monitor upstream releases.
+
+ -- Boyuan Yang <byang@debian.org>  Sun, 16 Feb 2020 14:41:09 -0500
+
+mawk (1.3.4.20200120-1) unstable; urgency=medium
+
+  * Upload to unstable.
+
+ -- Boyuan Yang <byang@debian.org>  Tue, 28 Jan 2020 11:27:10 -0500
+
+mawk (1.3.4.20200120-1~exp1) experimental; urgency=medium
+
+  * New upstream release snapshot.
+  * debian/copyright: Update copyright year information.
+  * debian/upstream/metadata: Add metadata: Repository,
+    Repository-Browse.
+
+ -- Boyuan Yang <byang@debian.org>  Sat, 25 Jan 2020 18:09:03 -0500
+
+mawk (1.3.4.20190203-1~exp1) experimental; urgency=medium
+
+  * New upstream release snapshot (Closes: #554167)
+    + Fixes segmentation fault on certain awk file.
+      (Closes: #901477)
+    + Fixes crashes with long strings. (Closes: #173664)
+    + Fixes bugs around substr. (Closes: #649147)
+  * debian/control:
+    + Declare autopkgtest as test suite. (Closes: #692662)
+    + Bump Standards-Version to 4.5.0.
+    + Update the pre-depends field and use ${misc:Pre-Depends}
+      instead.
+  * debian/copyright: Refresh information.
+  * debian/: Lintian warning fixes:
+    - description-synopsis-starts-with-article
+
+  [ Adreas Henriksson ]
+  * debian/patches: Review and drop all obsolete patches.
+  * Fix up autopkgtest for new version of mawktest.
+  * debian/control: Use autoconf-dickey instead of mainline
+    autoconf. This is required for mawk and other programs
+    maintained upstream by Dickey.
+
+ -- Boyuan Yang <byang@debian.org>  Sat, 25 Jan 2020 17:50:25 -0500
+
+mawk (1.3.3-20) unstable; urgency=high
+
+  * debian/tests/control: Enable allow-stderr to make autopkgtest
+    properly working. Hopefully this would fix bug #948929.
+
+ -- Boyuan Yang <byang@debian.org>  Wed, 15 Jan 2020 13:38:18 -0500
+
+mawk (1.3.3-19) unstable; urgency=high
+
+  * debian/control:
+    + Update Vcs-* fields to use git packaging repo under Salsa
+      Debian group.
+    + Bump debhelper compat to v12.
+    + Bump Standards-Version to 4.4.1.
+    + Set project homepage to be https://invisible-island.net/mawk/.
+  * debian/salsa-ci.yml: Add Salsa CI config file.
+  * debian/tests/mawktest: Use $AUTOPKGTEST_TMP instead of
+    non-working $TMPDIR. This fixes autopkgtest failure.
+  * debian/source/format: Use "3.0 (quilt)" format.
+  * debian/rules: Disable parallel build for now.
+
+ -- Boyuan Yang <byang@debian.org>  Fri, 27 Dec 2019 22:01:49 -0800
+
+mawk (1.3.3-18) unstable; urgency=medium
+
+  * debian/control:
+    + Take over package maintenance via package salvaging process.
+      (Closes: #945794).
+
+ -- Boyuan Yang <byang@debian.org>  Fri, 20 Dec 2019 09:18:09 -0500
+
+mawk (1.3.3-17) unstable; urgency=low
+
+  * debian/patches/cross-compile: fix the wrong invocation of AC_CHECK_PROG()
+    that breaks cross-compiler detection.
+  * debian/patches/21_memcpy-to-memmove: use memmove instead of memcpy in
+    FINgets.  Closes: #665383, LP: #955791.
+  * mark mawk Multi-Arch: foreign, to satisfy cross-build-dependencies.
+  * debian/patches/20_overlong-regexps: Do not crash if regexp is too
+    long for our buffer.  Thanks to Ian Jackson <iwj@ubuntu.com>,
+    Jonathan Nieder <jrnieder@gmail.com>.  Closes: #391051, LP: #23494.
+  * add autopkgtest/autodebtest support to run upstream tests.
+
+ -- Steve Langasek <vorlon@debian.org>  Fri, 23 Mar 2012 13:15:00 -0700
+
+mawk (1.3.3-16) unstable; urgency=low
+
+  * Swap out dpatch in favor of quilt.
+  * Replace debian/patches/08_fix-for-gcc3.3 with debian/patches/autoreconf,
+    which gets us modern autoconf support.
+  * Migrate to dh(1).  This gets us md5sums for the package (Closes: #507315)
+    and support for DEB_BUILD_OPTIONS=nostrip (Closes: #437557).
+  * Only run the mawk_test and fpe_test targets from override_dh_auto_test,
+    so that DEB_BUILD_OPTIONS=nocheck does the right thing.  This should
+    be sufficient to support cross-building, provided nocheck is passed in
+    the cross-build environment (as it should be).  Closes: #285418.
+  * Put mawk in Section: interpreters, along with the other awken.
+    Closes: #442071.
+  * debian/mawk.postinst: drop obsolete upgrade handling of long-gone broken
+    symlinks.
+  * Update to standards-version 3.9.2.
+  * Add Vcs-Bzr/Vcs-Browser fields.
+
+ -- Steve Langasek <vorlon@debian.org>  Tue, 25 Oct 2011 00:47:34 +0000
+
+mawk (1.3.3-15) unstable; urgency=high
+
+  * Fix debian/copyright to correctly list the license as GPLv2, not GPLv2
+    or later.  Closes: #536689
+
+ -- Steve Langasek <vorlon@debian.org>  Mon, 27 Jul 2009 11:26:47 -0700
+
+mawk (1.3.3-14) unstable; urgency=low
+
+  * Build-Conflict with byacc, as the current version doesn't appear to be
+    compatible with mawk; though we ought to fix the upstream build rules
+    to not check for byacc first in this case, this is an ok fix for now.
+    Closes: #509832.
+
+ -- Steve Langasek <vorlon@debian.org>  Fri, 26 Dec 2008 16:17:53 -0800
+
+mawk (1.3.3-13) unstable; urgency=low
+
+  * New maintainer; closes: #496711.
+  * Drop versioned gcc build-dependency, which has been satisfied since
+    before oldstable.
+  * debian/rules: fix up clean target to use a simpler, standard distclean
+    call, fixing a lintian warning.
+  * debian/rules: future-proof the clean target for patch interaction
+    with the build system, moving all the cleaning into a
+    "clean-patched" target that fires before the unpatch target
+
+ -- Steve Langasek <vorlon@debian.org>  Wed, 27 Aug 2008 10:03:33 -0700
+
+mawk (1.3.3-12) unstable; urgency=low
+
+  * New maintainer; closes: 496711
+  * Fix the following lintian issues:
+    W: ancient-standards-version 3.5.10.0 (current is 3.8.0)
+    W: mawk: unknown-section base
+    W: mawk: old-fsf-address-in-copyright-file
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Wed, 27 Aug 2008 17:41:50 +1000
+
+mawk (1.3.3-11.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * debian/postinst: fix bashism.  Closes: #308134
+
+ -- Peter Eisentraut <petere@debian.org>  Sat, 05 Apr 2008 17:11:11 +0200
+
+mawk (1.3.3-11) unstable; urgency=low
+
+  * 08_fix-for-gcc3.3.dpatch: grossly hack configure to work around
+    gcc-3.3 providing a builtin log() function which broke the configure
+    tests.  Thanks to Daniel Schepler <schepler@math.berkeley.edu> for the
+    report.  Closes: #195371
+
+  * debian/control: add build-depends on gcc (>= 3:3.3-1) for hppa.
+  * debian/rules: remove de-optimization hack for hppa.  Thanks to LaMont
+    Jones <lamont@smallone.fc.hp.com> and Matthias Klose
+    <doko@cs.tu-berlin.de>.  Closes: #105816
+
+  * debian/control (Standards-Version): bump to 3.5.10.0.
+
+ -- James Troup <james@nocrew.org>  Fri, 30 May 2003 15:24:50 +0100
+
+mawk (1.3.3-10) unstable; urgency=low
+
+  * Move to dpatch; existing non-debian/ changes split into
+    01_error-on-full-fs, 02_fix-examples, 03_read-and-close-redefinition,
+    04_mawk.1-fix-pi and 05_-Wall-fixes.
+  * debian/rules: include /usr/share/dpatch/dpatch.make.
+  * debian/rules (build): depend on patch-stamp.
+  * debian/rules (clean): depend on unpatch.  Remove debian/patched.
+  * debian/control (Build-Depends): add dpatch.
+
+  * debian/rules: update copyright and use install_foo convenience
+    variables.
+  * debian/copyright: update copyright.
+
+  * debian/control (Standards-Version): bump to 3.5.9.0.
+  * debian/postinst, debian/prerm: no longer do /usr/doc symlinks.
+
+  * debian/prerm: use set -e rather than #!/bin/sh -e.
+
+  * 06_parse.y-semicolons.dpatch: new patch to fix missing semi-colons
+    that upset recent versions of bison.  Thanks to Paul Eggert
+    <eggert@twinsun.com>.  Closes: #170973
+  * debian/control (Build-Depends): add bison.
+  * debian/rules (clean): remove parse.c and parse.h so they're not
+    included in the .diff.gz.
+
+  * 07_mawktest-check-devfull: new patch to conditionalize the write error
+    tests on the existence of /dev/full since apparently some systems
+    don't have it.  Requested by Marcus.Brinkmann@ruhr-uni-bochum.de.
+    Closes: #51875
+
+  * debian/postinst: demote mawk to priority 5 so that gawk will be
+    selected by default.  [mawk isn't being actively maintained upstream
+    and has both long-standing bugs and isn't feature-complete WRT POSIX
+    at least.]
+
+ -- James Troup <james@nocrew.org>  Thu, 10 Apr 2003 02:22:27 +0100
+
+mawk (1.3.3-9) unstable; urgency=low
+
+  * debian/control: capitalize POSIX, thanks to Matt Zimmerman
+    <mdz@debian.org>.  Closes: #125120
+  * debian/changelog: remove obsolete local variables.
+  * man/mawk.1: add a macro provided by Colin Watson <cjwatson@debian.org>
+    to force PI to be displayed as "pi" (rather than 'n') when processed
+    by nroff.  Closes: #103699
+  * debian/control (Standards-Version): update to 3.5.6.1.
+
+ -- James Troup <james@nocrew.org>  Fri,  9 Aug 2002 15:04:23 +0100
+
+mawk (1.3.3-8) unstable; urgency=low
+
+  * debian/rules (build): compile with -O1 on hppa to work around probable
+    compiler bug.  Thanks to LaMont Jones <lamont@ia.mmjgroup.com>.
+
+ -- James Troup <james@nocrew.org>  Wed, 18 Jul 2001 20:40:37 +0100
+
+mawk (1.3.3-7) unstable; urgency=low
+
+  * mawk.h: remove bogus redefinition of read() and close() and #include
+    <unistd.h> instead, thanks to LaMont Jones <lamont@ia.mmjgroup.com>.
+    Closes: #104124
+
+ -- James Troup <james@nocrew.org>  Tue, 10 Jul 2001 03:09:24 +0100
+
+mawk (1.3.3-6) unstable; urgency=low
+
+  * debian/control (Maintainer): fixed to be me.
+  * debian/changelog: remove add-log-mailing-address.
+  * debian/rules: rewritten.
+  * debian/control (Standards-Version): bump to 3.5.5.0.
+  * Half hearted attempt at -Wall cleaning of the code.
+
+ -- James Troup <james@nocrew.org>  Mon, 25 Jun 2001 05:33:51 +0100
+
+mawk (1.3.3-5) unstable; urgency=low
+
+  * debian/postinst: manpages are in /usr/share/man now; forgot to update
+    the arguments to update-alternatives.  Thanks to Malcolm Parsons
+    <malcolm@ivywell.screaming.net> for noticing.  [#54440]
+
+ -- James Troup <awkmaint@nocrew.org>  Sun,  9 Jan 2000 16:54:14 +0000
+
+mawk (1.3.3-4) unstable; urgency=low
+
+  * debian/rules (build): make configure and the test scripts executables
+    to make builds work under aegis.
+  * debian/copyright: remove references to Linux.  Update location of the
+    GPL.  We are mawk, not hello.
+  * debian/rules (binary-arch): move to FHS; install documentation into
+    /usr/share/doc/ and manpages into /usr/share/man/.
+  * debian/postinst: add /usr/doc/ symlink.
+  * debian/prerm: remove /usr/doc/ symlink.
+  * debian/control (Standards-Version): update to 3.1.1.1.
+  * debian/rules (binary-arch): pass -isp to dpkg-gencontrol.
+
+ -- James Troup <awkmaint@nocrew.org>  Fri, 31 Dec 1999 13:53:42 +0000
+
+mawk (1.3.3-3) unstable; urgency=low
+
+  * debian/rules (binary-arch): add chmod -R go=rX to correct permissions
+    on directories.
+  * debian/control (Standards-Version): update [FSVO] to 2.5.0.0.
+
+  * The following entries are a patch from Torsten Landschoff
+    <torsten@debian.org>. [#4293, #28249]
+  * files.c: Added handling of write errors delivered when closing the
+    output file.
+  * test/mawktest: Added checking for correct handling of write errors on
+    full disks.
+
+  * The remaining entries are a patch from Edward Betts
+    <edward@debian.org>. [#36011]
+  * examples/hical: use /bin/echo to avoid bash's builtin.
+  * examples/{ct_length.awk,eatc.awk,nocomment,primes,qsort}: fix bang
+    path.
+  * examples/{decl.awk,gdecl.awk,hcal}: fix bang path, remove trailing
+    white space.
+
+ -- James Troup <awkmaint@nocrew.org>  Fri,  8 Oct 1999 18:26:49 +0100
+
+mawk (1.3.3-2) frozen unstable; urgency=low
+
+  * debian/control (Maintainer): New maintainer.  However, I'm just an
+    interim real maintainer, the package will go back to Chris as soon as
+    he's ready.
+  * debian/control (Standards-Version): Upgraded to 2.4.1.0.
+  * debian/control (Depends): Made a Pre-Depends. [#20601]
+  * debian/copyright: corrected URL of upstream source. [#20603]
+  * debian/copyright: updated the address of the FSF.
+  * Pristine upstream source.
+
+ -- James Troup <awkmaint@nocrew.org>  Thu, 30 Apr 1998 16:02:45 +0200
+
+mawk (1.3.3-1.1) unstable; urgency=low
+
+  * Non-maintainer release.
+  * Rebuilt under libc6 [#11707].
+
+ -- James Troup <jjtroup@comp.brad.ac.uk>  Fri,  3 Oct 1997 20:19:36 +0200
+
+mawk (1.3.3-1) unstable; urgency=low
+
+  * Upgrade to latest upstream source (very minor bug fix)
+  * Change update-alternatives links to reflect compressed man pages.
+  * postinst: remove bad links in /usr/man/man1.
+
+ -- Chris Fearnley <cjf@netaxs.com>  Fri, 7 Mar 1997 14:41:20 -0500
+
+mawk (1.3.2-3) unstable; urgency=low
+
+  * I accidently built the last mawk from my hacked source :(
+    This version reverts to the pristine upstream (but fails to
+    completely close Bug #4293 -- which was the point of the dubious
+    hack found in mawk-1.3.2-2).  Sorry.  Glad I noticed so soon!
+
+ -- Chris Fearnley <cjf@netaxs.com>  Sun, 3 Nov 1996 22:57:45 -0500
+
+mawk (1.3.2-2) unstable; urgency=low
+
+  * Fixed postinst to install awk and nawk man pages correctly (bug#5001)
+
+ -- Chris Fearnley <cjf@netaxs.com>  Sun, 3 Nov 1996 22:28:56 -0500
+
+mawk (1.3.2-1) unstable; urgency=low
+
+  * upgrade to latest upstream source (solves bug #4293)
+  * development environment: gcc-2.7.2.1-1, libc5-5.2.18-10,
+    libc5-dev-5.2.18-10, binutils-2.6-2, and make-3.74-12
+
+ -- Chris Fearnley <cjf@netaxs.com>  Sat, 28 Sep 1996 22:58:42 -0400
+
+mawk (1.3.1-1) unstable; urgency=low
+
+  * upgrade to latest upstream source
+  * upgrade packaging to Debian Standards-Version 2.1.1.0
+  * i386 development environment: gcc-2.7.2.1-1, libc5-5.2.18-10,
+    libc5-dev-5.2.18-10, binutils-2.6-2, and make-3.74-12
+
+ -- Chris Fearnley <cjf@netaxs.com>  Wed, 18 Sep 1996 14:24:31 -0400
+
+mawk (1.2.2-2) unstable; urgency=low
+
+  * upgrade to latest debian packaging guidelines
+  * provides: awk
+  * mawk is now the default awk/nawk for Debian GNU/Linux
+  * Development environment for i386: gcc-2.7.2-8 libc5-5.2.18-9 make-3.74-12
+  * Section: base ; Priority: important
+
+ -- Chris Fearnley <cjf@netaxs.com>  Wed, 7 Aug 1996 21:51:21 -0400
+
+mawk (1.2.2-1) unstable; urgency=low
+
+  * Upgrade to new upsteam version
+  * Compiled with: gcc-2.7.2-2, binutils-2.6-2, and libc5-5.2.18-1.
+
+ -- Chris Fearnley <cjf@netaxs.com>  Mon, 29 Jan 1996 04:02:39 -0400
+
+mawk (1.2.1-1) unstable; urgency=low
+
+  * added Debian GNU/Linux package maintenance system files
+  * patched Makefile.in to make debianization more flexible
+  * initial release - ELF package
+
+ -- Chris Fearnley <cjf@netaxs.com>  Sun, 3 Dec 1995 00:48:23 -0400
