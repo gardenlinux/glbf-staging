@@ -1,0 +1,10 @@
+# Upstream patches
+
+# Local patches
+local/0001-po-Update-Dutch-translation.patch
+local/0002-build-Fix-cross-compilation-on-musl-based-systems.patch
+local/0003-man-Fix-formatting-markup-for-attr-1.patch
+local/0004-man-Clarify-attr-1-manual-page.patch
+local/0005-man-Mention-the-origins-of-ENOATTR.patch
+local/0006-man-Improve-markup-and-editorial-changes-for-setfatt.patch
+local/0007-man-Use-f-letter-instead-of-f-number-to-select-fonts.patch
