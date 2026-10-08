@@ -1,0 +1,6 @@
+Version: 5
+
+Source: https://archive.hadrons.org/software/libmd/
+Matching-Pattern: libmd-([\d\.-]*)\.tar\.xz
+Pgp-Sig-Url-Mangle: s/$/.asc/
+Update-Script: uupdate
