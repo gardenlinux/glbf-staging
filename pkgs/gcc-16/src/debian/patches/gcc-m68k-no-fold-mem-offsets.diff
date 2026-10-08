@@ -1,0 +1,25 @@
+From 6a616afb8dadcd33506001914f5ca6fa37749b6b Mon Sep 17 00:00:00 2001
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Date: Sun, 8 Jun 2025 07:59:26 +0200
+Subject: [PATCH] Disable fold-mem-offsets, only applied for m68k
+
+---
+ gcc/common.opt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gcc/common.opt b/gcc/common.opt
+index 0e50305dde8..e57dff18af7 100644
+--- a/src/gcc/common.opt
++++ b/src/gcc/common.opt
+@@ -1295,7 +1295,7 @@ Common Var(flag_cprop_registers) Optimization
+ Perform a register copy-propagation optimization pass.
+ 
+ ffold-mem-offsets
+-Common Var(flag_fold_mem_offsets) Init(1) Optimization
++Common Var(flag_fold_mem_offsets) Init(0) Optimization
+ Fold instructions calculating memory offsets to the memory access instruction if possible.
+ 
+ fcrossjumping
+-- 
+2.49.0
+

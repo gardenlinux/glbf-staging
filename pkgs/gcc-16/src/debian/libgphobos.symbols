@@ -1,0 +1,2 @@
+libgdruntime.so.7 #PACKAGE# #MINVER#
+libgphobos.so.7 #PACKAGE# #MINVER#

@@ -1,0 +1,1681 @@
+PR ada/114065, patches v15
+
+In the hope to reduce the rebasing work,
+when a whole file can be kept unchanged in Debian,
+ * files specific to other systems can remain broken
+ * cal.c can remain, it is disabled in Makefile.rtl
+ * declarations of obsolete but unused time types or constants
+the changes affecting it are removed from this patch.
+
+--- a/src/gcc/ada/Makefile.rtl
++++ b/src/gcc/ada/Makefile.rtl
+@@ -754,6 +754,7 @@ GNATRTL_NONTASKING_OBJS= \
+   s-string$(objext) \
+   s-ststop$(objext) \
+   s-tasloc$(objext) \
++  s-c_time$(objext) \
+   s-traceb$(objext) \
+   s-traent$(objext) \
+   s-trasym$(objext) \
+@@ -1416,7 +1417,6 @@ ifeq ($(strip $(filter-out arm% aarch64
+   a-intnam.ads<libgnarl/a-intnam__linux.ads \
+   s-inmaop.adb<libgnarl/s-inmaop__posix.adb \
+   s-intman.adb<libgnarl/s-intman__android.adb \
+-  s-osinte.adb<libgnarl/s-osinte__android.adb \
+   s-osinte.ads<libgnarl/s-osinte__android.ads \
+   s-oslock.ads<libgnat/s-oslock__posix.ads \
+   s-osprim.adb<libgnat/s-osprim__posix.adb \
+@@ -3190,7 +3190,7 @@ LIBGNAT_TARGET_PAIRS += \
+ # library.  LIBGNAT_OBJS is the list of object files for libgnat.
+ # thread.c is special as put into GNATRTL_TASKING_OBJS
+ LIBGNAT_OBJS = adadecode.o adaint.o argv.o aux-io.o 			\
+-  cal.o cio.o cstreams.o ctrl_c.o					\
++  cio.o cstreams.o ctrl_c.o						\
+   env.o errno.o exit.o expect.o final.o rtfinal.o rtinit.o		\
+   init.o initialize.o locales.o mkdir.o					\
+   raise.o seh_init.o socket.o sysdep.o					\
+--- a/src/gcc/ada/libgnarl/a-exetim__posix.adb
++++ b/src/gcc/ada/libgnarl/a-exetim__posix.adb
+@@ -34,6 +34,7 @@
+ with Ada.Task_Identification;  use Ada.Task_Identification;
+ with Ada.Unchecked_Conversion;
+ 
++with System.C_Time;
+ with System.Tasking;
+ with System.OS_Interface; use System.OS_Interface;
+ with System.Task_Primitives.Operations; use System.Task_Primitives.Operations;
+@@ -98,7 +99,7 @@ package body Ada.Execution_Time is
+      (T : Ada.Task_Identification.Task_Id :=
+         Ada.Task_Identification.Current_Task) return CPU_Time
+    is
+-      TS       : aliased timespec;
++      TS       : aliased System.C_Time.timespec;
+       Clock_Id : aliased Interfaces.C.int;
+       Result   : Interfaces.C.int;
+ 
+@@ -112,7 +113,7 @@ package body Ada.Execution_Time is
+ 
+       function clock_gettime
+         (clock_id : Interfaces.C.int;
+-         tp       : access timespec)
++         tp       : access System.C_Time.timespec)
+          return Interfaces.C.int;
+       pragma Import (C, clock_gettime, "clock_gettime");
+       --  Function from the POSIX.1b Realtime Extensions library
+@@ -139,7 +140,7 @@ package body Ada.Execution_Time is
+         (clock_id => Clock_Id, tp => TS'Unchecked_Access);
+       pragma Assert (Result = 0);
+ 
+-      return To_CPU_Time (To_Duration (TS));
++      return To_CPU_Time (System.C_Time.To_Duration (TS));
+    end Clock;
+ 
+    --------------------------
+--- a/src/gcc/ada/libgnarl/s-osinte__gnu.adb
++++ b/src/gcc/ada/libgnarl/s-osinte__gnu.adb
+@@ -93,15 +93,6 @@ package body System.OS_Interface is
+       return 0;
+    end pthread_setschedparam;
+ 
+-   -----------------
+-   -- To_Duration --
+-   -----------------
+-
+-   function To_Duration (TS : timespec) return Duration is
+-   begin
+-      return Duration (TS.tv_sec) + Duration (TS.tv_nsec) / 10#1#E9;
+-   end To_Duration;
+-
+    ------------------------
+    -- To_Target_Priority --
+    ------------------------
+@@ -113,28 +104,4 @@ package body System.OS_Interface is
+       return Interfaces.C.int (Prio);
+    end To_Target_Priority;
+ 
+-   -----------------
+-   -- To_Timespec --
+-   -----------------
+-
+-   function To_Timespec (D : Duration) return timespec is
+-      S : time_t;
+-      F : Duration;
+-
+-   begin
+-      S := time_t (Long_Long_Integer (D));
+-      F := D - Duration (S);
+-
+-      --  If F has negative value due to a round-up, adjust for positive F
+-      --  value.
+-
+-      if F < 0.0 then
+-         S := S - 1;
+-         F := F + 1.0;
+-      end if;
+-
+-      return timespec'(tv_sec => S,
+-                       tv_nsec => long (Long_Long_Integer (F * 10#1#E9)));
+-   end To_Timespec;
+-
+ end System.OS_Interface;
+--- a/src/gcc/ada/libgnarl/s-osinte__gnu.ads
++++ b/src/gcc/ada/libgnarl/s-osinte__gnu.ads
+@@ -42,8 +42,8 @@ with Ada.Unchecked_Conversion;
+ 
+ with Interfaces.C;
+ 
++with System.C_Time;
+ with System.OS_Locks;
+-with System.Parameters;
+ 
+ package System.OS_Interface is
+    pragma Preelaborate;
+@@ -210,9 +210,7 @@ package System.OS_Interface is
+    Time_Slice_Supported : constant Boolean := True;
+    --  Indicates whether time slicing is supported (i.e SCHED_RR is supported)
+ 
+-   type timespec is private;
+-
+-   function nanosleep (rqtp, rmtp : access timespec) return int;
++   function nanosleep (rqtp, rmtp : access C_Time.timespec) return int;
+    pragma Import (C, nanosleep, "nanosleep");
+ 
+    type clockid_t is new int;
+@@ -221,21 +219,15 @@ package System.OS_Interface is
+    --  From: /usr/include/time.h
+    function clock_gettime
+      (clock_id : clockid_t;
+-      tp       : access timespec)
++      tp       : access C_Time.timespec)
+       return int;
+    pragma Import (C, clock_gettime, "clock_gettime");
+ 
+    function clock_getres
+      (clock_id : clockid_t;
+-      res      : access timespec) return int;
++      res      : access C_Time.timespec) return int;
+    pragma Import (C, clock_getres, "clock_getres");
+ 
+-   function To_Duration (TS : timespec) return Duration;
+-   pragma Inline (To_Duration);
+-
+-   function To_Timespec (D : Duration) return timespec;
+-   pragma Inline (To_Timespec);
+-
+    --  From: /usr/include/unistd.h
+    function sysconf (name : int) return long;
+    pragma Import (C, sysconf);
+@@ -487,7 +479,7 @@ package System.OS_Interface is
+    function pthread_cond_timedwait
+      (cond    : access pthread_cond_t;
+       mutex   : access pthread_mutex_t;
+-      abstime : access timespec) return int;
++      abstime : access C_Time.timespec) return int;
+    pragma Import (C, pthread_cond_timedwait, "pthread_cond_timedwait");
+ 
+    Relative_Timed_Wait : constant Boolean := False;
+@@ -656,15 +648,6 @@ private
+ 
+    type pid_t is new int;
+ 
+-   type time_t is range -2 ** (System.Parameters.time_t_bits - 1)
+-     .. 2 ** (System.Parameters.time_t_bits - 1) - 1;
+-
+-   type timespec is record
+-      tv_sec  : time_t;
+-      tv_nsec : long;
+-   end record;
+-   pragma Convention (C, timespec);
+-
+    --  From: /usr/include/pthread/pthreadtypes.h:
+    --  typedef struct __pthread_attr pthread_attr_t;
+    --  /usr/include/i386-gnu/bits/thread-attr.h: struct __pthread_attr...
+--- a/src/gcc/ada/libgnarl/s-osinte__kfreebsd-gnu.ads
++++ b/src/gcc/ada/libgnarl/s-osinte__kfreebsd-gnu.ads
+@@ -42,8 +42,8 @@ with Ada.Unchecked_Conversion;
+ 
+ with Interfaces.C;
+ 
++with System.C_Time;
+ with System.OS_Locks;
+-with System.Parameters;
+ 
+ package System.OS_Interface is
+    pragma Preelaborate;
+@@ -205,9 +205,7 @@ package System.OS_Interface is
+    Time_Slice_Supported : constant Boolean := True;
+    --  Indicates whether time slicing is supported (i.e SCHED_RR is supported)
+ 
+-   type timespec is private;
+-
+-   function nanosleep (rqtp, rmtp : access timespec) return int;
++   function nanosleep (rqtp, rmtp : access C_Time.timespec) return int;
+    pragma Import (C, nanosleep, "nanosleep");
+ 
+    type clockid_t is new int;
+@@ -215,21 +213,15 @@ package System.OS_Interface is
+ 
+    function clock_gettime
+      (clock_id : clockid_t;
+-      tp       : access timespec)
++      tp       : access C_Time.timespec)
+       return int;
+    pragma Import (C, clock_gettime, "clock_gettime");
+ 
+    function clock_getres
+      (clock_id : clockid_t;
+-      res      : access timespec) return int;
++      res      : access C_Time.timespec) return int;
+    pragma Import (C, clock_getres, "clock_getres");
+ 
+-   function To_Duration (TS : timespec) return Duration;
+-   pragma Inline (To_Duration);
+-
+-   function To_Timespec (D : Duration) return timespec;
+-   pragma Inline (To_Timespec);
+-
+    function sysconf (name : int) return long;
+    pragma Import (C, sysconf);
+ 
+@@ -430,7 +422,7 @@ package System.OS_Interface is
+    function pthread_cond_timedwait
+      (cond    : access pthread_cond_t;
+       mutex   : access pthread_mutex_t;
+-      abstime : access timespec) return int;
++      abstime : access C_Time.timespec) return int;
+    pragma Import (C, pthread_cond_timedwait, "pthread_cond_timedwait");
+ 
+    --------------------------
+@@ -602,15 +594,6 @@ private
+ 
+    type pid_t is new int;
+ 
+-   type time_t is range -2 ** (System.Parameters.time_t_bits - 1)
+-     .. 2 ** (System.Parameters.time_t_bits - 1) - 1;
+-
+-   type timespec is record
+-      tv_sec  : time_t;
+-      tv_nsec : long;
+-   end record;
+-   pragma Convention (C, timespec);
+-
+    type pthread_attr_t is record
+       detachstate   : int;
+       schedpolicy   : int;
+--- a/src/gcc/ada/libgnarl/s-osinte__linux.ads
++++ b/src/gcc/ada/libgnarl/s-osinte__linux.ads
+@@ -42,6 +42,7 @@ with Ada.Unchecked_Conversion;
+ 
+ with Interfaces.C;
+ 
++with System.C_Time;
+ with System.Linux;
+ with System.OS_Constants;
+ with System.OS_Locks;
+@@ -54,8 +55,6 @@ package System.OS_Interface is
+ 
+    pragma Linker_Options ("-lpthread");
+ 
+-   use type System.Linux.time_t;
+-
+    subtype int            is Interfaces.C.int;
+    subtype char           is Interfaces.C.char;
+    subtype short          is Interfaces.C.short;
+@@ -229,26 +228,17 @@ package System.OS_Interface is
+    -- Time --
+    ----------
+ 
+-   subtype time_t    is System.Linux.time_t;
+-   subtype timespec  is System.Linux.timespec;
+-   subtype timeval   is System.Linux.timeval;
+    subtype clockid_t is System.Linux.clockid_t;
+ 
+    function clock_gettime
+-     (clock_id : clockid_t; tp : access timespec) return int;
++     (clock_id : clockid_t; tp : access C_Time.timespec) return int;
+    pragma Import (C, clock_gettime, "clock_gettime");
+ 
+    function clock_getres
+      (clock_id : clockid_t;
+-      res      : access timespec) return int;
++      res      : access C_Time.timespec) return int;
+    pragma Import (C, clock_getres, "clock_getres");
+ 
+-   function To_Duration (TS : timespec) return Duration;
+-   pragma Inline (To_Duration);
+-
+-   function To_Timespec (D : Duration) return timespec;
+-   pragma Inline (To_Timespec);
+-
+    function sysconf (name : int) return long;
+    pragma Import (C, sysconf);
+ 
+@@ -457,7 +447,7 @@ package System.OS_Interface is
+    function pthread_cond_timedwait
+      (cond    : access pthread_cond_t;
+       mutex   : access pthread_mutex_t;
+-      abstime : access timespec) return int;
++      abstime : access C_Time.timespec) return int;
+    pragma Import (C, pthread_cond_timedwait, "pthread_cond_timedwait");
+ 
+    --------------------------
+--- a/src/gcc/ada/libgnarl/s-osinte__posix.adb
++++ b/src/gcc/ada/libgnarl/s-osinte__posix.adb
+@@ -58,15 +58,6 @@ package body System.OS_Interface is
+       null;
+    end pthread_init;
+ 
+-   -----------------
+-   -- To_Duration --
+-   -----------------
+-
+-   function To_Duration (TS : timespec) return Duration is
+-   begin
+-      return Duration (TS.tv_sec) + Duration (TS.tv_nsec) / 10#1#E9;
+-   end To_Duration;
+-
+    ------------------------
+    -- To_Target_Priority --
+    ------------------------
+@@ -78,28 +69,4 @@ package body System.OS_Interface is
+       return Interfaces.C.int (Prio);
+    end To_Target_Priority;
+ 
+-   -----------------
+-   -- To_Timespec --
+-   -----------------
+-
+-   function To_Timespec (D : Duration) return timespec is
+-      S : time_t;
+-      F : Duration;
+-
+-   begin
+-      S := time_t (Long_Long_Integer (D));
+-      F := D - Duration (S);
+-
+-      --  If F has negative value due to a round-up, adjust for positive F
+-      --  value.
+-
+-      if F < 0.0 then
+-         S := S - 1;
+-         F := F + 1.0;
+-      end if;
+-
+-      return timespec'(tv_sec => S,
+-                       tv_nsec => long (Long_Long_Integer (F * 10#1#E9)));
+-   end To_Timespec;
+-
+ end System.OS_Interface;
+--- a/src/gcc/ada/libgnarl/s-osinte__x32.adb
++++ b/src/gcc/ada/libgnarl/s-osinte__x32.adb
+@@ -59,15 +59,6 @@ package body System.OS_Interface is
+       null;
+    end pthread_init;
+ 
+-   -----------------
+-   -- To_Duration --
+-   -----------------
+-
+-   function To_Duration (TS : timespec) return Duration is
+-   begin
+-      return Duration (TS.tv_sec) + Duration (TS.tv_nsec) / 10#1#E9;
+-   end To_Duration;
+-
+    ------------------------
+    -- To_Target_Priority --
+    ------------------------
+@@ -79,28 +70,4 @@ package body System.OS_Interface is
+       return Interfaces.C.int (Prio);
+    end To_Target_Priority;
+ 
+-   -----------------
+-   -- To_Timespec --
+-   -----------------
+-
+-   function To_Timespec (D : Duration) return timespec is
+-      S : time_t;
+-      F : Duration;
+-
+-   begin
+-      S := time_t (Long_Long_Integer (D));
+-      F := D - Duration (S);
+-
+-      --  If F has negative value due to a round-up, adjust for positive F
+-      --  value.
+-
+-      if F < 0.0 then
+-         S := S - 1;
+-         F := F + 1.0;
+-      end if;
+-
+-      return timespec'(tv_sec => S,
+-                       tv_nsec => Long_Long_Integer (F * 10#1#E9));
+-   end To_Timespec;
+-
+ end System.OS_Interface;
+--- a/src/gcc/ada/libgnarl/s-tpopmo.adb
++++ b/src/gcc/ada/libgnarl/s-tpopmo.adb
+@@ -31,6 +31,8 @@
+ 
+ --  This is the Monotonic version of this package for Posix and Linux targets.
+ 
++with System.C_Time;
++
+ separate (System.Task_Primitives.Operations)
+ package body Monotonic is
+ 
+@@ -54,14 +56,14 @@ package body Monotonic is
+    ---------------------
+ 
+    function Monotonic_Clock return Duration is
+-      TS     : aliased timespec;
++      TS     : aliased C_Time.timespec;
+       Result : Interfaces.C.int;
+    begin
+       Result := clock_gettime
+         (clock_id => OSC.CLOCK_RT_Ada, tp => TS'Unchecked_Access);
+       pragma Assert (Result = 0);
+ 
+-      return To_Duration (TS);
++      return C_Time.To_Duration (TS);
+    end Monotonic_Clock;
+ 
+    -------------------
+@@ -69,14 +71,14 @@ package body Monotonic is
+    -------------------
+ 
+    function RT_Resolution return Duration is
+-      TS     : aliased timespec;
++      TS     : aliased C_Time.timespec;
+       Result : Interfaces.C.int;
+ 
+    begin
+       Result := clock_getres (OSC.CLOCK_REALTIME, TS'Unchecked_Access);
+       pragma Assert (Result = 0);
+ 
+-      return To_Duration (TS);
++      return C_Time.To_Duration (TS);
+    end RT_Resolution;
+ 
+    ----------------------
+@@ -150,7 +152,7 @@ package body Monotonic is
+       Abs_Time   : Duration;
+       P_Abs_Time : Duration;
+ 
+-      Request    : aliased timespec;
++      Request    : aliased C_Time.timespec;
+       Result     : Interfaces.C.int;
+       Exit_Outer : Boolean := False;
+ 
+@@ -184,7 +186,7 @@ package body Monotonic is
+             end if;
+             pragma Warnings (On);
+ 
+-            Request := To_Timespec (P_Abs_Time);
++            Request := C_Time.To_Timespec (P_Abs_Time);
+ 
+             Inner : loop
+                exit Outer
+@@ -236,7 +238,7 @@ package body Monotonic is
+       Check_Time : Duration;
+       Abs_Time   : Duration;
+       P_Abs_Time : Duration;
+-      Request    : aliased timespec;
++      Request    : aliased C_Time.timespec;
+ 
+       Result     : Interfaces.C.int;
+       Exit_Outer : Boolean := False;
+@@ -271,7 +273,7 @@ package body Monotonic is
+             end if;
+             pragma Warnings (On);
+ 
+-            Request := To_Timespec (P_Abs_Time);
++            Request := C_Time.To_Timespec (P_Abs_Time);
+ 
+             Inner : loop
+                exit Outer
+--- a/src/gcc/ada/libgnat/g-calend.adb
++++ b/src/gcc/ada/libgnat/g-calend.adb
+@@ -29,11 +29,8 @@
+ --                                                                          --
+ ------------------------------------------------------------------------------
+ 
+-with Interfaces.C.Extensions;
+-
+ package body GNAT.Calendar is
+    use Ada.Calendar;
+-   use Interfaces;
+ 
+    -----------------
+    -- Day_In_Year --
+@@ -328,61 +325,6 @@ package body GNAT.Calendar is
+            Time_Zone    => 0);
+    end Time_Of_At_Locale;
+ 
+-   -----------------
+-   -- To_Duration --
+-   -----------------
+-
+-   function To_Duration (T : not null access timeval) return Duration is
+-
+-      procedure timeval_to_duration
+-        (T    : not null access timeval;
+-         sec  : not null access C.Extensions.long_long;
+-         usec : not null access C.long);
+-      pragma Import (C, timeval_to_duration, "__gnat_timeval_to_duration");
+-
+-      Micro : constant := 10**6;
+-      sec   : aliased C.Extensions.long_long;
+-      usec  : aliased C.long;
+-
+-   begin
+-      timeval_to_duration (T, sec'Access, usec'Access);
+-      pragma Annotate (CodePeer, Modified, sec);
+-      pragma Annotate (CodePeer, Modified, usec);
+-
+-      return Duration (sec) + Duration (usec) / Micro;
+-   end To_Duration;
+-
+-   ----------------
+-   -- To_Timeval --
+-   ----------------
+-
+-   function To_Timeval (D : Duration) return timeval is
+-
+-      procedure duration_to_timeval
+-        (Sec  : C.Extensions.long_long;
+-         Usec : C.long;
+-         T : not null access timeval);
+-      pragma Import (C, duration_to_timeval, "__gnat_duration_to_timeval");
+-
+-      Micro  : constant := 10**6;
+-      Result : aliased timeval;
+-      sec    : C.Extensions.long_long;
+-      usec   : C.long;
+-
+-   begin
+-      if D = 0.0 then
+-         sec  := 0;
+-         usec := 0;
+-      else
+-         sec  := C.Extensions.long_long (D - 0.5);
+-         usec := C.long ((D - Duration (sec)) * Micro - 0.5);
+-      end if;
+-
+-      duration_to_timeval (sec, usec, Result'Access);
+-
+-      return Result;
+-   end To_Timeval;
+-
+    ------------------
+    -- Week_In_Year --
+    ------------------
+--- a/src/gcc/ada/libgnat/g-calend.ads
++++ b/src/gcc/ada/libgnat/g-calend.ads
+@@ -40,7 +40,7 @@
+ --  Day_Of_Week, Day_In_Year and Week_In_Year.
+ 
+ with Ada.Calendar.Formatting;
+-with Interfaces.C;
++with System.C_Time;
+ 
+ package GNAT.Calendar is
+ 
+@@ -145,24 +145,19 @@ package GNAT.Calendar is
+    --  Return the week number as defined in ISO 8601 along with the year in
+    --  which the week occurs.
+ 
+-   --  C timeval conversion
++   subtype timeval is System.C_Time.timeval;
++   --  Deprecated.  Please use C_Time directly.
+ 
+-   --  C timeval represent a duration (used in Select for example). This
+-   --  structure is composed of a number of seconds and a number of micro
+-   --  seconds. The timeval structure is not exposed here because its
+-   --  definition is target dependent. Interface to C programs is done via a
+-   --  pointer to timeval structure.
+-
+-   type timeval is private;
+-
+-   function To_Duration (T : not null access timeval) return Duration;
+-   function To_Timeval  (D : Duration) return timeval;
++   function To_Duration (T : not null access timeval)
++                        return System.C_Time.Non_Negative_Duration
++   is (System.C_Time.To_Duration (T.all));
++   --  Deprecated.  Please use C_Time directly.
++
++   function To_Timeval (D : System.C_Time.Non_Negative_Duration) return timeval
++   renames System.C_Time.To_Timeval;
++   --  Deprecated.  Please use C_Time directly.
+ 
+ private
+-   --  This is a dummy declaration that should be the largest possible timeval
+-   --  structure of all supported targets.
+-
+-   type timeval is array (1 .. 3) of Interfaces.C.long;
+ 
+    function Julian_Day
+      (Year  : Ada.Calendar.Year_Number;
+--- a/src/gcc/ada/libgnat/g-socket.adb
++++ b/src/gcc/ada/libgnat/g-socket.adb
+@@ -45,6 +45,7 @@ pragma Warnings (Off, GNAT.Sockets.Linke
+ with GNAT.Sockets.Poll;
+ 
+ with System;               use System;
++with System.C_Time;
+ with System.Communication; use System.Communication;
+ with System.CRTL;          use System.CRTL;
+ with System.Task_Lock;
+@@ -179,13 +180,6 @@ package body GNAT.Sockets is
+    function Value (S : System.Address) return String;
+    --  Same as Interfaces.C.Strings.Value but taking a System.Address
+ 
+-   function To_Timeval (Val : Timeval_Duration) return Timeval;
+-   --  Separate Val in seconds and microseconds
+-
+-   function To_Duration (Val : Timeval) return Timeval_Duration;
+-   --  Reconstruct a Duration value from a Timeval record (seconds and
+-   --  microseconds).
+-
+    function Dedot (Value : String) return String
+    is (if Value /= "" and then Value (Value'Last) = '.'
+        then Value (Value'First .. Value'Last - 1)
+@@ -528,7 +522,7 @@ package body GNAT.Sockets is
+       Res  : C.int;
+       Last : C.int;
+       RSig : Socket_Type := No_Socket;
+-      TVal : aliased Timeval;
++      TVal : aliased System.C_Time.timeval;
+       TPtr : Timeval_Access;
+ 
+    begin
+@@ -543,7 +537,7 @@ package body GNAT.Sockets is
+       if Timeout = Forever then
+          TPtr := null;
+       else
+-         TVal := To_Timeval (Timeout);
++         TVal := System.C_Time.To_Timeval (Timeout);
+          TPtr := TVal'Unchecked_Access;
+       end if;
+ 
+@@ -1423,7 +1417,7 @@ package body GNAT.Sockets is
+       U4  : aliased C.unsigned;
+       V1  : aliased C.unsigned_char;
+       VS  : aliased C.char_array (1 .. NS); -- for devices name
+-      VT  : aliased Timeval;
++      VT  : aliased System.C_Time.timeval;
+       Len : aliased C.int;
+       Add : System.Address;
+       Res : C.int;
+@@ -1596,8 +1590,10 @@ package body GNAT.Sockets is
+                   Opt.Timeout := Duration (U4) / 1000;
+                end if;
+ 
++            elsif System.C_Time.In_Duration (VT) then
++               Opt.Timeout := System.C_Time.To_Duration (VT);
+             else
+-               Opt.Timeout := To_Duration (VT);
++               Opt.Timeout := Forever;
+             end if;
+ 
+          when Bind_To_Device =>
+@@ -2633,7 +2629,7 @@ package body GNAT.Sockets is
+               (1 .. (if Option.Name = Bind_To_Device
+                      then C.size_t (ASU.Length (Option.Device) + 1)
+                      else 0));
+-      VT  : aliased Timeval;
++      VT  : aliased System.C_Time.timeval;
+       Len : C.int;
+       Add : System.Address := Null_Address;
+       Res : C.int;
+@@ -2767,7 +2763,7 @@ package body GNAT.Sockets is
+                end if;
+ 
+             else
+-               VT  := To_Timeval (Option.Timeout);
++               VT  := System.C_Time.To_Timeval (Option.Timeout);
+                Len := VT'Size / 8;
+                Add := VT'Address;
+             end if;
+@@ -2865,33 +2861,6 @@ package body GNAT.Sockets is
+       return Integer (Socket);
+    end To_C;
+ 
+-   -----------------
+-   -- To_Duration --
+-   -----------------
+-
+-   function To_Duration (Val : Timeval) return Timeval_Duration is
+-      Max_D : constant Long_Long_Integer := Long_Long_Integer (Forever - 0.5);
+-      Tv_sec_64 : constant Boolean := SOSC.SIZEOF_tv_sec = 8;
+-      --  Need to separate this condition into the constant declaration to
+-      --  avoid GNAT warning about "always true" or "always false".
+-   begin
+-      if Tv_sec_64 then
+-         --  Check for possible Duration overflow when Tv_Sec field is 64 bit
+-         --  integer.
+-
+-         if Val.Tv_Sec > time_t (Max_D)
+-             or else
+-           (Val.Tv_Sec = time_t (Max_D)
+-              and then
+-            Val.Tv_Usec > suseconds_t ((Forever - Duration (Max_D)) * 1E6))
+-         then
+-            return Forever;
+-         end if;
+-      end if;
+-
+-      return Duration (Val.Tv_Sec) + Duration (Val.Tv_Usec) * 1.0E-6;
+-   end To_Duration;
+-
+    -------------------
+    -- To_Host_Entry --
+    -------------------
+@@ -3041,36 +3010,6 @@ package body GNAT.Sockets is
+       return HN.Name (1 .. HN.Length);
+    end To_String;
+ 
+-   ----------------
+-   -- To_Timeval --
+-   ----------------
+-
+-   function To_Timeval (Val : Timeval_Duration) return Timeval is
+-      S  : time_t;
+-      uS : suseconds_t;
+-
+-   begin
+-      --  If zero, set result as zero (otherwise it gets rounded down to -1)
+-
+-      if Val = 0.0 then
+-         S  := 0;
+-         uS := 0;
+-
+-      --  Normal case where we do round down
+-
+-      else
+-         S  := time_t (Val - 0.5);
+-         uS := suseconds_t (1_000_000 * (Val - Selector_Duration (S)) - 0.5);
+-
+-         if uS = -1 then
+-            --  It happen on integer duration
+-            uS := 0;
+-         end if;
+-      end if;
+-
+-      return (S, uS);
+-   end To_Timeval;
+-
+    -----------
+    -- Value --
+    -----------
+--- a/src/gcc/ada/libgnat/g-socthi.adb
++++ b/src/gcc/ada/libgnat/g-socthi.adb
+@@ -40,6 +40,8 @@ with GNAT.Task_Lock;
+ 
+ with Interfaces.C; use Interfaces.C;
+ 
++with System.C_Time;
++
+ package body GNAT.Sockets.Thin is
+ 
+    Non_Blocking_Sockets : aliased Fd_Set;
+@@ -215,7 +217,7 @@ package body GNAT.Sockets.Thin is
+       declare -- unreachable if Thread_Blocking_IO is statically True
+          pragma Warnings (On, "unreachable code");
+          WSet : aliased Fd_Set;
+-         Now  : aliased Timeval;
++         Now  : aliased System.C_Time.timeval;
+ 
+       begin
+          Reset_Socket_Set (WSet'Access);
+--- a/src/gcc/ada/libgnat/g-sothco.ads
++++ b/src/gcc/ada/libgnat/g-sothco.ads
+@@ -34,7 +34,7 @@
+ 
+ with Ada.Unchecked_Conversion;
+ with Interfaces.C.Strings;
+-with System.Parameters;
++with System.C_Time;
+ 
+ package GNAT.Sockets.Thin_Common is
+ 
+@@ -44,31 +44,13 @@ package GNAT.Sockets.Thin_Common is
+    Success : constant C.int :=  0;
+    Failure : constant C.int := -1;
+ 
+-   type time_t is
+-     range -2 ** (System.Parameters.time_t_bits - 1)
+-        .. 2 ** (System.Parameters.time_t_bits - 1) - 1;
+-   for time_t'Size use System.Parameters.time_t_bits;
+-   pragma Convention (C, time_t);
+-
+-   type suseconds_t is
+-     range -2 ** (8 * SOSC.SIZEOF_tv_usec - 1)
+-         .. 2 ** (8 * SOSC.SIZEOF_tv_usec - 1) - 1;
+-   for suseconds_t'Size use 8 * SOSC.SIZEOF_tv_usec;
+-   pragma Convention (C, suseconds_t);
+-
+-   type Timeval is record
+-      Tv_Sec  : time_t;
+-      Tv_Usec : suseconds_t;
+-   end record;
+-   pragma Convention (C, Timeval);
+-
+-   type Timeval_Access is access all Timeval;
++   type Timeval_Access is access all System.C_Time.timeval;
+    pragma Convention (C, Timeval_Access);
+ 
+    type socklen_t is mod 2 ** (8 * SOSC.SIZEOF_socklen_t);
+    for socklen_t'Size use (8 * SOSC.SIZEOF_socklen_t);
+ 
+-   Immediat : constant Timeval := (0, 0);
++   Immediat : System.C_Time.timeval renames System.C_Time.Timeval_Zero;
+ 
+    -------------------------------------------
+    -- Mapping tables to low level constants --
+--- a/src/gcc/ada/libgnat/g-spogwa.adb
++++ b/src/gcc/ada/libgnat/g-spogwa.adb
+@@ -29,7 +29,7 @@
+ --                                                                          --
+ ------------------------------------------------------------------------------
+ 
+-with GNAT.Sockets.Thin_Common;
++with System.C_Time;
+ 
+ procedure GNAT.Sockets.Poll.G_Wait
+   (Fds : in out Set; Timeout : Interfaces.C.int; Result : out Integer)
+@@ -41,11 +41,11 @@ is
+       readfds   : access FD_Set_Type;
+       writefds  : access FD_Set_Type;
+       exceptfds : access FD_Set_Type;
+-      timeout   : access Thin_Common.Timeval) return Integer
++      timeout   : access System.C_Time.timeval) return Integer
+      with Import => True, Convention => Stdcall, External_Name => "select";
+ 
+-   Timeout_V : aliased Thin_Common.Timeval;
+-   Timeout_A : access Thin_Common.Timeval;
++   Timeout_V : aliased System.C_Time.timeval;
++   Timeout_A : access System.C_Time.timeval;
+ 
+    Rfds      : aliased FD_Set_Type;
+    Rcount    : Natural := 0;
+@@ -63,8 +63,7 @@ begin
+ 
+    if Timeout >= 0 then
+       Timeout_A := Timeout_V'Access;
+-      Timeout_V.Tv_Sec  := Thin_Common.time_t  (Timeout / 1000);
+-      Timeout_V.Tv_Usec := Thin_Common.suseconds_t (Timeout rem 1000 * 1000);
++      Timeout_V := System.C_Time.Milliseconds_To_Timeval (Timeout);
+    end if;
+ 
+    Reset_Socket_Set (Rfds);
+--- /dev/null
++++ b/src/gcc/ada/libgnat/s-c_time.adb
+@@ -0,0 +1,248 @@
++------------------------------------------------------------------------------
++--                                                                          --
++--                 GNAT RUN-TIME LIBRARY (GNARL) COMPONENTS                 --
++--                                                                          --
++--                  S Y S T E M . C _ T I M E                               --
++--                                                                          --
++--                                  B o d y                                 --
++--                                                                          --
++--          Copyright (C) 1998-2025, Free Software Foundation, Inc.         --
++--                                                                          --
++-- GNARL is free software; you can  redistribute it  and/or modify it under --
++-- terms of the  GNU General Public License as published  by the Free Soft- --
++-- ware  Foundation;  either version 3,  or (at your option) any later ver- --
++-- sion.  GNAT is distributed in the hope that it will be useful, but WITH- --
++-- OUT ANY WARRANTY;  without even the  implied warranty of MERCHANTABILITY --
++-- or FITNESS FOR A PARTICULAR PURPOSE.                                     --
++--                                                                          --
++-- As a special exception under Section 7 of GPL version 3, you are granted --
++-- additional permissions described in the GCC Runtime Library Exception,   --
++-- version 3.1, as published by the Free Software Foundation.               --
++--                                                                          --
++-- You should have received a copy of the GNU General Public License and    --
++-- a copy of the GCC Runtime Library Exception along with this program;     --
++-- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see    --
++-- <http://www.gnu.org/licenses/>.                                          --
++--                                                                          --
++-- GNARL was developed by the GNARL team at Florida State University.       --
++-- Extensive contributions were provided by Ada Core Technologies, Inc.     --
++--                                                                          --
++------------------------------------------------------------------------------
++
++package body System.C_Time is
++
++   --  Two Duration representations are described in targparm.ads.
++   --  Size       Delta       Last = (2**(Size - 1) - 1) * Delta
++   --   32    0.02                   42_949_672.94
++   --   64    0.000_000_001       9_223_372_036.854_775_807
++
++   --  The overflows listed in comments must raise Constraint_Error.
++   pragma Unsuppress (Overflow_Check);
++
++   -----------------
++   -- In_Duration --
++   -----------------
++
++   function In_Duration (T : timeval) return Boolean is
++
++      --  Mimic To_Timeval (Duration'Last), except that
++      --   * this computation happens at compile time
++      --   * Sec may be far above MAX_tv_sec
++      --   * on 64 bits, Usec is truncated instead of rounded up
++      Sec  : constant := (if Duration'Size = 64
++                          then (2**63 - 1)  /  1_000_000_000
++                          else (2**31 - 1)  /             50);
++      Usec : constant := (if Duration'Size = 64
++                          then (2**63 - 1) mod 1_000_000_000 / 1_000
++                          else (2**31 - 1) mod            50 * 20_000);
++
++      pragma Warnings (Off, "condition is always");
++      Dur_Covers_Tv_Sec : constant Boolean := OS_Constants.MAX_tv_sec < Sec;
++      pragma Warnings (On, "condition is always");
++
++      --  When Duration'Size = 64 and time_t'Size = 32, the compiler
++      --  complains that Sec does not fit in time_t, hence cannot be
++      --  compared with T.tv_sec.  But then Dur_Covers_Tv_Sec is True
++      --  and the following comparisons are skipped.
++      Maybe_Sec : constant := (if Dur_Covers_Tv_Sec then 1 else Sec);
++   begin
++      return Dur_Covers_Tv_Sec
++        or else  T.tv_sec < Maybe_Sec
++        or else (T.tv_sec = Maybe_Sec and then T.tv_usec <= Usec);
++   end In_Duration;
++
++   -----------------------------
++   -- Milliseconds_To_Timeval --
++   -----------------------------
++
++   function Milliseconds_To_Timeval (M : Non_Negative_Int) return timeval is
++      use Interfaces.C;
++      Q : constant int range 0 .. int'Last / 1_000 := M  /  1_000;
++      R : constant int range 0 .. 999              := M mod 1_000;
++   begin
++      return (tv_sec  => time_t (Q),
++              tv_usec => 1_000 * usec_t (R));
++   end Milliseconds_To_Timeval;
++
++   -----------------------------
++   -- Nanoseconds_To_Timespec --
++   -----------------------------
++
++   function Nanoseconds_To_Timespec (N : Non_Negative_Int) return timespec is
++      use Interfaces.C;
++      Q : constant int range 0 .. int'Last / 10**9 := N  /  10**9;
++      R : constant int range 0 .. 999_999_999      := N mod 10**9;
++   begin
++      return (tv_sec  => time_t (Q),
++              tv_nsec => nsec_t (R));
++   end Nanoseconds_To_Timespec;
++
++   -----------------
++   -- To_Duration --
++   -----------------
++
++   function To_Duration (T : timeval) return Non_Negative_Duration is
++      Usec : usec_t range 0 .. 1_009_999;
++      Frac : Duration range 0.0 .. 1.0;
++   begin
++      if Duration'Size = 64 then
++         Usec := T.tv_usec;
++      else
++         --  Fix the rounding (999_999.0 / 1_000_000 = 0.98)
++         --  with a bias of half Duration'Small = 10 ms.
++         Usec := T.tv_usec + 10_000;
++      end if;
++      Frac := Duration (Usec) / 1_000_000;
++
++      return Duration (T.tv_sec) + Frac;
++      --  Both the conversion and the addition may overflow.
++   end To_Duration;
++
++   function To_Duration (T : timespec) return Non_Negative_Duration is
++      Frac : Duration range 0.0 .. 1.0;
++   begin
++      if Duration'Size = 64 then
++         Frac := Duration (T.tv_nsec) / 1_000_000_000;
++      else
++         --  Avoid an overflow (Duration'Last < 999_999_999).
++         --  Fix the rounding (999_999_999.0 / 1_000_000_000 = 0.98)
++         --  with a bias of half Duration'Small = 10 ms.
++         Frac := Duration (T.tv_nsec / 10_000_000 + 1) / 100;
++      end if;
++
++      return Duration (T.tv_sec) + Frac;
++      --  Both the conversion and the addition may overflow.
++   end To_Duration;
++
++   function To_Duration (tv_sec  : Tv_Sec_Long;
++                         tv_nsec : Tv_Nsec_Long)
++                        return Non_Negative_Duration is
++   begin
++      return To_Duration (timespec'(tv_sec  => time_t (tv_sec),
++                                    tv_nsec => nsec_t (tv_nsec)));
++   end To_Duration;
++
++   function To_Duration (tv_sec  : Tv_Sec_Long_Long;
++                         tv_nsec : Tv_Nsec_Long)
++                        return Non_Negative_Duration is
++   begin
++      return To_Duration (timespec'(tv_sec  => time_t (tv_sec),
++                                    tv_nsec => nsec_t (tv_nsec)));
++   end To_Duration;
++
++   ------------------------
++   -- To_Struct_Timespec --
++   ------------------------
++
++   procedure To_Struct_Timespec (D       : Non_Negative_Duration;
++                                 tv_sec  : out Tv_Sec_Long;
++                                 tv_nsec : out Tv_Nsec_Long) is
++      T : constant timespec := To_Timespec (D);
++   begin
++      tv_sec  := Tv_Sec_Long (T.tv_sec);  --  May overflow Interfaces.C.long.
++      tv_nsec := Tv_Nsec_Long (T.tv_nsec);
++   end To_Struct_Timespec;
++
++   procedure To_Struct_Timespec (D       : Non_Negative_Duration;
++                                 tv_sec  : out Tv_Sec_Long_Long;
++                                 tv_nsec : out Tv_Nsec_Long) is
++      T : constant timespec := To_Timespec (D);
++   begin
++      tv_sec  := Tv_Sec_Long_Long (T.tv_sec);
++      tv_nsec := Tv_Nsec_Long (T.tv_nsec);
++   end To_Struct_Timespec;
++
++   -----------------
++   -- To_Timespec --
++   -----------------
++
++   function To_Timespec (T : timeval) return timespec is
++   begin
++      return (tv_sec  => T.tv_sec,
++              tv_nsec => 1_000 * nsec_t (T.tv_usec));
++   end To_Timespec;
++
++   function To_Timespec (D : Non_Negative_Duration) return timespec is
++      --  See To_Timeval.
++      Dm1  : constant Duration range -1.0 .. Duration'Last - 1.0 := D - 1.0;
++      Sec  : constant time_t range -1 .. time_t'Last := time_t (Dm1);
++      Frac : constant Duration range -0.5 .. 0.5 := Dm1 - Duration (Sec);
++      Nsec : nsec_t range -500_000_000 .. 500_000_000;
++   begin
++      if Duration'Size = 64 then
++         Nsec := nsec_t (1_000_000_000 * Frac);
++      else
++         --  Duration'Last < 500_000_000 so there is an overflow issue,
++         --  easy to solve because Frac has few significative digits.
++         Nsec := 20_000_000 * nsec_t (50 * Frac);
++      end if;
++      if Nsec < 0 then
++         return (tv_sec => Sec,     tv_nsec => Nsec + 1_000_000_000);
++      else
++         return (tv_sec => Sec + 1, tv_nsec => Nsec);
++      end if;
++   end To_Timespec;
++
++   -----------------
++   -- To_Timeval --
++   -----------------
++
++   function To_Timeval (D : Non_Negative_Duration) return timeval is
++
++      --   Most comments also apply to the timespec variant.
++
++      --    Sec := time_t (D);
++      --    Usec := usec_t (1_000_000 * (D - Duration (Sec)));
++      --  fails when D is
++      --    Duration'Last (Sec is rounded up and Duration (Sec) overflows)
++      --    0.9           (Sec is rounded up and Usec < 0)
++
++      --    Sec := time_t (D - 0.5);
++      --    Usec := usec_t (1_000_000 * (D - Duration (Sec)));
++      --  leads to Usec = 1_000_000 when D is
++      --    0.0           (Sec is rounded down)
++      --    0.999_999_999 (Usec is rounded up) (not an issue with timespec)
++
++      Dm1  : constant Duration range -1.0 .. Duration'Last - 1.0 := D - 1.0;
++      --  Converting D - 1 avoids overflows and simplifies roundings.
++
++      Sec  : constant time_t range -1 .. time_t'Last := time_t (Dm1);
++      --  The conversion of Dm1 may overflow if time_t has 32 bits.
++
++      Frac : constant Duration range -0.5 .. 0.5 := Dm1 - Duration (Sec);
++      --  The conversion back is always possible, Sec <= Duration'Last - 0.5.
++
++      Usec : constant usec_t range -500_000 .. 500_000
++        := usec_t (1_000_000 * Frac);
++   begin
++      --  Add the second substracted at the beginning, in a way fixing
++      --  the Usec interval if necessary.
++      --  In both cases, tv_sec may exceed MAX_tv_sec.
++      if Usec < 0 then
++         return (tv_sec => Sec,     tv_usec => Usec + 1_000_000);
++      else
++         return (tv_sec => Sec + 1, tv_usec => Usec);
++      end if;
++   end To_Timeval;
++
++end System.C_Time;
+--- /dev/null
++++ b/src/gcc/ada/libgnat/s-c_time.ads
+@@ -0,0 +1,135 @@
++------------------------------------------------------------------------------
++--                                                                          --
++--                 GNAT RUN-TIME LIBRARY (GNARL) COMPONENTS                 --
++--                                                                          --
++--                  S Y S T E M . C _ T I M E                               --
++--                                                                          --
++--                                  S p e c                                 --
++--                                                                          --
++--          Copyright (C) 1998-2025, Free Software Foundation, Inc.         --
++--                                                                          --
++-- GNARL is free software; you can  redistribute it  and/or modify it under --
++-- terms of the  GNU General Public License as published  by the Free Soft- --
++-- ware  Foundation;  either version 3,  or (at your option) any later ver- --
++-- sion.  GNAT is distributed in the hope that it will be useful, but WITH- --
++-- OUT ANY WARRANTY;  without even the  implied warranty of MERCHANTABILITY --
++-- or FITNESS FOR A PARTICULAR PURPOSE.                                     --
++--                                                                          --
++-- As a special exception under Section 7 of GPL version 3, you are granted --
++-- additional permissions described in the GCC Runtime Library Exception,   --
++-- version 3.1, as published by the Free Software Foundation.               --
++--                                                                          --
++-- You should have received a copy of the GNU General Public License and    --
++-- a copy of the GCC Runtime Library Exception along with this program;     --
++-- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see    --
++-- <http://www.gnu.org/licenses/>.                                          --
++--                                                                          --
++-- GNARL was developed by the GNARL team at Florida State University.       --
++-- Extensive contributions were provided by Ada Core Technologies, Inc.     --
++--                                                                          --
++------------------------------------------------------------------------------
++
++--  This package provides the timeval, timespec C types and conversions.
++--  It hides all details about time_t, suseconds_t.
++
++with Interfaces.C;
++private with System.OS_Constants;
++
++package System.C_Time
++  with Pure
++is
++
++   --  These C structs represent non negative durations with different
++   --  accuracies and maximal values.
++   type timespec is private;  --  accurate to 1  nanosecond
++   type timeval  is private;  --  accurate to 1 microsecond
++
++   --  Duration is accurate to either 1 nanosecond or 20 milliseconds.
++   subtype Non_Negative_Duration is Duration range 0.0 .. Duration'Last;
++
++   --  All conversions round if the target type is less accurate than
++   --  the source type, away from zero if the source value is midway
++   --  between two values of the target type.
++   --  They raise Constraint_Error when the value, after rounding,
++   --  exceeds the last value of the target type.
++
++   function To_Duration (T : timespec) return Non_Negative_Duration;
++   function To_Duration (T : timeval)  return Non_Negative_Duration;
++
++   function To_Timespec (D : Non_Negative_Duration) return timespec;
++   function To_Timeval  (D : Non_Negative_Duration) return timeval;
++
++   Timeval_Zero : constant timeval;
++   --  g-sothco.ads
++
++   function In_Duration (T : timeval) return Boolean with Inline;
++   --  True if computing To_Duration (T) is safe,
++   --  False if Constraint Error would be raised.
++   --  g-socket.adb:
++
++   subtype Non_Negative_Int is
++     Interfaces.C.int range 0 .. Interfaces.C.int'Last;
++
++   function Milliseconds_To_Timeval (M : Non_Negative_Int) return timeval
++     with Inline;
++   --  g-spogwa.adb
++
++   function Nanoseconds_To_Timespec (N : Non_Negative_Int) return timespec
++     with Inline;
++   function To_Timespec (T : timeval) return timespec with Inline;
++   --  s-osinte__darwin.adb
++
++   --  These functions are provided for backward compatibility,
++   --  but lead to non portable interfaces with C.
++   --  Tv_sec and tv_nsec do not match the long int type on x32,
++   --  or on 32 bits ARM with a 2038-compatible GNU libc.
++   subtype Tv_Sec_Long_Long is Interfaces.C.long_long
++     range 0 .. Interfaces.C.long_long'Last;
++   subtype Tv_Sec_Long  is Interfaces.C.long range 0 .. Interfaces.C.long'Last;
++   subtype Tv_Nsec_Long is Interfaces.C.long range 0 .. 999_999_999;
++   function To_Duration (tv_sec  : Tv_Sec_Long;
++                         tv_nsec : Tv_Nsec_Long) return Non_Negative_Duration
++     with Inline;
++   function To_Duration (tv_sec  : Tv_Sec_Long_Long;
++                         tv_nsec : Tv_Nsec_Long) return Non_Negative_Duration
++     with Inline;
++   procedure To_Struct_Timespec (D       : Non_Negative_Duration;
++                                 tv_sec  : out Tv_Sec_Long;
++                                 tv_nsec : out Tv_Nsec_Long) with Inline;
++   procedure To_Struct_Timespec (D       : Non_Negative_Duration;
++                                 tv_sec  : out Tv_Sec_Long_Long;
++                                 tv_nsec : out Tv_Nsec_Long) with Inline;
++   --  a-calcon.ads
++
++private
++
++   type time_t is range -2 ** (OS_Constants.SIZEOF_tv_sec * 8 - 1) ..
++                         2 ** (OS_Constants.SIZEOF_tv_sec * 8 - 1) - 1
++     with Convention => C, Size => OS_Constants.SIZEOF_tv_sec * 8;
++
++   type usec_t is range -2 ** (OS_Constants.SIZEOF_tv_usec * 8 - 1) ..
++                         2 ** (OS_Constants.SIZEOF_tv_usec * 8 - 1) - 1
++     with Convention => C, Size => OS_Constants.SIZEOF_tv_usec * 8;
++   --  Larger than the suseconds_t C type on ARM 32 bits with GNU libc
++   --  when __TIME_BITS=64.
++
++   type nsec_t is range -2 ** (OS_Constants.SIZEOF_tv_nsec * 8 - 1) ..
++                         2 ** (OS_Constants.SIZEOF_tv_nsec * 8 - 1) - 1
++     with Convention => C, Size => OS_Constants.SIZEOF_tv_nsec * 8;
++   --  Larger than the signed long int C type on x32.
++
++   type timeval is record
++      tv_sec  : time_t range 0 .. OS_Constants.MAX_tv_sec;  --  seconds
++      tv_usec : usec_t range 0 .. 999_999;                  --  microseconds
++   end record
++     with Convention => C;
++
++   type timespec is record
++      tv_sec  : time_t range 0 .. OS_Constants.MAX_tv_sec;  --  seconds
++      tv_nsec : nsec_t range 0 .. 999_999_999;              --  nanoseconds
++   end record
++     with Convention => C;
++
++   Timeval_Zero : constant timeval := (tv_sec => 0, tv_usec => 0);
++
++end System.C_Time;
+--- a/src/gcc/ada/libgnat/s-optide.adb
++++ b/src/gcc/ada/libgnat/s-optide.adb
+@@ -36,8 +36,8 @@ procedure Timed_Delay
+   (Time : Duration;
+    Mode : Integer)
+ is
+-   Request    : aliased timespec;
+-   Remaind    : aliased timespec;
++   Request    : aliased C_Time.timespec;
++   Remaind    : aliased C_Time.timespec;
+    Rel_Time   : Duration;
+    Abs_Time   : Duration;
+    Base_Time  : constant Duration := Clock;
+@@ -71,7 +71,7 @@ begin
+          end if;
+          pragma Warnings (On);
+ 
+-         Request := To_Timespec (Time_Chunk);
++         Request := C_Time.To_Timespec (Time_Chunk);
+          Result := nanosleep (Request'Access, Remaind'Access);
+ 
+          Check_Time := Clock;
+--- a/src/gcc/ada/libgnat/s-osprim__posix.adb
++++ b/src/gcc/ada/libgnat/s-osprim__posix.adb
+@@ -30,7 +30,7 @@
+ ------------------------------------------------------------------------------
+ 
+ --  This version is for POSIX-like operating systems
+-with System.Parameters;
++with System.C_Time;
+ 
+ package body System.OS_Primitives is
+ 
+@@ -39,16 +39,8 @@ package body System.OS_Primitives is
+    --  these declarations in System.OS_Interface and move these ones in
+    --  the spec.
+ 
+-   type time_t is range -2 ** (System.Parameters.time_t_bits - 1)
+-     .. 2 ** (System.Parameters.time_t_bits - 1) - 1;
+-
+-   type timespec is record
+-      tv_sec  : time_t;
+-      tv_nsec : Long_Integer;
+-   end record;
+-   pragma Convention (C, timespec);
+-
+-   function nanosleep (rqtp, rmtp : not null access timespec) return Integer;
++   function nanosleep (rqtp, rmtp : not null access C_Time.timespec)
++                      return Integer;
+    pragma Import (C, nanosleep, "nanosleep");
+ 
+    -----------
+@@ -57,27 +49,12 @@ package body System.OS_Primitives is
+ 
+    function Clock return Duration is
+ 
+-      type timeval is array (1 .. 3) of Long_Integer;
+-      --  The timeval array is sized to contain Long_Long_Integer sec and
+-      --  Long_Integer usec. If Long_Long_Integer'Size = Long_Integer'Size then
+-      --  it will be overly large but that will not effect the implementation
+-      --  since it is not accessed directly.
+-
+-      procedure timeval_to_duration
+-        (T    : not null access timeval;
+-         sec  : not null access Long_Long_Integer;
+-         usec : not null access Long_Integer);
+-      pragma Import (C, timeval_to_duration, "__gnat_timeval_to_duration");
+-
+-      Micro  : constant := 10**6;
+-      sec    : aliased Long_Long_Integer;
+-      usec   : aliased Long_Integer;
+-      TV     : aliased timeval;
++      TV     : aliased C_Time.timeval;
+       Result : Integer;
+       pragma Unreferenced (Result);
+ 
+       function gettimeofday
+-        (Tv : access timeval;
++        (Tv : access C_Time.timeval;
+          Tz : System.Address := System.Null_Address) return Integer;
+       pragma Import (C, gettimeofday, "gettimeofday");
+ 
+@@ -91,38 +68,10 @@ package body System.OS_Primitives is
+       --  value is never checked.
+ 
+       Result := gettimeofday (TV'Access, System.Null_Address);
+-      timeval_to_duration (TV'Access, sec'Access, usec'Access);
+-      return Duration (sec) + Duration (usec) / Micro;
++      return C_Time.To_Duration (TV);
+    end Clock;
+ 
+    -----------------
+-   -- To_Timespec --
+-   -----------------
+-
+-   function To_Timespec (D : Duration) return timespec;
+-
+-   function To_Timespec (D : Duration) return timespec is
+-      S : time_t;
+-      F : Duration;
+-
+-   begin
+-      S := time_t (Long_Long_Integer (D));
+-      F := D - Duration (S);
+-
+-      --  If F has negative value due to a round-up, adjust for positive F
+-      --  value.
+-
+-      if F < 0.0 then
+-         S := S - 1;
+-         F := F + 1.0;
+-      end if;
+-
+-      return
+-        timespec'(tv_sec  => S,
+-                  tv_nsec => Long_Integer (Long_Long_Integer (F * 10#1#E9)));
+-   end To_Timespec;
+-
+-   -----------------
+    -- Timed_Delay --
+    -----------------
+ 
+--- a/src/gcc/ada/libgnat/s-osprim__posix2008.adb
++++ b/src/gcc/ada/libgnat/s-osprim__posix2008.adb
+@@ -31,9 +31,10 @@
+ 
+ --  This version is for POSIX.1-2008-like operating systems
+ 
++with System.C_Time;
+ with System.CRTL;
+ with System.OS_Constants;
+-with System.Parameters;
++
+ package body System.OS_Primitives is
+ 
+    subtype int is System.CRTL.int;
+@@ -42,16 +43,8 @@ package body System.OS_Primitives is
+    --  we don't want to depend on any package. Consider removing these
+    --  declarations in System.OS_Interface and move these ones to the spec.
+ 
+-   type time_t is range -2 ** (System.Parameters.time_t_bits - 1)
+-     .. 2 ** (System.Parameters.time_t_bits - 1) - 1;
+-
+-   type timespec is record
+-      tv_sec  : time_t;
+-      tv_nsec : Long_Integer;
+-   end record;
+-   pragma Convention (C, timespec);
+-
+-   function nanosleep (rqtp, rmtp : not null access timespec) return Integer;
++   function nanosleep (rqtp, rmtp : not null access C_Time.timespec)
++                      return Integer;
+    pragma Import (C, nanosleep, "nanosleep");
+ 
+    -----------
+@@ -59,7 +52,7 @@ package body System.OS_Primitives is
+    -----------
+ 
+    function Clock return Duration is
+-      TS     : aliased timespec;
++      TS     : aliased C_Time.timespec;
+       Result : int;
+ 
+       type clockid_t is new int;
+@@ -68,43 +61,16 @@ package body System.OS_Primitives is
+ 
+       function clock_gettime
+         (clock_id : clockid_t;
+-         tp       : access timespec) return int;
++         tp       : access C_Time.timespec) return int;
+       pragma Import (C, clock_gettime, "clock_gettime");
+ 
+    begin
+       Result := clock_gettime (CLOCK_REALTIME, TS'Unchecked_Access);
+       pragma Assert (Result = 0);
+-      return Duration (TS.tv_sec) + Duration (TS.tv_nsec) / 10#1#E9;
++      return C_Time.To_Duration (TS);
+    end Clock;
+ 
+    -----------------
+-   -- To_Timespec --
+-   -----------------
+-
+-   function To_Timespec (D : Duration) return timespec;
+-
+-   function To_Timespec (D : Duration) return timespec is
+-      S : time_t;
+-      F : Duration;
+-
+-   begin
+-      S := time_t (Long_Long_Integer (D));
+-      F := D - Duration (S);
+-
+-      --  If F has negative value due to a round-up, adjust for positive F
+-      --  value.
+-
+-      if F < 0.0 then
+-         S := S - 1;
+-         F := F + 1.0;
+-      end if;
+-
+-      return
+-        timespec'(tv_sec  => S,
+-                  tv_nsec => Long_Integer (Long_Long_Integer (F * 10#1#E9)));
+-   end To_Timespec;
+-
+-   -----------------
+    -- Timed_Delay --
+    -----------------
+ 
+--- a/src/gcc/ada/libgnat/s-osprim__unix.adb
++++ b/src/gcc/ada/libgnat/s-osprim__unix.adb
+@@ -32,6 +32,8 @@
+ --  This version uses gettimeofday and select
+ --  This file is suitable for OpenNT, Dec Unix and SCO UnixWare.
+ 
++with System.C_Time;
++
+ package body System.OS_Primitives is
+ 
+    --  ??? These definitions are duplicated from System.OS_Interface
+@@ -39,14 +41,8 @@ package body System.OS_Primitives is
+    --  these declarations in System.OS_Interface and move these ones in
+    --  the spec.
+ 
+-   type struct_timeval is record
+-      tv_sec  : Integer;
+-      tv_usec : Integer;
+-   end record;
+-   pragma Convention (C, struct_timeval);
+-
+    procedure gettimeofday
+-     (tv : not null access struct_timeval;
++     (tv : not null access C_Time.timeval;
+       tz : Address := Null_Address);
+    pragma Import (C, gettimeofday, "gettimeofday");
+ 
+@@ -55,7 +51,7 @@ package body System.OS_Primitives is
+       readfds,
+       writefds,
+       exceptfds : Address := Null_Address;
+-      timeout   : not null access struct_timeval);
++      timeout   : not null access C_Time.timeval);
+    pragma Import (C, C_select, "select");
+ 
+    -----------
+@@ -63,11 +59,11 @@ package body System.OS_Primitives is
+    -----------
+ 
+    function Clock return Duration is
+-      TV : aliased struct_timeval;
++      TV : aliased C_Time.timeval;
+ 
+    begin
+       gettimeofday (TV'Access);
+-      return Duration (TV.tv_sec) + Duration (TV.tv_usec) / 10#1#E6;
++      return C_Time.To_Duration (TV);
+    end Clock;
+ 
+    -----------------
+@@ -82,7 +78,7 @@ package body System.OS_Primitives is
+       Abs_Time   : Duration;
+       Base_Time  : constant Duration := Clock;
+       Check_Time : Duration := Base_Time;
+-      timeval    : aliased struct_timeval;
++      timeval    : aliased C_Time.timeval;
+ 
+    begin
+       if Mode = Relative then
+@@ -95,14 +91,7 @@ package body System.OS_Primitives is
+ 
+       if Rel_Time > 0.0 then
+          loop
+-            timeval.tv_sec := Integer (Rel_Time);
+-
+-            if Duration (timeval.tv_sec) > Rel_Time then
+-               timeval.tv_sec := timeval.tv_sec - 1;
+-            end if;
+-
+-            timeval.tv_usec :=
+-              Integer ((Rel_Time - Duration (timeval.tv_sec)) * 10#1#E6);
++            timeval := C_Time.To_Timeval (Rel_Time);
+ 
+             C_select (timeout => timeval'Unchecked_Access);
+             Check_Time := Clock;
+--- a/src/gcc/ada/libgnat/s-osprim__x32.adb
++++ b/src/gcc/ada/libgnat/s-osprim__x32.adb
+@@ -31,7 +31,7 @@
+ 
+ --  This version is for Linux/x32
+ 
+-with System.Parameters;
++with System.C_Time;
+ 
+ package body System.OS_Primitives is
+ 
+@@ -40,16 +40,8 @@ package body System.OS_Primitives is
+    --  these declarations in System.OS_Interface and move these ones in
+    --  the spec.
+ 
+-   type time_t is range -2 ** (System.Parameters.time_t_bits - 1)
+-     .. 2 ** (System.Parameters.time_t_bits - 1) - 1;
+-
+-   type timespec is record
+-      tv_sec  : time_t;
+-      tv_nsec : Long_Long_Integer;
+-   end record;
+-   pragma Convention (C, timespec);
+-
+-   function nanosleep (rqtp, rmtp : not null access timespec) return Integer;
++   function nanosleep (rqtp, rmtp : not null access C_Time.timespec)
++                      return Integer;
+    pragma Import (C, nanosleep, "nanosleep");
+ 
+    -----------
+@@ -57,23 +49,12 @@ package body System.OS_Primitives is
+    -----------
+ 
+    function Clock return Duration is
+-      type timeval is array (1 .. 2) of Long_Long_Integer;
+-
+-      procedure timeval_to_duration
+-        (T    : not null access timeval;
+-         sec  : not null access Long_Integer;
+-         usec : not null access Long_Integer);
+-      pragma Import (C, timeval_to_duration, "__gnat_timeval_to_duration");
+-
+-      Micro  : constant := 10**6;
+-      sec    : aliased Long_Integer;
+-      usec   : aliased Long_Integer;
+-      TV     : aliased timeval;
++      TV     : aliased C_Time.timeval;
+       Result : Integer;
+       pragma Unreferenced (Result);
+ 
+       function gettimeofday
+-        (Tv : access timeval;
++        (Tv : access C_Time.timeval;
+          Tz : System.Address := System.Null_Address) return Integer;
+       pragma Import (C, gettimeofday, "gettimeofday");
+ 
+@@ -87,38 +68,10 @@ package body System.OS_Primitives is
+       --  value is never checked.
+ 
+       Result := gettimeofday (TV'Access, System.Null_Address);
+-      timeval_to_duration (TV'Access, sec'Access, usec'Access);
+-      return Duration (sec) + Duration (usec) / Micro;
++      return C_Time.To_Duration (TV);
+    end Clock;
+ 
+    -----------------
+-   -- To_Timespec --
+-   -----------------
+-
+-   function To_Timespec (D : Duration) return timespec;
+-
+-   function To_Timespec (D : Duration) return timespec is
+-      S : time_t;
+-      F : Duration;
+-
+-   begin
+-      S := time_t (Long_Long_Integer (D));
+-      F := D - Duration (S);
+-
+-      --  If F has negative value due to a round-up, adjust for positive F
+-      --  value.
+-
+-      if F < 0.0 then
+-         S := S - 1;
+-         F := F + 1.0;
+-      end if;
+-
+-      return
+-        timespec'(tv_sec  => S,
+-                  tv_nsec => Long_Long_Integer (F * 10#1#E9));
+-   end To_Timespec;
+-
+-   -----------------
+    -- Timed_Delay --
+    -----------------
+ 
+@@ -126,8 +79,8 @@ package body System.OS_Primitives is
+      (Time : Duration;
+       Mode : Integer)
+    is
+-      Request    : aliased timespec;
+-      Remaind    : aliased timespec;
++      Request    : aliased C_Time.timespec;
++      Remaind    : aliased C_Time.timespec;
+       Rel_Time   : Duration;
+       Abs_Time   : Duration;
+       Base_Time  : constant Duration := Clock;
+@@ -147,7 +100,7 @@ package body System.OS_Primitives is
+ 
+       if Rel_Time > 0.0 then
+          loop
+-            Request := To_Timespec (Rel_Time);
++            Request := C_Time.To_Timespec (Rel_Time);
+             Result := nanosleep (Request'Access, Remaind'Access);
+             Check_Time := Clock;
+ 
+--- a/src/gcc/ada/s-oscons-tmplt.c
++++ b/src/gcc/ada/s-oscons-tmplt.c
+@@ -1764,6 +1764,17 @@ CND(SIZEOF_tv_usec, "tv_usec")
+ #endif
+ CNS(MAX_tv_sec, "")
+ }
++
++{
++  struct timespec ts;
++/*
++   --  Sizes (in bytes) of the components of struct timespec.
++   --  The tv_sec field is the same than in struct timeval.
++*/
++#define SIZEOF_tv_nsec (sizeof (ts.tv_nsec))
++CND(SIZEOF_tv_nsec, "tv_nsec");
++}
++
+ /*
+ 
+    --  Sizes of various data types
