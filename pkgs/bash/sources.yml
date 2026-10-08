@@ -1,0 +1,6 @@
+sources:
+    - file: bash_5.3.orig.tar.xz
+      sha256: a70de6bb41f5e192534a5a1836b1d7fad9a8d4818a6e1506d70f38441552c17a
+      urls:
+        - https://deb.debian.org/debian/pool/main/b/bash/bash_5.3.orig.tar.xz
+        - https://snapshot.debian.org/file/2e1b210a4d7e3969158fcaa03502fe9e4dff0bf5/bash_5.3.orig.tar.xz
