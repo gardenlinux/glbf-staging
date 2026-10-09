@@ -1,3 +1,27 @@
+glibc (2.42-17) unstable; urgency=medium
+
+  [ Aurelien Jarno ]
+  * debian/patches/git-updates.diff: update from upstream stable branch:
+    - Fix buffer overflow in scanf %mc (CVE-2026-5450).  Closes: #1134543.
+    - Fix ungetwc operating on byte stream (CVE-2026-5928).  Closes: #1134544.
+    - Save/restore VFP registers inPLT trampolines on arm.  Closes: #1133139.
+    - Suppress iconv intermediate errors with //TRANSLIT.
+    - debian/patches/hurd-i386/git-run-iconv-test.sh.diff: rebased.
+  * debian/rules.d/build.mk: append extra_cflags to CFLAGS and ASFLAGS.
+  * debian/control.in/libc: stop suggesting libnss-nisplus.
+  * debian/debhelper.in/libc-bin.lintian-overrides: add a
+    statically-linked-binary override for the ldconfig binary.
+  * debian/control.in/main: build-depends on libselinux-dev instead of
+    libselinux1-dev.
+
+  [ Miao Wang ]
+  * debian/libc6.symbols.loong64: add.
+
+  [ Samuel Thibault ]
+  * debian/patches/hurd-i386/git-SO_TIMESTAMP.diff: Add SO_TIMESTAMP macro.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Thu, 18 Jun 2026 21:48:16 +0200
+
 glibc (2.42-16) unstable; urgency=medium
 
   [ Aurelien Jarno ]

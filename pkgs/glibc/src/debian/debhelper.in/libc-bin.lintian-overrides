@@ -1,6 +1,7 @@
 # ldconfig must be executable even when the libc is not configured, and
 # thus must be linked statically
 shared-library-lacks-prerequisites [usr/sbin/ldconfig]
+statically-linked-binary [usr/sbin/ldconfig]
 
 # these manpages are provided by the manpages package
 no-manual-page [usr/sbin/ldconfig]

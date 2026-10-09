@@ -69,6 +69,7 @@ hurd-i386/git-MSG_EXAMINE.diff
 hurd-i386/git-interrupt-EINTR.diff
 hurd-i386/git-SEM_FAILED.diff
 hurd-i386/git-tst-fix.diff
+hurd-i386/git-SO_TIMESTAMP.diff
 
 i386/local-biarch.diff
 i386/unsubmitted-quiet-ldconfig.diff
