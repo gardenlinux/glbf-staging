@@ -1,0 +1,45 @@
+name: update
+
+# Manual (and, once enabled, daily) entrypoint for the package-update pass. Thin
+# caller: all logic lives in the reusable update-packages.yml. The target branch
+# is pure data, so this can run from main while opening PRs against another
+# branch.
+on:
+  workflow_dispatch:
+    inputs:
+      target-branch:
+        description: branch to check updates for and open PRs against
+        default: main
+        type: string
+      update-tag:
+        description: auto_update tag to select packages by AND to write into imports
+        default: "debian:testing"
+        type: string
+      repo:
+        description: APT repository URL to pull from
+        default: "https://deb.debian.org/debian"
+        type: string
+      dist:
+        description: dist to pull from (override with a snapshot dist to replay a point in time)
+        default: testing
+        type: string
+      update-lockfile:
+        description: also bump the build-deps lockfile on the clean path
+        default: false
+        type: boolean
+  # Daily cron — disabled for the initial PoC. The reusable workflow owns the
+  # defaults, so the || fallbacks below already supply the cron's parameters;
+  # uncommenting this line is the only change needed to enable unattended runs.
+  # schedule:
+  #   - cron: "23 4 * * *"     # off-peak, non-:00 minute
+
+jobs:
+  run:
+    uses: ./.github/workflows/update-packages.yml
+    with:
+      target-branch:   ${{ inputs.target-branch   || 'main' }}
+      update-tag:      ${{ inputs.update-tag       || 'debian:testing' }}
+      repo:            ${{ inputs.repo             || 'https://deb.debian.org/debian' }}
+      dist:            ${{ inputs.dist             || 'testing' }}
+      update-lockfile: ${{ inputs.update-lockfile  || false }}
+    secrets: inherit

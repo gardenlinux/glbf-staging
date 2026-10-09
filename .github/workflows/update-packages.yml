@@ -1,0 +1,84 @@
+name: update-packages
+
+# Reusable: build glbx, check every selected package for a newer version, and
+# fan out one update-one-package call per updatable package.
+on:
+  workflow_call:
+    inputs:
+      target-branch:
+        required: true
+        type: string
+      update-tag:
+        required: true
+        type: string
+      repo:
+        required: true
+        type: string
+      dist:
+        required: true
+        type: string
+      update-lockfile:
+        default: false
+        type: boolean
+      glbx-ref:
+        default: main
+        type: string
+
+jobs:
+  build-glbx:
+    uses: ./.github/workflows/build-glbx.yml
+    with:
+      glbx-ref: ${{ inputs.glbx-ref }}
+
+  check:
+    needs: [build-glbx]
+    runs-on: ubuntu-latest
+    outputs:
+      updates: ${{ steps.check.outputs.updates }}
+      any: ${{ steps.check.outputs.any }}
+    steps:
+      - name: Check out the target branch
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.target-branch }}
+          fetch-depth: 0
+      - uses: ./.github/actions/glbx-bin
+      - name: Resolve which packages have a newer version
+        id: check
+        run: |
+          # One cookie per run so check-updates and every later import share one
+          # signed InRelease snapshot of the archive.
+          updates="$(bin/glbx check-updates \
+            --conf-dir . \
+            --repo '${{ inputs.repo }}' \
+            --dist '${{ inputs.dist }}' \
+            --update-tag '${{ inputs.update-tag }}' \
+            --cookie '${{ github.run_id }}' \
+            --format json)"
+          echo "updates=$updates" >> "$GITHUB_OUTPUT"
+          if [ "$(echo "$updates" | jq 'length')" -gt 0 ]; then
+            echo "any=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "any=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "updatable: $(echo "$updates" | jq -c '[.[].pkg]')"
+
+  update:
+    needs: [check]
+    if: needs.check.outputs.any == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        pkg: ${{ fromJSON(needs.check.outputs.updates) }}
+    uses: ./.github/workflows/update-one-package.yml
+    with:
+      pkg: ${{ matrix.pkg.pkg }}
+      old: ${{ matrix.pkg.old }}
+      new: ${{ matrix.pkg.new }}
+      target-branch: ${{ inputs.target-branch }}
+      update-tag: ${{ inputs.update-tag }}
+      repo: ${{ inputs.repo }}
+      dist: ${{ inputs.dist }}
+      update-lockfile: ${{ inputs.update-lockfile }}
+      cookie: ${{ github.run_id }}
+    secrets: inherit

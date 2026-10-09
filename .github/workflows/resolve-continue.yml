@@ -1,0 +1,115 @@
+name: resolve-continue
+
+# The /continue-update comment handler. A maintainer who has resolved a conflict
+# on an update-staging branch comments /continue-update; this re-verifies the
+# branch merges cleanly with its target, optionally bumps the lockfile, and
+# marks the PR ready for review. Every outcome is a safe repeat (see the table
+# in the plan): closed/merged, already-ready, not-mergeable, and the single
+# state-changing mergeable path are each idempotent.
+#
+# issue_comment only fires for the copy of this workflow on the default branch,
+# so this must be merged to the default branch before /continue-update works.
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  continue:
+    if: >-
+      github.event.issue.pull_request &&
+      startsWith(github.event.comment.body, '/continue-update')
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PR: ${{ github.event.issue.number }}
+    steps:
+      - name: Check out the config repo (default branch workflow copy)
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/glbx-bin
+
+      - name: Configure git identity
+        run: |
+          git config user.name "glbf-update[bot]"
+          git config user.email "glbf-update@users.noreply.github.com"
+
+      - name: Continue the update
+        run: |
+          set -euo pipefail
+          source .github/update-lib.sh
+
+          # 1. Read the PR; the head ref convention is the authorization gate.
+          head="$(gh pr view "$PR" --json headRefName  --jq .headRefName)"
+          state="$(gh pr view "$PR" --json state       --jq .state)"
+          isDraft="$(gh pr view "$PR" --json isDraft    --jq .isDraft)"
+          body="$(gh pr view "$PR" --json body          --jq .body)"
+
+          case "$head" in
+            update-staging/*) : ;;
+            *) echo "::notice::$head is not an update-staging branch; ignoring"; exit 0 ;;
+          esac
+
+          if [ "$state" != "OPEN" ]; then
+            gh pr comment "$PR" --body "This PR is already $state — nothing to do."
+            exit 0
+          fi
+
+          # 2. Already-ready short-circuit (idempotency).
+          if [ "$isDraft" != "true" ]; then
+            gh pr comment "$PR" --body "This PR is already ready for review — nothing left to do."
+            exit 0
+          fi
+
+          # 3. Recover the original decision from the state block.
+          target="$(printf '%s' "$body" | state_get target)"
+          pkg="$(printf '%s' "$body" | state_get pkg)"
+          update_lockfile="$(printf '%s' "$body" | state_get update_lockfile)"
+          cookie_dist="$(printf '%s' "$body" | state_get dist)"
+          repo="$(printf '%s' "$body" | state_get repo)"
+          if [ -z "$target" ] || [ -z "$pkg" ]; then
+            gh pr comment "$PR" --body "Could not read the glbf-update-state block from this PR; cannot continue."
+            exit 1
+          fi
+
+          # 4. Fetch fresh and operate on the remote refs, never a stale checkout.
+          git fetch --no-tags origin "$target" "$head"
+
+          # 5. Mergeability safety check — no merge performed. git merge-tree
+          #    --write-tree does a real three-way merge in the object database:
+          #    non-zero exit means conflicts; it writes nothing and moves no ref.
+          if git merge-tree --write-tree "origin/$target" "origin/$head" >/dev/null 2>&1; then
+            mergeable=1
+          else
+            mergeable=0
+          fi
+
+          if [ "$mergeable" != 1 ]; then
+            gh pr comment "$PR" --body "\`$head\` is **not cleanly mergeable with \`$target\`** right now. If you resolved locally, make sure you pushed; if \`$target\` moved since, run \`git merge origin/$target\` again and push. Then comment \`/continue-update\` again."
+            exit 0
+          fi
+
+          # 6. Optional lockfile bump, idempotent: skip if build-deps.yml already
+          #    changed on this branch relative to the target.
+          bumped=""
+          if [ "$update_lockfile" = "true" ]; then
+            depfile="pkgs/$pkg/build-deps.yml"
+            if git diff --quiet "origin/$target" "origin/$head" -- "$depfile"; then
+              git checkout -B "$head" "origin/$head"
+              bin/glbx lockfile "$pkg" --conf-dir . --repo "$repo" --dist "$cookie_dist"
+              if ! git diff --quiet -- "$depfile"; then
+                git add "$depfile"
+                git commit -m "update $pkg build deps"
+                git push origin "HEAD:$head"
+                bumped=" · lockfile bumped"
+              fi
+            fi
+          fi
+
+          # 7. Promote draft → ready, and 8. report.
+          gh pr ready "$PR"
+          gh pr comment "$PR" --body "mergeable with \`$target\` ✓$bumped · marked ready for review"

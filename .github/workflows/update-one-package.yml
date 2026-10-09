@@ -1,0 +1,123 @@
+name: update-one-package
+
+# Reusable: import one package's new upstream version as a pristine commit, open
+# a staging branch and a PR into the target. A clean three-way merge becomes a
+# normal PR with the merge already made; a conflict becomes a draft PR whose
+# branch is just the pristine import, with resolution instructions and a
+# greppable state block for the /continue-update handler to finish.
+on:
+  workflow_call:
+    inputs:
+      pkg:             { required: true,  type: string }
+      old:             { required: true,  type: string }
+      new:             { required: true,  type: string }
+      target-branch:   { required: true,  type: string }
+      update-tag:      { required: true,  type: string }
+      repo:            { required: true,  type: string }
+      dist:            { required: true,  type: string }
+      update-lockfile: { default: false,  type: boolean }
+      cookie:          { required: true,  type: string }
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-one:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PKG: ${{ inputs.pkg }}
+      OLD: ${{ inputs.old }}
+      NEW: ${{ inputs.new }}
+      TARGET: ${{ inputs.target-branch }}
+      UPDATE_TAG: ${{ inputs.update-tag }}
+      REPO: ${{ inputs.repo }}
+      DIST: ${{ inputs.dist }}
+      UPDATE_LOCKFILE: ${{ inputs.update-lockfile }}
+      COOKIE: ${{ inputs.cookie }}
+    steps:
+      - name: Check out the target branch (full history)
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.target-branch }}
+          fetch-depth: 0
+      - uses: ./.github/actions/glbx-bin
+
+      - name: Configure git identity
+        run: |
+          git config user.name "glbf-update[bot]"
+          git config user.email "glbf-update@users.noreply.github.com"
+
+      - name: Import the new version as a pristine commit (no merge)
+        id: import
+        run: |
+          result="$(bin/glbx import --no-merge \
+            --repo "$REPO" --dist "$DIST" --update-tag "$UPDATE_TAG" \
+            --cookie "$COOKIE" --output . "$PKG")"
+          echo "$result"
+          commit="$(echo "$result" | jq -r '.commit')"
+          already="$(echo "$result" | jq -r '.already_present')"
+          echo "commit=$commit" >> "$GITHUB_OUTPUT"
+          echo "already=$already" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update the PR
+        if: steps.import.outputs.already != 'true' && steps.import.outputs.commit != ''
+        run: |
+          set -euo pipefail
+          source .github/update-lib.sh
+
+          U="${{ steps.import.outputs.commit }}"
+          branch="$(branch_name "$TARGET" "$PKG" "$NEW")"
+          echo "import commit U=$U branch=$branch"
+
+          # A branch that already exists (an earlier run for this exact version)
+          # is a guardrail stop for the PoC: supersession is a later concern.
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+            echo "::notice::$branch already exists; skipping (supersession is out of scope for now)"
+            exit 0
+          fi
+
+          # Trial-merge on a throwaway branch to decide clean vs. conflict,
+          # then abort so nothing is left half-staged either way; the chosen
+          # path re-does the merge from a clean checkout.
+          git checkout -B "$branch" "origin/$TARGET"
+          if git merge --no-commit --no-ff "$U" >/dev/null 2>&1; then
+            clean=1
+          else
+            clean=0
+          fi
+          git merge --abort 2>/dev/null || true
+
+          if [ "$clean" = 1 ]; then
+            # Real merge commit preserving U's ancestry (never squash/rebase).
+            git checkout -B "$branch" "origin/$TARGET"
+            git merge --no-ff --no-edit "$U"
+
+            if [ "$UPDATE_LOCKFILE" = "true" ]; then
+              bin/glbx lockfile "$PKG" --conf-dir . --cookie "$COOKIE"
+              git add -A
+              git commit -m "update $PKG build deps"
+            fi
+
+            git push origin "$branch"
+
+            body="$(clean_body "$PKG" "$OLD" "$NEW" "$TARGET" "$UPDATE_TAG" "$REPO" "$DIST" "$UPDATE_LOCKFILE" "$U")"
+            gh pr create --base "$TARGET" --head "$branch" \
+              --title "update $PKG $OLD → $NEW" \
+              --body "$body"
+          else
+            # Conflict: the branch is JUST the pristine import U. The maintainer
+            # merges the target in locally and pushes; a draft PR carries the
+            # instructions and the state block.
+            git push origin "$U:refs/heads/$branch"
+
+            git merge --no-commit --no-ff "$U" >/dev/null 2>&1 || true
+            pathlist="$(git diff --name-only --diff-filter=U | format_conflict_paths)"
+            git merge --abort 2>/dev/null || true
+
+            body="$(conflict_body "$PKG" "$OLD" "$NEW" "$TARGET" "$UPDATE_TAG" "$REPO" "$DIST" "$UPDATE_LOCKFILE" "$U" "$branch" "$pathlist")"
+            gh pr create --draft --base "$TARGET" --head "$branch" \
+              --title "update $PKG $OLD → $NEW (needs conflict resolution)" \
+              --body "$body"
+          fi

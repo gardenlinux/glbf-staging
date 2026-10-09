@@ -43,3 +43,35 @@ A run's first jobs build glbx from a chosen ref and then **gate** on the graph:
 differs from the committed copy. So a stale committed workflow can never silently
 build the wrong thing — adding or removing a package means regenerating and
 committing `build.yml`.
+
+All build logic lives in hand-authored **reusable workflows**
+(`.github/workflows/{build-glbx,check-graph,restore-inputs,plan,build-node}.yml`);
+the generated `build.yml` is thin, one caller job per node that `uses:`
+`build-node.yml` and carries only the node's `needs:` edges and the already-built
+skip guard — the structural wiring `check-graph` validates. Editing the per-node
+build logic is a one-file edit; regeneration only re-runs when the graph *shape*
+changes.
+
+## The update pipeline
+
+`.github/workflows/update.yml` (manual dispatch; a daily cron is committed
+commented-out) opens one pull request per package whose newest Debian version is
+higher than the version currently pinned on its lineage. It builds glbx, runs
+`glbx check-updates` once over the selected packages, and fans out one
+`update-one-package.yml` call per updatable package.
+
+Each package job imports the new version as a pristine commit (`glbx import
+--no-merge`) and opens a staging branch `update-staging/<target>/<pkg>-<version>`:
+
+- **clean** — the import three-way-merges into the target; the branch is that
+  merge and the PR is a normal one.
+- **conflict** — the branch is just the pristine import; the PR is a draft
+  carrying the conflicting paths, resolution instructions, and a greppable state
+  block. A maintainer merges the target in locally, pushes, and comments
+  `/continue-update`; `resolve-continue.yml` re-checks mergeability, optionally
+  bumps the lockfile, and marks the PR ready for review.
+
+The target branch is passed as data, so the workflow can run from `main` while
+opening PRs against another branch. A branch pushed by the automatic
+`GITHUB_TOKEN` does not trigger the build pipeline, so CI runs once a maintainer
+pushes to or approves the update PR.
