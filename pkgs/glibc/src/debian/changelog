@@ -1,3 +1,20 @@
+glibc (2.42-16) unstable; urgency=medium
+
+  [ Aurelien Jarno ]
+  * debian/sysdeps/mips*.mk: revert change to match the dpkg architecture
+    name.
+  * debian/rules.d/build.mk, debian/sysdeps/mips*.mk: add a way to define the
+    debian architecture corresponding to a multilib build. Use it when it
+    doesn't match the name of the pass and package like on mips*.
+  * debian/patches/git-updates.diff: update from upstream stable branch:
+    - Fix build against linux 7.0 headers.  Closes: #1135405.
+
+  [ liu jianqiang ]
+  * debian/debhelper.in/locales.config: handle leading spaces in
+    /etc/locale.gen configuration.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Thu, 07 May 2026 00:25:31 +0200
+
 glibc (2.42-15) unstable; urgency=medium
 
   [ Aurelien Jarno ]
@@ -37,7 +54,7 @@ glibc (2.42-14) unstable; urgency=medium
   * debian/testsuite-xfail-debian.mk: Update for 2.44.
 
   [ Aurelien Jarno ]
-  * debian/sysdeps/mips*.mk: rename extra passes to matche the dpkg
+  * debian/sysdeps/mips*.mk: rename extra passes to match the dpkg
     architecture name.
   * debian/rules.d/build.mk: add a makefile function that queries the dpkg
     build flags for the current pass.
