@@ -1,3 +1,37 @@
+openssl (3.6.3-1) unstable; urgency=medium
+
+  * Import 3.6.3 (Closes: #1139674)
+   - CVE-2026-7383 ("Possible Heap Buffer Overflow in ASN.1 Multibyte String
+     Conversion")
+   - CVE-2026-9076 ("Out-of-Bounds Read in CMS Password-Based Decryption")
+   - CVE-2026-34180 ("Heap Buffer Over-read in ASN.1 Content Parsing")
+   - CVE-2026-34181 ("PKCS#12 Files with PBMAC1 Are Accepted with Short HMAC
+     Keys")
+   - CVE-2026-34182 ("CMS AuthEnvelopedData Processing May Accept Forged
+     Messages")
+   - CVE-2026-34183 ("Unbounded Memory Growth in the QUIC PATH_CHALLENGE
+     Handler")
+   - CVE-2026-35188 ("Double-free When Checking OCSP Stapled Response")
+   - CVE-2026-42764 ("NULL pointer dereference in QUIC server initial packet
+     handling")
+   - CVE-2026-42765 ("NULL Dereference in Certificate Verification with OCSP
+     Checking")
+   - CVE-2026-42766 ("Possible NULL Dereference in Password-Based CMS
+     Decryption")
+   - CVE-2026-42767 ("NULL Pointer Dereference in CRMF EncryptedValue
+     Decryption")
+   - CVE-2026-42768 ("Multi-RecipientInfo Bleichenbacher Oracle in
+     CMS_decrypt() and PKCS7_decrypt()")
+   - CVE-2026-42769 ("Trust-Anchor Substitution via cert/issuer Typo in CMP
+     rootCaKeyUpdate")
+   - CVE-2026-42770 ("FFC-DH Peer Validation Uses Attacker-Supplied q")
+   - CVE-2026-45445 ("AES-OCB IV Ignored on EVP_Cipher() Path")
+   - CVE-2026-45446 ("Incorrect Tag Processing for Empty Messages in
+     AES-GCM-SIV and AES-SIV modes")
+   - CVE-2026-45447 ("Heap Use-After-Free in OpenSSL PKCS7_verify()")
+
+ -- Sebastian Andrzej Siewior <sebastian@breakpoint.cc>  Sat, 13 Jun 2026 19:00:51 +0200
+
 openssl (3.6.2-1) unstable; urgency=medium
 
   * Import 3.6.2
