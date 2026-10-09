@@ -1,0 +1,6 @@
+sources:
+    - file: systemd_260.1.orig.tar.gz
+      sha256: 11b9821892b75d19af7b21f0f7f4e53636638147faf3e6a4ded78b40cb38993f
+      urls:
+        - https://snapshot.debian.org/archive/debian/20260501T000000Z/pool/main/s/systemd/systemd_260.1.orig.tar.gz
+        - https://snapshot.debian.org/file/0143e3df4f736faccb87b33835392b12514a95fd/systemd_260.1.orig.tar.gz
