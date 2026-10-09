@@ -6,7 +6,7 @@
 
 --- a/src/gcc/config/alpha/alpha.cc
 +++ b/src/gcc/config/alpha/alpha.cc
-@@ -10177,7 +10177,7 @@ alpha_file_start (void)
+@@ -10178,7 +10178,7 @@ alpha_file_start (void)
      fputs ("\t.set nomacro\n", asm_out_file);
    if (TARGET_SUPPORT_ARCH | TARGET_BWX | TARGET_MAX | TARGET_FIX | TARGET_CIX)
      {
@@ -15,7 +15,7 @@
  
        if (alpha_cpu == PROCESSOR_EV6 || TARGET_FIX || TARGET_CIX)
  	arch = "ev6";
-@@ -10187,10 +10187,9 @@ alpha_file_start (void)
+@@ -10188,10 +10188,9 @@ alpha_file_start (void)
  	arch = "ev56";
        else if (alpha_cpu == PROCESSOR_EV5)
  	arch = "ev5";

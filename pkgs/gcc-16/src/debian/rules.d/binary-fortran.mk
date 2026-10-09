@@ -129,7 +129,8 @@ define __do_libgfortran_dev
 	dh_installdirs -p$(p_l) $(gcc_lib_dir$(2))
 
 	$(dh_compat2) dh_movefiles -p$(p_l) \
-		$(gcc_lib_dir$(2))/libcaf_single.a
+		$(gcc_lib_dir$(2))/libcaf_single.a \
+		$(gcc_lib_dir$(2))/libcaf_shmem.a
 	$(call install_gcc_lib,libgfortran,$(FORTRAN_SONAME),$(2),$(p_l))
 
 	$(if $(2),, \
