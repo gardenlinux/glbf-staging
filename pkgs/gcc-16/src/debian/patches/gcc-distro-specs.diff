@@ -14,7 +14,7 @@
  #define INCLUDE_STRING
  #define INCLUDE_VECTOR
  #include "config.h"
-@@ -1016,6 +1021,148 @@ proper position among the other output f
+@@ -1017,6 +1022,148 @@ proper position among the other output f
  #define LINK_GCC_C_SEQUENCE_SPEC "%G %{!nolibc:%L %G}"
  #endif
  
@@ -163,7 +163,7 @@
  #ifndef LINK_SSP_SPEC
  #ifdef TARGET_LIBC_PROVIDES_SSP
  #define LINK_SSP_SPEC "%{fstack-protector|fstack-protector-all" \
-@@ -1072,7 +1219,7 @@ proper position among the other output f
+@@ -1073,7 +1220,7 @@ proper position among the other output f
  #ifndef LINK_PIE_SPEC
  #ifdef HAVE_LD_PIE
  #ifndef LD_PIE_SPEC
@@ -172,7 +172,7 @@
  #endif
  #else
  #define LD_PIE_SPEC ""
-@@ -1189,6 +1336,7 @@ proper position among the other output f
+@@ -1190,6 +1337,7 @@ proper position among the other output f
     "%{flto|flto=*:%<fcompare-debug*} \
      %{flto} %{fno-lto} %{flto=*} %l " LINK_PIE_SPEC \
     "%{fuse-ld=*:-fuse-ld=%*} " LINK_COMPRESS_DEBUG_SPEC \
@@ -180,7 +180,7 @@
     "%X %{o*} %{e*} %{N} %{n} %{r}\
      %{s} %{t} %{u*} %{z} %{Z} %{!nostdlib:%{!r:%{!nostartfiles:%S}}} \
      %{static|no-pie|static-pie:} %@{L*} %(link_libgcc) " \
-@@ -1233,6 +1381,9 @@ static const char *cpp_spec = CPP_SPEC L
+@@ -1234,6 +1382,9 @@ static const char *cpp_spec = CPP_SPEC L
  static const char *cc1_spec = CC1_SPEC OS_CC1_SPEC;
  static const char *cc1plus_spec = CC1PLUS_SPEC;
  static const char *link_gcc_c_sequence_spec = LINK_GCC_C_SEQUENCE_SPEC;
@@ -190,7 +190,7 @@
  static const char *link_ssp_spec = LINK_SSP_SPEC;
  static const char *asm_spec = ASM_SPEC;
  static const char *asm_final_spec = ASM_FINAL_SPEC;
-@@ -1293,7 +1444,7 @@ static const char *cpp_options =
+@@ -1294,7 +1445,7 @@ static const char *cpp_options =
  "%(cpp_unique_options) %1 %{m*} %{std*&ansi&trigraphs} %{W*&pedantic*} %{w}\
   %{f*} %{g*:%{%:debug-level-gt(0):%{g*}\
   %{!fno-working-directory:-fworking-directory}}} %{O*}\
@@ -199,7 +199,7 @@
  
  /* Pass -d* flags, possibly modifying -dumpdir, -dumpbase et al.
  
-@@ -1331,6 +1482,7 @@ static const char *asm_options =
+@@ -1332,6 +1483,7 @@ static const char *asm_options =
     to the assembler equivalents.  */
  "%{v} %{w:-W} %{I*} "
  #endif
@@ -207,7 +207,7 @@
  "%(asm_debug_option)"
  ASM_COMPRESS_DEBUG_SPEC
  "%a %Y %{c:%W{o*}%{!o*:-o %w%b%O}}%{!c:-o %d%w%u%O}";
-@@ -1487,9 +1639,9 @@ static const struct compiler default_com
+@@ -1488,9 +1640,9 @@ static const struct compiler default_com
        %{save-temps*|traditional-cpp|no-integrated-cpp:%(trad_capable_cpp) \
  	  %(cpp_options) -o %{save-temps*:%b.i} %{!save-temps*:%g.i} \n\
  	    cc1 -fpreprocessed %{save-temps*:%b.i} %{!save-temps*:%g.i} \
@@ -219,7 +219,7 @@
        %{!fsyntax-only:%(invoke_as)}}}}", 0, 0, 1},
    {"-",
     "%{!E:%e-E or -x required when input is from standard input}\
-@@ -1503,18 +1655,18 @@ static const struct compiler default_com
+@@ -1504,18 +1656,18 @@ static const struct compiler default_com
  	  %{save-temps*|traditional-cpp|no-integrated-cpp:%(trad_capable_cpp) \
  		%(cpp_options) -o %{save-temps*:%b.i} %{!save-temps*:%g.i} \n\
  		    cc1 -fpreprocessed %{save-temps*:%b.i} %{!save-temps*:%g.i} \
@@ -241,7 +241,7 @@
    {".s", "@assembler", 0, 0, 0},
    {"@assembler",
     "%{!M:%{!MM:%{!E:%{!S:as %(asm_debug) %(asm_options) %i %A }}}}", 0, 0, 0},
-@@ -1751,6 +1903,9 @@ static struct spec_list static_specs[] =
+@@ -1752,6 +1904,9 @@ static struct spec_list static_specs[] =
    INIT_STATIC_SPEC ("cc1_options",		&cc1_options),
    INIT_STATIC_SPEC ("cc1plus",			&cc1plus_spec),
    INIT_STATIC_SPEC ("link_gcc_c_sequence",	&link_gcc_c_sequence_spec),
