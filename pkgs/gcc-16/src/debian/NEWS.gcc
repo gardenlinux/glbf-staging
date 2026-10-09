@@ -1,0 +1,864 @@
+GCC 15 Release Series - Changes, New Features, and Fixes
+
+This page is a "brief" summary of some of the huge number of improvements in
+GCC 15.  You may also want to check out our Porting to GCC 15 page and the full
+GCC documentation.
+
+
+Caveats
+
+  * Support for Nios II targets, which was marked obsolete in GCC 14,
+    has now been removed entirely.
+
+  * In the AArch64 port, support for ILP32 (-mabi=ilp32) has been deprecated
+    and will be removed in a future release.
+
+  * {0} initializer in C or C++ for unions no longer guarantees
+    clearing of the whole union (except for static storage duration
+    initialization), it just initializes the first union member to
+    zero.  If initialization of the whole union including padding bits
+    is desirable, use {} (valid in C23 or C++) or use
+    -fzero-init-padding-bits=unions option to restore old GCC
+    behavior.
+
+
+General Improvements
+
+  * The default vectorizer cost model at -O2 has been enhanced to
+    handle unknown tripcount. But it still disables vectorization of
+    loops when any runtime check for data dependence or alignment is
+    required, it also disables vectorization of epilogue loops but
+    otherwise is equal to the cheap cost model.
+
+  * The vectorizer now supports vectorizing loops with early exits
+    where the number of elements for the input pointers are unknown
+    through peeling for alignment.  This is supported for only for
+    loops with fixed vector lengths.
+
+  * -ftime-report now only reports monotonic run time instead of
+    system and user time. This reduces the overhead of the option
+    significantly, making it possible to use in standard build
+    systems.
+
+  * Incremental Link-Time Optimizations significantly reduce average
+    recompilation time of LTO when doing small code edits
+    (e.g. editing a single function).  Enable with -flto-incremental=.
+
+  * For offloading using OpenMP and OpenACC, issues preventing some
+    host-device architecture combinations have been resolved. In
+    particular, offloading from aarch64 hosts to nvptx devices is now
+    supported. Additionally, the support for using C++ in offload
+    regions has been extended.
+
+  * Improvements for compiling very large input files.  The compile
+    time for large input files with -Wmisleading-indentation has been
+    significantly improved. The compiler can now track columnn numbers
+    larger than 4096. Very large source files have more accurate
+    location reporting.
+
+
+New Languages and Language specific improvements
+
+OpenMP
+
+See the GNU Offloading and Multi-Processing Project (GOMP) page for
+general information.
+
+  * Support for unified-shared memory has been added for some AMD and
+    Nvidia GPU devices, enabled when using the unified_shared_memory
+    clause to the requires directive.  The OpenMP 6.0 self_maps clause
+    is also now supported.  For details, see the offload-target
+    specifics section in the GNU Offloading and Multi Processing
+    Runtime Library Manual.
+
+  * GCC added ompx_gnu_pinned_mem_alloc as a predefined allocator and,
+    for C++, allocator class templates in the omp::allocator namespace
+    for the predefined allocators as specified in the OpenMP
+    specification 5.0, including omp::allocator::null_allocator of
+    OpenMP 6.0 and ompx::allocator::gnu_pinned_mem; the allocator
+    templates can be used with C++ containers such as std::vector.
+
+  * In C and Fortran, the allocate directive now supports static
+    variables; stack variables were previously supported in those
+    languages.  C++ support is not available yet.
+
+  * Offloading improvements: On Nvidia GPUs, writing to the terminal
+    from OpenMP target regions (but not from OpenACC compute regions)
+    is now also supported in Fortran; in C/C++ and on AMD GPUs this
+    was already supported before with both OpenMP and OpenACC.
+    Constructors and destructors on the device side for declare target
+    static aggregates are now handled.
+
+  * For Fortran, mapping derived-type variables with allocatable
+    components is now supported.
+
+  * The OpenMP 5.1 unroll and tile loop-transforming constructs are
+    now supported.
+
+  * OpenMP 5.0 metadirectives are now supported, as are OpenMP 5.1
+    dynamic selectors in both metadirective and declare variant (the
+    latter with some restrictions).
+
+  * The interop construct and the OpenMP interoperability API routines
+    for C, C++ and Fortran are now implemented, including the OpenMP
+    6.0 additions.  This includes foreign-runtime support for Cuda,
+    Cuda Driver, and HIP on Nvida GPUs and for HIP and HSA on AMD GPUs.
+
+  * The OpenMP 5.1 dispatch construct has been implemented with
+    support for the adjust_args and append_args clauses to the declare
+    variant directive, including the following OpenMP 6.0 additions:
+    the interop clause to dispatch and the syntax extensions to
+    append_args are supported.
+
+  * OpenMP 6.0: The get_device_from_uid and omp_get_uid_from_device
+    API routines have been added.
+
+
+COBOL
+
+  * GCC now includes an ISO COBOL compiler, gcobol.  It has been
+    tested on x86-64 and AArch64 targets. It is not expected to work
+    on 32-bit systems. Efforts are underway to adapt it to other
+    machine architectures that support native 128-bit computation.
+
+  * gcobol passes much of the NIST CCVS/85 test suite (except for
+    parts that are now obsolete). It uses ISO/IEC 1989:2023 as a
+    reference specification.  Some parts of that document, notably
+    object-orientation features, are yet to be implemented. Beyond
+    ISO, gcobol recognizes some syntax common on other compilers, with
+    special attention given to IBM.  More information about GCC COBOL
+    can be found at the COBOLworx website.
+
+
+Ada
+
+  * GNAT now allows the 'Round attribute also for ordinary fixed-point
+    types.
+
+  * The new GNAT attribute 'Super can be applied to objects of tagged
+    types in order to obtain a view conversion to the most immediate
+    specific parent type.
+
+  * Mutably tagged types with a defined size are now available through
+    the use of Size'Class. This allows defining a maximum size for the
+    tagged. Example:
+
+      type Base is tagged null record with Size'Class => 16 * 8;
+           -- Size in bits (128 bits, or 16 bytes)
+
+      type Derived_Type is new Base with record Data_Field : Integer; end record;
+           -- ERROR if Derived_Type exceeds 16 bytes
+
+  * New Finalizable aspect. It is a GNAT language extension which
+    serves as a lightweight alternative to controlled types.
+
+      type T is record
+          ...
+      end record with Finalizable => (Initialize           => Initialize,
+                                      Adjust               => Adjust,
+                                      Finalize             => Finalize,
+                                      Relaxed_Finalization => True);
+
+      procedure Adjust     (Obj : in out T);
+      procedure Finalize   (Obj : in out T);
+      procedure Initialize (Obj : in out T);
+
+  * The aspect No_Raise has been added, it declares that a subprogram
+    cannot raise an exception.
+
+  * The aspect External_Initialization has been added, it allows for
+    data to be initialized using an external file which is loaded
+    during compilation time.
+
+  * The aspect Exit_Cases has been added to annotate functions and
+    procedures with side effects in SPARK (see SPARK reference manual)
+    . It can be used to partition the input state into a list of cases
+    and specify, for each case, how the subprogram is allowed to
+    terminate.
+
+  * Language extensions are enabled through the use of pragma
+    Extensions_Allowed (On | Off | All_Extensions); which has had its
+    syntax changed. An argument of All_Extensions has the same effect
+    as On, except that some extra experimental extensions are enabled.
+
+  * Several new compilation flags have been added, some examples
+    include -gnatis, -gnatw.n, -gnatw_l and -gnatw.v.  The internal
+    debugging utilities for the compiler have also received a lot of
+    new options, please refer to debug.adb for more information.
+
+  * The diagnostics code has seen a major refactor, it now supports
+    the sarif format -fdiagnostics-format=sarif-file among other
+    improvements. More changes are expected in following releases.
+
+  * System.Image_A has now printing routines to output address
+    information in HEX.
+
+  * Several program units have had contracts added to them and SPARK
+    analysis has been enabled.
+
+  * Support for FreeBSD, Android and aarch64 targets has been improved.
+
+  * Task priorities on MinGW have been reworked.
+
+  * The documentation has been rearanged for clarity, mainly the
+    sections related to tasking and platform dependent information.
+
+  * REMOVAL: Generic_Formal_Hash_Table has been removed, the SPARK
+    Library is recommended as a substitute.
+
+
+C family
+
+  * A musttail statement attribute was added to enforce tail calls.
+
+  * Extended inline assembler statements can now be used with some
+    limitations outside of functions as well.  New constraints have
+    been added for defining symbols or using symbols inside of inline
+    assembler, and a new generic operand modifier has been added to
+    allow printing those regardless of PIC.  For example:
+
+      struct S { int a, b, c; };
+      extern foo (void);
+      extern char var;
+      int var2;
+      asm (".text; %cc0: mov %cc2, %%r0; .previous;"
+           ".rodata: %cc1: .byte %3; .previous" : :
+           ":" (foo), /* Tell compiler asm defines foo function. */
+           ":" (&var), /* Tell compiler asm defines var variable.  */
+           "-s" (var2), /* Tell compiler asm uses var2 variable.  */
+                        /* "s" would work too but might not work with -fpic.  */
+           "i" (sizeof (struct S))); /* It is possible to pass constants to toplevel asm.  */
+
+  * The "redzone" clobber is now allowed in inline assembler
+    statements to describe that the assembler can overwrite memory in
+    the stack red zone (e.g. on x86-64 or PowerPC).
+
+  * The nonnull_if_nonzero function attribute has been added to
+    describe functions where some pointer parameter may be NULL
+    only if some other parameter is zero.
+	
+  * The -Wtrailing-whitespace= and -Wleading-whitespace= options have
+    been added to diagnose certain whitespace characters at the end of
+    source lines or whitespace characters at the start of source lines
+    violating certain indentation styles.
+
+  * The -Wheader-guard warning has been added and enabled in -Wall to
+    warn about some inconsistencies in header file guarding macros.
+
+
+C
+
+  * C23 by default: GCC 15 changes the default language version for C
+    compilation from -std=gnu17 to -std=gnu23.  If your code relies on
+    older versions of the C standard, you will need to either add
+    -std= to your build flags, or port your code; see the porting
+    notes.
+
+  * Some more C23 features have been implemented:
+
+    * #embed preprocessing directive support.
+    * Support for unsequenced and reproducible attributes.
+    * __STDC_VERSION__ predefined macro value changed
+      for -std=c23 or -std=gnu23 to 202311L.
+
+  * Some new features from the upcoming C2Y revision of the ISO C
+    standard are supported with -std=c2y and -std=gnu2y.  Some of
+    these features are also supported as extensions when compiling for
+    older language versions.
+
+    * Generic selection expression with a type operand.
+    * Support ++ and -- on complex values.
+    * Accessing byte arrays.
+    * alignof of an incomplete array type.
+    * Obsolete implicitly octal literals and add delimited escape
+      sequences (just partially implemented, support for new syntax
+      added but nothing deprecated yet).
+    * Named loops.
+    * More Modern Bit Utilities (addition of __builtin_stdc_rotate_left
+      and __builtin_stdc_rotate_right builtins for use in future C
+      library <stdbit.h> headers).
+    * Case range expressions.
+    * if declarations.
+    * Introduce complex literals.
+    * Abs Without Undefined Behavior (addition of builtins for use in
+      future C library <stdlib.h> headers).
+    * Allow zero length operations on null pointers (just the compiler
+      side, C library headers will need adjustments too if using
+      nonnull attribute).
+
+
+C++
+
+  * Several C++26 features have been implemented:
+
+    * P2558R2, Add @, $, and ` to the basic character set (PR110343)
+    * P2552R3, On the ignorability of standard attributes (PR110345)
+    * P2662R3, Pack indexing (PR113798)
+    * P0609R3, Attributes for structured bindings (PR114456)
+    * P2573R2, = delete("reason"); (PR114458)
+    * P2893R3, Variadic friends (PR114459)
+    * P3034R1, Disallow module declarations to be macros (PR114461)
+    * P2747R2, constexpr placement new (PR115744)
+    * P0963R3, Structured binding declaration as a condition (PR115745)
+    * P3144R2, Deleting a pointer to an incomplete type should be
+      ill-formed (PR115747)
+    * P3176R0, Oxford variadic comma (PR117786)
+    * P2865R5, Removing deprecated array comparisons (PR117788)
+    * P1967R14, #embed (PR119065)
+    * P3247R2, Deprecating the notion of trivial types (PR117787)
+
+  * Several C++23 features have been implemented:
+
+    * P2615R1, Meaningful exports (PR107688)
+    * P2718R0, Wording for P2644R1 Fix for Range-based for Loop (PR107637)
+
+  * Several C++ Defect Reports have been resolved, e.g.:
+
+    * DR 36, using-declarations in multiple-declaration contexts
+    * DR 882, Defining main as deleted
+    * DR 1363, Triviality vs multiple default constructors
+    * DR 1496, Triviality with deleted and missing default constructors
+    * DR 2387, Linkage of const-qualified variable template
+    * DR 2521, User-defined literals and reserved identifiers
+    * DR 2627, Bit-fields and narrowing conversions
+    * DR 2819, Cast from null pointer value in a constant expression (C++26 only)
+    * DR 2867, Order of initialization for structured bindings
+    * DR 2918, Consideration of constraints for address of overloaded function
+
+  * Inline assembler statements now support constexpr generated
+    strings, analoguous to static_assert.
+
+  * Qualified name lookup failure into the current instantiation, e.g.
+    this->non_existent, is now proactively diagnosed when parsing a
+    template.
+
+  * The -fassume-sane-operators-new-delete option has been added and
+    enabled by default.  This option allows control over some
+    optimizations around calls to replaceable global operators new and
+    delete.  If a program overrides those replaceable global operators
+    and the replaced definitions read or modify global state visible to
+    the rest of the program, programs might need to be compiled with
+    -fno-assume-sane-operators-new-delete.
+
+  * The -Wself-move warning now warns even in a
+    member-initializer-list.
+
+  * The support for Concepts TS was removed.  -fconcepts-ts has no
+    effect anymore.
+
+  * A new option -Wtemplate-body was added, which can be used to
+    disable diagnosing errors when parsing a template.
+
+  * C++ Modules have been greatly improved.
+
+  * C++11 attributes are now supported even in C++98.
+
+
+  * New flag_enum attribute to indicate that the enumerators are used
+    in bitwise operations; this suppresses a -Wswitch warning.
+
+  * The -Wdangling-reference warning has been improved: for example,
+    it doesn't warn for empty classes anymore.
+
+  * The front end's handling of explicitly-defaulted functions has
+    been corrected to properly handle [dcl.fct.def.default].  The new
+    -Wdefaulted-function-deleted warning warns when an explicitly
+    defaulted function is deleted.
+
+  * The implementation of DR 2789 was refined.
+
+  * Compilation time speed ups, e.g. by improving hashing of template
+    specializations.
+
+  * Support for __builtin_operator_new and __builtin_operator_delete
+    was added.  See the manual for more info.
+
+  * More prvalues are evaluated at compile time (git).
+
+  * Various diagnostic improvements.
+
+
+Runtime Library (libstdc++)
+
+  * Debug assertions are now enabled by default for unoptimized
+    builds.  Use -D_GLIBCXX_NO_ASSERTIONS to override this.
+
+  * Improved experimental support for C++26, including:
+    * views::concat.
+    * Member visit.
+    * Type-checking std::format args.
+
+  * Improved experimental support for C++23, including:
+    * std and std.compat modules (also supported for C++20).
+    * std::flat_map and std::flat_set.
+    * Clarify handling of encodings in localized formatting of chrono types.
+
+
+D
+
+  * Support for the D programming language has been updated to version
+    2.111.0 of the language and run-time library. Full changelog for
+    this release and previous releases can be found on the dlang.org
+    website.
+
+  * On supported targets, the version GNU_CET is now predefined when
+    the option -fcf-protection is used. The protection level is also
+    set in the traits key __traits(getTargetInfo, "CET").
+
+  * A new option -finclude-imports was added, which tells the compiler
+    to include imported modules in the compilation, as if they were
+    given on the command-line.
+
+
+Fortran
+
+  * Fortran 2018 and 2023 locality specifiers to do concurrent are
+    now supported.
+
+  * Experimental support for unsigned modular integers, enabled by
+    -funsigned; see gfortran documentation for details. This follows
+    (J3/24-116).  With this option in force, the selected_logical_kind
+    intrinsic function and, in the ISO_FORTRAN_ENV module, the named
+    constants logical{8,16,32,64} and real16 were added.  The
+    ISO_C_BINDING module has been extended accordingly.
+
+  * Missing commas separating descriptors in input/output format
+    strings are no longer permitted by default and are rejected at
+    run-time unless -std=legacy is used when compiling the main
+    program unit.  See Fortran 2023 constraint C1302.
+
+  * The Fortran module *.mod format generated by GCC 15 is
+    incompatible with the module format generated by GCC 8 - 14, but
+    GCC 15 can for compatibility still read GCC 8 - 14 created module
+    files.
+
+  * Coarray support has been reworked to allow access to components in
+    derived types that have not been compiled with coarray support
+    enabled; especially, when the derived type is in a binary only
+    module.  This has changed the ABI and may lead to link-time errors
+    with object files generated with a previous GCC version and to be
+    linked to the current caf_single library.  If this library is to
+    be used, then it is recommended to recompile all artifacts.  The
+    OpenCoarrays library is not affected, because it provides
+    backwards compatibility with the older ABI.
+
+  * The -Wexternal-interface-mismatch option has been added.  This
+    checks for mismatches between the argument lists in dummy external
+    arguments, and is implied by -Wall and -fc-prototypes-external
+    options.
+
+  * The -fc-prototypes now also generates prototypes for interoperable
+    procedures with assumed shape and assumed rank arguments that
+    require the header file <ISO_Fortran_binding.h>.
+
+
+Modula-2
+
+  * The keyword FORWARD has been implemented in the compiler and is
+    available by default in all dialects.
+
+  * The SYSTEM module now exports the datatype COFF_T mapping onto the
+    POSIX off_t type.  The size of this datatype can be controlled by
+    the new option -fm2-file-offset-bits=.
+
+  * Access to the GCC builtins clz, clzll, ctz and ctzll are now
+    available from the module Builtins.
+
+
+New Targets and Target Specific Improvements
+
+
+AArch64
+
+  * Support has been added for the AArch64 MinGW target
+    (aarch64-w64-mingw32).  At present, this target supports C and C++
+    for base Armv8-A, but with some caveats:
+
+    * Although most variadic functions work, the implementation of
+      them is not yet complete.
+    * C++ exception handling is not yet implemented.
+
+    Further work is planned for GCC 16.
+
+  * As noted above, support for ILP32 (-mabi=ilp32) has been
+    deprecated and will be removed in a future release.  aarch64*-elf
+    targets no longer build the ILP32 multilibs.
+
+  * The following architecture level is now supported by -march and
+    related source-level constructs (GCC identifiers in parentheses):
+
+    * Armv9.5-A (arm9.5-a)
+
+  * The following CPUs are now supported by -mcpu, -mtune, and related
+    source-level constructs (GCC identifiers in parentheses):
+
+    * Apple A12 (apple-a12)
+    * Apple M1 (apple-m1)
+    * Apple M2 (apple-m2)
+    * Apple M3 (apple-m3)
+    * Arm Cortex-A520AE (cortex-a520ae)
+    * Arm Cortex-A720AE (cortex-a720ae)
+    * Arm Cortex-A725 (cortex-a725)
+    * Arm Cortex-R82AE (cortex-r82ae)
+    * Arm Cortex-X925 (cortex-x925)
+    * Arm Neoverse N3 (neoverse-n3)
+    *  Arm Neoverse V3 (neoverse-v3)
+    * Arm Neoverse V3AE (neoverse-v3ae)
+    * FUJITSU-MONAKA (fujitsu-monaka)
+    * NVIDIA Grace (grace)
+    *  NVIDIA Olympus (olympus)
+    * Qualcomm Oryon-1 (oryon-1)
+
+  * The following features are now supported by -march, -mcpu, and
+    related source-level constructs (GCC modifiers in parentheses):
+
+    * FEAT_CPA (+cpa), enabled by default for Arm9.5-A and above
+    * FEAT_FAMINMAX (+faminmax), enabled by default for Arm9.5-A and above
+    * FEAT_FCMA (+fcma), enabled by default for Armv8.3-A and above
+    * FEAT_FLAGM2 (+flagm2), enabled by default for Armv8.5-A and above
+    * FEAT_FP8 (+fp8)
+    * FEAT_FP8DOT2 (+fp8dot2)
+    * FEAT_FP8DOT4 (+fp8dot4)
+    * FEAT_FP8FMA (+fp8fma)
+    * FEAT_FRINTTS (+frintts), enabled by default for Armv8.5-A and above
+    * FEAT_JSCVT (+jscvt), enabled by default for Armv8.3-A and above
+    * FEAT_LUT (+lut), enabled by default for Arm9.5-A and above
+    * FEAT_LRCPC2 (+rcpc2), enabled by default for Armv8.4-A and above
+    * FEAT_SME_B16B16 (+sme-b16b16)
+    * FEAT_SME_F16F16 (+sme-f16f16)
+    * FEAT_SME2p1 (+sme2p1)
+    * FEAT_SSVE_FP8DOT2 (+ssve-fp8dot2)
+    * FEAT_SSVE_FP8DOT4 (+ssve-fp8dot4)
+    * FEAT_SSVE_FP8FMA (+ssve-fp8fma)
+    * FEAT_SVE_B16B16 (+sve-b16b16)
+    * FEAT_SVE2p1 (+sve2p1), enabled by default for Armv9.4-A and above
+    * FEAT_WFXT (+wfxt), enabled by default for Armv8.7-A and above
+    * FEAT_XS (+xs), enabled by default for Armv8.7-A and above
+
+    The features listed as being enabled by default for Armv8.7-A or
+    earlier were previously only selectable using the associated
+    architecture level.  For example, FEAT_FCMA was previously
+    selected by -march=armv8.3-a and above (as it still is), but it
+    wasn't previously selectable independently.
+
+  * -mbranch-protection has been extended to support the Guarded
+    Control Stack (GCS) extension.  This support is included in
+    -mbranch-protection=standard and can be enabled individually using
+    -mbranch-protection=gcs.
+
+  * The following additional changes have been made to the
+    command-line options:
+
+    * In order to align with other tools, the SME feature modifier
+      +sme no longer enables SVE.  However, GCC does not yet support
+      using SME without SVE and instead rejects such combinations with
+      a "not implemented" error.
+
+    * The options -mfix-cortex-a53-835769 and -mfix-cortex-a53-843419
+      are now silently ignored if the selected architecture is
+      incompatible with Cortex-A53.  This is particularly useful for
+      toolchains that are configured to apply the Cortex-A53 workarounds
+      by default.  For example, all other things being equal, a
+      toolchain configured with --enable-fix-cortex-a53-835769 now
+      produces the same code for -mcpu=neoverse-n2 as a toolchain
+      configured without --enable-fix-cortex-a53-835769.
+
+    * -mcpu=native now handles unrecognized heterogeneous systems by
+      detecting which individual architecture features are supported
+      by the CPUs.  This matches the preexisting behavior for unknown
+      homogeneous systems.
+
+    * The first scheduling pass (-fschedule-insns) is no longer
+      enabled by default at -O2 for AArch64 targets.  The pass is
+      still enabled by default at -O3 and -Ofast.
+
+  * Support has been added for the following features of the Arm C
+    Language Extensions (ACLE):
+
+    * guarded control stacks
+    * lookup table instructions with 2-bit and 4-bit indices
+      (predefined macro __ARM_FEATURE_LUT, enabled by +lut)
+    * floating-point absolute minimum and maximum instructions
+      (predefined macro __ARM_FEATURE_FAMINMAX, enabled by +faminmax)
+
+    * FP8 conversions (predefined macro __ARM_FEATURE_FP8, enabled by +fp8)
+
+    * FP8 2-way dot product to half precision instructions (predefined
+      macro __ARM_FEATURE_FP8DOT2, enabled by +fp8dot2)
+
+    * FP8 4-way dot product to single precision instructions
+      (predefined macro __ARM_FEATURE_FP8DOT4, enabled by +fp8dot4)
+
+    * FP8 multiply-accumulate to half precision and single precision
+      instructions (predefined macro __ARM_FEATURE_FP8FMA, enabled by
+      +fp8fma)
+
+    * SVE FP8 2-way dot product to half precision instructions
+      (predefined macro __ARM_FEATURE_SSVE_FP8DOT2, enabled by
+      +ssve-fp8dot2)
+
+    * SVE FP8 4-way dot product to single precision instructions
+      (predefined macro __ARM_FEATURE_SSVE_FP8DOT4, enabled by
+      +ssve-fp8dot4)
+
+    * SVE FP8 multiply-accumulate to half precision and single
+      precision instructions (predefined macro
+      __ARM_FEATURE_SSVE_FP8FMA, enabled by +ssve-fp8fma)
+
+    * SVE2.1 instructions (predefined macro __ARM_FEATURE_SVE2p1,
+      enabled by +sve2p1)
+
+    * SVE non-widening bfloat16 instructions (predefined macro
+      __ARM_FEATURE_SVE_B16B16, enabled by +sve-b16b16)
+
+    * SME2.1 instructions (predefined macro __ARM_FEATURE_SME2p1,
+      enabled by +sme2p1)
+
+    * SME non-widening bfloat16 instructions (predefined macro
+      __ARM_FEATURE_SME_B16B16, enabled by +sme-b16b16)
+
+    * SME half-precision instructions (predefined macro
+      __ARM_FEATURE_SME_F16F16, enabled by +sme-f16f16)
+
+    * using C and C++ prefix operators, infix operators, and postfix
+      operators with scalable SVE ACLE types (predefined macro
+      __ARM_FEATURE_SVE_VECTOR_OPERATORS==2, enabled by +sve)
+
+      * __fma (in arm_acle.h)
+      * __fmaf (in arm_acle.h)
+      * __chkfeat (in arm_acle.h)
+
+  * In addition, the following changes have been made to preexisting
+    ACLE features:
+
+    * The macros __ARM_FEATURE_BF16 and __ARM_FEATURE_SVE_BF16 are now
+      predefined when the associated support is available.  Previous
+      versions of GCC provided the associated intrinsics but did not
+      predefine the macros.
+
+    * OpenMP tasks can now share scalable SVE vectors and predicates.
+      However, offloading of scalable vectors and predicates is not
+      supported.
+
+    * ACLE system register functions (such as __arm_rsr and __arm_wsr)
+      no longer try to enforce the minimum architectural requirement.
+
+    * A warning is reported if code attempts to use the Function
+      Multi-Versioning feature.  GCC's current implementation of this
+      feature is still experimental and it does not conform to the
+      ACLE specification.
+
+  * Support has been added for the indirect_return function-type
+    attribute, which indicates that a function might return via an
+    indirect branch instead of via a normal return instruction.
+
+  * 128-bit atomic operations have been extended to make use of
+    FEAT_LRCPC3 instructions, when support for the instructions is
+    detected at runtime.
+
+  * There have been many code-generation improvements to the AArch64 port.
+    Some examples are:
+
+    * automatic use of AArch64 CRC instructions
+    *  automatic use of AArch64 saturating vector arithmetic instructions
+    * better code generation of population counts
+    * improved handling of floating-point and vector immediates
+    * improved handling of vector permutations
+    * more use of SVE instructions to optimize Advanced SIMD code
+    * more folding and simplification of SVE ACLE intrinsics
+    * improved CPU-specific tuning
+    * improved register allocation, such as eliminating some vector moves
+
+
+AMD GPU (GCN)
+
+  * The standard C++ library (libstdc++) is now supported and enabled.
+
+  * Experimental support for supporting generic devices has been
+    added; specifying gfx9-generic, gfx10-3-generic, or gfx11-generic
+    to -march= will generate code that can run on all devices of a
+    series.  Additionally, the following specific devices are now have
+    experimental support, all of which are compatible with a listed
+    generic: gfx902, gfx904, gfx909, gfx1031, gfx1032, gfx1033,
+    gfx1034, gfx1035, gfx1101, gfx1102, gfx1150, and gfx1151.  To use
+    any of the listed new devices including the generic ones, GCC has
+    to be configured to build the runtime library for the device. Note
+    that generic support requires ROCm 6.4.0 (or newer).  For details,
+    consult GCC's installation notes.
+
+  * Support for Fiji (gfx803) devices has been removed (this was
+    already deprecated in GCC 14).
+
+
+AVR
+
+  * Support has been added for the signal(num) and interrupt(num)
+    function attributes that allow to specify the interrupt vector
+    number num as an argument.  It allows to use static functions as
+    interrupt handlers, and also functions defined in a C++ namespace.
+
+  * Support has been added for the noblock function attribute.  It can
+    be specified together with the signal attribute to indicate that
+    the interrupt service routine should start with a SEI instruction
+    to globally re-enable interrupts.  The difference to the interrupt
+    attribute is that the noblock attribute just acts like a flag and
+    does not impose a specific function name.
+
+  * Support has been added for the __builtin_avr_mask1 built-in
+    function.  It can be used to compute some bit masks when code like
+    1 << offset is not fast enough.
+
+  * Support has been added for a new 24-bit named address space
+    __flashx.  It is similar to the __memx address space introduced in
+    v4.7, but reading is a bit more efficient since it only supports
+    reading from program memory. Objects in the __flashx address space
+    are located in the .progmemx.data section.
+
+  * Apart from the built-in types __int24 and __uint24 supported since
+    v4.7, support has been added for the signed __int24 and unsigned
+    __int24 types.
+
+  * Code generation for the 32-bit integer shifts with constant offset
+    has been improved. The code size may slightly increase even when
+    optimizing for code size with -Os.
+
+  * Support has been added for a compact vector table as supported by
+    some AVR devices.  It can be activated by the new command-line
+    option -mcvt.  It links crtmcu-cvt.o as startup code which is
+    supported since AVR-LibC v2.3.
+
+  * Support has been added for the new option -mno-call-main.  Instead
+    of calling main, it will be located in section .init9.
+
+  * New AVR specific optimizations have been added.  They can be
+    controlled by the new command-line options -mfuse-move,
+    -msplit-ldst, -msplit-bit-shift and -muse-nonzero-bits.
+
+
+IA-32/x86-64
+
+  * New ISA extension support for Intel AMX-AVX512 was added.
+    AMX-AVX512 intrinsics are available via the -mamx-avx512 compiler
+    switch.
+
+  * New ISA extension support for Intel AMX-FP8 was added.  AMX-FP8
+    intrinsics are available via the -mamx-fp8 compiler switch.
+
+  * New ISA extension support for Intel AMX-MOVRS was added.
+    AMX-MOVRS intrinsics are available via the -mamx-movrs compiler
+    switch.
+
+  * New ISA extension support for Intel AMX-TF32 was added.
+    AMX-TF32 intrinsics are available via the -mamx-tf32
+    compiler switch.
+
+  * New ISA extension support for Intel AMX-TRANSPOSE was added.
+    AMX-TRANSPOSE intrinsics are available via the -mamx-transpose
+    compiler switch.
+
+  * All of new feature support for Intel APX expect for CFCMOV was
+    added, including CCMP/CTEST, NF and ZU. APX support is available
+    via the -mapxf compiler switch.
+
+  * New ISA extension support for Intel AVX10.2 was added.  AVX10.2
+    intrinsics are available via the -mavx10.2 compiler switch.
+
+  * New ISA extension support for Intel MOVRS was added.  MOVRS
+    intrinsics are available via the -mmovrs compiler switch. MOVRS
+    vector intrinsics are available via the -mmovrs -mavx10.2 compiler
+    switches.
+
+  * EVEX version support for Intel SM4 was added.  New 512-bit SM4
+    intrinsics are available via the -msm4 -mavx10.2 compiler
+    switches.
+
+  * GCC now supports the Intel CPU named Diamond Rapids through
+    -march=diamondrapids.  Based on Granite Rapids, the switch further
+   enables the AMX-AVX512, AMX-FP8, AMX-MOVRS, AMX-TF32, AMX-TRANSPOSE,
+    APX_F, AVX10.2, AVX-IFMA, AVX-NE-CONVERT, AVX-VNNI-INT16,
+    AVX-VNNI-INT8, CMPccXADD, MOVRS, SHA512, SM3, SM4, and USER_MSR ISA
+    extensions.
+
+  * Support for Xeon Phi CPUs (a.k.a. Knight Landing and Knight Mill)
+    were removed in GCC 15. GCC will no longer accept -march=knl,
+    -march=knm, -mavx5124fmaps, -mavx5124vnniw, -mavx512er,
+    -mavx512pf, -mprefetchwt1, -mtune=knl, and -mtune=knm compiler
+    switches.
+
+  * -mavx10.1-256, -mavx10.1-512, and mevex512 are
+    -deprecated. Meanwhile, -mavx10.1 enables AVX10.1 intrinsics with
+    -512-bit vector support, while in GCC 14.1 and GCC 14.2, it only
+    -enables 256-bit vector support. GCC will emit a warning when
+    -using these compiler switches. -mavx10.1-256, mavx10.1-512, and
+    --mevex512 will be removed in GCC 16 together with the warning for
+    -the behavior change on mavx10.1.
+
+  * With the -mveclibabi compiler switch GCC is able to generate
+    vectorized calls to external libraries. GCC 15 newly supports
+    generating vectorized math calls to the math library from AMD
+    Optimizing CPU Libraries (AOCL LibM). This option is available
+    through -mveclibabi=aocl. GCC still supports generating calls to
+    AMD Core Math Library (ACML). However, that library is end-of-life
+    and AOCL offers many more vectorized functions.
+
+
+LoongArch
+
+  * Support has been added for target attributes and pragmas. For more
+    details on available attributes and pragmas, including their
+    proper usage, please refer to the provided documentation.
+
+  * Support has been added for the new option
+    -mannotate-tablejump. Which can create an annotation section
+    .discard.tablejump_annotate to correlate the jirl instruction and
+    the jump table.
+
+  * Add CRC expander to generate faster CRC.
+
+  * Add ABI names for FPR.
+
+
+NVPTX
+
+  * The standard C++ library (libstdc++) is now supported and enabled.
+
+  * GCC's nvptx target now supports constructors and destructors.  For
+    this, a recent version of nvptx-tools is required.
+
+
+SH
+
+  * Bare metal sh-elf targets are now using the newer soft-fp library
+    for improved performance of floating-point emulation on CPUs
+    without hardware floating-point support.
+
+
+Operating Systems
+
+PowerPC Darwin
+
+  * Fortran's IEEE modules are now supported on Darwin PowerPC.
+
+
+Other significant improvements
+
+
+GCC 15.1
+
+This is the list of problem reports (PRs) from GCC's bug tracking
+system that are known to be fixed in the 15.1 release. This list might
+not be complete (that is, it is possible that some PRs that have been
+fixed are not listed here).
+
+For questions related to the use of GCC, please consult these web
+pages and the GCC manuals. If that fails, the gcc-help@gcc.gnu.org
+mailing list might help.  Comments on these web pages and the
+development of GCC are welcome on our developer list at
+gcc@gcc.gnu.org.  All of our lists have public archives.
+
+
+Copyright (C) Free Software Foundation, Inc.  Verbatim copying and
+distribution of this entire article is permitted in any medium,
+provided this notice is preserved.
+
+These pages are maintained by the GCC team.  Last modified 2025-04-25.
