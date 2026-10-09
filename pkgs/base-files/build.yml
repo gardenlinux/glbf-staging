@@ -2,3 +2,4 @@ build_profiles: [nocheck, noudeb]
 build_options: [nocheck]
 runtime_depends:
   base-files: [mawk:mawk, glibc:libc6]
+# force-rebuild: 8f993b72-cb8b-45c2-b867-4383058b3fd5
