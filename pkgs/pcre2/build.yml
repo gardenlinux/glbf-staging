@@ -1,0 +1,4 @@
+build_profiles: [nocheck, noudeb]
+build_options: [nocheck]
+runtime_depends:
+  libpcre2-8-0: [glibc:libc6]

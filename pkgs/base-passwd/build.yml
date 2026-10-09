@@ -1,0 +1,4 @@
+build_profiles: [nocheck, nodoc]
+build_options: [nocheck]
+runtime_depends:
+  base-passwd: [cdebconf:libdebconfclient0, libselinux:libselinux1, glibc:libc6]

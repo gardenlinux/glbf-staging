@@ -1,0 +1,5 @@
+build_profiles: [nocheck, noudeb]
+build_options: [nocheck]
+runtime_depends:
+  libssl3t64: [openssl:openssl-provider-legacy, zlib:zlib1g, libzstd:libzstd1, glibc:libc6]
+  openssl-provider-legacy: [openssl:libssl3t64, zlib:zlib1g, libzstd:libzstd1, glibc:libc6]

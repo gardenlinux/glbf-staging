@@ -1,0 +1,4 @@
+build_profiles: [nocheck, noudeb]
+build_options: [nocheck]
+runtime_depends:
+  libgmp10: [glibc:libc6]
