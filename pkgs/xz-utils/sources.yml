@@ -1,0 +1,6 @@
+sources:
+    - file: xz-utils_5.8.3.orig.tar.xz
+      sha256: fff1ffcf2b0da84d308a14de513a1aa23d4e9aa3464d17e64b9714bfdd0bbfb6
+      urls:
+        - https://snapshot.debian.org/archive/debian/20260501T000000Z/pool/main/x/xz-utils/xz-utils_5.8.3.orig.tar.xz
+        - https://snapshot.debian.org/file/48562fc255d61bdb140f628212b2450819ba8f20/xz-utils_5.8.3.orig.tar.xz
