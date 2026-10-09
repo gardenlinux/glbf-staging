@@ -1,0 +1,416 @@
+# THIS FILE IS GENERATED AUTOMATICALLY FROM THE D-I PO MASTER FILES
+# The master files can be found under packages/po/
+#
+# DO NOT MODIFY THIS FILE DIRECTLY: SUCH CHANGES WILL BE LOST
+#
+# Serbian/Cyrillic messages for debian-installer.
+# Copyright (C) 2010-2012 Software in the Public Interest, Inc.
+# Copyright (C) 2008 THE cp6Linux'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the debian-installer package.
+# Karolina Kalic <karolina@resenje.org>, 2010-2012.
+# Janos Guljas <janos@resenje.org>, 2010-2012.
+# Veselin Mijušković <veselin.mijuskovic@gmail.com>, 2008.
+# Milan Kostic <kosticmilan77@open.telekom.rs>, 2012.
+# Filipovic Dragan <filipovic@tutanota.com>, 2018, 2020.
+#
+# Translations from iso-codes:
+#   Aleksandar Jelenak <aleksandar.jelenak@gmail.com>, 2010.
+#   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+#   Danilo Segan <dsegan@gmx.net>, 2003, 2004, 2005.
+#   Milos Komarcevic <kmilos@gmail.com>, Caslav Ilic <caslav.ilic@gmx.net>, 2009.
+#   Tobias Quathamer <toddy@debian.org>, 2007.
+#     Translations taken from ICU SVN on 2007-09-09
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: debian-installer\n"
+"Report-Msgid-Bugs-To: cdebconf@packages.debian.org\n"
+"POT-Creation-Date: 2016-06-05 14:47+0000\n"
+"PO-Revision-Date: 2025-08-04 18:01+0000\n"
+"Last-Translator: Саша Петровић <salepetronije@gmail.com>\n"
+"Language-Team: Serbian <debian-l10n-serbian@lists.debian.org>\n"
+"Language: sr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. Type: select
+#. Choices
+#. :sl2:
+#: ../cdebconf-udeb.templates:2001
+msgid "critical"
+msgstr "кључне"
+
+#. Type: select
+#. Choices
+#. :sl2:
+#: ../cdebconf-udeb.templates:2001
+msgid "high"
+msgstr "високе"
+
+#. Type: select
+#. Choices
+#. :sl2:
+#: ../cdebconf-udeb.templates:2001
+msgid "medium"
+msgstr "средње"
+
+#. Type: select
+#. Choices
+#. :sl2:
+#: ../cdebconf-udeb.templates:2001
+msgid "low"
+msgstr "ниске"
+
+#. Type: select
+#. Description
+#. :sl2:
+#: ../cdebconf-udeb.templates:2002
+msgid "Ignore questions with a priority less than:"
+msgstr "Занемари питања са хитношћу мањом од:"
+
+#. Type: select
+#. Description
+#. :sl2:
+#: ../cdebconf-udeb.templates:2002
+msgid ""
+"Packages that use debconf for configuration prioritize the questions they "
+"might ask you. Only questions with a certain priority or higher are actually "
+"shown to you; all less important questions are skipped."
+msgstr ""
+"Пакети који користе дебцонф за подешавање дају предност питањима која могу "
+"да вам упуте. Само питања одређене важности или више биће вам постављена; "
+"сва питања ниже важности биће прескочена."
+
+#. Type: select
+#. Description
+#. :sl2:
+#: ../cdebconf-udeb.templates:2002
+msgid ""
+"You can select the lowest priority of question you want to see:\n"
+" - 'critical' is for items that will probably break the system\n"
+"    without user intervention.\n"
+" - 'high' is for items that don't have reasonable defaults.\n"
+" - 'medium' is for normal items that have reasonable defaults.\n"
+" - 'low' is for trivial items that have defaults that will work in\n"
+"   the vast majority of cases."
+msgstr ""
+"Изаберите најнижи ниво важности питања која желите видети:\n"
+" - „кључне“ је за проблеме који ће вероватно срушити систем\n"
+"    без суделовања корисника.\n"
+" - „високе“ је за проблеме који немају разумне подразумеване вредности.\n"
+" - „средње“ је за обичне ставке које имају разумне подразумеване вредности.\n"
+" - „низак“ је за неважне ставке које ће у највећем броју\n"
+"   случајева добро радити са подразумеваним вредностима."
+
+#. Type: select
+#. Description
+#. :sl2:
+#: ../cdebconf-udeb.templates:2002
+msgid ""
+"For example, this question is of medium priority, and if your priority were "
+"already 'high' or 'critical', you wouldn't see this question."
+msgstr ""
+"На пример, ово питање је средње важности и да је ваша важност већ „висока“ "
+"или „критична“, не бисте видели ово питање."
+
+#. Type: text
+#. Description
+#. :sl2:
+#: ../cdebconf-priority.templates:1001
+msgid "Change debconf priority"
+msgstr "Промени хитност дебцонфа"
+
+#. Type: text
+#. Description
+#. Translators, this text will appear on a button, so KEEP IT SHORT
+#. :sl1:
+#: ../cdebconf-newt-udeb.templates:1001 ../cdebconf-gtk-udeb.templates:1001
+msgid "Continue"
+msgstr "Настави"
+
+#. Type: text
+#. Description
+#. Translators, this text will appear on a button, so KEEP IT SHORT
+#. :sl1:
+#: ../cdebconf-newt-udeb.templates:2001 ../cdebconf-gtk-udeb.templates:2001
+msgid "Go Back"
+msgstr "Назад"
+
+#. Type: text
+#. Description
+#. Translators, this text will appear on a button, so KEEP IT SHORT
+#. :sl1:
+#. Type: text
+#. Description
+#. :sl4:
+#: ../cdebconf-newt-udeb.templates:3001 ../cdebconf-gtk-udeb.templates:3001
+#: ../cdebconf-slang-udeb.templates:1001 ../cdebconf-text-udeb.templates:10001
+msgid "Yes"
+msgstr "Да"
+
+#. Type: text
+#. Description
+#. Translators, this text will appear on a button, so KEEP IT SHORT
+#. :sl1:
+#. Type: text
+#. Description
+#. :sl4:
+#: ../cdebconf-newt-udeb.templates:4001 ../cdebconf-gtk-udeb.templates:4001
+#: ../cdebconf-slang-udeb.templates:2001 ../cdebconf-text-udeb.templates:11001
+msgid "No"
+msgstr "Не"
+
+#. Type: text
+#. Description
+#. Translators, this text will appear on a button, so KEEP IT SHORT
+#. :sl1:
+#: ../cdebconf-newt-udeb.templates:5001
+msgid "Cancel"
+msgstr "Поништи"
+
+#. Type: text
+#. Description
+#. Help line displayed at the bottom of the cdebconf newt interface.
+#. Translators: must fit within 80 characters.
+#. :sl1:
+#: ../cdebconf-newt-udeb.templates:6001
+msgid "<Tab> moves; <Space> selects; <Enter> activates buttons"
+msgstr ""
+"<Tab> кретање између опција; <Space> одабира; <Enter> активира одабрано"
+
+#. Type: text
+#. Description
+#. Help line displayed at the bottom of the cdebconf newt interface.
+#. Translators: must fit within 80 characters.
+#. :sl1:
+#: ../cdebconf-newt-udeb.templates:7001
+msgid "<F1> for help; <Tab> moves; <Space> selects; <Enter> activates buttons"
+msgstr ""
+"<F1> помоћ; <Tab> кретање између опција; <Space> одабира; <Enter> активира "
+"одабрано"
+
+#. Type: text
+#. Description
+#. Appears as a checkbox in the newt and GTK interfaces.
+#. :sl1:
+#: ../cdebconf-newt-udeb.templates:8001 ../cdebconf-gtk-udeb.templates:9001
+msgid "Show Password in Clear"
+msgstr "Прикажи лозинку"
+
+#. Type: text
+#. Description
+#. Translators, this text will appear on a button, so KEEP IT SHORT
+#. :sl1:
+#: ../cdebconf-gtk-udeb.templates:5001
+msgid "Help"
+msgstr "Помоћ"
+
+#. Type: text
+#. Description
+#. TRANSLATORS: This should be "translated" to "RTL" or "LTR" depending of
+#. default text direction of your language
+#. LTR: Left to Right (Latin, Cyrillic, CJK, Indic...)
+#. RTL: Right To Left (Arabic, Hebrew, Persian...)
+#. DO NOT USE ANYTHING ELSE
+#. :sl1:
+#: ../cdebconf-gtk-udeb.templates:6001
+msgid "LTR"
+msgstr "LTR"
+
+#. Type: text
+#. Description
+#. Translators, this text will appear on a button, so KEEP IT SHORT
+#. This button will allow users to virtually "shoot a picture"
+#. of the screen
+#. :sl1:
+#: ../cdebconf-gtk-udeb.templates:7001
+msgid "Screenshot"
+msgstr "Слика екрана"
+
+#. Type: text
+#. Description
+#. Text that will appear in a dialog box mentioning which file
+#. the screenshot has been saved to. "%s" is a file name here
+#. :sl1:
+#: ../cdebconf-gtk-udeb.templates:8001
+#, no-c-format
+msgid "Screenshot saved as %s"
+msgstr "Слика екрана је сачуван као „%s“"
+
+#. Type: text
+#. Description
+#. :sl4:
+#: ../cdebconf-text-udeb.templates:1001
+#, no-c-format
+msgid "!! ERROR: %s"
+msgstr "!! ГРЕШКА: %s"
+
+#. Type: text
+#. Description
+#. :sl4:
+#: ../cdebconf-text-udeb.templates:2001
+msgid "KEYSTROKES:"
+msgstr "ПРИТИСЦИ:"
+
+#. Type: text
+#. Description
+#. :sl4:
+#: ../cdebconf-text-udeb.templates:3001
+#, no-c-format
+msgid "'%c'"
+msgstr "„%c“"
+
+#. Type: text
+#. Description
+#. :sl4:
+#: ../cdebconf-text-udeb.templates:4001
+msgid "Display this help message"
+msgstr "Приказуј ову поруку помоћи"
+
+#. Type: text
+#. Description
+#. :sl4:
+#: ../cdebconf-text-udeb.templates:5001
+msgid "Go back to previous question"
+msgstr "Назад на претходно питање"
+
+#. Type: text
+#. Description
+#. :sl4:
+#: ../cdebconf-text-udeb.templates:6001
+msgid "Select an empty entry"
+msgstr "Означи празну ставку"
+
+#. Type: text
+#. Description
+#. :sl4:
+#: ../cdebconf-text-udeb.templates:7001
+#, no-c-format
+msgid "Other choices are available with '%c' and '%c'"
+msgstr "Други избори су доступни са „%c“ и „%c“"
+
+#. Type: text
+#. Description
+#. :sl4:
+#: ../cdebconf-text-udeb.templates:8001
+#, no-c-format
+msgid "Previous choices are available with '%c'"
+msgstr "Претходни избори су доступни са „%c“"
+
+#. Type: text
+#. Description
+#. :sl4:
+#: ../cdebconf-text-udeb.templates:9001
+#, no-c-format
+msgid "Next choices are available with '%c'"
+msgstr "Следећи избори су доступни са „%c“"
+
+#. Type: text
+#. Description
+#. :sl4:
+#: ../cdebconf-text-udeb.templates:12001
+#, no-c-format
+msgid "Prompt: '%c' for help, default=%d> "
+msgstr "Упит: „%c“ -- помоћ, подразумевано=%d> "
+
+#. Type: text
+#. Description
+#. :sl4:
+#: ../cdebconf-text-udeb.templates:13001
+#, no-c-format
+msgid "Prompt: '%c' for help> "
+msgstr "Упит: „%c“ за помоћ> "
+
+#. Type: text
+#. Description
+#. :sl4:
+#: ../cdebconf-text-udeb.templates:14001
+#, no-c-format
+msgid "Prompt: '%c' for help, default=%s> "
+msgstr "Упит: „%c“ за помоћ, подразумевано=%s> "
+
+#. Type: text
+#. Description
+#. :sl4:
+#: ../cdebconf-text-udeb.templates:15001
+msgid "[Press enter to continue]"
+msgstr "[Притисните ентер за наставак]"
+
+#. Type: select
+#. Description
+#. :sl4:
+#: ../cdebconf.templates:1001
+msgid "Interface to use:"
+msgstr "Сучеље за коришћење:"
+
+#. Type: select
+#. Description
+#. :sl4:
+#: ../cdebconf.templates:1001
+msgid ""
+"Packages that use debconf for configuration share a common look and feel. "
+"You can select the type of user interface they use."
+msgstr ""
+"Пакети који користе дебконф за подешавање деле заједнички изглед и начин "
+"рада. Можете изабрати врсту сучеља за употребу."
+
+#. Type: string
+#. Description
+#. :sl4:
+#: ../cdebconf.templates:2001
+msgid "None"
+msgstr "Ништа"
+
+#. Type: string
+#. Description
+#. :sl4:
+#: ../cdebconf.templates:2001
+msgid "'None' will never ask you any question."
+msgstr "„Ништа“ вам никада неће поставити питање."
+
+#. Type: string
+#. Description
+#. :sl4:
+#: ../cdebconf.templates:3001
+msgid "Text"
+msgstr "Писмо"
+
+#. Type: string
+#. Description
+#. :sl4:
+#: ../cdebconf.templates:3001
+msgid "'Text' is a traditional plain text interface."
+msgstr "„Писмо“ је обичајно сучеље искључиво писмом."
+
+#. Type: string
+#. Description
+#. :sl4:
+#: ../cdebconf.templates:4001
+msgid "Newt"
+msgstr "Неввт"
+
+#. Type: string
+#. Description
+#. :sl4:
+#: ../cdebconf.templates:4001
+msgid "'Newt' is a full-screen, character based interface."
+msgstr "Неввт је сучеље засновано на знацима, преко целог заслона."
+
+#. Type: string
+#. Description
+#. :sl4:
+#: ../cdebconf.templates:5001
+msgid "GTK"
+msgstr "ГТК"
+
+#. Type: string
+#. Description
+#. :sl4:
+#: ../cdebconf.templates:5001
+msgid ""
+"'GTK' is a graphical interface that may be used in any graphical environment."
+msgstr ""
+"ГТК је цртано сучеље које може да се користи у било ком цртаном окружењу."

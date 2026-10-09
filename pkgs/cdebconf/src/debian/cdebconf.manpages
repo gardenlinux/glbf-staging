@@ -1,0 +1,3 @@
+deb/usr/share/man/man7/debconf.7cdebconf
+deb/usr/share/man/man8/dpkg-preconfigure.8cdebconf
+deb/usr/share/man/man8/dpkg-reconfigure.8cdebconf
