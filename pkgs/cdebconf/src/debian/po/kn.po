@@ -10,6 +10,7 @@
 # Translators:
 # shashi kiran <shashi859@gmail.com>, 2010, 2011.
 # Prabodh CP <prabodhcp@gmail.com>, 2011.
+# Yogesh <yogesh@karnatakaeducation.org.in>, 2020.
 #
 # Credits: Thanks to contributions from Free Software Movement Karnataka (FSMK), 2011.
 #
@@ -21,8 +22,8 @@ msgstr ""
 "Project-Id-Version: kn\n"
 "Report-Msgid-Bugs-To: cdebconf@packages.debian.org\n"
 "POT-Creation-Date: 2016-06-05 14:47+0000\n"
-"PO-Revision-Date: 2018-04-02 06:37+0000\n"
-"Last-Translator: Prabodh C P (FSMK Localisation Team) <prabodh@fsmk.org>\n"
+"PO-Revision-Date: 2026-01-13 12:12+0000\n"
+"Last-Translator: Prasannakumar T Bhat <pbhat99@gmail.com>\n"
 "Language-Team: Kannada <debian-l10n-kannada@lists.debian.org>\n"
 "Language: kn\n"
 "MIME-Version: 1.0\n"
@@ -158,10 +159,6 @@ msgstr "ಹೌದು"
 msgid "No"
 msgstr "ಇಲ್ಲ"
 
-#  templates.pot (PACKAGE VERSION)#-#-#-#-
-#  templates.pot (PACKAGE VERSION)#-#-#-#-
-#  templates.pot (PACKAGE VERSION)#-#-#-#-
-#  templates.pot (PACKAGE VERSION)#-#-#-#-
 #. Type: text
 #. Description
 #. Translators, this text will appear on a button, so KEEP IT SHORT
@@ -282,7 +279,7 @@ msgstr "ಹಿಂದಿನ ಪ್ರಶ್ನೆಗೆ ಹೋಗು"
 #. :sl4:
 #: ../cdebconf-text-udeb.templates:6001
 msgid "Select an empty entry"
-msgstr "ಒಂದು ಖಾಲಿ ದಾಖಲೆಯನ್ನು ಆಯ್ಕೆ ಮಾಡು."
+msgstr "ಒಂದು ಖಾಲಿ ದಾಖಲೆಯನ್ನು ಆಯ್ಕೆ ಮಾಡು"
 
 #. Type: text
 #. Description
@@ -298,7 +295,7 @@ msgstr "ಬೇರೆ ಆಯ್ಕೆಗಳು '%c' ಮತ್ತು '%c' ನೊ�
 #: ../cdebconf-text-udeb.templates:8001
 #, no-c-format
 msgid "Previous choices are available with '%c'"
-msgstr ""
+msgstr "'%c' ಇದರೊಂದಿಗೆ ಹಿಂದಿನ ಆಯ್ಕೆಗಳು ಲಭ್ಯವಿವೆ"
 
 #. Type: text
 #. Description
@@ -306,7 +303,7 @@ msgstr ""
 #: ../cdebconf-text-udeb.templates:9001
 #, no-c-format
 msgid "Next choices are available with '%c'"
-msgstr ""
+msgstr "'%c' ಇದರೊಂದಿಗೆ ಮುಂದಿನ ಆಯ್ಕೆಗಳು ಲಭ್ಯವಿವೆ"
 
 #. Type: text
 #. Description
@@ -322,7 +319,7 @@ msgstr "ಸಹಾಯಕ್ಕಾಗಿ '%c'  ಯನ್ನು ಕೇಳು, ಪ�
 #: ../cdebconf-text-udeb.templates:13001
 #, no-c-format
 msgid "Prompt: '%c' for help> "
-msgstr "ಸಹಾಯಕ್ಕಾಗಿ '%c'  ಯನ್ನು ಕೇಳು> "
+msgstr "ಸಹಾಯಕ್ಕಾಗಿ '%c' ಯನ್ನು ಕೇಳು> "
 
 #. Type: text
 #. Description
@@ -330,7 +327,7 @@ msgstr "ಸಹಾಯಕ್ಕಾಗಿ '%c'  ಯನ್ನು ಕೇಳು> "
 #: ../cdebconf-text-udeb.templates:14001
 #, no-c-format
 msgid "Prompt: '%c' for help, default=%s> "
-msgstr "ಸಹಾಯಕ್ಕಾಗಿ '%c'  ಯನ್ನು ಕೇಳು, ಪೂರ್ವನಿಯೋಜಿತ=%s> "
+msgstr "ಸಹಾಯಕ್ಕಾಗಿ '%c' ಯನ್ನು ಕೇಳು, ಪೂರ್ವನಿಯೋಜಿತ=%s> "
 
 #. Type: text
 #. Description
