@@ -1,0 +1,34 @@
+name: build-glbx
+
+# Reusable: compile glbx and the sandbox stub from a glbx ref and share the two
+# binaries with the jobs that need them as a run-scoped artifact (glbx-bin).
+on:
+  workflow_call:
+    inputs:
+      glbx-ref:
+        description: glbx ref (branch, tag, or full SHA) to build the executor from
+        default: main
+        type: string
+
+jobs:
+  build-glbx:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out glbx
+        uses: actions/checkout@v5
+        with:
+          repository: gardenlinux/glbx
+          ref: ${{ inputs.glbx-ref || 'main' }}
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+      - name: Build glbx and the sandbox stub
+        run: |
+          go build -o bin/glbx ./cmd/glbx
+          go build -o bin/exec_env_stub ./cmd/exec_env_stub
+      - name: Share the binaries with the node jobs
+        uses: actions/upload-artifact@v6
+        with:
+          name: glbx-bin
+          path: bin/
+          retention-days: 1

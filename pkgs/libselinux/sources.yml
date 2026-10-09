@@ -1,0 +1,6 @@
+sources:
+    - file: libselinux_3.10.orig.tar.gz
+      sha256: 1ef216c5b56fb7e0a51cd2909787a175a17ee391e0467894807873539ebe766b
+      urls:
+        - https://snapshot.debian.org/archive/debian/20260501T000000Z/pool/main/libs/libselinux/libselinux_3.10.orig.tar.gz
+        - https://snapshot.debian.org/file/9711a28d16d63be78214d2c569970159e9c97e77/libselinux_3.10.orig.tar.gz

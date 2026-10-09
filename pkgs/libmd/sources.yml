@@ -1,0 +1,6 @@
+sources:
+    - file: libmd_1.2.0.orig.tar.xz
+      sha256: ac15ffb8430502fbaccdec66c5a82ee0eab0b0f36220df56710feadfeb13d0a0
+      urls:
+        - https://snapshot.debian.org/archive/debian/20260601T000000Z/pool/main/libm/libmd/libmd_1.2.0.orig.tar.xz
+        - https://snapshot.debian.org/file/27fc99e6966a3bf2c61f5d1faca4f11c580eac1d/libmd_1.2.0.orig.tar.xz

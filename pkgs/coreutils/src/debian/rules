@@ -1,0 +1,79 @@
+#!/usr/bin/make -f
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+#export DH_OPTIONS=-v
+
+DPKG_EXPORT_BUILDFLAGS = 1
+include /usr/share/dpkg/default.mk
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+DEB_CFLAGS_MAINT_APPEND = -DSYSLOG_SUCCESS -DSYSLOG_FAILURE -DSYSLOG_NON_ROOT
+
+# Renesas SH(sh4) need -mieee option.
+ifeq ($(DEB_HOST_ARCH_CPU),sh4)
+  DEB_CFLAGS_MAINT_APPEND += -mieee
+endif
+
+ifeq ($(DEB_HOST_ARCH),hurd-i386)
+  Y2038 = --disable-year2038
+endif
+
+ifneq ($(filter nodoc,$(DEB_BUILD_PROFILES)),)
+  export MAKEINFO = true
+endif
+
+BIN_PROGS = cat chgrp chmod chown cp date dd df dir echo false ln ls mkdir \
+	mknod mv pwd readlink rm rmdir vdir sleep stty sync touch true uname \
+	mktemp
+d=debian/coreutils
+
+override_dh_update_autotools_config:
+	# don't do this
+
+override_dh_autoreconf:
+	# don't do this
+
+override_dh_auto_configure:
+	dh_auto_configure -- --enable-systemd --enable-install-program=arch --with-openssl=auto-gpl-compat --with-packager=$(DEB_VENDOR) --with-packager-version=$(DEB_VERSION) $(Y2038)
+
+%:
+	dh $@
+
+override_dh_auto_clean:
+	make distclean || true
+
+override_dh_auto_test:
+	# tests fail a lot on the buildds
+
+override_dh_auto_install:
+	dh_auto_install --destdir=$(d)
+
+override_dh_install-arch: 
+	dh_install -a
+
+	# remove stuff provided by other packages
+ifeq ($(DEB_HOST_ARCH_OS),linux)
+	# kill from procps is linux-specific
+	rm -f $(d)/usr/bin/kill $(d)/usr/share/man/man1/kill.1
+endif
+	rm -f $(d)/usr/bin/hostname $(d)/usr/share/man/man1/hostname.1
+	rm -f $(d)/usr/bin/uptime $(d)/usr/share/man/man1/uptime.1
+
+	# the [ program doesn't have its own man page yet
+	ln -s test.1 $(d)/usr/share/man/man1/[.1
+
+	# gnu thinks chroot is in bin, debian thinks it's in sbin
+	install -d $(d)/usr/sbin $(d)/usr/share/man/man8
+	mv $(d)/usr/bin/chroot $(d)/usr/sbin/chroot
+	sed s/\"1\"/\"8\"/1 $(d)/usr/share/man/man1/chroot.1 > $(d)/usr/share/man/man8/chroot.8
+	rm $(d)/usr/share/man/man1/chroot.1
+
+	# some build environments will leave a dangling info dir
+	rm -f $(d)/usr/share/info/dir
+
+ifneq ($(filter nodoc,$(DEB_BUILD_PROFILES)),)
+	# Remove info files and manual pages if building with <nodoc>
+	rm -rf $(d)/usr/share/info/
+	rm -rf $(d)/usr/share/man/
+endif
+

@@ -1,0 +1,5 @@
+# cdebconf frontend name and descritions are stored in the templates
+cdebconf binary: malformed-prompt-in-templates
+cdebconf binary: unused-debconf-template
+# dpkg-{p,}reconfigure binaries are in /usr/lib/cdebconf/
+cdebconf binary: spare-manual-page [usr/share/man/man8/dpkg-*reconfigure.8cdebconf.gz]

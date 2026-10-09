@@ -1,0 +1,37 @@
+From: =?utf-8?q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
+Date: Mon, 2 Feb 2026 14:53:20 +0100
+Subject: Fix matchpathcon_filespec_add() condition for alpha
+
+Correctly handle the case when unsigned long is 8 bytes wide, but ino_t
+only 4 bytes, like on alpha.
+---
+ include/selinux/selinux.h | 2 +-
+ src/matchpathcon.c        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/selinux/selinux.h b/include/selinux/selinux.h
+index b1431e5..f4b2f40 100644
+--- a/include/selinux/selinux.h
++++ b/include/selinux/selinux.h
+@@ -537,7 +537,7 @@ extern int matchpathcon_index(const char *path,
+    with the same inode (e.g. due to multiple hard links).  If so, then
+    use the latter of the two specifications based on their order in the 
+    file contexts configuration.  Return the used specification index. */
+-#if defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64 && defined(__INO64_T_TYPE) && !defined(__INO_T_MATCHES_INO64_T)
++#if defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64 && ULONG_WIDTH < 64 && defined(__INO64_T_TYPE) && !defined(__INO_T_MATCHES_INO64_T)
+ #define matchpathcon_filespec_add matchpathcon_filespec_add64
+ #endif
+ extern int matchpathcon_filespec_add(ino_t ino, int specind, const char *file);
+diff --git a/src/matchpathcon.c b/src/matchpathcon.c
+index 240c9fa..829e551 100644
+--- a/src/matchpathcon.c
++++ b/src/matchpathcon.c
+@@ -261,7 +261,7 @@ int matchpathcon_filespec_add(ino_t ino, int specind, const char *file)
+ 	return -1;
+ }
+ 
+-#if (defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64) && defined(__INO64_T_TYPE) && !defined(__INO_T_MATCHES_INO64_T)
++#if defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64 && ULONG_WIDTH < 64 && defined(__INO64_T_TYPE) && !defined(__INO_T_MATCHES_INO64_T)
+ /* alias defined in the public header but we undefine it here */
+ #undef matchpathcon_filespec_add
+ 

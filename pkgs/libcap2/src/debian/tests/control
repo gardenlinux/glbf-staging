@@ -1,0 +1,10 @@
+Tests: executables
+Restrictions: isolation-machine, needs-root
+Depends: gcc, libc-dev, libcap2-bin
+
+Tests: upstream-root
+Restrictions: needs-root, allow-stderr
+Depends: gcc, libcap-dev
+
+Tests: upstream-nonroot
+Depends: gcc, libcap-dev

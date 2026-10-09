@@ -1,0 +1,4 @@
+build_profiles: [nocheck, noudeb, nopython]
+build_options: [nocheck]
+runtime_depends:
+  libselinux1: [pcre2:libpcre2-8-0, glibc:libc6]
