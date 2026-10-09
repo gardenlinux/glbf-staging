@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+# Compile the file
+gcc -o infcover test/infcover.c inftrees.c -I. -lz
+
+# Run the executable file
+./infcover
+
+# Cleanup
+rm infcover
