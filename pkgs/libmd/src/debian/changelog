@@ -1,3 +1,19 @@
+libmd (1.2.0-1) unstable; urgency=medium
+
+  * New upstream release.
+    - Add SHA3 and SHAKE support.
+  * Remove «Rules-Requires-Root: no», which is the current default.
+  * Remove «Priority: optional», which is the current default.
+  * Switch to debian/watch version 5.
+  * Switch to Standards-Version 4.7.4 (no changes needed).
+  * Add spaces around make assignment operators to distinguish from shell ones.
+  * Update upstream metadata.
+  * Refactor common description into a source stanza Description field.
+  * Remove build dependency on debhelper (>= 13.10) implied by
+    debhelper-compat (= 13) since Debian bookworm.
+
+ -- Guillem Jover <guillem@debian.org>  Sun, 10 May 2026 22:52:01 +0200
+
 libmd (1.1.0-2) unstable; urgency=medium
 
   * Switch autopkgtest dependency from pkg-config to pkgconf.
