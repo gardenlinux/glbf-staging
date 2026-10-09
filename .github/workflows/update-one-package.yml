@@ -105,10 +105,10 @@ jobs:
             git merge --no-ff --no-edit "$U"
 
             if [ "$UPDATE_LOCKFILE" = "true" ]; then
-              bin/glbx lockfile "$PKG" --conf-dir . \
+              bin/glbx lockfile --conf-dir . \
                 --repo "$REPO" --dist "$DIST" \
                 --keyring .wf/.github/keyrings/debian-archive-keyring.gpg \
-                --cookie "$COOKIE"
+                --cookie "$COOKIE" "$PKG"
               git add "pkgs/$PKG"
               git commit -m "update $PKG build deps"
             fi
