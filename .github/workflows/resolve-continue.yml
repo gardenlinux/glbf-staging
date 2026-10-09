@@ -18,7 +18,16 @@ permissions:
   pull-requests: write
 
 jobs:
+  # Build glbx for the lockfile bump. Gated on the same condition as the handler
+  # so an unrelated comment does not spin up a build.
+  build-glbx:
+    if: >-
+      github.event.issue.pull_request &&
+      startsWith(github.event.comment.body, '/continue-update')
+    uses: ./.github/workflows/build-glbx.yml
+
   continue:
+    needs: [build-glbx]
     if: >-
       github.event.issue.pull_request &&
       startsWith(github.event.comment.body, '/continue-update')
