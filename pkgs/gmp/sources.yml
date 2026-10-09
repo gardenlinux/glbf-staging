@@ -1,0 +1,6 @@
+sources:
+    - file: gmp_6.3.0+dfsg.orig.tar.xz
+      sha256: bd2966e6d277f79328e894a5a9f3ba3fbf2ed2be81def5f48623e30c23fb1572
+      urls:
+        - https://snapshot.debian.org/archive/debian/20260501T000000Z/pool/main/g/gmp/gmp_6.3.0+dfsg.orig.tar.xz
+        - https://snapshot.debian.org/file/72323f8cf07aa5d338aff92ef42eea622569ed2c/gmp_6.3.0+dfsg.orig.tar.xz
