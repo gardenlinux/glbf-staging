@@ -7,6 +7,7 @@ usr/lib/*.d/README
 usr/lib/udev/*.d/README
 usr/lib/sysctl.d/50-default.conf
 usr/lib/tmpfiles.d/etc.conf
+usr/lib/tmpfiles.d/root.conf
 usr/share/factory/
 usr/bin/systemd-resolve
 usr/share/man/man5/crypttab.5

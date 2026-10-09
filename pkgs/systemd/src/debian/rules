@@ -57,6 +57,7 @@ endif
 export DEB_BUILD_MAINT_OPTIONS = optimize=+lto hardening=+pie $(DEB_BUILD_OPTIONS)
 
 CONFFLAGS = \
+	-Dc_link_args=-Wl,--push-state,--no-as-needed,-lm,--pop-state \
 	-Dstatic-libsystemd=true \
 	-Dversion-tag="$(VERSION_TAG)" \
 	-Dquotaon-path=/usr/sbin/quotaon \

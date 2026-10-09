@@ -6,6 +6,7 @@ Depends: systemd,
   acl,
   locales,
   evemu-tools,
+  procps,
 Restrictions: needs-root, allow-stderr, isolation-container, skippable
 
 Tests: unit-config
@@ -50,7 +51,7 @@ Depends: systemd,
   polkitd,
   netlabel-tools,
   dnsmasq-base
-Restrictions: needs-root, isolation-container, breaks-testbed, skip-not-installable, skippable
+Restrictions: needs-root, isolation-container, breaks-testbed, skippable
 
 Tests: build-login
 Depends: systemd,
@@ -89,6 +90,7 @@ Depends: systemd-sysv,
   libacl1-dev,
   libapparmor-dev,
   libblkid-dev,
+  libfdisk-dev,
   libmount-dev,
   libkmod-dev,
   libselinux-dev,
@@ -109,6 +111,7 @@ Depends: systemd-sysv,
   python3,
   python3-pefile,
   dhcpcd-base | dhcpcd5,
+  procps,
 Restrictions: needs-root, isolation-container, allow-stderr
 
 Tests: unit-tests
@@ -145,6 +148,7 @@ Depends: systemd-tests,
   libacl1-dev,
   libapparmor-dev,
   libblkid-dev,
+  libfdisk-dev,
   libmount-dev,
   libkmod-dev,
   libselinux-dev,
@@ -152,17 +156,19 @@ Depends: systemd-tests,
   libidn2-dev,
   libpcre2-dev,
   libp11-kit-dev,
+  libmicrohttpd-dev,
   tzdata-legacy | tzdata,
   dosfstools,
   bsdutils,
   bsdextrautils,
-Restrictions: needs-root, isolation-container, skip-not-installable, skippable
+Restrictions: needs-root, isolation-container, skippable
 
 Tests: boot-smoke
 Depends: systemd-sysv,
   network-manager,
   gdm3 [!s390x !riscv64 !armel !loong64],
   xserver-xorg-video-dummy,
+  procps,
 Restrictions: needs-root, isolation-container, allow-stderr
 
 Tests: build-with-static-libsystemd
@@ -309,4 +315,4 @@ Depends: systemd (>= 254~),
   zstd,
   uidmap,
   jq,
-Restrictions: needs-root, allow-stderr, isolation-machine, needs-internet, breaks-testbed, skip-not-installable, skippable
+Restrictions: needs-root, allow-stderr, isolation-machine, needs-internet, breaks-testbed, skippable
