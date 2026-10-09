@@ -14,7 +14,7 @@
  # Where our data files go
 --- a/src/libgfortran/Makefile.in
 +++ b/src/libgfortran/Makefile.in
-@@ -973,7 +973,7 @@ gcc_version := $(shell @get_gcc_base_ver
+@@ -976,7 +976,7 @@ gcc_version := $(shell @get_gcc_base_ver
  extra_darwin_ldflags_libgfortran = @extra_ldflags_libgfortran@ \
  	$(am__append_1)
  gfor_c_HEADERS = ISO_Fortran_binding.h
@@ -23,16 +23,16 @@
  LTLDFLAGS = $(shell $(SHELL) $(top_srcdir)/../libtool-ldflags $(LDFLAGS)) \
  	    $(lt_host_flags)
  
-@@ -990,7 +990,7 @@ libgfortran_la_DEPENDENCIES = $(version_
+@@ -993,7 +993,7 @@ libgfortran_la_DEPENDENCIES = $(version_
  libcaf_shared_DEPS = caf/libcaf.h caf/caf_error.h
  libcaf_shared_SRCS = caf/caf_error.c
- cafexeclib_LTLIBRARIES = libcaf_single.la libcaf_shmem.la
+ cafexeclib_LTLIBRARIES = libcaf_single.la $(am__append_2)
 -cafexeclibdir = $(libdir)/gcc/$(target_alias)/$(gcc_version)$(MULTISUBDIR)
 +cafexeclibdir = $(libdir)/gcc-cross/$(target_alias)/$(gcc_version)$(MULTISUBDIR)
  libcaf_single_la_SOURCES = caf/single.c $(libcaf_shared_SRCS)
  libcaf_single_la_LDFLAGS = -static
  libcaf_single_la_DEPENDENCIES = $(libcaf_shared_DEPS)
-@@ -1010,7 +1010,7 @@ libcaf_single_la_LINK = $(LINK) $(libcaf
+@@ -1013,7 +1013,7 @@ libcaf_single_la_LINK = $(LINK) $(libcaf
  @ENABLE_CAF_SHMEM_TRUE@	caf/shmem/teams_mgmt.h caf/shmem/thread_support.h
  
  @ENABLE_CAF_SHMEM_TRUE@libcaf_shmem_la_LINK = $(LINK) $(libcaf_shmem_la_LDFLAGS) $(CAF_SHMEM_LIBS)
@@ -55,13 +55,13 @@
 @@ -62,7 +62,7 @@ libcaf_shared_DEPS = caf/libcaf.h caf/ca
  libcaf_shared_SRCS = caf/caf_error.c
  
- cafexeclib_LTLIBRARIES = libcaf_single.la libcaf_shmem.la
+ cafexeclib_LTLIBRARIES = libcaf_single.la
 -cafexeclibdir = $(libdir)/gcc/$(target_alias)/$(gcc_version)$(MULTISUBDIR)
 +cafexeclibdir = $(libdir)/gcc-cross/$(target_alias)/$(gcc_version)$(MULTISUBDIR)
  libcaf_single_la_SOURCES = caf/single.c $(libcaf_shared_SRCS)
  libcaf_single_la_LDFLAGS = -static
  libcaf_single_la_DEPENDENCIES = $(libcaf_shared_DEPS)
-@@ -86,7 +86,7 @@ libcaf_shmem_la_LINK = $(LINK) $(libcaf_
+@@ -87,7 +87,7 @@ libcaf_shmem_la_LINK = $(LINK) $(libcaf_
  endif
  
  if IEEE_SUPPORT
@@ -116,7 +116,7 @@
  
 --- a/src/gcc/gcc.cc
 +++ b/src/gcc/gcc.cc
-@@ -5110,7 +5110,7 @@ process_command (unsigned int decoded_op
+@@ -5112,7 +5112,7 @@ process_command (unsigned int decoded_op
  	 GCC_EXEC_PREFIX is typically a directory name with a trailing
  	 / (which is ignored by make_relative_prefix), so append a
  	 program name.  */
@@ -125,7 +125,7 @@
        gcc_libexec_prefix = get_relative_prefix (tmp_prefix,
  						standard_exec_prefix,
  						standard_libexec_prefix);
-@@ -5136,15 +5136,15 @@ process_command (unsigned int decoded_op
+@@ -5138,15 +5138,15 @@ process_command (unsigned int decoded_op
      {
        int len = strlen (gcc_exec_prefix);
  
@@ -159,7 +159,7 @@
  # Directory in which all plugin resources are installed
  plugin_resourcesdir = $(libsubdir)/plugin
   # Directory in which plugin headers are installed
-@@ -2653,8 +2653,8 @@ default-rust.o: config/default-rust.cc
+@@ -2659,8 +2659,8 @@ default-rust.o: config/default-rust.cc
  
  DRIVER_DEFINES = \
    -DSTANDARD_STARTFILE_PREFIX=\"$(unlibsubdir)/\" \
@@ -170,7 +170,7 @@
    -DDEFAULT_TARGET_VERSION=\"$(version)\" \
    -DDEFAULT_REAL_TARGET_MACHINE=\"$(real_target_noncanonical)\" \
    -DDEFAULT_TARGET_MACHINE=\"$(target_noncanonical)\" \
-@@ -3453,7 +3453,7 @@ PREPROCESSOR_DEFINES = \
+@@ -3459,7 +3459,7 @@ PREPROCESSOR_DEFINES = \
    -DTOOL_INCLUDE_DIR=\"$(gcc_tooldir)/include\" \
    -DNATIVE_SYSTEM_HEADER_DIR=\"$(NATIVE_SYSTEM_HEADER_DIR)\" \
    -DPREFIX=\"$(prefix)/\" \
@@ -369,7 +369,7 @@
  
 --- a/src/gcc/ada/gcc-interface/Makefile.in
 +++ b/src/gcc/ada/gcc-interface/Makefile.in
-@@ -918,7 +918,7 @@ toolexeclibdir = $(ADA_RTL_OBJ_DIR)
+@@ -913,7 +913,7 @@ toolexeclibdir = $(ADA_RTL_OBJ_DIR)
  
  ADA_INCLUDE_DIR = $(libsubdir)/adainclude
  ADA_RTL_OBJ_DIR = $(libsubdir)/adalib

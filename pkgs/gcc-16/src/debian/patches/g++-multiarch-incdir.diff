@@ -3,7 +3,7 @@
 
 --- a/src/libstdc++-v3/include/Makefile.am
 +++ b/src/libstdc++-v3/include/Makefile.am
-@@ -1064,7 +1064,7 @@ endif
+@@ -1078,7 +1078,7 @@ endif
  
  host_srcdir = ${glibcxx_srcdir}/$(OS_INC_SRCDIR)
  host_builddir = ./${host_alias}/bits
@@ -14,7 +14,7 @@
  	${host_srcdir}/ctype_inline.h \
 --- a/src/libstdc++-v3/include/Makefile.in
 +++ b/src/libstdc++-v3/include/Makefile.in
-@@ -1398,7 +1398,7 @@ parallel_headers = \
+@@ -1412,7 +1412,7 @@ parallel_headers = \
  @GLIBCXX_C_HEADERS_COMPATIBILITY_TRUE@c_compatibility_headers_extra = ${c_compatibility_headers}
  host_srcdir = ${glibcxx_srcdir}/$(OS_INC_SRCDIR)
  host_builddir = ./${host_alias}/bits
@@ -33,7 +33,7 @@
  	"gxx_libcxx_include_dir=$(gcc_gxx_libcxx_include_dir)" \
  	"build_tooldir=$(build_tooldir)" \
  	"gcc_tooldir=$(gcc_tooldir)" \
-@@ -2056,6 +2057,14 @@ gnat_install_lib = @gnat_install_lib@
+@@ -2062,6 +2063,14 @@ gnat_install_lib = @gnat_install_lib@
  # host overrides
  -include $(xmake_file)
  
@@ -48,7 +48,7 @@
  # all-tree.def includes all the tree.def files.
  all-tree.def: s-alltree; @true
  s-alltree: Makefile
-@@ -3444,7 +3453,7 @@ PREPROCESSOR_DEFINES = \
+@@ -3450,7 +3459,7 @@ PREPROCESSOR_DEFINES = \
    -DFIXED_INCLUDE_DIR=\"$(libsubdir)/include-fixed\" \
    -DGPLUSPLUS_INCLUDE_DIR=\"$(gcc_gxx_include_dir)\" \
    -DGPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT=$(gcc_gxx_include_dir_add_sysroot) \

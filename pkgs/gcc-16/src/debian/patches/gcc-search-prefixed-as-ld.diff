@@ -2,7 +2,7 @@
 
 --- a/src/gcc/gcc.cc
 +++ b/src/gcc/gcc.cc
-@@ -1764,6 +1764,9 @@ struct path_prefix
+@@ -1765,6 +1765,9 @@ struct path_prefix
  
  static struct path_prefix exec_prefixes = { 0, 0, "exec" };
  
@@ -12,7 +12,7 @@
  /* List of prefixes to try when looking for startup (crt0) files.  */
  
  static struct path_prefix startfile_prefixes = { 0, 0, "startfile" };
-@@ -3263,6 +3266,8 @@ find_a_file (const struct path_prefix *p
+@@ -3264,6 +3267,8 @@ find_a_file (const struct path_prefix *p
  static char*
  find_a_program (const char *name)
  {
@@ -21,7 +21,7 @@
    /* Do not search if default matches query. */
  
  #ifdef DEFAULT_ASSEMBLER
-@@ -3285,7 +3290,37 @@ find_a_program (const char *name)
+@@ -3286,7 +3291,37 @@ find_a_program (const char *name)
      return xstrdup (DEFAULT_WINDRES);
  #endif
  
@@ -60,7 +60,7 @@
  }
  
  /* Ranking of prefixes in the sort list. -B prefixes are put before
-@@ -3416,6 +3451,56 @@ add_sysrooted_hdrs_prefix (struct path_p
+@@ -3417,6 +3452,56 @@ add_sysrooted_hdrs_prefix (struct path_p
  	      require_machine_suffix, os_multilib);
  }
  
@@ -117,7 +117,7 @@
  
  /* Execute the command specified by the arguments on the current line of spec.
     When using pipes, this includes several piped-together commands
-@@ -8460,6 +8545,8 @@ driver::main (int argc, char **argv)
+@@ -8462,6 +8547,8 @@ driver::main (int argc, char **argv)
    bool early_exit;
  
    set_progname (argv[0]);
