@@ -92,9 +92,9 @@ Build-Depends: DEBHELPER_BUILD_DEP DPKG_BUILD_DEP GCC_MULTILIB_BUILD_DEP
 Build-Depends-Indep: LIBSTDCXX_BUILD_INDEP
 ')dnl
 ifelse(regexp(SRCNAME, `gdc'),0,`dnl
-Homepage: http://gdcproject.org/
+Homepage: https://gdcproject.org/
 ', `dnl
-Homepage: http://gcc.gnu.org/
+Homepage: https://gcc.gnu.org/
 ')dnl SRCNAME
 Vcs-Browser: https://salsa.debian.org/toolchain-team/gcc
 Vcs-Git: https://salsa.debian.org/toolchain-team/gcc.git
