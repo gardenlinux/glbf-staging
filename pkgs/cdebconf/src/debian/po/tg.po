@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: debian-installer\n"
 "Report-Msgid-Bugs-To: cdebconf@packages.debian.org\n"
 "POT-Creation-Date: 2016-06-05 14:47+0000\n"
-"PO-Revision-Date: 2019-08-02 22:04+0500\n"
+"PO-Revision-Date: 2026-05-11 14:36+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: Tajik <victor.ibragimov@gmail.com>\n"
 "Language: tg\n"
@@ -184,8 +184,8 @@ msgstr ""
 #: ../cdebconf-newt-udeb.templates:7001
 msgid "<F1> for help; <Tab> moves; <Space> selects; <Enter> activates buttons"
 msgstr ""
-"Тугмаи <F1> барои кумак; <Tab> интиқол медиҳад; <Space> интихоб мекунад; "
-"<Enter> тугмаҳоро фаъол мекунад"
+"Тугмаи <F1> барои кумак; тугмаи <Tab> интиқол медиҳад; тугмаи <Space> "
+"интихоб мекунад; тугмаи <Enter> тугмаҳоро фаъол мекунад"
 
 #. Type: text
 #. Description
@@ -233,7 +233,7 @@ msgstr "Акси экран"
 #: ../cdebconf-gtk-udeb.templates:8001
 #, no-c-format
 msgid "Screenshot saved as %s"
-msgstr "Акси экран дар макони зерин бо номи %s захира шудааст"
+msgstr "Акси экран дар макони зерин бо номи «%s» нигоҳ дошта шуд"
 
 #. Type: text
 #. Description
