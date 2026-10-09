@@ -89,10 +89,6 @@ if [ "$1" = "configure" ] && [ "$2" = "" ]; then
   install_local_dir /usr/local/src
   install_local_dir /usr/local/etc
   ln -sf share/man "$DPKG_ROOT/usr/local/man"
-
-  ensure_file_owner_mode /var/log/wtmp root:utmp 664
-  ensure_file_owner_mode /var/log/btmp root:utmp 660
-  ensure_file_owner_mode /var/log/lastlog root:utmp 664
 fi
 
 if [ -d "$DPKG_ROOT/usr/share/info" ] && [ ! -f "$DPKG_ROOT/usr/info/dir" ] && [ ! -f "$DPKG_ROOT/usr/share/info/dir" ]; then

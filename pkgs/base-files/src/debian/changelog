@@ -1,3 +1,27 @@
+base-files (14.2) unstable; urgency=medium
+
+  * Make it easier for derivatives to change the name of the system.
+    Thanks to Arnaud Rebillout. Closes: #1111436.
+  * Fix copyright-refers-to-symlink-license lintian warning.
+  * Fix missing-field-in-dep5-copyright lintian warning.
+  * Drop some unused lintian overrides.
+
+ -- Santiago Vila <sanvila@debian.org>  Sun, 31 May 2026 11:20:00 +0200
+
+base-files (14.1) unstable; urgency=medium
+
+  * Do not create empty lastlog, btmp or wtmp in the initial install anymore.
+    Closes: #1115946.
+  * README: Reword answer to the question about common-licenses.
+  * Add reportbug hook to warn users that requests for new common licenses
+    should be discussed in debian-policy first. Closes: #1122915.
+    Thanks to Rafael Laboissière.
+  * Add AGPL-3.0, Artistic-2.0, BSL-1.0, CC-BY-3.0, CC-BY-4.0, CC-BY-SA-3.0,
+    CC-BY-SA-4.0, GFDL-1.1 and OFL-1.1 to common-licenses, following a
+    proposal from Mechtilde Stehmann. Closes: #1136090.
+
+ -- Santiago Vila <sanvila@debian.org>  Fri, 29 May 2026 13:30:00 +0200
+
 base-files (99999-glbf-conflict-marker) UNRELEASED; urgency=low
 
   * Deliberate local change to force a merge conflict in the update test.
