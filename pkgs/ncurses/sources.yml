@@ -1,0 +1,6 @@
+sources:
+    - file: ncurses_6.6+20251231.orig.tar.gz
+      sha256: e280541f4f601b8586bec305976c873fd641607f9bc4254bf661034dcccac4e9
+      urls:
+        - https://snapshot.debian.org/archive/debian/20260501T000000Z/pool/main/n/ncurses/ncurses_6.6+20251231.orig.tar.gz
+        - https://snapshot.debian.org/file/e09fef6a97ab679cf950c935f1f6155480e0afb5/ncurses_6.6+20251231.orig.tar.gz
