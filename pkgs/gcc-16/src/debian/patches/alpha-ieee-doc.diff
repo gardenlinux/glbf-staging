@@ -8,7 +8,7 @@
 
 --- a/src/gcc/doc/invoke.texi
 +++ b/src/gcc/doc/invoke.texi
-@@ -27713,6 +27713,13 @@ able to correctly support denormalized n
+@@ -26022,6 +26022,13 @@ able to correctly support denormalized n
  values such as not-a-number and plus/minus infinity.  Other Alpha
  compilers call this option @option{-ieee_with_no_inexact}.
  

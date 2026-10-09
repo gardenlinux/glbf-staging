@@ -423,8 +423,8 @@ ifneq ($(trunk_build),yes)
   endif
 
   # disable for testing purposes
-  with_bootstrap :=
-  with_lto_build :=
+  #with_bootstrap :=
+  #with_lto_build :=
 endif
 
 ifneq ($(findstring nostrap, $(DEB_BUILD_OPTIONS)),)
@@ -897,7 +897,7 @@ else
   gcn_tools_llvm_version = tools
 endif
 ifeq ($(gcn_tools_llvm_version),tools)
-  ifneq (,$(filter $(distrelease), bookworm trixie xenial bionic focal jammy noble oracular plucky questing))
+  ifneq (,$(filter $(distrelease), bookworm trixie xenial bionic focal))
     AMDGCN_TOOLS_DEP = amdgcn-tools-19 [$(gcn_archs)],
   else
     AMDGCN_TOOLS_DEP = amdgcn-tools-21 [$(gcn_archs)],
@@ -1391,7 +1391,8 @@ endif
 ifeq ($(DEB_STAGE)-$(filter libgcobol, $(with_rtlibs)),rtlibs-)
   with_cobol := disabled for rtlibs stage
 endif
-ifneq (,$(filter $(distrelease),precise))
+ifneq (,$(filter $(distrelease),precise trusty xenial bionic))
+  # requires bison 3.5.1 or 3.8.2
   with_cobol := disabled for $(distrelease) backport
 endif
 #with_cobol := disabled for GCC 16
@@ -1850,7 +1851,7 @@ endif
 ifeq ($(distribution)-$(DEB_HOST_ARCH),Ubuntu-riscv64)
   with_check := disabled for $(DEB_HOST_ARCH) on Ubuntu, qemu builders
 endif
-with_check := disabled for this upload
+#with_check := disabled for this upload
 
 # not a dependency on all archs, but if available, use it for the testsuite
 ifneq (,$(wildcard /usr/bin/localedef))

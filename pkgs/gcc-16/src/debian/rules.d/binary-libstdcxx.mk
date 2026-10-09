@@ -141,7 +141,7 @@ debian/README.libstdc++-baseline:
 	    echo ""; \
 	    $(MAKE) -C $(buildlibdir)/libstdc++-v3/testsuite \
 		check-abi; \
-	  ) >> debian/README.libstdc++-baseline; \
+	  ) | grep -Ev '^Test run by \S+ on .*$$' >> debian/README.libstdc++-baseline; \
 	else \
 	  ( \
 	    echo "No baseline file found for $$baseline_name."; \
@@ -154,7 +154,7 @@ debian/README.libstdc++-baseline:
 	    cat $(gxx_baseline_file); \
 	  else \
 	    cat $$(find $(buildlibdir)/libstdc++-v3 $(srcdir)/libstdc++-v3 -name '.new') || true; \
-	  fi >> debian/README.libstdc++-baseline; \
+	  fi | grep -Ev '^Test run by \S+ on .*$$' >> debian/README.libstdc++-baseline; \
 	fi
 
 	: # restore the results of the libstdc++ test run
