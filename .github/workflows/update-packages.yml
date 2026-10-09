@@ -53,6 +53,7 @@ jobs:
             --repo '${{ inputs.repo }}' \
             --dist '${{ inputs.dist }}' \
             --update-tag '${{ inputs.update-tag }}' \
+            --keyring .github/keyrings/debian-archive-keyring.gpg \
             --cookie '${{ github.run_id }}' \
             --format json)"
           echo "updates=$updates" >> "$GITHUB_OUTPUT"

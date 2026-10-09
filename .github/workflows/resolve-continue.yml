@@ -100,7 +100,8 @@ jobs:
             depfile="pkgs/$pkg/build-deps.yml"
             if git diff --quiet "origin/$target" "origin/$head" -- "$depfile"; then
               git checkout -B "$head" "origin/$head"
-              bin/glbx lockfile "$pkg" --conf-dir . --repo "$repo" --dist "$cookie_dist"
+              bin/glbx lockfile "$pkg" --conf-dir . --repo "$repo" --dist "$cookie_dist" \
+                --keyring .github/keyrings/debian-archive-keyring.gpg
               if ! git diff --quiet -- "$depfile"; then
                 git add "$depfile"
                 git commit -m "update $pkg build deps"

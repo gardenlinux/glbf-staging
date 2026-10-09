@@ -54,6 +54,7 @@ jobs:
         run: |
           result="$(bin/glbx import --no-merge \
             --repo "$REPO" --dist "$DIST" --update-tag "$UPDATE_TAG" \
+            --keyring .github/keyrings/debian-archive-keyring.gpg \
             --cookie "$COOKIE" --output . "$PKG")"
           echo "$result"
           commit="$(echo "$result" | jq -r '.commit')"
