@@ -2,12 +2,12 @@
 
 include /usr/share/dpkg/architecture.mk
 
-OSNAME = "GNU/`uname | sed -e 's/GNU\///'`"
+OSNAME = Debian GNU/$(shell uname | sed -e 's/GNU\///')
 ifeq ($(DEB_HOST_GNU_SYSTEM),linux)
-  OSNAME=GNU/Linux
+  OSNAME = Debian GNU/Linux
 endif
 ifeq ($(DEB_HOST_GNU_SYSTEM),gnu)
-  OSNAME=GNU/Hurd
+  OSNAME = Debian GNU/Hurd
 endif
 
 VENDORFILE = debian
@@ -81,3 +81,8 @@ override_dh_installdeb:
 	  '-DVENDORFILE=$(VENDORFILE)' \
 	  '-DUSR_MERGE_MULTILIB=$(USR_MERGE_MULTILIB)' \
 	  '-DUSR_MERGE_RTLDLIB=$(USR_MERGE_RTLDLIB)'
+
+override_dh_bugfiles:
+ifeq ($(VENDORFILE),debian)
+	dh_bugfiles
+endif
