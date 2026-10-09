@@ -25,6 +25,7 @@ permissions:
 jobs:
   update-one:
     runs-on: ubuntu-latest
+    name: open PR
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PKG: ${{ inputs.pkg }}
@@ -42,7 +43,12 @@ jobs:
         with:
           ref: ${{ inputs.target-branch }}
           fetch-depth: 0
-      - uses: ./.github/actions/glbx-bin
+      - name: Check out the workflow ref for the helper lib and keyring
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          path: .wf
+      - uses: ./.wf/.github/actions/glbx-bin
 
       - name: Configure git identity
         run: |
@@ -54,7 +60,7 @@ jobs:
         run: |
           result="$(bin/glbx import --no-merge \
             --repo "$REPO" --dist "$DIST" --update-tag "$UPDATE_TAG" \
-            --keyring .github/keyrings/debian-archive-keyring.gpg \
+            --keyring .wf/.github/keyrings/debian-archive-keyring.gpg \
             --cookie "$COOKIE" --output . "$PKG")"
           echo "$result"
           commit="$(echo "$result" | jq -r '.commit')"
@@ -66,7 +72,7 @@ jobs:
         if: steps.import.outputs.already != 'true' && steps.import.outputs.commit != ''
         run: |
           set -euo pipefail
-          source .github/update-lib.sh
+          source .wf/.github/update-lib.sh
 
           U="${{ steps.import.outputs.commit }}"
           branch="$(branch_name "$TARGET" "$PKG" "$NEW")"

@@ -42,6 +42,9 @@ jobs:
         run: |
           set -euo pipefail
           source .github/update-lib.sh
+          # Absolute path captured while on the default-branch checkout, so it
+          # survives the later `git checkout` of the PR head branch.
+          KEYRING="$PWD/.github/keyrings/debian-archive-keyring.gpg"
 
           # 1. Read the PR; the head ref convention is the authorization gate.
           head="$(gh pr view "$PR" --json headRefName  --jq .headRefName)"
@@ -101,7 +104,7 @@ jobs:
             if git diff --quiet "origin/$target" "origin/$head" -- "$depfile"; then
               git checkout -B "$head" "origin/$head"
               bin/glbx lockfile "$pkg" --conf-dir . --repo "$repo" --dist "$cookie_dist" \
-                --keyring .github/keyrings/debian-archive-keyring.gpg
+                --keyring "$KEYRING"
               if ! git diff --quiet -- "$depfile"; then
                 git add "$depfile"
                 git commit -m "update $pkg build deps"
