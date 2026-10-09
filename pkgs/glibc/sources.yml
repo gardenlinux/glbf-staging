@@ -2,5 +2,5 @@ sources:
     - file: glibc_2.42.orig.tar.xz
       sha256: 69c1e915c8edd75981cbfc6b7654e8fc4e52a48d06b9f706f463492749a9b6fb
       urls:
-        - https://snapshot.debian.org/archive/debian/20260501T000000Z/pool/main/g/glibc/glibc_2.42.orig.tar.xz
+        - https://snapshot.debian.org/archive/debian/20260601T000000Z/pool/main/g/glibc/glibc_2.42.orig.tar.xz
         - https://snapshot.debian.org/file/a6ea30a2fd9443ed3fce10e20a0169136d2258bc/glibc_2.42.orig.tar.xz
