@@ -194,7 +194,9 @@ endif
 
 	( \
 	  echo 'libgcc_s $(GCC_SONAME) ${p_snap} (>= $(DEB_EVERSION))'; \
+	  echo 'libstdc++ $(CXX_SONAME) ${p_snap} (>= $(DEB_EVERSION))'; \
 	  echo 'libobjc $(OBJC_SONAME) ${p_snap} (>= $(DEB_EVERSION))'; \
+	  echo 'libgdiagnostics $(DIAGNOSTICS_SONAME) ${p_snap} (>= $(DEB_EVERSION))'; \
 	  echo 'libgfortran $(FORTRAN_SONAME) ${p_snap} (>= $(DEB_EVERSION))'; \
 	  echo 'libgo $(GO_SONAME) ${p_snap} (>= $(DEB_EVERSION))'; \
 	  echo 'libgomp $(GOMP_SONAME) ${p_snap} (>= $(DEB_EVERSION))'; \

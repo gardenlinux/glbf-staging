@@ -5,7 +5,7 @@ Subject: [PATCH] Disable fold-mem-offsets, only applied for m68k
 
 --- a/src/gcc/doc/invoke.texi
 +++ b/src/gcc/doc/invoke.texi
-@@ -16170,6 +16170,8 @@ Try to eliminate add instructions by fol
+@@ -16154,6 +16154,8 @@ Try to eliminate add instructions by fol
  
  Enabled at levels @option{-O2}, @option{-O3}.
  

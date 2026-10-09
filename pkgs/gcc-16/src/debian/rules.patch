@@ -13,11 +13,13 @@ series_file	?= $(patchdir)/series
 # which patches should be applied?
 
 debian_patches += \
+	git-updates \
 
 #	git-updates \
 
 ifneq ($(GFDL_INVARIANT_FREE),yes)
   debian_patches += \
+	git-doc-updates \
 	rename-info-files \
 
 #	git-doc-updates \
@@ -66,7 +68,6 @@ debian_patches += \
 	musl-ssp \
 	arc-stddef \
 	gccrs-bootstrap-mipsel \
-	D-22464 \
 	libsanitizer-static-tls \
 
 # see https://bugs.debian.org/1108322

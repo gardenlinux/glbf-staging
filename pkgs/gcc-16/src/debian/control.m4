@@ -58,7 +58,7 @@ XSBC-Original-Maintainer: MAINTAINER
 Maintainer: MAINTAINER
 ')dnl DIST
 Uploaders: Matthias Klose <doko@debian.org>
-Standards-Version: 4.7.2
+Standards-Version: 4.7.4
 ifdef(`TARGET',`dnl cross
 Build-Depends: DEBHELPER_BUILD_DEP DPKG_BUILD_DEP
   LIBC_BUILD_DEP, LIBC_BIARCH_BUILD_DEP
@@ -2513,7 +2513,7 @@ Architecture: all
 Depends: gcc`'PV-base (>= ${gcc:SoftVersion}), ${misc:Depends}
 Conflicts: libgccjit-5-doc, libgccjit-6-doc, libgccjit-7-doc, libgccjit-8-doc,
   libgccjit-9-doc, libgccjit-10-doc, libgccjit-11-doc, libgccjit-12-doc,
-  libgccjit-13-doc, libgccjit-14-doc,
+  libgccjit-13-doc, libgccjit-14-doc, libgccjit-15-doc,
 Description: GCC just-in-time compilation (documentation)
  libgccjit provides an embeddable shared library with an API for adding
  compilation to existing programs using GCC.
@@ -2756,7 +2756,7 @@ ifdef(`TARGET',`Multi-Arch: foreign
 ')dnl
 Depends: BASEDEP, gobjc`'PV`'TS (= ${gcc:Version}), gcc`'PV-multilib`'TS (= ${gcc:Version}), ${dep:libobjcbiarchdev}, ${shlibs:Depends}, ${misc:Depends}
 BUILT_USING`'dnl
-Description: GNU Objective-C compiler (multilib support)`'ifdef(`TARGET',` (cross compiler for TARGET architecture)', `')
+Description: GNU Objective-C compiler (multilib support)`'ifdef(`TARGET',` (cross compiler for TARGET)', `')
  This is the GNU Objective-C compiler, which compiles Objective-C on platforms
  supported by the gcc compiler.
  .
@@ -3005,7 +3005,7 @@ ifdef(`TARGET',`Multi-Arch: foreign
 ')dnl
 Depends: BASEDEP, gfortran`'PV`'TS (= ${gcc:Version}), gcc`'PV-multilib`'TS (= ${gcc:Version}), ${dep:libgfortranbiarchdev}, ${shlibs:Depends}, ${misc:Depends}
 BUILT_USING`'dnl
-Description: GNU Fortran compiler (multilib support)`'ifdef(`TARGET',` (cross compiler for TARGET architecture)', `')
+Description: GNU Fortran compiler (multilib support)`'ifdef(`TARGET',` (cross compiler for TARGET)', `')
  This is the GNU Fortran compiler, which compiles Fortran on platforms
  supported by the gcc compiler.
  .
@@ -3275,7 +3275,7 @@ ifdef(`TARGET',`Multi-Arch: foreign
 Depends: BASEDEP, gccgo`'PV`'TS (= ${gcc:Version}), ifdef(`STANDALONEGO',,`gcc`'PV-multilib`'TS (= ${gcc:Version}), ')${dep:libgobiarchdev}, ${shlibs:Depends}, ${misc:Depends}
 Suggests: ${dep:libgobiarchdbg}
 BUILT_USING`'dnl
-Description: GNU Go compiler (multilib support)`'ifdef(`TARGET',` (cross compiler for TARGET architecture)', `')
+Description: GNU Go compiler (multilib support)`'ifdef(`TARGET',` (cross compiler for TARGET)', `')
  This is the GNU Go compiler, which compiles Go on platforms supported
  by the gcc compiler.
  .
@@ -3667,7 +3667,7 @@ Conflicts: libstdc++5-dbg`'LS, libstdc++5-3.3-dbg`'LS, libstdc++6-dbg`'LS,
  libstdc++6-4.9-dbg`'LS, libstdc++6-5-dbg`'LS, libstdc++6-6-dbg`'LS,
  libstdc++6-7-dbg`'LS, libstdc++6-8-dbg`'LS, libstdc++6-9-dbg`'LS,
  libstdc++6-10-dbg`'LS, libstdc++6-11-dbg`'LS, libstdc++6-12-dbg`'LS,
- libstdc++6-13-dbg`'LS, libstdc++6-14-dbg`'LS,
+ libstdc++6-13-dbg`'LS, libstdc++6-14-dbg`'LS, libstdc++6-15-dbg`'LS,
 BUILT_USING`'dnl
 ifelse(index(enabled_languages, `libdbg'), -1, `dnl
 Description: GNU Standard C++ Library v3 (debug build)`'ifdef(`TARGET',` (TARGET)', `')
@@ -3720,7 +3720,7 @@ Conflicts: lib32stdc++6-dbg`'LS, lib32stdc++6-4.0-dbg`'LS,
  lib32stdc++6-5-dbg`'LS, lib32stdc++6-6-dbg`'LS, lib32stdc++6-7-dbg`'LS,
  lib32stdc++6-8-dbg`'LS, lib32stdc++6-9-dbg`'LS, lib32stdc++6-10-dbg`'LS,
  lib32stdc++6-11-dbg`'LS, lib32stdc++6-12-dbg`'LS, lib32stdc++6-13-dbg`'LS,
- lib32stdc++6-14-dbg`'LS,
+ lib32stdc++6-14-dbg`'LS, lib32stdc++6-15-dbg`'LS,
 BUILT_USING`'dnl
 ifelse(index(enabled_languages, `libdbg'), -1, `dnl
 Description: GNU Standard C++ Library v3 (debug build)`'ifdef(`TARGET',` (TARGET)', `')
@@ -3773,7 +3773,7 @@ Conflicts: lib64stdc++6-dbg`'LS, lib64stdc++6-4.0-dbg`'LS,
  lib64stdc++6-5-dbg`'LS, lib64stdc++6-6-dbg`'LS, lib64stdc++6-7-dbg`'LS,
  lib64stdc++6-8-dbg`'LS, lib64stdc++6-9-dbg`'LS, lib64stdc++6-10-dbg`'LS,
  lib64stdc++6-11-dbg`'LS, lib64stdc++6-12-dbg`'LS, lib64stdc++6-13-dbg`'LS,
- lib64stdc++6-14-dbg`'LS,
+ lib64stdc++6-14-dbg`'LS, lib64stdc++6-15-dbg`'LS,
 BUILT_USING`'dnl
 ifelse(index(enabled_languages, `libdbg'), -1, `dnl
 Description: GNU Standard C++ Library v3 (debug build)`'ifdef(`TARGET',` (TARGET)', `')
@@ -3826,7 +3826,7 @@ Conflicts: libn32stdc++6-dbg`'LS, libn32stdc++6-4.0-dbg`'LS,
  libn32stdc++6-5-dbg`'LS, libn32stdc++6-6-dbg`'LS, libn32stdc++6-7-dbg`'LS,
  libn32stdc++6-8-dbg`'LS, libn32stdc++6-9-dbg`'LS, libn32stdc++6-10-dbg`'LS,
  libn32stdc++6-11-dbg`'LS, libn32stdc++6-12-dbg`'LS, libn32stdc++6-13-dbg`'LS,
- libn32stdc++6-14-dbg`'LS,
+ libn32stdc++6-14-dbg`'LS, libn32stdc++6-15-dbg`'LS,
 BUILT_USING`'dnl
 ifelse(index(enabled_languages, `libdbg'), -1, `dnl
 Description: GNU Standard C++ Library v3 (debug build)`'ifdef(`TARGET',` (TARGET)', `')
@@ -3880,7 +3880,7 @@ Conflicts: libx32stdc++6-dbg`'LS, libx32stdc++6-4.6-dbg`'LS,
  libx32stdc++6-5-dbg`'LS, libx32stdc++6-6-dbg`'LS, libx32stdc++6-7-dbg`'LS,
  libx32stdc++6-8-dbg`'LS, libx32stdc++6-9-dbg`'LS, libx32stdc++6-10-dbg`'LS,
  libx32stdc++6-11-dbg`'LS, libx32stdc++6-12-dbg`'LS, libx32stdc++6-13-dbg`'LS,
- libx32stdc++6-14-dbg`'LS,
+ libx32stdc++6-14-dbg`'LS, libx32stdc++6-15-dbg`'LS,
 BUILT_USING`'dnl
 ifelse(index(enabled_languages, `libdbg'), -1, `dnl
 Description: GNU Standard C++ Library v3 (debug build)`'ifdef(`TARGET',` (TARGET)', `')
@@ -3910,6 +3910,7 @@ Conflicts: libstdc++5-doc, libstdc++5-3.3-doc, libstdc++6-doc,
  libstdc++-4.8-doc, libstdc++-4.9-doc, libstdc++-5-doc, libstdc++-6-doc,
  libstdc++-7-doc, libstdc++-8-doc, libstdc++-9-doc, libstdc++-10-doc,
  libstdc++-11-doc, libstdc++-12-doc, libstdc++-13-doc, libstdc++-14-doc,
+ libstdc++-15-doc,
 Description: GNU Standard C++ Library v3 (documentation files)
  This package contains documentation files for the GNU stdc++ library.
  .
@@ -4079,7 +4080,7 @@ Depends: ${misc:Depends}
 Suggests: gnat`'PV
 Conflicts: gnat-4.9-doc,
   gnat-5-doc, gnat-6-doc, gnat-7-doc, gnat-8-doc, gnat-9-doc, gnat-10-doc,
-  gnat-11-doc, gnat-12-doc, gnat-13-doc,
+  gnat-11-doc, gnat-12-doc, gnat-13-doc, gnat-14-doc, gnat-15-doc,
 BUILT_USING`'dnl
 Description: GNU Ada compiler (documentation)
  GNAT is a compiler for the Ada programming language. It produces optimized
@@ -4161,7 +4162,7 @@ ifdef(`TARGET',`Multi-Arch: foreign
 ')dnl
 Depends: SOFTBASEDEP, gdc`'PV`'TS (= ${gcc:Version}), gcc`'PV-multilib`'TS (= ${gcc:Version}), ${dep:libphobosbiarchdev}${shlibs:Depends}, ${misc:Depends}
 BUILT_USING`'dnl
-Description: GNU D compiler (version 2, multilib support)`'ifdef(`TARGET',` (cross compiler for TARGET architecture)', `')
+Description: GNU D compiler (version 2, multilib support)`'ifdef(`TARGET',` (cross compiler for TARGET)', `')
  This is the GNU D compiler, which compiles D on platforms supported by gcc.
  It uses the gcc backend to generate optimised code.
  .

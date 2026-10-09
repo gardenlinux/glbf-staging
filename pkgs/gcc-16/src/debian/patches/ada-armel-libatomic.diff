@@ -27,14 +27,15 @@ Author: Nicolas Boulenguez <nicolas@debian.org>
 
 --- a/src/gcc/ada/Makefile.rtl
 +++ b/src/gcc/ada/Makefile.rtl
-@@ -2506,6 +2506,7 @@ endif
- # ARM linux, GNU eabi
- ifeq ($(SELECTED_PAIRS),PAIRS_NONE)
- ifeq ($(strip $(filter-out arm% linux-gnueabi%,$(target_cpu) $(target_os))),)
-+  MISCLIB = ../../../$(target_alias)/libatomic/.libs/libatomic.so
- 
-   SELECTED_PAIRS=arm-linux-gnueabi
- 
+@@ -2535,7 +2535,7 @@ ifeq ($(strip $(filter-out arm% linux-gn
+   EXTRA_GNATRTL_TASKING_OBJS=s-linux.o
+   EH_MECHANISM=-arm
+   THREADSLIB = -lpthread
+-  MISCLIB = -ldl
++  MISCLIB = ../../../$(target_alias)/libatomic/.libs/libatomic.so -ldl
+   GNATLIB_SHARED = gnatlib-shared-dual
+   GMEM_LIB = gmemlib
+   LIBRARY_VERSION := $(LIB_VERSION)
 --- a/src/Makefile.def
 +++ b/src/Makefile.def
 @@ -422,6 +422,8 @@ dependencies = { module=all-target-libad
@@ -68,7 +69,7 @@ Author: Nicolas Boulenguez <nicolas@debian.org>
  all-c++tools: maybe-all-gcc
 --- a/src/gcc/ada/gcc-interface/Makefile.in
 +++ b/src/gcc/ada/gcc-interface/Makefile.in
-@@ -727,6 +727,7 @@ gnatlib-shared-default:
+@@ -722,6 +722,7 @@ gnatlib-shared-default:
  		$(GNATRTL_TASKING_OBJS) \
  		$(SO_OPTS)libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
  		libgnat$(hyphen)$(LIBRARY_VERSION).so \

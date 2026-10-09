@@ -15,7 +15,7 @@
    open_quote = _("`");
 --- a/src/gcc/Makefile.in
 +++ b/src/gcc/Makefile.in
-@@ -4875,8 +4875,8 @@ install-po:
+@@ -4882,8 +4882,8 @@ install-po:
  	  dir=$(localedir)/$$lang/LC_MESSAGES; \
  	  echo $(mkinstalldirs) $(DESTDIR)$$dir; \
  	  $(mkinstalldirs) $(DESTDIR)$$dir || exit 1; \

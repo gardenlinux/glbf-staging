@@ -221,7 +221,6 @@ define __do_libgm2
 	  echo "$(p_l) binary: dev-pkg-without-shlib-symlink"; \
 	  echo "$(p_l) binary: shared-lib-without-dependency-information"; \
 	  echo "$(p_l) binary: package-name-doesnt-match-sonames"; \
-	  echo "$(p_l) binary: library-not-linked-against-libc"; \
 	) >> $(d_l)/usr/share/lintian/overrides/$(p_l)
 
 	dh_lintian -p$(p_l)
