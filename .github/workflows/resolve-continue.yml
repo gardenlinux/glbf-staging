@@ -70,7 +70,7 @@ jobs:
 
           # 3. Recover the original decision from the state block.
           target="$(printf '%s' "$body" | state_get target)"
-          pkg="$(printf '%s' "$body" | state_get pkg)"
+          pkg="$(printf '%s' "$body" | state_get package)"
           update_lockfile="$(printf '%s' "$body" | state_get update_lockfile)"
           cookie_dist="$(printf '%s' "$body" | state_get dist)"
           repo="$(printf '%s' "$body" | state_get repo)"

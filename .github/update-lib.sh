@@ -18,17 +18,19 @@ branch_name() {
 	printf 'update-staging/%s/%s-%s' "$target" "$pkg" "$(refsafe "$version")"
 }
 
-# state_block emits the greppable YAML state block (wrapped in an HTML comment so
-# it is hidden in the rendered PR view). resolve-continue recovers the update
-# decision from it. All arguments are required.
+# state_block emits the update metadata as a visible fenced YAML block. It is
+# both the human-readable record of the update and the machine-readable memo
+# resolve-continue recovers the decision from: the first line inside the fence
+# carries the glbf-update-state marker (a YAML comment) that state_get anchors
+# on. All arguments are required.
 state_block() {
 	local pkg="$1" old="$2" new="$3" target="$4" tag="$5" repo="$6" dist="$7" update_lockfile="$8" import_commit="$9"
 	cat <<EOF
-<!-- glbf-update-state
 \`\`\`yaml
-pkg: $pkg
-old: $old
-new: $new
+# glbf-update-state
+package: $pkg
+old_version: $old
+new_version: $new
 target: $target
 update_tag: $tag
 repo: $repo
@@ -36,23 +38,22 @@ dist: $dist
 update_lockfile: $update_lockfile
 import_commit: $import_commit
 \`\`\`
--->
 EOF
 }
 
 # state_get reads one field from a PR body's state block on stdin. Usage:
-#   echo "$body" | state_get pkg
-# It extracts the fenced yaml inside the glbf-update-state comment and prints the
-# value for the given key. Exits non-zero if the block or key is absent.
+#   echo "$body" | state_get package
+# It scans the fenced yaml block introduced by the glbf-update-state marker and
+# prints the value for the given key. Exits non-zero if the block or key is
+# absent. The block ends at the closing fence.
 state_get() {
 	local key="$1"
 	awk -v key="$key" '
-		/glbf-update-state/ { inblock = 1; next }
-		inblock && /^-->/   { inblock = 0 }
+		/^# glbf-update-state$/ { inblock = 1; next }
+		inblock && /^```/        { inblock = 0 }
 		inblock {
-			line = $0
-			sub(/^```yaml$/, "", line)
-			if (line ~ "^" key ":") {
+			if ($0 ~ "^" key ":") {
+				line = $0
 				sub("^" key ":[ \t]*", "", line)
 				print line
 				found = 1
@@ -79,42 +80,51 @@ format_conflict_paths() {
 	fi
 }
 
-# clean_body prints the PR body for a clean (non-draft) update. Args:
+# clean_body prints the PR body for a clean (non-draft) update: a one-line
+# summary and the metadata block. Whether it merged cleanly is evident from the
+# GitHub UI, so it is not restated here. Args:
 #   pkg old new target update_tag repo dist update_lockfile U
 clean_body() {
 	local pkg="$1" old="$2" new="$3" target="$4" tag="$5" repo="$6" dist="$7" lockfile="$8" u="$9"
 	cat <<EOF
-This updates **$pkg** from \`$old\` to \`$new\` (import \`${u:0:12}\`).
-
-The import merges cleanly into \`$target\`. Lockfile bumped: $lockfile.
+Updates **$pkg** from \`$old\` to \`$new\`.
 
 $(state_block "$pkg" "$old" "$new" "$target" "$tag" "$repo" "$dist" "$lockfile" "$u")
 EOF
 }
 
-# conflict_body prints the draft PR body for a conflicting update. Args:
+# conflict_body prints the draft PR body for a conflicting update: an alert with
+# the manual-merge instructions, a caution against rebasing, and the metadata
+# block. Args:
 #   pkg old new target update_tag repo dist update_lockfile U branch pathlist
 conflict_body() {
 	local pkg="$1" old="$2" new="$3" target="$4" tag="$5" repo="$6" dist="$7" lockfile="$8" u="$9" branch="${10}" pathlist="${11}"
 	cat <<EOF
-This updates **$pkg** from \`$old\` to \`$new\` (import \`${u:0:12}\`).
+Updates **$pkg** from \`$old\` to \`$new\`.
 
-The import does **not** merge cleanly into \`$target\`. Conflicting paths:
+> [!IMPORTANT]
+> This update does not merge cleanly into \`$target\` and needs a manual merge.
+> Check out the branch, merge the target in, resolve the conflicts, and push:
+>
+> \`\`\`
+> git fetch origin
+> git checkout $branch
+> git merge origin/$target
+> # resolve conflicts, stage, commit
+> git push
+> \`\`\`
+>
+> Then comment \`/continue-update\` on this PR; automation re-checks
+> mergeability, bumps the lockfile if requested, and marks it ready for review.
+
+> [!CAUTION]
+> Resolve with \`git merge\` only — never \`git rebase\`. The import keeps its own
+> upstream lineage, and the merge commit is what lets later updates apply cleanly.
+> Rebasing rewrites that history and breaks future updates.
+
+Conflicting paths:
 
 $pathlist
-To resolve:
-
-    git fetch origin
-    git checkout $branch
-    git merge origin/$target
-    # resolve conflicts, stage, commit
-    git push
-
-When the branch merges cleanly with \`$target\`, comment \`/continue-update\`
-on this PR and automation will finish it (lockfile bump if requested) and mark
-it ready for review.
-
-CI will run once a maintainer pushes to the branch or the PR is approved.
 
 $(state_block "$pkg" "$old" "$new" "$target" "$tag" "$repo" "$dist" "$lockfile" "$u")
 EOF
