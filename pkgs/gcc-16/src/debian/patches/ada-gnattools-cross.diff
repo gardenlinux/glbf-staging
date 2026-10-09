@@ -33,7 +33,7 @@ to stamp-gnatlib2 is not necessary anymore with gcc-9.
  ifeq ($(strip $(filter-out hppa% hp hpux11%,$(target_cpu) $(target_vendor) $(target_os))),)
 --- a/src/gcc/ada/gcc-interface/Makefile.in
 +++ b/src/gcc/ada/gcc-interface/Makefile.in
-@@ -516,6 +516,20 @@ gnatlink-re: ../stamp-tools gnatmake-re
+@@ -511,6 +511,20 @@ gnatlink-re: ../stamp-tools gnatmake-re
  	  --LINK="$(GCC_LINK)" $(TOOLS_LIBS)
  	$(MV)  ../../gnatlinknew$(exeext)  ../../gnatlink$(exeext)
  
@@ -54,7 +54,7 @@ to stamp-gnatlib2 is not necessary anymore with gcc-9.
  # Needs to be built with CC=gcc
  # Since the RTL should be built with the latest compiler, remove the
  #  stamp target in the parent directory whenever gnat1 is rebuilt
-@@ -643,7 +657,7 @@ $(RTSDIR)/s-oscons.ads: ../stamp-gnatlib
+@@ -638,7 +652,7 @@ $(RTSDIR)/s-oscons.ads: ../stamp-gnatlib
  	    $(OSCONS_EXTRACT) ; \
  	    ../bldtools/oscons/xoscons s-oscons)
  
@@ -63,7 +63,7 @@ to stamp-gnatlib2 is not necessary anymore with gcc-9.
  	test -f $(RTSDIR)/s-oscons.ads || exit 1
  # C files
  	$(MAKE) -C $(RTSDIR) \
-@@ -675,18 +689,30 @@ gnatlib: ../stamp-gnatlib1-$(RTSDIR) ../
+@@ -670,18 +684,30 @@ gnatlib: ../stamp-gnatlib1-$(RTSDIR) ../
  		$(RANLIB_FOR_TARGET) $(RTSDIR)/libgmem$(arext)
          endif
  	$(CHMOD) a-wx $(RTSDIR)/*.ali
@@ -102,7 +102,7 @@ to stamp-gnatlib2 is not necessary anymore with gcc-9.
  	$(RM) $(RTSDIR)/libgna*$(soext)
  	cd $(RTSDIR); $(GCC_FOR_ADA_RTS) -shared $(GNATLIBCFLAGS) \
  		$(PICFLAG_FOR_TARGET) \
-@@ -697,8 +723,10 @@ gnatlib-shared-default:
+@@ -692,8 +718,10 @@ gnatlib-shared-default:
  	cd $(RTSDIR); $(GCC_FOR_ADA_RTS) -shared $(GNATLIBCFLAGS) \
  		$(PICFLAG_FOR_TARGET) \
  		-o libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
@@ -113,7 +113,7 @@ to stamp-gnatlib2 is not necessary anymore with gcc-9.
  		$(THREADSLIB)
  	cd $(RTSDIR); $(LN_S) libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) \
  		libgnat$(soext)
-@@ -714,6 +742,10 @@ gnatlib-shared-default:
+@@ -709,6 +737,10 @@ gnatlib-shared-default:
  	   $(addprefix $(RTSDIR)/,$(GNATRTL_TASKING_OBJS))
  	$(RANLIB_FOR_TARGET) $(RTSDIR)/libgnarl_pic$(arext)
  
@@ -124,7 +124,7 @@ to stamp-gnatlib2 is not necessary anymore with gcc-9.
  gnatlib-shared-dual:
  	$(MAKE) $(FLAGS_TO_PASS) \
               GNATLIBFLAGS="$(GNATLIBFLAGS)" \
-@@ -723,11 +755,8 @@ gnatlib-shared-dual:
+@@ -718,11 +750,8 @@ gnatlib-shared-dual:
  	     MULTISUBDIR="$(MULTISUBDIR)" \
  	     THREAD_KIND="$(THREAD_KIND)" \
  	     LN_S="$(LN_S)" \
@@ -138,7 +138,7 @@ to stamp-gnatlib2 is not necessary anymore with gcc-9.
  	$(MAKE) $(FLAGS_TO_PASS) \
               GNATLIBFLAGS="$(GNATLIBFLAGS)" \
  	     GNATLIBCFLAGS="$(GNATLIBCFLAGS)" \
-@@ -735,10 +764,7 @@ gnatlib-shared-dual:
+@@ -730,10 +759,7 @@ gnatlib-shared-dual:
  	     MULTISUBDIR="$(MULTISUBDIR)" \
  	     THREAD_KIND="$(THREAD_KIND)" \
  	     LN_S="$(LN_S)" \
@@ -150,7 +150,7 @@ to stamp-gnatlib2 is not necessary anymore with gcc-9.
  
  	# Remove all the object files. They cannot be reused because they have
  	# been generated for the static library and the shared library will be
-@@ -757,9 +783,8 @@ gnatlib-shared-dual-win32:
+@@ -752,9 +778,8 @@ gnatlib-shared-dual-win32:
  	     MULTISUBDIR="$(MULTISUBDIR)" \
  	     THREAD_KIND="$(THREAD_KIND)" \
  	     LN_S="$(LN_S)" \
@@ -162,7 +162,7 @@ to stamp-gnatlib2 is not necessary anymore with gcc-9.
  	$(MAKE) $(FLAGS_TO_PASS) \
               GNATLIBFLAGS="$(GNATLIBFLAGS)" \
  	     GNATLIBCFLAGS="$(GNATLIBCFLAGS)" \
-@@ -767,8 +792,7 @@ gnatlib-shared-dual-win32:
+@@ -762,8 +787,7 @@ gnatlib-shared-dual-win32:
  	     MULTISUBDIR="$(MULTISUBDIR)" \
  	     THREAD_KIND="$(THREAD_KIND)" \
  	     LN_S="$(LN_S)" \
