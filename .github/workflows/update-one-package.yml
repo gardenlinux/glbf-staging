@@ -54,6 +54,9 @@ jobs:
         run: |
           git config user.name "glbf-update[bot]"
           git config user.email "glbf-update@users.noreply.github.com"
+          # The workflow-ref checkout lives at .wf inside the workspace; keep it
+          # out of every git operation on the target tree so it is never staged.
+          echo '/.wf/' >> .git/info/exclude
 
       - name: Import the new version as a pristine commit (no merge)
         id: import
@@ -103,7 +106,7 @@ jobs:
 
             if [ "$UPDATE_LOCKFILE" = "true" ]; then
               bin/glbx lockfile "$PKG" --conf-dir . --cookie "$COOKIE"
-              git add -A
+              git add "pkgs/$PKG"
               git commit -m "update $PKG build deps"
             fi
 
