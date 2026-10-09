@@ -1,0 +1,14 @@
+MODULE=text
+SOBJ=text.so
+OBJS=text.opic
+
+LIBS=@READLINE_LIBS@ -lhistory
+
+include ../modules.mak
+
+install::
+ifeq ($(TARGET),udeb)
+	install -m 644 ${srcdir}/src/modules/frontend/text/inputrc $(DESTDIR)/.inputrc
+else
+	install -m 644 ${srcdir}/src/modules/frontend/text/cdebconf_text.h $(DESTDIR)${incdir}
+endif
