@@ -16,109 +16,31 @@ permissions:
   contents: read
   packages: write
 
-env:
-  GLBX_ARCH: amd64
-  # ghcr.io/<owner>/<repo>/objstore — the shared pull-through cache and the only
-  # channel between node jobs. Resolved from the run's own repository.
-  GLBX_REGISTRY: ghcr.io/${{ github.repository }}/objstore
-  # Credentials glbx redeems a registry bearer token with. The automatic
-  # GITHUB_TOKEN has push access to the repository's own package namespace.
-  GLBX_REGISTRY_USER: ${{ github.actor }}
-  GLBX_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 jobs:
 
   build-glbx:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out glbx
-        uses: actions/checkout@v5
-        with:
-          repository: gardenlinux/glbx
-          ref: ${{ inputs.glbx-ref || 'main' }}
-      - uses: actions/setup-go@v6
-        with:
-          go-version: stable
-      - name: Build glbx and the sandbox stub
-        run: |
-          go build -o bin/glbx ./cmd/glbx
-          go build -o bin/exec_env_stub ./cmd/exec_env_stub
-      - name: Share the binaries with the node jobs
-        uses: actions/upload-artifact@v6
-        with:
-          name: glbx-bin
-          path: bin/
-          retention-days: 1
+    uses: ./.github/workflows/build-glbx.yml
+    with:
+      glbx-ref: ${{ inputs.glbx-ref || 'main' }}
 
   check-graph:
-    runs-on: ubuntu-latest
     needs: [build-glbx]
-    steps:
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Regenerate the workflow from the current sources and compare
-        env:
-          GLBX: bin/glbx
-          STUB: bin/exec_env_stub
-        run: |
-          .github/generate-workflow.sh /tmp/build.current.yml
-          if ! diff -u .github/workflows/build.yml /tmp/build.current.yml; then
-            echo '::error::committed .github/workflows/build.yml is stale; run .github/generate-workflow.sh and commit'
-            exit 1
-          fi
+    uses: ./.github/workflows/check-graph.yml
 
   restore-inputs:
-    runs-on: ubuntu-latest
     needs: [build-glbx]
-    steps:
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Download the recorded inputs (source archives and tooling .debs)
-        run: bin/glbx restore-cache --conf-dir . --arch "$GLBX_ARCH"
-      - name: Publish the inputs to ghcr for the node jobs to pull
-        run: bin/glbx publish --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/restore-inputs.yml
+    with:
+      arch: amd64
 
   plan:
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph]
-    outputs:
-      # A JSON object { "<node Key>": true|false } — true means the node's
-      # output is already in the registry, so its job skips. Node jobs read this
-      # with fromJSON(needs.plan.outputs.built)[<their NODE_KEY>].
-      built: ${{ steps.check.outputs.built }}
-    steps:
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Determine which nodes already exist in the registry
-        id: check
-        run: |
-          bin/glbx graph --format=json --check-built \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH" > /tmp/graph.json
-          built="$(jq -c '.builtStatus' /tmp/graph.json)"
-          echo "built=$built" >> "$GITHUB_OUTPUT"
-          echo "already built: $(jq '[.builtStatus[] | select(.)] | length' /tmp/graph.json) / $(jq '.nodes | length' /tmp/graph.json)"
+    uses: ./.github/workflows/plan.yml
+    with:
+      arch: amd64
 
   node-0:
     name: "debian-pkg-build:acl:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -127,31 +49,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:acl:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:acl:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:acl:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:acl:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:acl:amd64"
+      arch: amd64
 
   node-1:
     name: "debian-pkg-build:attr:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -160,31 +64,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:attr:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:attr:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:attr:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:attr:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:attr:amd64"
+      arch: amd64
 
   node-2:
     name: "debian-pkg-build:base-files:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -193,31 +79,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:base-files:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:base-files:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:base-files:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:base-files:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:base-files:amd64"
+      arch: amd64
 
   node-3:
     name: "debian-pkg-build:base-passwd:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -226,31 +94,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:base-passwd:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:base-passwd:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:base-passwd:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:base-passwd:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:base-passwd:amd64"
+      arch: amd64
 
   node-4:
     name: "debian-pkg-build:bash:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -259,31 +109,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:bash:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:bash:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:bash:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:bash:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:bash:amd64"
+      arch: amd64
 
   node-5:
     name: "debian-pkg-build:bzip2:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -292,31 +124,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:bzip2:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:bzip2:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:bzip2:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:bzip2:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:bzip2:amd64"
+      arch: amd64
 
   node-6:
     name: "debian-pkg-build:cdebconf:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -325,31 +139,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:cdebconf:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:cdebconf:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:cdebconf:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:cdebconf:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:cdebconf:amd64"
+      arch: amd64
 
   node-7:
     name: "debian-pkg-build:coreutils:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -358,31 +154,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:coreutils:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:coreutils:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:coreutils:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:coreutils:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:coreutils:amd64"
+      arch: amd64
 
   node-8:
     name: "debian-pkg-build:debianutils:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -391,31 +169,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:debianutils:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:debianutils:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:debianutils:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:debianutils:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:debianutils:amd64"
+      arch: amd64
 
   node-9:
     name: "debian-pkg-build:dpkg:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -424,31 +184,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:dpkg:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:dpkg:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:dpkg:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:dpkg:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:dpkg:amd64"
+      arch: amd64
 
   node-10:
     name: "debian-pkg-build:gcc-16:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -457,31 +199,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:gcc-16:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:gcc-16:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:gcc-16:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:gcc-16:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:gcc-16:amd64"
+      arch: amd64
 
   node-11:
     name: "debian-binary-pkg:gcc-16:gcc-16-base:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-10]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -490,31 +214,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:gcc-16:gcc-16-base:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:gcc-16:gcc-16-base:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:gcc-16:gcc-16-base:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:gcc-16:gcc-16-base:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:gcc-16:gcc-16-base:amd64"
+      arch: amd64
 
   node-12:
     name: "debian-binary-pkg:gcc-16:libgcc-s1:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-10]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -523,31 +229,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:gcc-16:libgcc-s1:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:gcc-16:libgcc-s1:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:gcc-16:libgcc-s1:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:gcc-16:libgcc-s1:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:gcc-16:libgcc-s1:amd64"
+      arch: amd64
 
   node-13:
     name: "debian-pkg-build:glibc:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -556,31 +244,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:glibc:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:glibc:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:glibc:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:glibc:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:glibc:amd64"
+      arch: amd64
 
   node-14:
     name: "debian-binary-pkg:glibc:libc-gconv-modules-extra:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-11, node-12, node-13]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -589,31 +259,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:glibc:libc-gconv-modules-extra:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:glibc:libc-gconv-modules-extra:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:glibc:libc-gconv-modules-extra:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:glibc:libc-gconv-modules-extra:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:glibc:libc-gconv-modules-extra:amd64"
+      arch: amd64
 
   node-15:
     name: "debian-binary-pkg:glibc:libc6:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-11, node-12, node-13]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -622,31 +274,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:glibc:libc6:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:glibc:libc6:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:glibc:libc6:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:glibc:libc6:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:glibc:libc6:amd64"
+      arch: amd64
 
   node-16:
     name: "debian-binary-pkg:attr:libattr1:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-1, node-14, node-15]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -655,31 +289,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:attr:libattr1:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:attr:libattr1:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:attr:libattr1:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:attr:libattr1:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:attr:libattr1:amd64"
+      arch: amd64
 
   node-17:
     name: "debian-binary-pkg:acl:libacl1:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-0, node-14, node-15, node-16]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -688,31 +304,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:acl:libacl1:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:acl:libacl1:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:acl:libacl1:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:acl:libacl1:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:acl:libacl1:amd64"
+      arch: amd64
 
   node-18:
     name: "debian-binary-pkg:bzip2:libbz2-1.0:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-5, node-14, node-15]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -721,31 +319,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:bzip2:libbz2-1.0:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:bzip2:libbz2-1.0:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:bzip2:libbz2-1.0:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:bzip2:libbz2-1.0:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:bzip2:libbz2-1.0:amd64"
+      arch: amd64
 
   node-19:
     name: "debian-binary-pkg:cdebconf:libdebconfclient0:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-6, node-14, node-15]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -754,31 +334,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:cdebconf:libdebconfclient0:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:cdebconf:libdebconfclient0:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:cdebconf:libdebconfclient0:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:cdebconf:libdebconfclient0:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:cdebconf:libdebconfclient0:amd64"
+      arch: amd64
 
   node-20:
     name: "debian-binary-pkg:debianutils:debianutils:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-8, node-14, node-15]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -787,31 +349,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:debianutils:debianutils:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:debianutils:debianutils:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:debianutils:debianutils:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:debianutils:debianutils:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:debianutils:debianutils:amd64"
+      arch: amd64
 
   node-21:
     name: "debian-pkg-build:gmp:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -820,31 +364,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:gmp:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:gmp:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:gmp:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:gmp:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:gmp:amd64"
+      arch: amd64
 
   node-22:
     name: "debian-binary-pkg:gmp:libgmp10:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-21]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -853,31 +379,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:gmp:libgmp10:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:gmp:libgmp10:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:gmp:libgmp10:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:gmp:libgmp10:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:gmp:libgmp10:amd64"
+      arch: amd64
 
   node-23:
     name: "debian-pkg-build:libcap2:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -886,31 +394,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:libcap2:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:libcap2:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:libcap2:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:libcap2:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:libcap2:amd64"
+      arch: amd64
 
   node-24:
     name: "debian-binary-pkg:libcap2:libcap2:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-23]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -919,31 +409,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:libcap2:libcap2:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:libcap2:libcap2:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:libcap2:libcap2:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:libcap2:libcap2:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:libcap2:libcap2:amd64"
+      arch: amd64
 
   node-25:
     name: "debian-pkg-build:libmd:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -952,31 +424,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:libmd:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:libmd:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:libmd:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:libmd:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:libmd:amd64"
+      arch: amd64
 
   node-26:
     name: "debian-binary-pkg:libmd:libmd0:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-25]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -985,31 +439,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:libmd:libmd0:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:libmd:libmd0:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:libmd:libmd0:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:libmd:libmd0:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:libmd:libmd0:amd64"
+      arch: amd64
 
   node-27:
     name: "debian-pkg-build:libselinux:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1018,31 +454,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:libselinux:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:libselinux:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:libselinux:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:libselinux:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:libselinux:amd64"
+      arch: amd64
 
   node-28:
     name: "debian-pkg-build:libzstd:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1051,31 +469,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:libzstd:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:libzstd:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:libzstd:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:libzstd:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:libzstd:amd64"
+      arch: amd64
 
   node-29:
     name: "debian-binary-pkg:libzstd:libzstd1:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-28]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1084,31 +484,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:libzstd:libzstd1:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:libzstd:libzstd1:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:libzstd:libzstd1:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:libzstd:libzstd1:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:libzstd:libzstd1:amd64"
+      arch: amd64
 
   node-30:
     name: "debian-pkg-build:mawk:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1117,31 +499,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:mawk:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:mawk:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:mawk:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:mawk:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:mawk:amd64"
+      arch: amd64
 
   node-31:
     name: "debian-binary-pkg:mawk:mawk:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-30]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1150,31 +514,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:mawk:mawk:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:mawk:mawk:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:mawk:mawk:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:mawk:mawk:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:mawk:mawk:amd64"
+      arch: amd64
 
   node-32:
     name: "debian-binary-pkg:base-files:base-files:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-2, node-14, node-15, node-31]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1183,31 +529,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:base-files:base-files:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:base-files:base-files:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:base-files:base-files:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:base-files:base-files:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:base-files:base-files:amd64"
+      arch: amd64
 
   node-33:
     name: "debian-pkg-build:ncurses:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1216,31 +544,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:ncurses:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:ncurses:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:ncurses:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:ncurses:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:ncurses:amd64"
+      arch: amd64
 
   node-34:
     name: "debian-binary-pkg:ncurses:libtinfo6:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-33]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1249,31 +559,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:ncurses:libtinfo6:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:ncurses:libtinfo6:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:ncurses:libtinfo6:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:ncurses:libtinfo6:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:ncurses:libtinfo6:amd64"
+      arch: amd64
 
   node-35:
     name: "debian-binary-pkg:bash:bash:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-4, node-14, node-15, node-20, node-32, node-34]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1282,31 +574,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:bash:bash:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:bash:bash:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:bash:bash:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:bash:bash:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:bash:bash:amd64"
+      arch: amd64
 
   node-36:
     name: "debian-pkg-build:openssl:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1315,31 +589,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:openssl:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:openssl:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:openssl:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:openssl:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:openssl:amd64"
+      arch: amd64
 
   node-37:
     name: "debian-pkg-build:pcre2:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1348,31 +604,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:pcre2:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:pcre2:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:pcre2:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:pcre2:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:pcre2:amd64"
+      arch: amd64
 
   node-38:
     name: "debian-binary-pkg:pcre2:libpcre2-8-0:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-37]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1381,31 +619,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:pcre2:libpcre2-8-0:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:pcre2:libpcre2-8-0:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:pcre2:libpcre2-8-0:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:pcre2:libpcre2-8-0:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:pcre2:libpcre2-8-0:amd64"
+      arch: amd64
 
   node-39:
     name: "debian-binary-pkg:libselinux:libselinux1:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-27, node-38]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1414,31 +634,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:libselinux:libselinux1:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:libselinux:libselinux1:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:libselinux:libselinux1:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:libselinux:libselinux1:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:libselinux:libselinux1:amd64"
+      arch: amd64
 
   node-40:
     name: "debian-binary-pkg:base-passwd:base-passwd:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-3, node-14, node-15, node-19, node-39]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1447,31 +649,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:base-passwd:base-passwd:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:base-passwd:base-passwd:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:base-passwd:base-passwd:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:base-passwd:base-passwd:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:base-passwd:base-passwd:amd64"
+      arch: amd64
 
   node-41:
     name: "debian-pkg-build:systemd:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1480,31 +664,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:systemd:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:systemd:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:systemd:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:systemd:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:systemd:amd64"
+      arch: amd64
 
   node-42:
     name: "debian-binary-pkg:systemd:libsystemd0:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-24, node-29, node-39, node-41]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1513,31 +679,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:systemd:libsystemd0:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:systemd:libsystemd0:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:systemd:libsystemd0:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:systemd:libsystemd0:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:systemd:libsystemd0:amd64"
+      arch: amd64
 
   node-43:
     name: "debian-pkg-build:tar:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1546,31 +694,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:tar:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:tar:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:tar:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:tar:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:tar:amd64"
+      arch: amd64
 
   node-44:
     name: "debian-binary-pkg:tar:tar:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-17, node-39, node-43]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1579,31 +709,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:tar:tar:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:tar:tar:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:tar:tar:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:tar:tar:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:tar:tar:amd64"
+      arch: amd64
 
   node-45:
     name: "debian-pkg-build:xz-utils:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1612,31 +724,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:xz-utils:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:xz-utils:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:xz-utils:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:xz-utils:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:xz-utils:amd64"
+      arch: amd64
 
   node-46:
     name: "debian-binary-pkg:xz-utils:liblzma5:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-45]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1645,31 +739,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:xz-utils:liblzma5:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:xz-utils:liblzma5:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:xz-utils:liblzma5:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:xz-utils:liblzma5:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:xz-utils:liblzma5:amd64"
+      arch: amd64
 
   node-47:
     name: "debian-pkg-build:zlib:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1678,31 +754,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:zlib:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-pkg-build:zlib:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-pkg-build:zlib:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-pkg-build:zlib:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:zlib:amd64"
+      arch: amd64
 
   node-48:
     name: "debian-binary-pkg:zlib:zlib1g:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-47]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1711,31 +769,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:zlib:zlib1g:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:zlib:zlib1g:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:zlib:zlib1g:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:zlib:zlib1g:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:zlib:zlib1g:amd64"
+      arch: amd64
 
   node-49:
     name: "debian-binary-pkg:dpkg:dpkg:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-9, node-14, node-15, node-18, node-26, node-29, node-39, node-44, node-46, node-48]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1744,31 +784,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:dpkg:dpkg:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:dpkg:dpkg:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:dpkg:dpkg:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:dpkg:dpkg:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:dpkg:dpkg:amd64"
+      arch: amd64
 
   node-50:
     name: "debian-binary-pkg:openssl:libssl3t64:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-29, node-36, node-48]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1777,31 +799,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:openssl:libssl3t64:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:openssl:libssl3t64:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:openssl:libssl3t64:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:openssl:libssl3t64:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:openssl:libssl3t64:amd64"
+      arch: amd64
 
   node-51:
     name: "debian-binary-pkg:openssl:openssl-provider-legacy:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-29, node-36, node-48]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1810,31 +814,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:openssl:openssl-provider-legacy:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:openssl:openssl-provider-legacy:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:openssl:openssl-provider-legacy:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:openssl:openssl-provider-legacy:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:openssl:openssl-provider-legacy:amd64"
+      arch: amd64
 
   node-52:
     name: "debian-binary-pkg:coreutils:coreutils:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-7, node-14, node-15, node-16, node-17, node-22, node-24, node-39, node-42, node-50, node-51]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1843,31 +829,13 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:coreutils:coreutils:amd64'] != true) }}"
-    env:
-      NODE_KEY: "debian-binary-pkg:coreutils:coreutils:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build debian-binary-pkg:coreutils:coreutils:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish debian-binary-pkg:coreutils:coreutils:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:coreutils:coreutils:amd64"
+      arch: amd64
 
   node-53:
     name: "rootfs:amd64"
-    runs-on: ubuntu-latest
     needs: [build-glbx, check-graph, restore-inputs, plan, node-32, node-35, node-40, node-49, node-52]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -1876,24 +844,7 @@ jobs:
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
     if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['rootfs:amd64'] != true) }}"
-    env:
-      NODE_KEY: "rootfs:amd64"
-    steps:
-      - name: Allow unprivileged user namespaces
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Check out the config repo
-        uses: actions/checkout@v5
-      - name: Fetch the glbx binaries
-        uses: actions/download-artifact@v7
-        with:
-          name: glbx-bin
-          path: bin
-      - run: chmod +x bin/glbx bin/exec_env_stub
-      - name: Build rootfs:amd64
-        run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish rootfs:amd64 to ghcr
-        run: |
-          bin/glbx publish --target "$NODE_KEY" \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "rootfs:amd64"
+      arch: amd64

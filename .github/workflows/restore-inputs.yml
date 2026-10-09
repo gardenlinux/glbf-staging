@@ -1,0 +1,33 @@
+name: restore-inputs
+
+# Reusable: fetch the recorded inputs (source archives and tooling .debs) and
+# mirror them to ghcr once, so the node jobs pull them from the shared cache
+# rather than re-fetching per node. The warm path is a near no-op (HEADs only).
+on:
+  workflow_call:
+    inputs:
+      arch:
+        default: amd64
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  GLBX_ARCH: ${{ inputs.arch }}
+  GLBX_REGISTRY: ghcr.io/${{ github.repository }}/objstore
+  GLBX_REGISTRY_USER: ${{ github.actor }}
+  GLBX_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  restore-inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the config repo
+        uses: actions/checkout@v5
+      - uses: ./.github/actions/glbx-bin
+      - name: Download the recorded inputs (source archives and tooling .debs)
+        run: bin/glbx restore-cache --conf-dir . --arch "$GLBX_ARCH"
+      - name: Publish the inputs to ghcr for the node jobs to pull
+        run: bin/glbx publish --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"

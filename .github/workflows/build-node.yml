@@ -1,0 +1,46 @@
+name: build-node
+
+# Reusable: build exactly one graph node with recursion inhibited (its
+# dependencies must already be cache hits published by earlier node jobs) and
+# publish that node's output to ghcr. The caller holds the node's needs: edges
+# and the already-built skip guard; this holds the per-node logic.
+on:
+  workflow_call:
+    inputs:
+      node-key:
+        description: The graph node Key to build (e.g. debian-pkg-build:acl:amd64).
+        required: true
+        type: string
+      arch:
+        default: amd64
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  GLBX_ARCH: ${{ inputs.arch }}
+  GLBX_REGISTRY: ghcr.io/${{ github.repository }}/objstore
+  GLBX_REGISTRY_USER: ${{ github.actor }}
+  GLBX_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build-node:
+    runs-on: ubuntu-latest
+    env:
+      NODE_KEY: ${{ inputs.node-key }}
+    steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: Check out the config repo
+        uses: actions/checkout@v5
+      - uses: ./.github/actions/glbx-bin
+      - name: Build ${{ inputs.node-key }}
+        run: |
+          bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
+            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+      - name: Publish ${{ inputs.node-key }} to ghcr
+        run: |
+          bin/glbx publish --target "$NODE_KEY" \
+            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"

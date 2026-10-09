@@ -1,0 +1,43 @@
+name: plan
+
+# Reusable: determine which graph nodes already exist in the registry, so the
+# caller can skip their jobs before a runner starts. Emits one JSON object
+# { "<node Key>": true|false } as the `built` output.
+on:
+  workflow_call:
+    inputs:
+      arch:
+        default: amd64
+        type: string
+    outputs:
+      built:
+        description: JSON object mapping each node Key to whether its output is already in the registry.
+        value: ${{ jobs.plan.outputs.built }}
+
+permissions:
+  contents: read
+  packages: read
+
+env:
+  GLBX_ARCH: ${{ inputs.arch }}
+  GLBX_REGISTRY: ghcr.io/${{ github.repository }}/objstore
+  GLBX_REGISTRY_USER: ${{ github.actor }}
+  GLBX_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      built: ${{ steps.check.outputs.built }}
+    steps:
+      - name: Check out the config repo
+        uses: actions/checkout@v5
+      - uses: ./.github/actions/glbx-bin
+      - name: Determine which nodes already exist in the registry
+        id: check
+        run: |
+          bin/glbx graph --format=json --check-built \
+            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH" > /tmp/graph.json
+          built="$(jq -c '.builtStatus' /tmp/graph.json)"
+          echo "built=$built" >> "$GITHUB_OUTPUT"
+          echo "already built: $(jq '[.builtStatus[] | select(.)] | length' /tmp/graph.json) / $(jq '.nodes | length' /tmp/graph.json)"

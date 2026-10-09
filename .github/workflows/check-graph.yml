@@ -1,0 +1,26 @@
+name: check-graph
+
+# Reusable: the drift gate. GitHub Actions cannot derive job structure at run
+# time, so build.yml is generated offline and committed; this regenerates it
+# from the current sources and fails the run if the committed copy has drifted.
+on:
+  workflow_call:
+
+jobs:
+  check-graph:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the config repo
+        uses: actions/checkout@v5
+      - uses: ./.github/actions/glbx-bin
+      - name: Regenerate the workflow from the current sources and compare
+        env:
+          GLBX: bin/glbx
+          STUB: bin/exec_env_stub
+          GLBX_ARCH: amd64
+        run: |
+          .github/generate-workflow.sh /tmp/build.current.yml
+          if ! diff -u .github/workflows/build.yml /tmp/build.current.yml; then
+            echo '::error::committed .github/workflows/build.yml is stale; run .github/generate-workflow.sh and commit'
+            exit 1
+          fi
