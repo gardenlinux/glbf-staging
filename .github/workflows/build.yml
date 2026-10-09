@@ -11,6 +11,11 @@ on:
         default: main
         type: string
   push:
+  # A pull_request build runs against the PR's merge ref, so the gate reflects the
+  # merged state rather than the branch tip. A branch pushed by the automatic
+  # GITHUB_TOKEN does not trigger this (bot-opened PR events need approval), so an
+  # update PR's build starts when a maintainer pushes to it or approves the run.
+  pull_request:
 
 permissions:
   contents: read
