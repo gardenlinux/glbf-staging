@@ -4,7 +4,7 @@ Priority: required
 Build-Depends: gettext, xz-utils, file, quilt,
  autoconf, gawk, debhelper-compat (= 13), rdfind, symlinks, netbase, gperf, bison,
  linux-libc-dev [linux-any],
- libaudit-dev [linux-any] <!nocheck> <!stage1 !stage2>, libcap-dev [linux-any] <!stage2>, libselinux1-dev [linux-any] <!stage2>,
+ libaudit-dev [linux-any] <!nocheck> <!stage1 !stage2>, libcap-dev [linux-any] <!stage2>, libselinux-dev [linux-any] <!stage2>,
  mig-for-host (>= 1.8+git20200618-7~) [hurd-any], gnumach-dev (>= 2:1.8+git20200710-2~) [hurd-any],
  hurd-dev (>= 1:0.9.git20201127-4~) [hurd-any] | hurd-headers-dev [hurd-any],
  binutils-for-host,
