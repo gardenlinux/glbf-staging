@@ -1,0 +1,5 @@
+default
+man
+Prefix-ruby-objects-with-interpreter-Closes-1095018.patch
+Build-shared-libraries-with-fPIC.patch
+Fix-matchpathcon_filespec_add-condition-for-alpha.patch
