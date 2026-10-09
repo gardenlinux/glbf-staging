@@ -1,3 +1,15 @@
+base-files (14.0) unstable; urgency=medium
+
+  * Do not ship the BSD license anymore. Closes: #1132426.
+    Thanks a lot to Bastian Germann.
+  * Update the Artistic license from perl_5.36.0.orig.tar.xz.
+    (Fixes old typo MERCHANTIBILITY -> MERCHANTABILITY).
+  * Drop "Rules-Requires-Root: no" (default).
+  * Update standards-version.
+  * Fine-tune salsa-ci.yml.
+
+ -- Santiago Vila <sanvila@debian.org>  Mon, 11 May 2026 17:40:00 +0200
+
 base-files (14) unstable; urgency=medium
 
   * Changes for forky while it's in development:
