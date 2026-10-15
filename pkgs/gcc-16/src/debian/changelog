@@ -1,3 +1,45 @@
+gcc-16 (16.1.0-2) unstable; urgency=medium
+
+  * Update to git 20260613 from the gcc-16 branch.
+    - Fix PR target/125751 (AVR), PR target/125611 (X86),
+      PR rtl-optimization/125375, PR target/122827 (AArch64),
+      PR tree-optimization/125250, PR middle-end/125156, PR target/124870 (ARM),
+      PR target/125215 (RISCV), PR tree-optimization/124151,
+      PR target/124895 (AArch64), PR target/125409 (AVR),
+      PR target/125362 (loongarch), PR target/125320 (RISCV),
+      PR target/125373 (X86), PR other/125348, PR target/125355 (X86),
+      PR target/125355 (X86), PR target/125351 (X86), PR target/120870 (X86),
+      PR tree-optimization/125291, PR target/125308 (X86),
+      PR target/124316 (X86), PR target/125194 (AVR),
+      PR target/125049 (loongarch), PR middle-end/125259,
+      PR target/53929 (MingW), PR ada/125695, PR ada/18205, PR other/125348,
+      PR ada/125240, PR c/124532, PR c++/125284, PR c++/125333, PR c++/125498,
+      PR c++/125334, PR c++/125378, PR c++/125490, PR c++/125123,
+      PR c++/125412, PR c++/125376, PR c++/125454, PR c++/125423,
+      PR c++/125135, PR c++/125384, PR c++/113563, PR c++/125007,
+      PR c++/125315, PR c++/124628, PR c++/125184, PR c++/125111,
+      PR c++/124991, PR c++/125280, PR c++/100903, PR c++/115181,
+      PR c++/125043, PR c++/124979, PR c++/125208, PR fortran/125669,
+      PR fortran/125606, PR fortran/125393, PR fortran/105582,
+      PR fortran/125391, PR fortran/125416, PR fortran/106546,
+      PR fortran/115260, PR fortran/125021, PR fortran/125192,
+      PR fortran/125198, PR fortran/111952, PR fortran/125059,
+      PR other/125348, PR target/125752 (AVR), PR libfortran/125095,
+      PR libstdc++/125450, PR libstdc++/125374, PR libstdc++/125369,
+      PR libstdc++/78302, PR libstdc++/71301, PR libstdc++/125312.
+
+  [ Matthias Klose ]
+  * Build using GNAT 15 for now. See #1136069.
+  * Configure --with-arch=rv64gc on Ubuntu/riscv64. LP: #2152642.
+  * Apply proposed patch for PR rtl-optimization/123853 (m68k). See #1107416.
+  * Still configure --with-arch=rv64gc for Debian/riscv64 backports.
+  * Apply PR middle-end/124637, taken from the trunk. Addresses: #1131886.
+
+  [ Aurelien Jarno ]
+  * Configure --with-arch=rva20u64 on Debian/riscv64.
+
+ -- Matthias Klose <doko@debian.org>  Sat, 13 Jun 2026 10:54:28 +0200
+
 gcc-16 (16.1.0-1) unstable; urgency=medium
 
   * GCC 16.1.0 release.
