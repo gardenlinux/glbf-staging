@@ -10,6 +10,7 @@
 #
 # Safir Secerovic <sapphire@linux.org.ba>, 2006.
 # Armin Besirovic <armin@linux.org.ba>, 2008.
+# Amar Tufo <bhllinux@gmail.com>, 2022.
 #
 # Translations from iso-codes:
 #   Alastair McKinstry <mckinstry@computer.org>, 2001,2002.
@@ -26,14 +27,15 @@ msgstr ""
 "Project-Id-Version: debian-installer_packages_po_sublevel1_bs\n"
 "Report-Msgid-Bugs-To: cdebconf@packages.debian.org\n"
 "POT-Creation-Date: 2016-06-05 14:47+0000\n"
-"PO-Revision-Date: 2014-05-21 11:20+0100\n"
-"Last-Translator: Amila Valjevčić <valjevcic.amila@gmail.com>\n"
+"PO-Revision-Date: 2026-04-20 19:09+0000\n"
+"Last-Translator: pacavarn <nahadster@gmail.com>\n"
 "Language-Team: Bosnian <lokal@linux.org.ba>\n"
 "Language: bs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: 3;\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. Type: select
 #. Choices
@@ -126,7 +128,7 @@ msgstr ""
 #. :sl2:
 #: ../cdebconf-priority.templates:1001
 msgid "Change debconf priority"
-msgstr "Promjeni debconf nivo prioritera "
+msgstr "Promijeni prioritet debconf-a"
 
 #. Type: text
 #. Description
@@ -199,9 +201,8 @@ msgstr "<F1> za pomoć; <Tab> pomiče; <Space> odabire; <Enter> aktivira dugmad"
 #. Appears as a checkbox in the newt and GTK interfaces.
 #. :sl1:
 #: ../cdebconf-newt-udeb.templates:8001 ../cdebconf-gtk-udeb.templates:9001
-#, fuzzy
 msgid "Show Password in Clear"
-msgstr "Greška pri unosu šifre"
+msgstr "Prikaži lozinku u Clear"
 
 #. Type: text
 #. Description
@@ -249,14 +250,14 @@ msgstr "Slika spremljena kao %s"
 #: ../cdebconf-text-udeb.templates:1001
 #, no-c-format
 msgid "!! ERROR: %s"
-msgstr "!! ERROR: %s"
+msgstr "!! GREŠKA: %s"
 
 #. Type: text
 #. Description
 #. :sl4:
 #: ../cdebconf-text-udeb.templates:2001
 msgid "KEYSTROKES:"
-msgstr "KEYSTROKES:"
+msgstr "PRITISCI TIPKI:"
 
 #. Type: text
 #. Description
@@ -293,7 +294,7 @@ msgstr "Izaberite prazan unos"
 #: ../cdebconf-text-udeb.templates:7001
 #, no-c-format
 msgid "Other choices are available with '%c' and '%c'"
-msgstr ""
+msgstr "Druge opcije su dostupne sa '%c' i '%c'"
 
 #. Type: text
 #. Description
@@ -301,7 +302,7 @@ msgstr ""
 #: ../cdebconf-text-udeb.templates:8001
 #, no-c-format
 msgid "Previous choices are available with '%c'"
-msgstr ""
+msgstr "Prethodni izbori su dostupni sa '%c'"
 
 #. Type: text
 #. Description
@@ -309,7 +310,7 @@ msgstr ""
 #: ../cdebconf-text-udeb.templates:9001
 #, no-c-format
 msgid "Next choices are available with '%c'"
-msgstr ""
+msgstr "Sljedeće opcije su dostupne sa '%c'"
 
 #. Type: text
 #. Description
@@ -325,7 +326,7 @@ msgstr "Prompt: '%c' za pomoć, podrazumijevano=%d> "
 #: ../cdebconf-text-udeb.templates:13001
 #, no-c-format
 msgid "Prompt: '%c' for help> "
-msgstr "Prompt: '%c' za pomoć> "
+msgstr "Upit: '%c' za pomoć> "
 
 #. Type: text
 #. Description
@@ -333,7 +334,7 @@ msgstr "Prompt: '%c' za pomoć> "
 #: ../cdebconf-text-udeb.templates:14001
 #, no-c-format
 msgid "Prompt: '%c' for help, default=%s> "
-msgstr "Prompt: '%c' za pomoć, podrazumijevano=%s> "
+msgstr "Upit: '%c' za pomoć, zadano=%s> "
 
 #. Type: text
 #. Description
@@ -347,7 +348,7 @@ msgstr "[Pritisnite enter za nastavak]"
 #. :sl4:
 #: ../cdebconf.templates:1001
 msgid "Interface to use:"
-msgstr "Interfejs koji će se koristiti:"
+msgstr "Interfejs za korištenje:"
 
 #. Type: select
 #. Description
