@@ -110,8 +110,8 @@ endif
 		CC="$(call xx,CC) -U_FILE_OFFSET_BITS -U_TIME_BITS" \
 		CXX=$(if $(filter nocheck,$(DEB_BUILD_OPTIONS)),:,"$(call xx,CXX) -U_FILE_OFFSET_BITS -U_TIME_BITS") \
 		MIG="$(call xx,MIG)" \
-		CFLAGS="$(call dpkg_filtered_host_cflags)" \
-		ASFLAGS="$(call dpkg_filtered_host_cflags)" \
+		CFLAGS="$(call dpkg_filtered_host_cflags) $(call xx,extra_cflags)" \
+		ASFLAGS="$(call dpkg_filtered_host_cflags) $(call xx,extra_cflags)" \
 		BUILD_CFLAGS="$(shell dpkg-buildflags --get CFLAGS_FOR_BUILD)" \
 		AUTOCONF=false \
 		MAKEINFO=: \
