@@ -13,7 +13,6 @@ base-files: relative-symlink ../usr/lib/os-release [etc/os-release]
 # other packages to reference them.
 #
 base-files: extra-license-file [usr/share/common-licenses/Artistic]
-base-files: extra-license-file [usr/share/common-licenses/BSD]
 base-files: extra-license-file [usr/share/common-licenses/GPL-1]
 base-files: extra-license-file [usr/share/common-licenses/GPL-2]
 base-files: extra-license-file [usr/share/common-licenses/GPL-3]
