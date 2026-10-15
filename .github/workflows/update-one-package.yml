@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     name: open PR
     env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ steps.app-token.outputs.token }}
       PKG: ${{ inputs.pkg }}
       OLD: ${{ inputs.old }}
       NEW: ${{ inputs.new }}
@@ -38,11 +38,19 @@ jobs:
       UPDATE_LOCKFILE: ${{ inputs.update-lockfile }}
       COOKIE: ${{ inputs.cookie }}
     steps:
+      - name: Mint a GitHub App installation token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GLBF_UPDATE_APP_ID }}
+          private-key: ${{ secrets.GLBF_UPDATE_APP_KEY }}
+
       - name: Check out the target branch (full history)
         uses: actions/checkout@v5
         with:
           ref: ${{ inputs.target-branch }}
           fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
       - name: Check out the workflow ref for the helper lib and keyring
         uses: actions/checkout@v5
         with:

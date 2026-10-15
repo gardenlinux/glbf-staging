@@ -33,13 +33,21 @@ jobs:
       startsWith(github.event.comment.body, '/continue-update')
     runs-on: ubuntu-latest
     env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ steps.app-token.outputs.token }}
       PR: ${{ github.event.issue.number }}
     steps:
+      - name: Mint a GitHub App installation token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GLBF_UPDATE_APP_ID }}
+          private-key: ${{ secrets.GLBF_UPDATE_APP_KEY }}
+
       - name: Check out the config repo (default branch workflow copy)
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
       - uses: ./.github/actions/glbx-bin
 
       - name: Configure git identity
