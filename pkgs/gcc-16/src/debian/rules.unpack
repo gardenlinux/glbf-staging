@@ -79,6 +79,7 @@ gfdl_texinfo_files = \
 	gcc/doc/rtl.texi \
 	gcc/doc/service.texi \
 	gcc/doc/sourcebuild.texi \
+	gcc/doc/specs.texi \
 	gcc/doc/standards.texi \
 	gcc/doc/tm.texi.in \
 	gcc/doc/tm.texi \
