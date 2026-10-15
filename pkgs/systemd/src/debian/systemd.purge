@@ -1,0 +1,7 @@
+/var/lib/systemd/network/
+/var/lib/systemd/backlight/
+/var/lib/systemd/rfkill/
+/var/lib/systemd/timesync/
+/var/lib/systemd/ephemeral-trees/
+/var/lib/systemd/random-seed
+/var/log/README
