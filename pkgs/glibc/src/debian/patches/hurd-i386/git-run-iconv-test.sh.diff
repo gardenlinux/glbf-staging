@@ -10,9 +10,9 @@ diff --git a/iconv/Makefile b/iconv/Makefile
 index 672126d452..97a3f586e4 100644
 --- a/iconv/Makefile
 +++ b/iconv/Makefile
-@@ -141,7 +141,7 @@ $(objpfx)test-iconvconfig.out: $(objpfx)iconvconfig
- 
- $(objpfx)tst-iconv_prog.out: tst-iconv_prog.sh $(objpfx)iconv_prog
+@@ -141,7 +141,7 @@
+ $(objpfx)tst-iconv_prog.out: tst-iconv_prog.sh $(objpfx)iconv_prog \
+   $(gen-locales)
  	$(BASH) $< $(common-objdir) '$(test-wrapper-env)' \
 -		 '$(run-program-env)' > $@; \
 +		 '$(run-program-env)' '$(rpath-link)' > $@; \
@@ -23,7 +23,7 @@ diff --git a/iconv/tst-iconv_prog.sh b/iconv/tst-iconv_prog.sh
 index e2a43280d2..ac0060e7f5 100644
 --- a/iconv/tst-iconv_prog.sh
 +++ b/iconv/tst-iconv_prog.sh
-@@ -21,13 +21,15 @@
+@@ -21,6 +21,8 @@
  codir=$1
  test_wrapper_env="$2"
  run_program_env="$3"
@@ -32,19 +32,20 @@ index e2a43280d2..ac0060e7f5 100644
  
  # We have to have some directories in the library path.
  LIBPATH=$codir:$codir/iconvdata
- 
+@@ -28,7 +30,7 @@
  # How the start the iconv(1) program.  $from is not defined/expanded yet.
  ICONV='
+ $test_wrapper_env $run_program_env
 -$codir/elf/ld.so --library-path $LIBPATH --inhibit-rpath ${from}.so
 +$codir/elf/ld.so --library-path $library_path:$LIBPATH --inhibit-rpath ${from}.so
  $codir/iconv/iconv_prog
  '
- ICONV="$test_wrapper_env $run_program_env $ICONV"
+
 diff --git a/iconvdata/Makefile b/iconvdata/Makefile
 index 5a2abeea24..a09ff12ead 100644
 --- a/iconvdata/Makefile
 +++ b/iconvdata/Makefile
-@@ -340,7 +340,7 @@ $(objpfx)iconv-test.out: run-iconv-test.sh \
+@@ -342,7 +342,7 @@ $(objpfx)iconv-test.out: run-iconv-test.sh \
  			 $(common-objdir)/iconv/iconv_prog TESTS
  	iconv_modules="$(modules)" \
  	$(SHELL) $< $(common-objdir) '$(test-wrapper-env)' \
