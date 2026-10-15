@@ -27,7 +27,6 @@ jobs:
     runs-on: ubuntu-latest
     name: open PR
     env:
-      GH_TOKEN: ${{ steps.app-token.outputs.token }}
       PKG: ${{ inputs.pkg }}
       OLD: ${{ inputs.old }}
       NEW: ${{ inputs.new }}
@@ -81,6 +80,8 @@ jobs:
 
       - name: Open or update the PR
         if: steps.import.outputs.already != 'true' && steps.import.outputs.commit != ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           set -euo pipefail
           source .wf/.github/update-lib.sh

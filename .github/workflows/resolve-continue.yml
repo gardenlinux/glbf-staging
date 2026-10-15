@@ -33,7 +33,6 @@ jobs:
       startsWith(github.event.comment.body, '/continue-update')
     runs-on: ubuntu-latest
     env:
-      GH_TOKEN: ${{ steps.app-token.outputs.token }}
       PR: ${{ github.event.issue.number }}
     steps:
       - name: Mint a GitHub App installation token
@@ -56,6 +55,8 @@ jobs:
           git config user.email "glbf-update@users.noreply.github.com"
 
       - name: Continue the update
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           set -euo pipefail
           source .github/update-lib.sh
