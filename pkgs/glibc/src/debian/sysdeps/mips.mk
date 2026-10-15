@@ -6,6 +6,7 @@ GLIBC_PASSES += mipsn32
 DEB_ARCH_MULTILIB_PACKAGES += libc6-mipsn32 libc6-dev-mipsn32
 libc6-mipsn32_shlib_dep = libc6-mipsn32 (>= $(shlib_dep_ver))
 mipsn32_configure_target = mips64-linux-gnuabin32
+mipsn32_debarch = mipsn32
 mipsn32_CC = $(CC) -mabi=n32
 mipsn32_CXX = $(CXX) -mabi=n32
 mipsn32_rtlddir = /lib32
@@ -17,6 +18,7 @@ GLIBC_PASSES += mips64
 DEB_ARCH_MULTILIB_PACKAGES += libc6-mips64 libc6-dev-mips64
 libc6-mips64_shlib_dep = libc6-mips64 (>= $(shlib_dep_ver))
 mips64_configure_target = mips64-linux-gnuabi64
+mips64_debarch = mips64
 mips64_CC = $(CC) -mabi=64
 mips64_CXX = $(CXX) -mabi=64
 mips64_rtlddir = /lib64
