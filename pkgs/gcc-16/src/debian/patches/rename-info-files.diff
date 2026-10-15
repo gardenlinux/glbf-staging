@@ -93,7 +93,7 @@ gcc/fortran/ChangeLog:
  # Clean hooks:
 --- a/src/gcc/Makefile.in
 +++ b/src/gcc/Makefile.in
-@@ -3776,8 +3776,31 @@ ifeq ($(BUILD_INFO),no-info)
+@@ -3783,8 +3783,31 @@ ifeq ($(BUILD_INFO),no-info)
  no-info: info
  endif
  
@@ -127,7 +127,7 @@ gcc/fortran/ChangeLog:
  
  info: $(INFOFILES) lang.info @GENINSRC@ srcinfo lang.srcinfo
  
-@@ -3825,7 +3848,20 @@ gcc-vers.texi: $(BASEVER) $(DEVPHASE)
+@@ -3833,7 +3856,20 @@ gcc-vers.texi: $(BASEVER) $(DEVPHASE)
  	if [ -n "$(PKGVERSION)" ]; then \
  	  echo "@set VERSION_PACKAGE $(PKGVERSION)" >> $@T; \
  	fi
@@ -149,7 +149,7 @@ gcc/fortran/ChangeLog:
  	mv -f $@T $@
  
  
-@@ -3833,21 +3869,41 @@ gcc-vers.texi: $(BASEVER) $(DEVPHASE)
+@@ -3841,21 +3877,41 @@ gcc-vers.texi: $(BASEVER) $(DEVPHASE)
  # patterns.  To use them, put each of the specific targets with its
  # specific dependencies but no build commands.
  
@@ -198,7 +198,7 @@ gcc/fortran/ChangeLog:
  			-I $(gcc_docdir)/include -o $@ $<; \
  	fi
  
-@@ -4334,11 +4390,11 @@ install-libgdiagnostics: libgdiagnostics
+@@ -4343,11 +4399,11 @@ install-libgdiagnostics: libgdiagnostics
  # $(INSTALL_DATA) might be a relative pathname, so we can't cd into srcdir
  # to do the install.
  install-info:: doc installdirs \
@@ -215,7 +215,7 @@ gcc/fortran/ChangeLog:
  	lang.install-info
  
  $(DESTDIR)$(infodir)/%.info: doc/%.info installdirs
-@@ -4577,8 +4633,11 @@ uninstall: lang.uninstall
+@@ -4586,8 +4642,11 @@ uninstall: lang.uninstall
  	-rm -rf $(DESTDIR)$(bindir)/$(GCOV_INSTALL_NAME)$(exeext)
  	-rm -rf $(DESTDIR)$(man1dir)/$(GCC_INSTALL_NAME)$(man1ext)
  	-rm -rf $(DESTDIR)$(man1dir)/cpp$(man1ext)
@@ -253,7 +253,7 @@ gcc/fortran/ChangeLog:
  @c %**end of header
 --- a/src/gcc/doc/invoke.texi
 +++ b/src/gcc/doc/invoke.texi
-@@ -20291,7 +20291,7 @@ One of the standard libraries bypassed b
+@@ -18559,7 +18559,7 @@ One of the standard libraries bypassed b
  @option{-nodefaultlibs} is @file{libgcc.a}, a library of internal subroutines
  which GCC uses to overcome shortcomings of particular machines, or special
  needs for some languages.
@@ -262,7 +262,7 @@ gcc/fortran/ChangeLog:
  Collection (GCC) Internals},
  for more discussion of @file{libgcc.a}.)
  In most cases, you need @file{libgcc.a} even when you want to avoid
-@@ -20300,7 +20300,7 @@ or @option{-nodefaultlibs} you should us
+@@ -18568,7 +18568,7 @@ or @option{-nodefaultlibs} you should us
  This ensures that you have no unresolved references to internal GCC
  library subroutines.
  (An example of such an internal subroutine is @code{__main}, used to ensure C++
@@ -271,7 +271,7 @@ gcc/fortran/ChangeLog:
  GNU Compiler Collection (GCC) Internals}.)
  
  @opindex nostdlib++
-@@ -39792,7 +39792,7 @@ Note that you can also specify places to
+@@ -37463,7 +37463,7 @@ Note that you can also specify places to
  @option{-B}, @option{-I} and @option{-L} (@pxref{Directory Options}).  These
  take precedence over places specified using environment variables, which
  in turn take precedence over those specified by the configuration of GCC@.
@@ -280,7 +280,7 @@ gcc/fortran/ChangeLog:
  GNU Compiler Collection (GCC) Internals}.
  
  @table @env
-@@ -39995,7 +39995,7 @@ the headers it contains change.
+@@ -37641,7 +37641,7 @@ the headers it contains change.
  
  A precompiled header file is searched for when @code{#include} is
  seen in the compilation.  As it searches for the included file
@@ -291,7 +291,7 @@ gcc/fortran/ChangeLog:
  the name specified in the @code{#include} with @samp{.gch} appended.  If
 --- a/src/gcc/doc/extend.texi
 +++ b/src/gcc/doc/extend.texi
-@@ -30658,7 +30658,7 @@ want to write code that checks whether t
+@@ -30585,7 +30585,7 @@ want to write code that checks whether t
  test for the GNU compiler the same way as for C programs: check for a
  predefined macro @code{__GNUC__}.  You can also use @code{__GNUG__} to
  test specifically for GNU C++ (@pxref{Common Predefined Macros,,
@@ -322,7 +322,7 @@ gcc/fortran/ChangeLog:
  mode, not a specific C type.  @xref{Machine Modes}, for an explanation
 --- a/src/gcc/doc/gccint.texi
 +++ b/src/gcc/doc/gccint.texi
-@@ -49,7 +49,7 @@ Texts being (a) (see below), and with th
+@@ -56,7 +56,7 @@ Texts being (a) (see below), and with th
  @ifnottex
  @dircategory Software development
  @direntry
@@ -331,7 +331,7 @@ gcc/fortran/ChangeLog:
  @end direntry
  This file documents the internals of the GNU compilers.
  @sp 1
-@@ -81,7 +81,7 @@ write front ends for new languages.  It
+@@ -88,7 +88,7 @@ write front ends for new languages.  It
  @value{VERSION_PACKAGE}
  @end ifset
  version @value{version-GCC}.  The use of the GNU compilers is documented in a
@@ -353,7 +353,7 @@ gcc/fortran/ChangeLog:
  
 --- a/src/gcc/doc/gcc.texi
 +++ b/src/gcc/doc/gcc.texi
-@@ -135,7 +135,7 @@ version @value{version-GCC}.
+@@ -137,7 +137,7 @@ version @value{version-GCC}.
  The internals of the GNU compilers, including how to port them to new
  targets and some information about how to write front ends for new
  languages, are documented in a separate manual.  @xref{Top,,

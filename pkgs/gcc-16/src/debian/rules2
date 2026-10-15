@@ -189,6 +189,7 @@ ifneq (,$(filter $(build_type), build-cross cross-build-cross))
     LDFLAGS += -Wl,--no-relax
   endif
 else
+  BOOT_CFLAGS	= -g -O2
   BOOT_LDFLAGS	= -Wl,-z,relro
   ifeq ($(DEB_TARGET_ARCH),alpha)
     BOOT_LDFLAGS += -Wl,--no-relax
@@ -241,6 +242,7 @@ ifeq ($(DEB_TARGET_ARCH),arm64)
     # Native build
     CFLAGS += $(CFLAGS_SECURE)
     CXXFLAGS += $(CFLAGS_SECURE)
+    BOOT_CFLAGS += $(CFLAGS_SECURE)
   endif
 endif
 
@@ -957,10 +959,12 @@ ifeq ($(trunk_build),yes)
   endif
 else
   enable_checking = yes
-  ifneq (,$(filter $(DEB_TARGET_ARCH), amd64 arm64 i386 mips64el ppc64 ppc64el s390x))
+  ifneq (,$(filter $(DEB_TARGET_ARCH), arm64 i386 mips64el ppc64 ppc64el s390x))
     enable_checking = yes,extra,rtl
   endif
-  #enable_checking = release
+  ifneq (,$(filter $(DEB_TARGET_ARCH), amd64))
+    enable_checking = release
+  endif
 endif
 CONFARGS += --enable-checking=$(enable_checking)
 
@@ -1237,7 +1241,9 @@ endif
 	@echo "CFLAGS: $(CFLAGS)"
 	@echo "LDFLAGS: $(LDFLAGS)"
 	@echo "FCFLAGS: $(FCFLAGS)"
+	@echo "STAGE1_CFLAGS: $(STAGE1_CFLAGS)"
 	@echo "BOOT_CFLAGS: $(BOOT_CFLAGS)"
+	@echo "BOOT_LDFLAGS: $(BOOT_LDFLAGS)"
 	@echo "DEBIAN_BUILDARCH: $(DEBIAN_BUILDARCH)"
 	@echo "Install prefix: /$(PF)"
 ifeq ($(biarchn32)-$(biarch64),yes-yes)
@@ -2931,15 +2937,20 @@ endif
 ifneq ($(with_common_libs),yes)
 # for native builds, the default ml libs are always available; no need for a placeholder
 # apparently this changed with newer dpkg versions (1.18.7?) ...
-	echo 'libgcc_s $(GCC_SONAME) $(p_lgcc)' > debian/shlibs.common
-	echo 'libstdc++ $(CXX_SONAME) $(p_lib)' >> debian/shlibs.common
-	echo 'libquadmath $(QUADMATH_SONAME) libquadmath$(QUADMATH_SONAME)$(cross_lib_arch)' >> debian/shlibs.common
-	echo 'libatomic $(ATOMIC_SONAME) libatomic$(ATOMIC_SONAME)$(cross_lib_arch)' >> debian/shlibs.common
+	( \
+	  echo 'libgcc_s $(GCC_SONAME) $(p_lgcc)'; \
+	  echo 'libstdc++ $(CXX_SONAME) $(p_lib)'; \
+	  echo 'libquadmath $(QUADMATH_SONAME) libquadmath$(QUADMATH_SONAME)$(cross_lib_arch)'; \
+	  echo 'libatomic $(ATOMIC_SONAME) libatomic$(ATOMIC_SONAME)$(cross_lib_arch)'; \
+	  echo 'libgdiagnostics $(DIAGNOSTICS_SONAME) libgdiagnostocs$(DIAGNOSTICS_SONAME)$(cross_lib_arch)'; \
+	) > debian/shlibs.common
 	$(foreach ml,32 64 n32 x32, \
-	  echo 'libgcc_s $(GCC_SONAME) $(subst lib,lib$(ml),$(p_lgcc))' > debian/shlibs.common$(ml); \
-	  echo 'libstdc++ $(CXX_SONAME) $(subst lib,lib$(ml),$(p_lib))' >> debian/shlibs.common$(ml); \
-	  echo 'libquadmath $(QUADMATH_SONAME) lib$(ml)quadmath$(QUADMATH_SONAME)$(cross_lib_arch)' >> debian/shlibs.common$(ml); \
-	  echo 'libatomic $(ATOMIC_SONAME) lib$(ml)atomic$(ATOMIC_SONAME)$(cross_lib_arch)' >> debian/shlibs.common$(ml); \
+	  ( \
+	    echo 'libgcc_s $(GCC_SONAME) $(subst lib,lib$(ml),$(p_lgcc))'; \
+	    echo 'libstdc++ $(CXX_SONAME) $(subst lib,lib$(ml),$(p_lib))'; \
+	    echo 'libquadmath $(QUADMATH_SONAME) lib$(ml)quadmath$(QUADMATH_SONAME)$(cross_lib_arch)'; \
+	    echo 'libatomic $(ATOMIC_SONAME) lib$(ml)atomic$(ATOMIC_SONAME)$(cross_lib_arch)'; \
+	  ) > debian/shlibs.common$(ml); \
 	)
 endif
 
