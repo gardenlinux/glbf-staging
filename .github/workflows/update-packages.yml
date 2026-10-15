@@ -72,7 +72,7 @@ jobs:
   update:
     needs: [check]
     if: needs.check.outputs.any == 'true'
-    name: ${{ matrix.pkg.pkg }} ${{ matrix.pkg.old }} → ${{ matrix.pkg.new }}
+    name: ${{ matrix.pkg.pkg }}
     strategy:
       fail-fast: false
       matrix:
