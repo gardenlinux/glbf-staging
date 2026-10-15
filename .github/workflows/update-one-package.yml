@@ -57,10 +57,20 @@ jobs:
           path: .wf
       - uses: ./.wf/.github/actions/glbx-bin
 
+      - name: Resolve the bot user id for the commit identity
+        id: bot-id
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          SLUG: ${{ steps.app-token.outputs.app-slug }}
+        run: echo "user-id=$(gh api "/users/${SLUG}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+
       - name: Configure git identity
+        env:
+          SLUG: ${{ steps.app-token.outputs.app-slug }}
+          UID: ${{ steps.bot-id.outputs.user-id }}
         run: |
-          git config user.name "glbf-update[bot]"
-          git config user.email "glbf-update@users.noreply.github.com"
+          git config user.name "${SLUG}[bot]"
+          git config user.email "${UID}+${SLUG}[bot]@users.noreply.github.com"
           # The workflow-ref checkout lives at .wf inside the workspace; keep it
           # out of every git operation on the target tree so it is never staged.
           echo '/.wf/' >> .git/info/exclude
