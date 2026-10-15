@@ -1,7 +1,22 @@
-# DP: updates from the 16 branch upto 20251111 (documentation).
+# DP: updates from the 16 branch upto 20260509 (documentation).
 
 LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
-	5115c7e447fc07457443df874bf57840e8316d5f ac34de574fe4974db48348178ab3e7f94f01e9fa \
+	6afcc4f6da931eb93f3ab001a0dd9650ea71d1ea a24661a0d900d563359bba966c47869e2455dfee \
 	| awk '/^diff .*\.texi/ {skip=0; print; next} /^diff / {skip=1; next} skip==0' \
         | grep -v -E '^(diff|index)'
 
+--- a/src/gcc/doc/invoke.texi
++++ b/src/gcc/doc/invoke.texi
+@@ -8319,10 +8319,10 @@ void foo (void)
+   int f = 0; // No warning, f used
+   int g = f = 5;
+   (void) g;
+-  int h = 0; // No warning, preincrement used
++  int h = 0; // No warning, preincrement result used
+   int i = ++h;
+   (void) i;
+-  int j = 0; // No warning, postdecrement used
++  int j = 0; // No warning, postdecrement result used
+   int k = j--;
+   (void) k;
+   int l = 0; // No warning, l used
