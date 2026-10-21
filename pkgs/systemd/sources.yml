@@ -1,6 +1,6 @@
 sources:
-    - file: systemd_260.1.orig.tar.gz
-      sha256: 11b9821892b75d19af7b21f0f7f4e53636638147faf3e6a4ded78b40cb38993f
+    - file: systemd_261.orig.tar.gz
+      sha256: f1c2e6a0d19ea5cae946386eb288432de12f3c6b7730cdb0d2a06f8ab8e3f8dc
       urls:
-        - https://snapshot.debian.org/archive/debian/20260501T000000Z/pool/main/s/systemd/systemd_260.1.orig.tar.gz
-        - https://snapshot.debian.org/file/0143e3df4f736faccb87b33835392b12514a95fd/systemd_260.1.orig.tar.gz
+        - https://snapshot.debian.org/archive/debian/20260701T000000Z/pool/main/s/systemd/systemd_261.orig.tar.gz
+        - https://snapshot.debian.org/file/51a23bff2cab04cd84f88c40b21e21ededf2df48/systemd_261.orig.tar.gz
