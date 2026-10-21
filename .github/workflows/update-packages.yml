@@ -1,38 +1,64 @@
 name: update-packages
 
-# Reusable: build glbx, check every selected package for a newer version, and
-# fan out one update-one-package call per updatable package.
+# Manual (and, once enabled, daily) entrypoint for the package-update pass: build
+# glbx, check every selected package for a newer version, and fan out one
+# update-one-package call per updatable package. The target branch is pure data,
+# so this can run from main while opening PRs against another branch.
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
-      target-branch:
-        required: true
-        type: string
-      update-tag:
-        required: true
-        type: string
-      repo:
-        required: true
-        type: string
-      dist:
-        required: true
-        type: string
-      update-lockfile:
-        default: false
-        type: boolean
-      glbx-ref:
-        default: main
-        type: string
+      target-branch:   { description: branch to check updates for and open PRs against,                 default: main,                            type: string }
+      update-tag:      { description: auto_update tag to select packages by AND to write into imports,   default: "debian:testing",                type: string }
+      repo:            { description: APT repository URL to pull from,                                   default: "https://deb.debian.org/debian", type: string }
+      dist:            { description: dist to pull from (override with a snapshot dist to replay a point in time), default: testing,                type: string }
+      update-lockfile: { description: also bump the build-deps lockfile on the clean path,               default: false,                           type: boolean }
+      glbx-ref:        { description: glbx ref (branch, tag, or full SHA) to build the executor from,     default: main,                            type: string }
+  # Daily cron — disabled for the initial PoC. The params job below supplies the
+  # cron's parameters (the dispatch inputs are empty on a schedule trigger), so
+  # uncommenting this line is the only change needed to enable unattended runs.
+  # schedule:
+  #   - cron: "23 4 * * *"     # off-peak, non-:00 minute
 
 jobs:
+  # Resolve the run's parameters once: each takes its workflow_dispatch input, or
+  # the default below when none was given (dispatch input defaults apply only on a
+  # manual run — on the future schedule trigger inputs is empty). Downstream jobs
+  # read needs.params.outputs.* — the only place the || fallback lives, and the one
+  # context allowed both in with: on a reusable-workflow call and in shell steps.
+  params:
+    runs-on: ubuntu-latest
+    outputs:
+      target-branch:   ${{ steps.resolve.outputs.target-branch }}
+      update-tag:      ${{ steps.resolve.outputs.update-tag }}
+      repo:            ${{ steps.resolve.outputs.repo }}
+      dist:            ${{ steps.resolve.outputs.dist }}
+      update-lockfile: ${{ steps.resolve.outputs.update-lockfile }}
+      glbx-ref:        ${{ steps.resolve.outputs.glbx-ref }}
+    steps:
+      - id: resolve
+        run: |
+          {
+            echo "target-branch=${{   inputs.target-branch   || 'main' }}"
+            echo "update-tag=${{       inputs.update-tag      || 'debian:testing' }}"
+            echo "repo=${{             inputs.repo            || 'https://deb.debian.org/debian' }}"
+            echo "dist=${{             inputs.dist            || 'testing' }}"
+            echo "update-lockfile=${{  inputs.update-lockfile || 'false' }}"
+            echo "glbx-ref=${{         inputs.glbx-ref        || 'main' }}"
+          } >> "$GITHUB_OUTPUT"
+
   build-glbx:
+    needs: [params]
     uses: ./.github/workflows/build-glbx.yml
     with:
-      glbx-ref: ${{ inputs.glbx-ref }}
+      glbx-ref: ${{ needs.params.outputs.glbx-ref }}
 
   check:
-    needs: [build-glbx]
+    needs: [params, build-glbx]
     runs-on: ubuntu-latest
+    env:
+      REPO:       ${{ needs.params.outputs.repo }}
+      DIST:       ${{ needs.params.outputs.dist }}
+      UPDATE_TAG: ${{ needs.params.outputs.update-tag }}
     outputs:
       updates: ${{ steps.check.outputs.updates }}
       any: ${{ steps.check.outputs.any }}
@@ -40,7 +66,7 @@ jobs:
       - name: Check out the target branch
         uses: actions/checkout@v5
         with:
-          ref: ${{ inputs.target-branch }}
+          ref: ${{ needs.params.outputs.target-branch }}
           fetch-depth: 0
       - name: Check out the workflow ref for the glbx-bin action and keyring
         uses: actions/checkout@v5
@@ -55,9 +81,9 @@ jobs:
           # signed InRelease snapshot of the archive.
           updates="$(bin/glbx check-updates \
             --conf-dir . \
-            --repo '${{ inputs.repo }}' \
-            --dist '${{ inputs.dist }}' \
-            --update-tag '${{ inputs.update-tag }}' \
+            --repo "$REPO" \
+            --dist "$DIST" \
+            --update-tag "$UPDATE_TAG" \
             --keyring .wf/.github/keyrings/debian-archive-keyring.gpg \
             --cookie '${{ github.run_id }}' \
             --format json)"
@@ -70,7 +96,7 @@ jobs:
           echo "updatable: $(echo "$updates" | jq -c '[.[].pkg]')"
 
   update:
-    needs: [check]
+    needs: [params, check]
     if: needs.check.outputs.any == 'true'
     name: ${{ matrix.pkg.pkg }}
     strategy:
@@ -82,10 +108,10 @@ jobs:
       pkg: ${{ matrix.pkg.pkg }}
       old: ${{ matrix.pkg.old }}
       new: ${{ matrix.pkg.new }}
-      target-branch: ${{ inputs.target-branch }}
-      update-tag: ${{ inputs.update-tag }}
-      repo: ${{ inputs.repo }}
-      dist: ${{ inputs.dist }}
-      update-lockfile: ${{ inputs.update-lockfile }}
+      target-branch: ${{ needs.params.outputs.target-branch }}
+      update-tag: ${{ needs.params.outputs.update-tag }}
+      repo: ${{ needs.params.outputs.repo }}
+      dist: ${{ needs.params.outputs.dist }}
+      update-lockfile: ${{ needs.params.outputs.update-lockfile == 'true' }}
       cookie: ${{ github.run_id }}
     secrets: inherit

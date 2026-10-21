@@ -54,7 +54,7 @@ changes.
 
 ## The update pipeline
 
-`.github/workflows/update.yml` (manual dispatch; a daily cron is committed
+`.github/workflows/update-packages.yml` (manual dispatch; a daily cron is committed
 commented-out) opens one pull request per package whose newest Debian version is
 higher than the version currently pinned on its lineage. It builds glbx, runs
 `glbx check-updates` once over the selected packages, and fans out one
