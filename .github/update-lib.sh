@@ -2,12 +2,31 @@
 # Shared helpers for the update workflows. Sourced by the update and
 # resolve-continue jobs. No side effects at source time.
 
-# refsafe encodes a Debian version into a git-ref-safe form for a branch name:
-# ':' -> '.' and '~' -> '_'. The branch name is a convenience; the exact version
-# lives in the PR body's state block, which is authoritative — so this need not
-# be reversible, only collision-free enough for a branch label.
+# refsafe encodes a Debian version into a git-ref-safe form for a branch or tag
+# name: ':' -> '.' and '~' -> '_'. The ref name is a convenience label; the exact
+# version lives in the authoritative source (the PR body's state block, the
+# import commit's metadata) — so this need not be reversible, only collision-free
+# enough as a label.
 refsafe() {
 	printf '%s' "$1" | tr ':~' '._'
+}
+
+# import_meta_get reads one field from an import commit message on stdin. The
+# message carries a fenced metadata block (see glbx's importer) delimited by exact
+# full-line begin/end markers; between them are `key: value` lines recording the
+# package identity and version. Prints the value for the given key, or nothing if
+# the message is not an import commit or lacks the key. Mirrors glbx's own parser.
+import_meta_get() {
+	local key="$1"
+	awk -v key="$key" '
+		/^---BEGIN PKG IMPORT METADATA---$/ { inblock = 1; next }
+		/^---END   PKG IMPORT METADATA---$/ { inblock = 0 }
+		inblock && $0 ~ "^" key ":" {
+			line = $0
+			sub("^" key ":[ \t]*", "", line)
+			print line
+		}
+	'
 }
 
 # branch_name prints the staging branch for an update:
