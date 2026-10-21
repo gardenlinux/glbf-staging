@@ -94,25 +94,27 @@ jobs:
 EOF
 
 	# One caller job per graph node. glbx emits the graph; jq turns it into YAML
-	# in a single pass: node index becomes a stable, GHA-safe job id, the Key
-	# rides in the job name and the node-key input (so the UI stays legible and
-	# build-node gets the exact Key), and each node's incoming edges become
-	# needs: on the predecessor jobs. The build logic itself is in build-node.yml;
-	# the needs: edges and the if: skip guard stay here because they are
-	# structural — they are exactly what check-graph validates.
+	# in a single pass: node index becomes a stable, GHA-safe job id, the node's
+	# short name rides in the job name (so the Actions UI shows just "libc6" or
+	# "rootfs") while the full Key rides in the node-key input (so build-node gets
+	# the exact build handle), and each node's incoming edges become needs: on the
+	# predecessor jobs. The build logic itself is in build-node.yml; the needs:
+	# edges and the if: skip guard stay here because they are structural — they are
+	# exactly what check-graph validates.
 	"$GLBX" graph --format=json --conf-dir "$CONF_DIR" --stub "$STUB" --arch "$ARCH" 2>/dev/null \
 		| jq -r --arg q "'" '
-			(.nodes | to_entries | map({(.value): .key}) | add) as $id
+			(.nodes | to_entries | map({(.value.key): .key}) | add) as $id
 			| .edges as $edges
 			| .nodes
 			| to_entries[]
 			| .key as $i
-			| .value as $key
+			| .value.key as $key
+			| .value.shortName as $short
 			| ([$edges[] | select(.to == $key) | $id[.from]] | sort) as $preds
 			| (["build-glbx", "check-graph", "restore-inputs", "plan"] + ($preds | map("node-\(.)"))) as $needs
 			| "
   node-\($i):
-    name: \"\($key)\"
+    name: \"\($short)\"
     needs: [\($needs | join(", "))]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
