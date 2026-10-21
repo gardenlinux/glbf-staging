@@ -21,6 +21,8 @@ debian/tmp/usr/share/man/man1/systemd-escape.1
 debian/tmp/usr/share/man/man1/systemd-firstboot.1
 debian/tmp/usr/share/man/man1/systemd-firstboot.service.1
 debian/tmp/usr/share/man/man1/systemd-id128.1
+<!stage1> debian/tmp/usr/share/man/man1/systemd-imds-import.service.1
+<!stage1> debian/tmp/usr/share/man/man1/systemd-imds.1
 debian/tmp/usr/share/man/man1/systemd-inhibit.1
 debian/tmp/usr/share/man/man1/systemd-machine-id-setup.1
 <!stage1> debian/tmp/usr/share/man/man1/systemd-measure.1
@@ -148,6 +150,7 @@ debian/tmp/usr/share/man/man8/systemd-boot-check-no-failures.service.8
 debian/tmp/usr/share/man/man8/systemd-confext.8
 debian/tmp/usr/share/man/man8/systemd-confext.service.8
 debian/tmp/usr/share/man/man8/systemd-confext-initrd.service.8
+debian/tmp/usr/share/man/man8/systemd-confext-sysroot.service.8
 debian/tmp/usr/share/man/man8/systemd-debug-generator.8
 debian/tmp/usr/share/man/man8/systemd-environment-d-generator.8
 debian/tmp/usr/share/man/man8/systemd-factory-reset-complete.service.8
@@ -175,6 +178,11 @@ debian/tmp/usr/share/man/man8/systemd-hibernate.service.8
 debian/tmp/usr/share/man/man8/systemd-hostnamed.8
 debian/tmp/usr/share/man/man8/systemd-hostnamed.service.8
 debian/tmp/usr/share/man/man8/systemd-hybrid-sleep.service.8
+<!stage1> debian/tmp/usr/share/man/man8/systemd-imds-generator.8
+<!stage1> debian/tmp/usr/share/man/man8/systemd-imdsd-early-network.service.8
+<!stage1> debian/tmp/usr/share/man/man8/systemd-imdsd.8
+<!stage1> debian/tmp/usr/share/man/man8/systemd-imdsd.socket.8
+<!stage1> debian/tmp/usr/share/man/man8/systemd-imdsd@.service.8
 debian/tmp/usr/share/man/man8/systemd-journald.8
 debian/tmp/usr/share/man/man8/systemd-journald-audit.socket.8
 debian/tmp/usr/share/man/man8/systemd-journald-dev-log.socket.8
@@ -213,10 +221,14 @@ debian/tmp/usr/share/man/man8/systemd-network-generator.service.8
 [amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-pcrlock-make-policy.service.8
 [amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-pcrlock-secureboot-authority.service.8
 [amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-pcrlock-secureboot-policy.service.8
+[amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-pcrlogin@.service.8
 [amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-pcrmachine.service.8
 [amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-pcrnvdone.service.8
+[amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-pcrosseparator.service.8
+[amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-pcrphase-factory-reset.service.8
 [amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-pcrphase-initrd.service.8
 [amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-pcrphase.service.8
+[amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-pcrphase-storage-target-mode.service.8
 [amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-pcrphase-sysinit.service.8
 [amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-pcrproduct.service.8
 debian/tmp/usr/share/man/man8/systemd-poweroff.service.8
@@ -248,6 +260,9 @@ debian/tmp/usr/share/man/man8/systemd-sysctl.service.8
 debian/tmp/usr/share/man/man8/systemd-sysext.8
 debian/tmp/usr/share/man/man8/systemd-sysext.service.8
 debian/tmp/usr/share/man/man8/systemd-sysext-initrd.service.8
+debian/tmp/usr/share/man/man8/systemd-sysinstall.8
+debian/tmp/usr/share/man/man8/systemd-sysinstall.service.8
+debian/tmp/usr/share/man/man8/systemd-sysext-sysroot.service.8
 debian/tmp/usr/share/man/man8/systemd-system-update-generator.8
 debian/tmp/usr/share/man/man8/systemd-sysusers.8
 debian/tmp/usr/share/man/man8/systemd-sysusers.service.8
@@ -264,6 +279,8 @@ debian/tmp/usr/share/man/man8/systemd-tmpfiles-setup.service.8
 [amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-tpm2-setup.8
 [amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-tpm2-setup-early.service.8
 [amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-tpm2-setup.service.8
+[amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-tpm2-swtpm.8
+[amd64 i386 arm64 armhf riscv64 loong64] <!stage1> debian/tmp/usr/share/man/man8/systemd-tpm2-swtpm.service.8
 debian/tmp/usr/share/man/man8/systemd-udev-settle.service.8
 debian/tmp/usr/share/man/man8/systemd-update-done.8
 debian/tmp/usr/share/man/man8/systemd-update-done.service.8

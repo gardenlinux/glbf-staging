@@ -41,6 +41,7 @@ libsystemd.so.0 libsystemd0 #MINVER#
  LIBSYSTEMD_258@LIBSYSTEMD_258 258~rc1
  LIBSYSTEMD_259@LIBSYSTEMD_259 259~rc1
  LIBSYSTEMD_260@LIBSYSTEMD_260 260~rc1
+ LIBSYSTEMD_261@LIBSYSTEMD_261 261~rc1
  sd_booted@LIBSYSTEMD_209 0
  sd_bus_add_fallback@LIBSYSTEMD_221 221
  sd_bus_add_fallback_vtable@LIBSYSTEMD_221 221
@@ -447,11 +448,13 @@ libsystemd.so.0 libsystemd0 #MINVER#
  sd_device_unref@LIBSYSTEMD_240 240
  sd_event_add_child@LIBSYSTEMD_221 221
  sd_event_add_child_pidfd@LIBSYSTEMD_245 245
+ sd_event_add_cpu_pressure@LIBSYSTEMD_261 261~rc1
  sd_event_add_defer@LIBSYSTEMD_221 221
  sd_event_add_exit@LIBSYSTEMD_221 221
  sd_event_add_inotify@LIBSYSTEMD_239 239
  sd_event_add_inotify_fd@LIBSYSTEMD_250 250
  sd_event_add_io@LIBSYSTEMD_221 221
+ sd_event_add_io_pressure@LIBSYSTEMD_261 261~rc1
  sd_event_add_memory_pressure@LIBSYSTEMD_254 254
  sd_event_add_post@LIBSYSTEMD_221 221
  sd_event_add_signal@LIBSYSTEMD_221 221
@@ -507,6 +510,8 @@ libsystemd.so.0 libsystemd0 #MINVER#
  sd_event_source_send_child_signal@LIBSYSTEMD_245 245
  sd_event_source_set_child_pidfd_own@LIBSYSTEMD_245 245
  sd_event_source_set_child_process_own@LIBSYSTEMD_245 245
+ sd_event_source_set_cpu_pressure_period@LIBSYSTEMD_261 261~rc1
+ sd_event_source_set_cpu_pressure_type@LIBSYSTEMD_261 261~rc1
  sd_event_source_set_description@LIBSYSTEMD_221 221
  sd_event_source_set_destroy_callback@LIBSYSTEMD_239 239
  sd_event_source_set_enabled@LIBSYSTEMD_221 221
@@ -515,6 +520,8 @@ libsystemd.so.0 libsystemd0 #MINVER#
  sd_event_source_set_io_events@LIBSYSTEMD_221 221
  sd_event_source_set_io_fd@LIBSYSTEMD_221 221
  sd_event_source_set_io_fd_own@LIBSYSTEMD_237 237
+ sd_event_source_set_io_pressure_period@LIBSYSTEMD_261 261~rc1
+ sd_event_source_set_io_pressure_type@LIBSYSTEMD_261 261~rc1
  sd_event_source_set_memory_pressure_period@LIBSYSTEMD_254 254
  sd_event_source_set_memory_pressure_type@LIBSYSTEMD_254 254
  sd_event_source_set_prepare@LIBSYSTEMD_221 221
@@ -650,6 +657,7 @@ libsystemd.so.0 libsystemd0 #MINVER#
  sd_json_dispatch_variant_noref@LIBSYSTEMD_257 257~rc1
  sd_json_parse@LIBSYSTEMD_257 257~rc1
  sd_json_parse_continue@LIBSYSTEMD_257 257~rc1
+ sd_json_parse_fd@LIBSYSTEMD_261 261~rc1
  sd_json_parse_file@LIBSYSTEMD_257 257~rc1
  sd_json_parse_file_at@LIBSYSTEMD_257 257~rc1
  sd_json_parse_with_source@LIBSYSTEMD_257 257~rc1
@@ -806,6 +814,7 @@ libsystemd.so.0 libsystemd0 #MINVER#
  sd_varlink_attach_event@LIBSYSTEMD_257 257~rc1
  sd_varlink_bind_reply@LIBSYSTEMD_257 257~rc1
  sd_varlink_call@LIBSYSTEMD_257 257~rc1
+ sd_varlink_call_and_upgrade@LIBSYSTEMD_261 261~rc1
  sd_varlink_call_full@LIBSYSTEMD_257 257~rc1
  sd_varlink_callb@LIBSYSTEMD_257 257~rc1
  sd_varlink_callb_ap@LIBSYSTEMD_257 257~rc1
@@ -869,6 +878,7 @@ libsystemd.so.0 libsystemd0 #MINVER#
  sd_varlink_push_fd@LIBSYSTEMD_257 257~rc1
  sd_varlink_ref@LIBSYSTEMD_257 257~rc1
  sd_varlink_reply@LIBSYSTEMD_257 257~rc1
+ sd_varlink_reply_and_upgrade@LIBSYSTEMD_261 261~rc1
  sd_varlink_replyb@LIBSYSTEMD_257 257~rc1
  sd_varlink_reset_fds@LIBSYSTEMD_258 258~rc1
  sd_varlink_send@LIBSYSTEMD_257 257~rc1
@@ -909,6 +919,7 @@ libsystemd.so.0 libsystemd0 #MINVER#
  sd_varlink_set_description@LIBSYSTEMD_257 257~rc1
  sd_varlink_set_input_sensitive@LIBSYSTEMD_257 257~rc1
  sd_varlink_set_relative_timeout@LIBSYSTEMD_257 257~rc1
+ sd_varlink_set_sentinel@LIBSYSTEMD_261 261~rc1
  sd_varlink_set_userdata@LIBSYSTEMD_257 257~rc1
  sd_varlink_take_fd@LIBSYSTEMD_257 257~rc1
  sd_varlink_unref@LIBSYSTEMD_257 257~rc1
