@@ -4,7 +4,7 @@
 xx=$(if $($(curpass)_$(1)),$($(curpass)_$(1)),$($(1)))
 
 # $(curpass) aware function to query dpkg build flags
-dpkg_host_buildflags = $(shell $(if $(filter libc,$(curpass)),,DEB_HOST_ARCH=$(curpass) )dpkg-buildflags --get $(1))
+dpkg_host_buildflags = $(shell $(if $(filter libc,$(curpass)),,DEB_HOST_ARCH=$(call xx,debarch) )dpkg-buildflags --get $(1))
 
 # Get CFLAGS and remove flags incompatible with GNU libc
 # -Wformat -Werror=format-security	=> GNU libc testsuite generates such warnings on purpose
@@ -110,8 +110,8 @@ endif
 		CC="$(call xx,CC) -U_FILE_OFFSET_BITS -U_TIME_BITS" \
 		CXX=$(if $(filter nocheck,$(DEB_BUILD_OPTIONS)),:,"$(call xx,CXX) -U_FILE_OFFSET_BITS -U_TIME_BITS") \
 		MIG="$(call xx,MIG)" \
-		CFLAGS="$(call dpkg_filtered_host_cflags)" \
-		ASFLAGS="$(call dpkg_filtered_host_cflags)" \
+		CFLAGS="$(call dpkg_filtered_host_cflags) $(call xx,extra_cflags)" \
+		ASFLAGS="$(call dpkg_filtered_host_cflags) $(call xx,extra_cflags)" \
 		BUILD_CFLAGS="$(shell dpkg-buildflags --get CFLAGS_FOR_BUILD)" \
 		AUTOCONF=false \
 		MAKEINFO=: \
