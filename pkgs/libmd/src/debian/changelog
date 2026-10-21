@@ -1,3 +1,9 @@
+libmd (1.2.0-2) unstable; urgency=medium
+
+  * Document supported SHA3 algorithms in package description.
+
+ -- Guillem Jover <guillem@debian.org>  Wed, 03 Jun 2026 09:40:52 +0200
+
 libmd (1.2.0-1) unstable; urgency=medium
 
   * New upstream release.
