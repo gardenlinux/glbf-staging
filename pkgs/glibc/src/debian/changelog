@@ -1,3 +1,44 @@
+glibc (2.42-17) unstable; urgency=medium
+
+  [ Aurelien Jarno ]
+  * debian/patches/git-updates.diff: update from upstream stable branch:
+    - Fix buffer overflow in scanf %mc (CVE-2026-5450).  Closes: #1134543.
+    - Fix ungetwc operating on byte stream (CVE-2026-5928).  Closes: #1134544.
+    - Save/restore VFP registers inPLT trampolines on arm.  Closes: #1133139.
+    - Suppress iconv intermediate errors with //TRANSLIT.
+    - debian/patches/hurd-i386/git-run-iconv-test.sh.diff: rebased.
+  * debian/rules.d/build.mk: append extra_cflags to CFLAGS and ASFLAGS.
+  * debian/control.in/libc: stop suggesting libnss-nisplus.
+  * debian/debhelper.in/libc-bin.lintian-overrides: add a
+    statically-linked-binary override for the ldconfig binary.
+  * debian/control.in/main: build-depends on libselinux-dev instead of
+    libselinux1-dev.
+
+  [ Miao Wang ]
+  * debian/libc6.symbols.loong64: add.
+
+  [ Samuel Thibault ]
+  * debian/patches/hurd-i386/git-SO_TIMESTAMP.diff: Add SO_TIMESTAMP macro.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Thu, 18 Jun 2026 21:48:16 +0200
+
+glibc (2.42-16) unstable; urgency=medium
+
+  [ Aurelien Jarno ]
+  * debian/sysdeps/mips*.mk: revert change to match the dpkg architecture
+    name.
+  * debian/rules.d/build.mk, debian/sysdeps/mips*.mk: add a way to define the
+    debian architecture corresponding to a multilib build. Use it when it
+    doesn't match the name of the pass and package like on mips*.
+  * debian/patches/git-updates.diff: update from upstream stable branch:
+    - Fix build against linux 7.0 headers.  Closes: #1135405.
+
+  [ liu jianqiang ]
+  * debian/debhelper.in/locales.config: handle leading spaces in
+    /etc/locale.gen configuration.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Thu, 07 May 2026 00:25:31 +0200
+
 glibc (2.42-15) unstable; urgency=medium
 
   [ Aurelien Jarno ]
@@ -37,7 +78,7 @@ glibc (2.42-14) unstable; urgency=medium
   * debian/testsuite-xfail-debian.mk: Update for 2.44.
 
   [ Aurelien Jarno ]
-  * debian/sysdeps/mips*.mk: rename extra passes to matche the dpkg
+  * debian/sysdeps/mips*.mk: rename extra passes to match the dpkg
     architecture name.
   * debian/rules.d/build.mk: add a makefile function that queries the dpkg
     build flags for the current pass.

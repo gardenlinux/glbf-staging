@@ -88,6 +88,7 @@ rtlddir=/lib
 slibdir=/lib/$(DEB_HOST_MULTIARCH)
 libdir=/usr/lib/$(DEB_HOST_MULTIARCH)
 mvec = no
+debarch=$(curpass)
 
 rtld_so=$(shell awk 'BEGIN {FS="="} /^ld\.so-version/ {print $$2}' $(DEB_BUILDDIR)/soversions.mk)
 rtld_target=$(shell readlink $(debian-tmp)$(rtlddir)/$(rtld_so))
