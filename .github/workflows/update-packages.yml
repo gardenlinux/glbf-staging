@@ -11,12 +11,13 @@ run-name: update-packages (${{ inputs.target-branch || 'main' }})
 on:
   workflow_dispatch:
     inputs:
-      dist:            { type: "string",  default: "testing",                         description: "dist to pull from (override with a snapshot dist to replay a point in time)" }
-      glbx-ref:        { type: "string",  default: "main",                            description: "glbx ref (branch, tag, or full SHA) to build the executor from" }
-      repo:            { type: "string",  default: "https://deb.debian.org/debian",   description: "APT repository URL to pull from" }
-      target-branch:   { type: "string",  default: "main",                            description: "branch to check updates for and open PRs against" }
-      update-lockfile: { type: "boolean", default: false,                             description: "also bump the build-deps lockfile on the clean path" }
-      update-tag:      { type: "string",  default: "debian:testing",                  description: "auto_update tag to select packages by AND to write into imports" }
+      dist:            { type: string,  default: "testing",                         description: "dist to pull from (override with a snapshot dist to replay a point in time)" }
+      glbx-ref:        { type: string,  default: "main",                            description: "glbx ref (branch, tag, or full SHA) to build the executor from" }
+      repo:            { type: string,  default: "https://deb.debian.org/debian",   description: "APT repository URL to pull from" }
+      target-branch:   { type: string,  default: "main",                            description: "branch to check updates for and open PRs against" }
+      update-lockfile: { type: boolean, default: false,                             description: "also bump the build-deps lockfile on the clean path" }
+      update-tag:      { type: string,  default: "debian:testing",                  description: "auto_update tag to select packages by AND to write into imports" }
+      auto-merge:      { type: boolean, default: false,                             description: "auto-merge each opened PR once its build is green (default on for the cron, off for a manual dispatch)" }
   # Daily cron — disabled for the initial PoC. The params job below supplies the
   # cron's parameters (the dispatch inputs are empty on a schedule trigger), so
   # uncommenting this line is the only change needed to enable unattended runs.
@@ -29,6 +30,9 @@ jobs:
   # manual run — on the future schedule trigger inputs is empty). Downstream jobs
   # read needs.params.outputs.* — the only place the || fallback lives, and the one
   # context allowed both in with: on a reusable-workflow call and in shell steps.
+  # auto-merge's fallback is 'true' on purpose: the cron run (empty inputs) opts
+  # into auto-merge, while a manual dispatch carries its own 'false' default and so
+  # overrides it — a human-driven run opens PRs without merging them unattended.
   params:
     runs-on: ubuntu-latest
     outputs:
@@ -38,6 +42,7 @@ jobs:
       dist:            ${{ steps.resolve.outputs.dist }}
       update-lockfile: ${{ steps.resolve.outputs.update-lockfile }}
       glbx-ref:        ${{ steps.resolve.outputs.glbx-ref }}
+      auto-merge:      ${{ steps.resolve.outputs.auto-merge }}
     steps:
       - id: resolve
         run: |
@@ -48,6 +53,7 @@ jobs:
             echo "dist=${{             inputs.dist            || 'testing' }}"
             echo "update-lockfile=${{  inputs.update-lockfile || 'false' }}"
             echo "glbx-ref=${{         inputs.glbx-ref        || 'main' }}"
+            echo "auto-merge=${{       inputs.auto-merge      || 'true' }}"
           } >> "$GITHUB_OUTPUT"
 
   build-glbx:
@@ -117,5 +123,6 @@ jobs:
       repo: ${{ needs.params.outputs.repo }}
       dist: ${{ needs.params.outputs.dist }}
       update-lockfile: ${{ needs.params.outputs.update-lockfile == 'true' }}
+      auto-merge: ${{ needs.params.outputs.auto-merge == 'true' }}
       cookie: ${{ github.run_id }}
     secrets: inherit
