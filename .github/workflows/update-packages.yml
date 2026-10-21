@@ -1,5 +1,9 @@
 name: update-packages
 
+# The run-list title; the sidebar keeps the workflow name above. A dispatch has no
+# meaningful commit to name the run after, so title it by the branch it targets.
+run-name: update-packages (${{ inputs.target-branch || 'main' }})
+
 # Manual (and, once enabled, daily) entrypoint for the package-update pass: build
 # glbx, check every selected package for a newer version, and fan out one
 # update-one-package call per updatable package. The target branch is pure data,
