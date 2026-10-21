@@ -1,3 +1,31 @@
+openssl (3.6.5-1) unstable; urgency=medium
+
+  * Import 3.6.5
+    - CVE-2026-84782 ("DTLS Retransmits Handshake Messages From a Stale Buffer
+      Offset")
+    - CVE-2026-35189 ("Memory Allocation in Relative CRLDP Processing")
+    - CVE-2026-35191 ("QUIC Unvalidated Amplification Credit may be Over
+      Accounted")
+    - CVE-2026-42772 ("Potential CPU DoS via O(n^2) Fragment Reassembly in
+      QUIC")
+    - CVE-2026-54872 ("Timing Side-Channel in Scalar Multiplication for Non-NIST
+      EC Curves")
+    - CVE-2026-54873 ("QUIC STREAM Fragment Metadata DoS")
+    - CVE-2026-54875 ("Non-Constant-Time SM2 Scalar Multiplication on ARM64 and
+      RISC-V")
+    - CVE-2026-72897 ("Out-of-Bounds Access After SSL_set_SSL_CTX() During a
+      Handshake")
+    - CVE-2026-75804 ("QUIC Connection-Level Flow Control is Not Enforced for
+      Streams")
+    - CVE-2026-75805 ("NULL Pointer Dereference in CMP Client Revocation
+      Response Handling")
+    - CVE-2026-75806 ("Unauthenticated and Undersized DTLS 1.2 AEAD Record
+      Causes DoS")
+    - CVE-2026-77696 ("Timing Side-Channel in SM2 Signature Generation")
+    - CVE-2026-84784 ("QUIC: Unbounded RETIRE_CONNECTION_ID Backlog")
+
+ -- Sebastian Andrzej Siewior <sebastian@breakpoint.cc>  Tue, 29 Sep 2026 21:39:32 +0200
+
 openssl (3.6.4-1) unstable; urgency=medium
 
   * Import 3.6.4

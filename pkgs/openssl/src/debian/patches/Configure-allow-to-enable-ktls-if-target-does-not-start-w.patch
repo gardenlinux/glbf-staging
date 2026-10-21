@@ -23,7 +23,7 @@ Signed-off-by: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Configurations/10-main.conf b/Configurations/10-main.conf
-index e62721e22fd9..3a87fe018754 100644
+index 0344ac0a402e..382949642abe 100644
 --- a/Configurations/10-main.conf
 +++ b/Configurations/10-main.conf
 @@ -695,7 +695,7 @@ my %targets = (
