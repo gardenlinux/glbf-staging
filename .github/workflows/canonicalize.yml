@@ -1,0 +1,89 @@
+name: canonicalize
+
+# Tag accepted pristine imports once they land on main. Each import is a commit
+# carrying a metadata block (written by glbx); when such a commit reaches main it
+# is "accepted", and gets an immutable canonical tag naming the package and
+# version. Reachability of an import commit alone does not make it accepted — the
+# tag is the durable record of acceptance, and survives the package later being
+# removed from HEAD.
+#
+# Keep this handler simple and trusted: it only reads commit metadata and writes
+# tags. It never checks out or runs PR-provided code.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  canonicalize:
+    runs-on: ubuntu-latest
+    env:
+      BEFORE: ${{ github.event.before }}
+      AFTER: ${{ github.sha }}
+    steps:
+      - name: Mint a GitHub App installation token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GLBF_UPDATE_APP_ID }}
+          private-key: ${{ secrets.GLBF_UPDATE_APP_KEY }}
+
+      - name: Check out main with full history and tags
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Tag accepted imports in the pushed range
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          SLUG: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          set -euo pipefail
+          source .github/update-lib.sh
+
+          uid="$(gh api "/users/${SLUG}[bot]" --jq .id)"
+          git config user.name "${SLUG}[bot]"
+          git config user.email "${uid}+${SLUG}[bot]@users.noreply.github.com"
+
+          # The commits newly on main. On a normal push that is BEFORE..AFTER; on
+          # the branch's first push BEFORE is all-zeros, so fall back to every
+          # commit reachable from AFTER but from no existing tag (the imports not
+          # already canonicalized).
+          zero='0000000000000000000000000000000000000000'
+          if [ "$BEFORE" = "$zero" ] || ! git rev-parse --quiet --verify "$BEFORE^{commit}" >/dev/null; then
+            mapfile -t commits < <(git rev-list "$AFTER" --not --tags)
+          else
+            mapfile -t commits < <(git rev-list "$BEFORE..$AFTER")
+          fi
+          echo "inspecting ${#commits[@]} commit(s) for import markers"
+
+          tagged=0
+          for c in "${commits[@]}"; do
+            msg="$(git log -1 --format=%B "$c")"
+            pkg="$(printf '%s' "$msg" | import_meta_get pkg)"
+            version="$(printf '%s' "$msg" | import_meta_get version)"
+            # Not an import commit (no marker, or incomplete) — skip quietly.
+            [ -n "$pkg" ] && [ -n "$version" ] || continue
+
+            tag="pkg/$pkg/$(refsafe "$version")"
+
+            # Idempotent: a tag already pointing at this commit is fine; one
+            # pointing elsewhere is an ambiguous canonical tip and an error.
+            if existing="$(git rev-parse --quiet --verify "refs/tags/$tag" 2>/dev/null)"; then
+              if [ "$existing" = "$c" ]; then
+                echo "$tag already points at $c; ok"
+                continue
+              fi
+              echo "::error::$tag already exists at $existing but import is $c — ambiguous canonical tag"
+              exit 1
+            fi
+
+            git tag "$tag" "$c"
+            git push origin "refs/tags/$tag"
+            echo "tagged $c as $tag"
+            tagged=$((tagged + 1))
+          done
+          echo "created $tagged canonical tag(s)"
