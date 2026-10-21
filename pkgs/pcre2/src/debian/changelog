@@ -1,3 +1,11 @@
+pcre2 (10.48-3.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * GHSA-r9hj-j2rw-4q3m: Fix large JIT stack allocation (Closes: #1149217)
+  * For release, revert platform-specific test case
+
+ -- Salvatore Bonaccorso <carnil@debian.org>  Mon, 28 Sep 2026 16:04:18 +0200
+
 pcre2 (10.48-3) unstable; urgency=medium
 
   * Bump dh compat to 13 (with some changes to rules file)
