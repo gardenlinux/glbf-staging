@@ -52,28 +52,35 @@ jobs:
           set -euo pipefail
           source .github/update-lib.sh
 
-          bot_login="${BOT_SLUG}[bot]"
+          # The bot's canonical numeric user id. A bot actor appears under three
+          # different login spellings across GitHub's APIs (the slug, slug[bot],
+          # app/slug), so authorship is matched on this stable id, never a string.
+          bot_id="$(gh api "/users/${BOT_SLUG}[bot]" --jq .id)"
 
-          # 1. Resolve the PR from the build's head SHA. workflow_run gives the
-          #    head SHA/branch but not the PR number; one commit can back at most
-          #    one open update PR here.
-          pr="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${HEAD_SHA}/pulls" \
-            --jq '[.[] | select(.state == "open")] | first | .number // empty')"
+          # 1. Resolve the PR (and its author id) from the build's head SHA.
+          #    workflow_run gives the head SHA/branch but not the PR number; one
+          #    commit can back at most one open PR here. The REST listing carries
+          #    .user.id, so the authorship gate below needs no extra call.
+          pr_json="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${HEAD_SHA}/pulls" \
+            --jq '[.[] | select(.state == "open")] | first')"
+          pr="$(printf '%s' "$pr_json" | jq -r '.number // empty')"
+          author_id="$(printf '%s' "$pr_json" | jq -r '.user.id // empty')"
           if [ -z "$pr" ]; then
             echo "::notice::no open PR for ${HEAD_SHA}; nothing to merge"
             exit 0
           fi
 
-          read -r author head base state isDraft <<<"$(gh pr view "$pr" \
-            --json author,headRefName,baseRefName,state,isDraft \
-            --jq '[.author.login, .headRefName, .baseRefName, .state, (.isDraft|tostring)] | @tsv')"
-          body="$(gh pr view "$pr" --json body --jq .body)"
-          echo "PR #$pr by $author: $head → $base (state=$state draft=$isDraft)"
+          # Remaining PR facts from the REST endpoint (its author login spelling
+          # is irrelevant — the id above is the authorship gate).
+          read -r head base state isDraft <<<"$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${pr}" \
+            --jq '[.head.ref, .base.ref, .state, (.draft|tostring)] | @tsv')"
+          echo "PR #$pr (author id $author_id): $head → $base (state=$state draft=$isDraft)"
 
-          # 2. Authorship is the primary security gate: only THIS App's bot. A PR
-          #    from anyone else is never eligible, whatever its branch or body says.
-          if [ "$author" != "$bot_login" ]; then
-            echo "::notice::PR #$pr author $author is not $bot_login; not auto-merging"
+          # 2. Authorship is the primary security gate: only THIS App's bot, by
+          #    numeric id. A PR from anyone else is never eligible, whatever its
+          #    branch or body says.
+          if [ "$author_id" != "$bot_id" ]; then
+            echo "::notice::PR #$pr author id $author_id is not the update bot ($bot_id); not auto-merging"
             exit 0
           fi
 
@@ -82,13 +89,14 @@ jobs:
             update-staging/*) : ;;
             *) echo "::notice::$head is not an update-staging branch; not auto-merging"; exit 0 ;;
           esac
-          if [ "$state" != "OPEN" ] || [ "$isDraft" = "true" ]; then
+          if [ "$state" != "open" ] || [ "$isDraft" = "true" ]; then
             echo "::notice::PR #$pr is $state/draft=$isDraft; not auto-merging"
             exit 0
           fi
 
           # 4. Opt-in: the update that opened the PR recorded the decision in the
           #    state block. Absent or non-true means do not auto-merge.
+          body="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${pr}" --jq '.body // ""')"
           auto_merge="$(printf '%s' "$body" | state_get auto_merge || true)"
           if [ "$auto_merge" != "true" ]; then
             echo "::notice::PR #$pr is not opted into auto-merge (auto_merge=$auto_merge)"
@@ -98,7 +106,7 @@ jobs:
           # 5. Race guard: the build that just went green ran on HEAD_SHA. If the
           #    PR head has moved since, the green result is stale — do not merge an
           #    unbuilt tip. A later build on the new tip re-triggers this workflow.
-          tip="$(gh pr view "$pr" --json headRefOid --jq .headRefOid)"
+          tip="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${pr}" --jq .head.sha)"
           if [ "$tip" != "$HEAD_SHA" ]; then
             echo "::notice::PR #$pr tip $tip moved past built $HEAD_SHA; waiting for its build"
             exit 0
