@@ -16,6 +16,7 @@ on:
       repo:            { required: true,  type: string }
       dist:            { required: true,  type: string }
       update-lockfile: { default: false,  type: boolean }
+      auto-merge:      { default: false,  type: boolean }
       cookie:          { required: true,  type: string }
 
 permissions:
@@ -35,6 +36,7 @@ jobs:
       REPO: ${{ inputs.repo }}
       DIST: ${{ inputs.dist }}
       UPDATE_LOCKFILE: ${{ inputs.update-lockfile }}
+      AUTO_MERGE: ${{ inputs.auto-merge }}
       COOKIE: ${{ inputs.cookie }}
     steps:
       - name: Mint a GitHub App installation token
@@ -133,7 +135,7 @@ jobs:
 
             git push origin "$branch"
 
-            body="$(clean_body "$PKG" "$OLD" "$NEW" "$TARGET" "$UPDATE_TAG" "$REPO" "$DIST" "$UPDATE_LOCKFILE" "$U")"
+            body="$(clean_body "$PKG" "$OLD" "$NEW" "$TARGET" "$UPDATE_TAG" "$REPO" "$DIST" "$UPDATE_LOCKFILE" "$U" "$AUTO_MERGE")"
             gh pr create --base "$TARGET" --head "$branch" \
               --title "update $PKG $OLD → $NEW" \
               --body "$body"
@@ -147,7 +149,7 @@ jobs:
             pathlist="$(git diff --name-only --diff-filter=U | format_conflict_paths)"
             git merge --abort 2>/dev/null || true
 
-            body="$(conflict_body "$PKG" "$OLD" "$NEW" "$TARGET" "$UPDATE_TAG" "$REPO" "$DIST" "$UPDATE_LOCKFILE" "$U" "$branch" "$pathlist")"
+            body="$(conflict_body "$PKG" "$OLD" "$NEW" "$TARGET" "$UPDATE_TAG" "$REPO" "$DIST" "$UPDATE_LOCKFILE" "$U" "$branch" "$pathlist" "$AUTO_MERGE")"
             gh pr create --draft --base "$TARGET" --head "$branch" \
               --title "update $PKG $OLD → $NEW (needs conflict resolution)" \
               --body "$body"

@@ -24,7 +24,7 @@ branch_name() {
 # carries the glbf-update-state marker (a YAML comment) that state_get anchors
 # on. All arguments are required.
 state_block() {
-	local pkg="$1" old="$2" new="$3" target="$4" tag="$5" repo="$6" dist="$7" update_lockfile="$8" import_commit="$9"
+	local pkg="$1" old="$2" new="$3" target="$4" tag="$5" repo="$6" dist="$7" update_lockfile="$8" import_commit="$9" auto_merge="${10}"
 	cat <<EOF
 \`\`\`yaml
 # glbf-update-state
@@ -37,6 +37,7 @@ repo: $repo
 dist: $dist
 update_lockfile: $update_lockfile
 import_commit: $import_commit
+auto_merge: $auto_merge
 \`\`\`
 EOF
 }
@@ -83,22 +84,22 @@ format_conflict_paths() {
 # clean_body prints the PR body for a clean (non-draft) update: a one-line
 # summary and the metadata block. Whether it merged cleanly is evident from the
 # GitHub UI, so it is not restated here. Args:
-#   pkg old new target update_tag repo dist update_lockfile U
+#   pkg old new target update_tag repo dist update_lockfile U auto_merge
 clean_body() {
-	local pkg="$1" old="$2" new="$3" target="$4" tag="$5" repo="$6" dist="$7" lockfile="$8" u="$9"
+	local pkg="$1" old="$2" new="$3" target="$4" tag="$5" repo="$6" dist="$7" lockfile="$8" u="$9" auto_merge="${10}"
 	cat <<EOF
 Updates **$pkg** from \`$old\` to \`$new\`.
 
-$(state_block "$pkg" "$old" "$new" "$target" "$tag" "$repo" "$dist" "$lockfile" "$u")
+$(state_block "$pkg" "$old" "$new" "$target" "$tag" "$repo" "$dist" "$lockfile" "$u" "$auto_merge")
 EOF
 }
 
 # conflict_body prints the draft PR body for a conflicting update: an alert with
 # the manual-merge instructions, a caution against rebasing, and the metadata
 # block. Args:
-#   pkg old new target update_tag repo dist update_lockfile U branch pathlist
+#   pkg old new target update_tag repo dist update_lockfile U branch pathlist auto_merge
 conflict_body() {
-	local pkg="$1" old="$2" new="$3" target="$4" tag="$5" repo="$6" dist="$7" lockfile="$8" u="$9" branch="${10}" pathlist="${11}"
+	local pkg="$1" old="$2" new="$3" target="$4" tag="$5" repo="$6" dist="$7" lockfile="$8" u="$9" branch="${10}" pathlist="${11}" auto_merge="${12}"
 	cat <<EOF
 Updates **$pkg** from \`$old\` to \`$new\`.
 
@@ -126,6 +127,6 @@ Conflicting paths:
 
 $pathlist
 
-$(state_block "$pkg" "$old" "$new" "$target" "$tag" "$repo" "$dist" "$lockfile" "$u")
+$(state_block "$pkg" "$old" "$new" "$target" "$tag" "$repo" "$dist" "$lockfile" "$u" "$auto_merge")
 EOF
 }

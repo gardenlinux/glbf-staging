@@ -1,0 +1,112 @@
+name: auto-merge
+
+# Merge a bot-opened update PR once its build is green. This runs on completion
+# of the build workflow and so always executes from the default branch's copy —
+# never the PR's — so a PR cannot edit the gate that decides to merge it, and the
+# base-repo App token (not anything from the PR) performs the merge.
+#
+# The merge is heavily gated; every check below must pass or the run exits
+# without merging. The load-bearing one is authorship: only a PR opened by THIS
+# App's bot is eligible, so an arbitrary contributor's PR can never be
+# auto-merged no matter what it puts in its branch name or body.
+on:
+  workflow_run:
+    workflows: ["build"]
+    types: [completed]
+
+# contents: write + pull-requests: write to merge; the App token used for the
+# merge itself carries its own installation permissions.
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    # Only consider green builds that ran on a branch (a PR head), not pushes to
+    # main or tag builds. The thorough identity checks happen in the step.
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    env:
+      HEAD_SHA:    ${{ github.event.workflow_run.head_sha }}
+      HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+    steps:
+      - name: Mint a GitHub App installation token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GLBF_UPDATE_APP_ID }}
+          private-key: ${{ secrets.GLBF_UPDATE_APP_KEY }}
+
+      - name: Check out the config repo (default branch workflow copy)
+        uses: actions/checkout@v5
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Auto-merge the PR if it is a green, opted-in bot update PR
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          BOT_SLUG: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          set -euo pipefail
+          source .github/update-lib.sh
+
+          bot_login="${BOT_SLUG}[bot]"
+
+          # 1. Resolve the PR from the build's head SHA. workflow_run gives the
+          #    head SHA/branch but not the PR number; one commit can back at most
+          #    one open update PR here.
+          pr="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${HEAD_SHA}/pulls" \
+            --jq '[.[] | select(.state == "open")] | first | .number // empty')"
+          if [ -z "$pr" ]; then
+            echo "::notice::no open PR for ${HEAD_SHA}; nothing to merge"
+            exit 0
+          fi
+
+          read -r author head base state isDraft <<<"$(gh pr view "$pr" \
+            --json author,headRefName,baseRefName,state,isDraft \
+            --jq '[.author.login, .headRefName, .baseRefName, .state, (.isDraft|tostring)] | @tsv')"
+          body="$(gh pr view "$pr" --json body --jq .body)"
+          echo "PR #$pr by $author: $head → $base (state=$state draft=$isDraft)"
+
+          # 2. Authorship is the primary security gate: only THIS App's bot. A PR
+          #    from anyone else is never eligible, whatever its branch or body says.
+          if [ "$author" != "$bot_login" ]; then
+            echo "::notice::PR #$pr author $author is not $bot_login; not auto-merging"
+            exit 0
+          fi
+
+          # 3. Defence in depth: the update branch convention and PR readiness.
+          case "$head" in
+            update-staging/*) : ;;
+            *) echo "::notice::$head is not an update-staging branch; not auto-merging"; exit 0 ;;
+          esac
+          if [ "$state" != "OPEN" ] || [ "$isDraft" = "true" ]; then
+            echo "::notice::PR #$pr is $state/draft=$isDraft; not auto-merging"
+            exit 0
+          fi
+
+          # 4. Opt-in: the update that opened the PR recorded the decision in the
+          #    state block. Absent or non-true means do not auto-merge.
+          auto_merge="$(printf '%s' "$body" | state_get auto_merge || true)"
+          if [ "$auto_merge" != "true" ]; then
+            echo "::notice::PR #$pr is not opted into auto-merge (auto_merge=$auto_merge)"
+            exit 0
+          fi
+
+          # 5. Race guard: the build that just went green ran on HEAD_SHA. If the
+          #    PR head has moved since, the green result is stale — do not merge an
+          #    unbuilt tip. A later build on the new tip re-triggers this workflow.
+          tip="$(gh pr view "$pr" --json headRefOid --jq .headRefOid)"
+          if [ "$tip" != "$HEAD_SHA" ]; then
+            echo "::notice::PR #$pr tip $tip moved past built $HEAD_SHA; waiting for its build"
+            exit 0
+          fi
+
+          # 6. All gates passed. Merge as the App (a merge commit, preserving the
+          #    import's upstream lineage — never squash/rebase) so the push to the
+          #    base branch attributes to the bot and triggers canonicalization.
+          echo "all gates passed; merging PR #$pr into $base"
+          gh pr merge "$pr" --merge --delete-branch
+          gh pr comment "$pr" --body "Build green on \`$HEAD_SHA\` and opted into auto-merge — merged into \`$base\` 🤖"
