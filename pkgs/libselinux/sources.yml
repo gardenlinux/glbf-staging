@@ -1,0 +1,6 @@
+sources:
+    - file: libselinux_3.9.orig.tar.gz
+      sha256: e7ee2c01dba64a0c35c9d7c9c0e06209d8186b325b0638a0d83f915cc3c101e8
+      urls:
+        - https://snapshot.debian.org/archive/debian/20260101T000000Z/pool/main/libs/libselinux/libselinux_3.9.orig.tar.gz
+        - https://snapshot.debian.org/file/7dc10c4b3f2d83a15d0da3ba5955a80c8f9875ff/libselinux_3.9.orig.tar.gz
