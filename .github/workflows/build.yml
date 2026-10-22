@@ -120,6 +120,21 @@ jobs:
       arch: amd64
 
   node-5:
+    name: "bash"
+    needs: [build-glbx, check-graph, restore-inputs, plan]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:bash:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:bash:amd64"
+      arch: amd64
+
+  node-6:
     name: "coreutils"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -134,7 +149,7 @@ jobs:
       node-key: "debian-pkg-build:coreutils:amd64"
       arch: amd64
 
-  node-6:
+  node-7:
     name: "gcc-15"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -149,9 +164,9 @@ jobs:
       node-key: "debian-pkg-build:gcc-15:amd64"
       arch: amd64
 
-  node-7:
+  node-8:
     name: "gcc-15-base"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-6]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-7]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -164,9 +179,9 @@ jobs:
       node-key: "debian-binary-pkg:gcc-15:gcc-15-base:amd64"
       arch: amd64
 
-  node-8:
+  node-9:
     name: "libgcc-s1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-6]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-7]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -179,7 +194,7 @@ jobs:
       node-key: "debian-binary-pkg:gcc-15:libgcc-s1:amd64"
       arch: amd64
 
-  node-9:
+  node-10:
     name: "glibc"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -194,9 +209,9 @@ jobs:
       node-key: "debian-pkg-build:glibc:amd64"
       arch: amd64
 
-  node-10:
+  node-11:
     name: "libc-gconv-modules-extra"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-9]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-10]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -209,9 +224,9 @@ jobs:
       node-key: "debian-binary-pkg:glibc:libc-gconv-modules-extra:amd64"
       arch: amd64
 
-  node-11:
+  node-12:
     name: "libc6"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-7, node-8, node-9]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-8, node-9, node-10]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -224,9 +239,9 @@ jobs:
       node-key: "debian-binary-pkg:glibc:libc6:amd64"
       arch: amd64
 
-  node-12:
+  node-13:
     name: "libacl1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-0, node-10, node-11]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-0, node-11, node-12]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -239,9 +254,9 @@ jobs:
       node-key: "debian-binary-pkg:acl:libacl1:amd64"
       arch: amd64
 
-  node-13:
+  node-14:
     name: "libattr1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-1, node-10, node-11]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-1, node-11, node-12]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -254,7 +269,7 @@ jobs:
       node-key: "debian-binary-pkg:attr:libattr1:amd64"
       arch: amd64
 
-  node-14:
+  node-15:
     name: "gmp"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -269,9 +284,9 @@ jobs:
       node-key: "debian-pkg-build:gmp:amd64"
       arch: amd64
 
-  node-15:
+  node-16:
     name: "libgmp10"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-10, node-11, node-14]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-11, node-12, node-15]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -284,7 +299,7 @@ jobs:
       node-key: "debian-binary-pkg:gmp:libgmp10:amd64"
       arch: amd64
 
-  node-16:
+  node-17:
     name: "libcap2"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -299,9 +314,9 @@ jobs:
       node-key: "debian-pkg-build:libcap2:amd64"
       arch: amd64
 
-  node-17:
+  node-18:
     name: "libcap2"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-10, node-11, node-16]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-11, node-12, node-17]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -314,7 +329,7 @@ jobs:
       node-key: "debian-binary-pkg:libcap2:libcap2:amd64"
       arch: amd64
 
-  node-18:
+  node-19:
     name: "libselinux"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -329,7 +344,7 @@ jobs:
       node-key: "debian-pkg-build:libselinux:amd64"
       arch: amd64
 
-  node-19:
+  node-20:
     name: "libzstd"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -344,9 +359,9 @@ jobs:
       node-key: "debian-pkg-build:libzstd:amd64"
       arch: amd64
 
-  node-20:
+  node-21:
     name: "libzstd1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-10, node-11, node-19]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-11, node-12, node-20]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -359,7 +374,52 @@ jobs:
       node-key: "debian-binary-pkg:libzstd:libzstd1:amd64"
       arch: amd64
 
-  node-21:
+  node-22:
+    name: "ncurses"
+    needs: [build-glbx, check-graph, restore-inputs, plan]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:ncurses:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:ncurses:amd64"
+      arch: amd64
+
+  node-23:
+    name: "libtinfo6"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-11, node-12, node-22]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:ncurses:libtinfo6:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:ncurses:libtinfo6:amd64"
+      arch: amd64
+
+  node-24:
+    name: "bash"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-5, node-11, node-12, node-23]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:bash:bash:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:bash:bash:amd64"
+      arch: amd64
+
+  node-25:
     name: "openssl"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -374,9 +434,9 @@ jobs:
       node-key: "debian-pkg-build:openssl:amd64"
       arch: amd64
 
-  node-22:
+  node-26:
     name: "openssl-provider-legacy"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-10, node-11, node-21]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-11, node-12, node-25]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -389,7 +449,7 @@ jobs:
       node-key: "debian-binary-pkg:openssl:openssl-provider-legacy:amd64"
       arch: amd64
 
-  node-23:
+  node-27:
     name: "pcre2"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -404,9 +464,9 @@ jobs:
       node-key: "debian-pkg-build:pcre2:amd64"
       arch: amd64
 
-  node-24:
+  node-28:
     name: "libpcre2-8-0"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-10, node-11, node-23]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-11, node-12, node-27]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -419,9 +479,9 @@ jobs:
       node-key: "debian-binary-pkg:pcre2:libpcre2-8-0:amd64"
       arch: amd64
 
-  node-25:
+  node-29:
     name: "libselinux1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-10, node-11, node-18, node-24]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-11, node-12, node-19, node-28]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -434,9 +494,9 @@ jobs:
       node-key: "debian-binary-pkg:libselinux:libselinux1:amd64"
       arch: amd64
 
-  node-26:
+  node-30:
     name: "base-passwd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-4, node-10, node-11, node-25]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-4, node-11, node-12, node-29]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -449,7 +509,7 @@ jobs:
       node-key: "debian-binary-pkg:base-passwd:base-passwd:amd64"
       arch: amd64
 
-  node-27:
+  node-31:
     name: "zlib"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -464,9 +524,9 @@ jobs:
       node-key: "debian-pkg-build:zlib:amd64"
       arch: amd64
 
-  node-28:
+  node-32:
     name: "zlib1g"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-10, node-11, node-27]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-11, node-12, node-31]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -479,9 +539,9 @@ jobs:
       node-key: "debian-binary-pkg:zlib:zlib1g:amd64"
       arch: amd64
 
-  node-29:
+  node-33:
     name: "libssl3t64"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-10, node-11, node-20, node-21, node-28]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-11, node-12, node-21, node-25, node-32]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -494,9 +554,9 @@ jobs:
       node-key: "debian-binary-pkg:openssl:libssl3t64:amd64"
       arch: amd64
 
-  node-30:
+  node-34:
     name: "coreutils"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-5, node-10, node-11, node-12, node-13, node-15, node-17, node-22, node-25, node-29]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-6, node-11, node-12, node-13, node-14, node-16, node-18, node-26, node-29, node-33]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -509,9 +569,9 @@ jobs:
       node-key: "debian-binary-pkg:coreutils:coreutils:amd64"
       arch: amd64
 
-  node-31:
+  node-35:
     name: "rootfs"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-3, node-26, node-30]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-3, node-24, node-30, node-34]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit

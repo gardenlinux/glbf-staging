@@ -1,0 +1,6 @@
+build_profiles: [nocheck]
+build_options: [nocheck]
+runtime_depends:
+  bash:
+    - ncurses:libtinfo6
+    - glibc:libc6
