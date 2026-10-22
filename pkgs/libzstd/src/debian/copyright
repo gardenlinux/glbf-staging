@@ -56,7 +56,7 @@ License: BSD-3-clause or GPL-2
 Files: debian/*
 Copyright:
  2015-2016 Kevin Murray <spam@kdmurray.id.au>
- 2022-2025 Peter Pentchev <roam@debian.org>
+ 2022-2026 Peter Pentchev <roam@debian.org>
 License: Expat
 
 License: Expat
