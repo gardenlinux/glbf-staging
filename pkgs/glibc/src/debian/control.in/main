@@ -13,8 +13,8 @@ Build-Depends: gettext, xz-utils, file, quilt,
  libidn2-0 <!nocheck>,
  libc-bin (>= @DEB_VERSION_UPSTREAM@) <cross>,
  libgd-dev <!stage1 !stage2>,
+ systemtap-sdt-dev [linux-any] <!stage1 !stage2 !pkg.glibc.nosystemtap>,
 Build-Depends-Indep: perl, po-debconf
-Rules-Requires-Root: no
 Maintainer: GNU Libc Maintainers <debian-glibc@lists.debian.org>
 Uploaders: Clint Adams <clint@debian.org>, Aurelien Jarno <aurel32@debian.org>, Samuel Thibault <sthibault@debian.org>
 Standards-Version: 4.6.2
