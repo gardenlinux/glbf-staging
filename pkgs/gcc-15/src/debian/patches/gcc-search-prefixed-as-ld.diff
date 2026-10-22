@@ -1,0 +1,128 @@
+# DP: Search for the <triplet>-as / -ld before serching for as / ld.
+
+--- a/src/gcc/gcc.cc
++++ b/src/gcc/gcc.cc
+@@ -1734,6 +1734,9 @@ struct path_prefix
+ 
+ static struct path_prefix exec_prefixes = { 0, 0, "exec" };
+ 
++/* Copied from collect2.cc, a prefix list from the PATH variable.  */
++static struct path_prefix path_prefixes;
++
+ /* List of prefixes to try when looking for startup (crt0) files.  */
+ 
+ static struct path_prefix startfile_prefixes = { 0, 0, "startfile" };
+@@ -3252,6 +3255,8 @@ find_a_file (const struct path_prefix *p
+ static char*
+ find_a_program (const char *name)
+ {
++  char *progname;
++
+   /* Do not search if default matches query. */
+ 
+ #ifdef DEFAULT_ASSEMBLER
+@@ -3269,7 +3274,37 @@ find_a_program (const char *name)
+     return xstrdup (DEFAULT_DSYMUTIL);
+ #endif
+ 
+-  return find_a_file (&exec_prefixes, name, X_OK, false);
++  progname = find_a_file (&exec_prefixes, name, X_OK, false);
++  if (progname)
++    {
++#if 0
++      fprintf (stderr, "find_a_program: %s --> %s\n",	name, progname);
++#endif
++      return progname;
++    }
++
++#ifndef ACCEL_COMPILER
++#ifndef CROSS_DIRECTORY_STRUCTURE
++  /* Search for the <triplet>-as / -ld instead of as / ld in PATH.
++     Doing that after the as / ld lookups, because these are used unversioned
++     during the build.  */
++  if (! strcmp (name, "as") || ! strcmp (name, "ld"))
++    {
++      char *prefixed_name = XNEWVEC (char, strlen("as") + 2
++				     + strlen (DEFAULT_REAL_TARGET_MACHINE));
++      strcpy (prefixed_name, DEFAULT_REAL_TARGET_MACHINE);
++      strcat (prefixed_name, "-");
++      strcat (prefixed_name, name);
++      /* Lookup in PATH, not exec_prefixes.  */
++      progname = find_a_file (&path_prefixes, prefixed_name, X_OK, false);
++#if 0
++      fprintf (stderr, "find_a_program: %s --> %s --> %s\n",
++	       name, prefixed_name, progname);
++#endif
++    }
++#endif
++#endif
++  return progname;
+ }
+ 
+ /* Ranking of prefixes in the sort list. -B prefixes are put before
+@@ -3400,6 +3435,56 @@ add_sysrooted_hdrs_prefix (struct path_p
+ 	      require_machine_suffix, os_multilib);
+ }
+ 
++/* Next two functions copied from file-find.cc, which defines its own
++   find_a_file function.  */
++
++/* Take the value of the environment variable ENV, break it into a path, and
++   add of the entries to PPREFIX.  */
++
++static void
++prefix_from_string (const char *p, struct path_prefix *pprefix)
++{
++  const char *startp, *endp;
++  char *nstore = XNEWVEC (char, strlen (p) + 3);
++
++  startp = endp = p;
++  while (1)
++    {
++      if (*endp == PATH_SEPARATOR || *endp == 0)
++	{
++	  strncpy (nstore, startp, endp-startp);
++	  if (endp == startp)
++	    {
++	      strcpy (nstore, "./");
++	    }
++	  else if (! IS_DIR_SEPARATOR (endp[-1]))
++	    {
++	      nstore[endp-startp] = DIR_SEPARATOR;
++	      nstore[endp-startp+1] = 0;
++	    }
++	  else
++	    nstore[endp-startp] = 0;
++
++	  add_prefix (pprefix, nstore, "path", PREFIX_PRIORITY_LAST, 0, 0);
++	  if (*endp == 0)
++	    break;
++	  endp = startp = endp + 1;
++	}
++      else
++	endp++;
++    }
++  free (nstore);
++}
++
++static void
++prefix_from_env (const char *e, struct path_prefix *pprefix)
++{
++  const char *const p = env.get (e);
++
++  if (p)
++    prefix_from_string (p, pprefix);
++}
++
+ 
+ /* Execute the command specified by the arguments on the current line of spec.
+    When using pipes, this includes several piped-together commands
+@@ -8436,6 +8521,8 @@ driver::main (int argc, char **argv)
+   bool early_exit;
+ 
+   set_progname (argv[0]);
++  /* Extract PATH into our path_prefixes list.  */
++  prefix_from_env ("PATH", &path_prefixes);
+   expand_at_files (&argc, &argv);
+   decode_argv (argc, const_cast <const char **> (argv));
+   global_initializations ();

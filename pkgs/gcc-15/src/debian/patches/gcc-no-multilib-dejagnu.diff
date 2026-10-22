@@ -1,0 +1,61 @@
+# DP: Don't run the gnat and gm2 tests for multilibs, which are not built
+
+--- a/src/gcc/Makefile.in
++++ b/src/gcc/Makefile.in
+@@ -4598,7 +4598,12 @@ $(filter-out $(lang_checks_parallelized)
+ 	if [ -f $${rootme}/../expect/expect ] ; then  \
+ 	   TCL_LIBRARY=`cd .. ; cd $${srcdir}/../tcl/library ; ${PWD_COMMAND}` ; \
+ 	    export TCL_LIBRARY ; fi ; \
+-	$(RUNTEST) --tool $* $(RUNTESTFLAGS))
++	case "$*" in \
++	  (gnat*|gm2*) rtflags=$$(printf '%s' '$(RUNTESTFLAGS)' | sed -E 's/,-m[a-z2-6=]+//g');; \
++	  (*) rtflags=$(RUNTESTFLAGS);; \
++	esac; \
++	echo "CHECK TARGET: $* -> $$rtflags"; \
++	$(RUNTEST) --tool $* $$rtflags)
+ 
+ $(patsubst %,%-subtargets,$(lang_checks)): check-%-subtargets:
+ 	@echo check-$*
+@@ -4632,12 +4637,17 @@ check_p_subdirs=$(wordlist 1,$(check_p_c
+ # testsuites like objc or go.
+ $(lang_checks_parallelized): check-% : site.exp
+ 	-rm -rf $(TESTSUITEDIR)/$*-parallel
+-	@if [ -n "$(filter -j%, $(MFLAGS))" ]; then \
++	@case "$*" in \
++	  (gnat*|gm2*) rtflags=$$(printf '%s' '$(RUNTESTFLAGS)' | sed -E 's/,-m[a-z2-6=]+//g');; \
++	  (*) rtflags=$(RUNTESTFLAGS);; \
++	esac; \
++	echo "CHECK TARGET: $* -> $$rtflags"; \
++	if [ -n "$(filter -j%, $(MFLAGS))" ]; then \
+ 	  test -d $(TESTSUITEDIR) || mkdir $(TESTSUITEDIR) || true; \
+ 	  test -d $(TESTSUITEDIR)/$*-parallel || mkdir $(TESTSUITEDIR)/$*-parallel || true; \
+ 	  GCC_RUNTEST_PARALLELIZE_DIR=`${PWD_COMMAND}`/$(TESTSUITEDIR)/$(check_p_tool)-parallel ; \
+ 	  export GCC_RUNTEST_PARALLELIZE_DIR ; \
+-	  $(MAKE) TESTSUITEDIR="$(TESTSUITEDIR)" RUNTESTFLAGS="$(RUNTESTFLAGS)" \
++	  $(MAKE) TESTSUITEDIR="$(TESTSUITEDIR)" RUNTESTFLAGS="$$rtflags" \
+ 	    EXPECT=$(EXPECT) \
+ 	    check-parallel-$* \
+ 	    $(patsubst %,check-parallel-$*_%, $(check_p_subdirs)); \
+@@ -4656,7 +4666,7 @@ $(lang_checks_parallelized): check-% : s
+ 	    > $(TESTSUITEDIR)/$*/$*.log; \
+ 	  rm -rf $(TESTSUITEDIR)/$*-parallel || true; \
+ 	else \
+-	  $(MAKE) TESTSUITEDIR="$(TESTSUITEDIR)" RUNTESTFLAGS="$(RUNTESTFLAGS)" \
++	  $(MAKE) TESTSUITEDIR="$(TESTSUITEDIR)" RUNTESTFLAGS="$$rtflags" \
+ 	    EXPECT=$(EXPECT) \
+ 	    check_$*_parallelize= check-parallel-$*; \
+ 	fi
+@@ -4682,7 +4692,12 @@ check-parallel-% : site.exp
+ 	    TCL_LIBRARY=`cd .. ; cd $${srcdir}/../tcl/library ; ${PWD_COMMAND}` ; \
+ 	    export TCL_LIBRARY ; \
+ 	  fi ; \
+-	  $(RUNTEST) --tool $(check_p_tool) $(RUNTESTFLAGS); \
++	  case "$*" in \
++	    (gnat*|gm2*) rtflags=$$(printf '%s' '$(RUNTESTFLAGS)' | sed -E 's/,-m[a-z2-6=]+//g');; \
++	    (*) rtflags=$(RUNTESTFLAGS);; \
++	  esac; \
++	  echo "CHECK TARGET: $* -> $$rtflags"; \
++	  $(RUNTEST) --tool $(check_p_tool) $$rtflags; \
+ 	  if [ -n "$$GCC_RUNTEST_PARALLELIZE_DIR" ] ; then \
+ 	    touch $${rootme}/$(TESTSUITEDIR)/$(check_p_tool)-parallel/finished; \
+ 	  fi ; \

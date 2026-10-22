@@ -1,0 +1,3380 @@
+From fd2e8b96b6fbf45a4cccd147ee82afac904e72fc Mon Sep 17 00:00:00 2001
+From: Oleg Endo <olegendo@gcc.gnu.org>
+Date: Sun, 29 Sep 2024 21:33:29 +0900
+Subject: [PATCH] SH: Add support for LRA and enable it by default
+
+SH: Tighten memory predicates and constraints
+
+In particular, reject invalid hard-regs for memory address registers when using
+LRA.  Unfortunately we need to distingquish between old reload and LRA behaviors
+for the transitional period.  LRA seems to require stricter predicates and
+constraints.
+
+gcc/ChangeLog:
+
+	PR target/55212
+	* config/sh/predicates.md (simple_mem_operand):
+	Use 'satisfies_constraint_Sra'.
+	(post_inc_mem, pre_dec_mem): Use 'satisfies_constraint_Rab'.
+	* config/sh/constraints.md (Rab, Rai, Sgb): New constraints.
+	(Sua, Sdd, Snd, Ssd, Sbv, Sra, Ara, Add): Use Rab and Rai constraints.
+	* config/sh/sync.md (atomic_mem_operand_0, atomic_mem_operand_1): Reject
+	GBR addresses when hard-llcs atomic mode is enabled.
+
+SH: Pin input args to hard-regs via predicates for sfuncs
+
+Some sfuncs uses hard reg as input and clobber its raw reg pattern. It
+seems that LRA doesn't process this clobber pattern.  Rewrite these
+patterns so as to work with LRA.
+
+gcc/ChangeLog:
+
+	PR target/55212
+	* config/sh/predicates.md (hard_reg_r0..r7): New predicates.
+	* config/sh/sh.md (udivsi3_i4, udivsi3_i4_single,
+	udivsi3_i1): Rewrite with match_operand and match_dup.
+	(block_lump_real, block_lump_real_i4): Ditto.
+	(udivsi3): Adjust for it.
+	* config/sh/sh-mem.cc (expand_block_move): Ditto.
+
+LRA: Take scratch as implicit unused output reloads
+
+gcc/ChangeLog:
+	* lra-constraints.cc (match_reload, process_alt_operands,
+	curr_insn_transform): Take scratch as implicit unused
+	output reloads.
+
+LRA: Add cannot_substitute_const_equiv_p target hook
+
+On SH fp constant load special instructions 'fldi0' and 'fldi1' are only valid
+for single-precision fp mode and thus depend on mode-switiching.  Since LRA is
+not aware of that it would emit such constant loads in the wrong mode.  The new
+target hook allows rejecting such potentially unsafe substitutions.
+
+gcc/ChangeLog:
+	PR target/117182
+	* target.def (cannot_substitute_const_equiv_p): New target hook.
+	* doc/tm.texi.in: Add it.
+	* lra-constraints.cc (get_equiv): Use it.
+	* config/sh/sh.cc (sh_cannot_substitute_const_equiv_p): Override it.
+	* doc/tm.texi: Re-generate.
+
+SH: A test case for wrong-code with -mlra PR55212 c#192 / c#248 / att. 59102
+
+gcc/testsuite/ChangeLog:
+
+	PR target/55212
+	* gcc.target/sh/pr55212-c248.c: New test.
+
+SH: Add test case from PR55212 c#298 / c#311 / att. 59185
+
+gcc/testsuite/ChangeLog:
+
+	PR target/55212
+	* g++.target/sh/sh.exp: New.
+	* g++.target/sh/torture/sh-torture.exp: New.
+	* g++.target/sh/torture/pr55212-c311.C: New
+
+SH: Add test case from PR55212 c#331 / c#333 / att. 59215
+
+gcc/testsuite/ChangeLog:
+
+	PR target/55212
+	* g++.target/sh/torture/pr55212-c333.C: New.
+
+SH: Add test case from PR55212 c#367 / c#373 / att. 59285
+
+gcc/testsuite/ChangeLog:
+
+	PR target/55212
+	* g++.target/sh/torture/pr55212-c373.C: New.
+
+SH: Add test case from PR55212 c#378 / c#384 / att. 59289
+
+gcc/testsuite/ChangeLog:
+
+	PR target/55212
+	* g++.target/sh/torture/pr55212-c384.C: New.
+
+SH: Add test case from PR55212 c#405 / c#413 / att. 59442
+
+gcc/testsuite/ChangeLog:
+
+	PR target/55212
+	* g++.target/sh/torture/pr55212-c413.C: New.
+
+SH: Try to workaround fp-reg related move insns
+
+LRA will try to satisfy the constraints in match_scratch for the memory
+displacements and it will make issues on this target. To mitigate the
+issue, split movsf_ie_ra into several new patterns to remove
+match_scratch.  Also define a new sub-pattern of movdf for constant
+loads.
+
+gcc/ChangeLog:
+
+	PR target/55212
+	* gcc/config/sh/predicates.md (pc_relative_load_operand): New predicate.
+	* gcc/config/sh/sh-protos.h (sh_movsf_ie_ra_split_p): Remove.
+	(sh_movsf_ie_y_split_p): New proto.
+	* gcc/config/sh/sh.cc: (sh_movsf_ie_ra_split_p): Remove.
+	(sh_movsf_ie_y_split_p): New function.
+	(broken_move): Take movsf_ie_ra into account for fldi cases.
+	* gcc/config/sh/sh.md (movdf_i4_F_z): New insn pattern.
+	(movdf): Use it.
+	(movsf_ie_ra): Use define_insn instead of define_insn_and_split.
+	(movsf_ie_F_z, movsf_ie_Q_z, movsf_ie_y): New insn pattern.
+	(movsf): Use new patterns.
+	(movsf-1):  Don't split when operands[0] or operands[1]	is fpul.
+	(movdf_i4_F_z+7): New splitter.
+
+SH: Try to workaround fp-reg related move insns pt.2
+
+The current movsf logic for LRA doesn't work well for reg from/to
+multiword subreg.  Use a separate pattern movsf_ie_rffr for that case.
+Also movsf_ie_ra should be disabled for reg from/to subreg of SImode.
+If not, it's recognizable as such move when subreg1 pass tries to split
+multiword because the constraints aren't effective in that stage.
+
+gcc/ChangeLog:
+	PR target/55212
+	* config/sh/sh-protos.h (sh_movsf_ie_subreg_multiword_p):
+	New proto.
+	* config/sh/sh.cc (sh_movsf_ie_subreg_multiword_p): New function.
+	* config/sh/sh.md (movsf_ie_rffr): New insn_and_split.
+	(movsf): Use movsf_ie_rffr when sh_movsf_ie_subreg_multiword_p is true.
+	(movsf_ie_ra): Disable when sh_movsf_ie_y_split_p is true.
+
+SH: Try to reduce R0 live ranges
+
+Some move or extend patterns will make long R0 live ranges and could
+confuse LRA.  Try reduce the failures by using insn variants that use an
+explicit R0-clobber.
+
+gcc/ChangeLog:
+	PR target/55212
+	* config/sh/sh.md (extend<mode>si2_short_mem_disp_z): New
+	insn_and_split.
+	(extend<mode>si2): Use it for LRA.
+	(mov<mode>_store_mem_index, *mov<mode>_store_mem_index): New patterns.
+	(mov<mode>): Use it for LRA.
+	(movsf_ie_store_mem_index, movsf_ie_load_mem_index,
+	*movsf_ie_store_mem_inde, *movsf_ie_load_mem_index): New patterns.
+	(movsf): Use it for LRA.
+
+SH: Enable LRA by default
+
+gcc/ChangeLog:
+
+	PR target/55212
+	* conifg/sh/sh.opt (sh_lra_flag): Init to 1.
+
+SH: Add patch 59550 from PR/target 55212
+---
+ gcc/config/sh/constraints.md                  |  65 +-
+ gcc/config/sh/predicates.md                   |  46 +-
+ gcc/config/sh/sh-mem.cc                       |   4 +-
+ gcc/config/sh/sh-protos.h                     |   3 +-
+ gcc/config/sh/sh.cc                           |  63 +-
+ gcc/config/sh/sh.md                           | 419 ++++++++++--
+ gcc/config/sh/sh.opt                          |   2 +-
+ gcc/config/sh/sync.md                         |   8 +-
+ gcc/lra-constraints.cc                        |  20 +-
+ gcc/target.def                                |  21 +-
+ gcc/testsuite/g++.target/sh/sh.exp            | 297 +++++++++
+ .../g++.target/sh/torture/pr55212-c311.C      |  73 +++
+ .../g++.target/sh/torture/pr55212-c333.C      | 259 ++++++++
+ .../g++.target/sh/torture/pr55212-c373.C      | 612 ++++++++++++++++++
+ .../g++.target/sh/torture/pr55212-c384.C      | 429 ++++++++++++
+ .../g++.target/sh/torture/pr55212-c413.C      |  38 ++
+ .../g++.target/sh/torture/sh-torture.exp      | 299 +++++++++
+ gcc/testsuite/gcc.target/sh/pr55212-c248.c    |  31 +
+ 20 files changed, 2586 insertions(+), 122 deletions(-)
+ create mode 100644 gcc/testsuite/g++.target/sh/sh.exp
+ create mode 100644 gcc/testsuite/g++.target/sh/torture/pr55212-c311.C
+ create mode 100644 gcc/testsuite/g++.target/sh/torture/pr55212-c333.C
+ create mode 100644 gcc/testsuite/g++.target/sh/torture/pr55212-c373.C
+ create mode 100644 gcc/testsuite/g++.target/sh/torture/pr55212-c384.C
+ create mode 100644 gcc/testsuite/g++.target/sh/torture/pr55212-c413.C
+ create mode 100644 gcc/testsuite/g++.target/sh/torture/sh-torture.exp
+ create mode 100644 gcc/testsuite/gcc.target/sh/pr55212-c248.c
+
+diff --git a/src/gcc/config/sh/constraints.md b/src/gcc/config/sh/constraints.md
+index bfdd868213e..04fb241e271 100644
+--- a/src/gcc/config/sh/constraints.md
++++ b/src/gcc/config/sh/constraints.md
+@@ -45,8 +45,10 @@
+ ;; H: Floating point 1
+ ;; Q: pc relative load operand
+ ;; Rxx: reserved for exotic register classes.
++;;  Rab: address base register
++;;  Rai: address index register
+ ;; Sxx: extra memory constraints
+-;;  Sua: unaligned memory address
++;;  Sua: simple or post-inc address (for unaligned load)
+ ;;  Sbv: QImode address without displacement
+ ;;  Sbw: QImode address with 12 bit displacement
+ ;;  Snd: address without displacement
+@@ -260,16 +262,36 @@
+ 	    (match_test "~ival == 64")
+ 	    (match_test "~ival == 128"))))
+ 
++;; FIXME: LRA and reload behavior differs in memory constraint handling.
++;;        For LRA memory address constraints need to narrow the register type
++;;        restrictions.  It seems  the address RTX validation is done slightly
++;;        differently.  Remove the non-LRA paths eventually.
++(define_constraint "Rab"
++  "@internal address base register constraint"
++  (ior (and (match_test "sh_lra_p ()")
++	    (match_test "MAYBE_BASE_REGISTER_RTX_P (op, false)"))
++       (and (match_test "!sh_lra_p ()")
++	    (match_code "reg"))))
++
++(define_constraint "Rai"
++  "@internal address index register constraint"
++  (ior (and (match_test "sh_lra_p ()")
++	    (match_test "MAYBE_INDEX_REGISTER_RTX_P (op, false)"))
++       (and (match_test "!sh_lra_p ()")
++	    (match_code "reg"))))
++
+ (define_memory_constraint "Sua"
+-  "@internal"
+-  (and (match_test "memory_operand (op, GET_MODE (op))")
+-       (match_test "GET_CODE (XEXP (op, 0)) != PLUS")))
++  "A memory reference that allows simple register or post-inc addressing."
++  (and (match_code "mem")
++       (ior (match_test "satisfies_constraint_Rab (XEXP (op, 0))")
++	    (and (match_code "post_inc" "0")
++	    (match_test "satisfies_constraint_Rab (XEXP (XEXP (op, 0), 0))")))))
+ 
+ (define_memory_constraint "Sdd"
+   "A memory reference that uses displacement addressing."
+   (and (match_code "mem")
+        (match_code "plus" "0")
+-       (match_code "reg" "00")
++       (match_test "satisfies_constraint_Rab (XEXP (XEXP (op, 0), 0))")
+        (match_code "const_int" "01")))
+ 
+ (define_memory_constraint "Snd"
+@@ -281,19 +303,28 @@
+   "A memory reference that uses index addressing."
+   (and (match_code "mem")
+        (match_code "plus" "0")
+-       (match_code "reg" "00")
+-       (match_code "reg" "01")))
++       (ior (and (match_test "satisfies_constraint_Rab (XEXP (XEXP (op, 0), 0))")
++		 (match_test "satisfies_constraint_Rai (XEXP (XEXP (op, 0), 1))"))
++	    (and (match_test "satisfies_constraint_Rab (XEXP (XEXP (op, 0), 1))")
++		 (match_test "satisfies_constraint_Rai (XEXP (XEXP (op, 0), 0))")))))
+ 
+ (define_memory_constraint "Ssd"
+   "A memory reference that excludes index and displacement addressing."
+-  (and (match_code "mem")
+-       (match_test "! satisfies_constraint_Sid (op)")
+-       (match_test "! satisfies_constraint_Sdd (op)")))
++  (ior (and (match_code "mem")
++	    (match_test "! sh_lra_p ()")
++	    (match_test "! satisfies_constraint_Sid (op)")
++	    (match_test "! satisfies_constraint_Sdd (op)"))
++       (and (match_code "mem")
++	    (match_test "sh_lra_p ()")
++	    (ior (match_test "satisfies_constraint_Rab (XEXP (op, 0))")
++		 (and (ior (match_code "pre_dec" "0") (match_code "post_inc" "0"))
++		 (match_test "satisfies_constraint_Rab (XEXP (XEXP (op, 0), 0))"))))))
+ 
+ (define_memory_constraint "Sbv"
+   "A memory reference, as used in SH2A bclr.b, bset.b, etc."
+-  (and (match_test "MEM_P (op) && GET_MODE (op) == QImode")
+-       (match_test "REG_P (XEXP (op, 0))")))
++  (and (match_code "mem")
++       (match_test "GET_MODE (op) == QImode")
++       (match_test "satisfies_constraint_Rab (XEXP (op, 0))")))
+ 
+ (define_memory_constraint "Sbw"
+   "A memory reference, as used in SH2A bclr.b, bset.b, etc."
+@@ -304,13 +335,17 @@
+ (define_memory_constraint "Sra"
+   "A memory reference that uses simple register addressing."
+   (and (match_code "mem")
+-       (match_code "reg" "0")))
++       (match_test "satisfies_constraint_Rab (XEXP (op, 0))")))
++
++(define_memory_constraint "Sgb"
++  "A memory renference that uses GBR addressing."
++  (match_test "gbr_address_mem (op, GET_MODE (op))"))
+ 
+ (define_memory_constraint "Ara"
+   "A memory reference that uses simple register addressing suitable for
+    gusa atomic operations."
+   (and (match_code "mem")
+-       (match_code "reg" "0")
++       (match_test "satisfies_constraint_Rab (XEXP (op, 0))")
+        (match_test "REGNO (XEXP (op, 0)) != SP_REG")))
+ 
+ (define_memory_constraint "Add"
+@@ -319,6 +354,6 @@
+   (and (match_code "mem")
+        (match_test "GET_MODE (op) == SImode")
+        (match_code "plus" "0")
+-       (match_code "reg" "00")
++       (match_test "satisfies_constraint_Rab (XEXP (XEXP (op, 0), 0))")
+        (match_code "const_int" "01")
+        (match_test "REGNO (XEXP (XEXP (op, 0), 0)) != SP_REG")))
+diff --git a/src/gcc/config/sh/predicates.md b/src/gcc/config/sh/predicates.md
+index 7349c97a2b5..632a236b17a 100644
+--- a/src/gcc/config/sh/predicates.md
++++ b/src/gcc/config/sh/predicates.md
+@@ -208,8 +208,7 @@
+ ;; Returns 1 if OP is a simple register address.
+ (define_predicate "simple_mem_operand"
+   (and (match_code "mem")
+-       (match_code "reg" "0")
+-       (match_test "arith_reg_operand (XEXP (op, 0), SImode)")))
++       (match_test "satisfies_constraint_Sra (op)")))
+ 
+ ;; Returns 1 if OP is a valid displacement address.
+ (define_predicate "displacement_mem_operand"
+@@ -239,13 +238,13 @@
+ (define_predicate "post_inc_mem"
+   (and (match_code "mem")
+        (match_code "post_inc" "0")
+-       (match_code "reg" "00")))
++       (match_test "satisfies_constraint_Rab (XEXP (XEXP (op, 0), 0))")))
+ 
+ ;; Returns true if OP is a pre-decrement addressing mode memory reference.
+ (define_predicate "pre_dec_mem"
+   (and (match_code "mem")
+        (match_code "pre_dec" "0")
+-       (match_code "reg" "00")))
++       (match_test "satisfies_constraint_Rab (XEXP (XEXP (op, 0), 0))")))
+ 
+ ;; Returns 1 if the operand can be used in an SH2A movu.{b|w} insn.
+ (define_predicate "zero_extend_movu_operand"
+@@ -485,6 +484,12 @@
+ 	 && sh_legitimate_index_p (mode, XEXP (plus0_rtx, 1), TARGET_SH2A, true);
+ })
+ 
++;; Returns true if OP is a pc relative load operand.
++(define_predicate "pc_relative_load_operand"
++  (and (match_code "mem")
++       (match_test "GET_MODE (op) != QImode")
++       (match_test "IS_PC_RELATIVE_LOAD_ADDR_P (XEXP (op, 0))")))
++
+ ;; Returns true if OP is a valid source operand for a logical operation.
+ (define_predicate "logical_operand"
+   (and (match_code "subreg,reg,const_int")
+@@ -807,3 +812,36 @@
+ 
+   return false;
+ })
++
++;; Predicates for pinning operands to hard-regs.
++(define_predicate "hard_reg_r0"
++  (and (match_code "reg")
++       (match_test "REGNO (op) == R0_REG")))
++
++(define_predicate "hard_reg_r1"
++  (and (match_code "reg")
++       (match_test "REGNO (op) == R1_REG")))
++
++(define_predicate "hard_reg_r2"
++  (and (match_code "reg")
++       (match_test "REGNO (op) == R2_REG")))
++
++(define_predicate "hard_reg_r3"
++  (and (match_code "reg")
++       (match_test "REGNO (op) == R3_REG")))
++
++(define_predicate "hard_reg_r4"
++  (and (match_code "reg")
++       (match_test "REGNO (op) == R4_REG")))
++
++(define_predicate "hard_reg_r5"
++  (and (match_code "reg")
++       (match_test "REGNO (op) == R5_REG")))
++
++(define_predicate "hard_reg_r6"
++  (and (match_code "reg")
++       (match_test "REGNO (op) == R6_REG")))
++
++(define_predicate "hard_reg_r7"
++  (and (match_code "reg")
++       (match_test "REGNO (op) == R7_REG")))
+diff --git a/src/gcc/config/sh/sh-mem.cc b/src/gcc/config/sh/sh-mem.cc
+index 2a64bede951..c608bf9aa2d 100644
+--- a/src/gcc/config/sh/sh-mem.cc
++++ b/src/gcc/config/sh/sh-mem.cc
+@@ -134,7 +134,7 @@ expand_block_move (rtx *operands)
+ 
+ 	  int dwords = bytes >> 3;
+ 	  emit_insn (gen_move_insn (r6, GEN_INT (dwords - 1)));
+-	  emit_insn (gen_block_lump_real_i4 (func_addr_rtx, lab));
++	  emit_insn (gen_block_lump_real_i4 (func_addr_rtx, lab, r4, r5, r6));
+ 	  return true;
+ 	}
+       else
+@@ -178,7 +178,7 @@ expand_block_move (rtx *operands)
+       final_switch = 16 - ((bytes / 4) % 16);
+       while_loop = ((bytes / 4) / 16 - 1) * 16;
+       emit_insn (gen_move_insn (r6, GEN_INT (while_loop + final_switch)));
+-      emit_insn (gen_block_lump_real (func_addr_rtx, lab));
++      emit_insn (gen_block_lump_real (func_addr_rtx, lab, r4, r5, r6));
+       return true;
+     }
+ 
+diff --git a/src/gcc/config/sh/sh-protos.h b/src/gcc/config/sh/sh-protos.h
+index c8cc19f4dc7..dc37b22837b 100644
+--- a/src/gcc/config/sh/sh-protos.h
++++ b/src/gcc/config/sh/sh-protos.h
+@@ -102,7 +102,8 @@ extern rtx sh_find_equiv_gbr_addr (rtx_insn* cur_insn, rtx mem);
+ extern int sh_eval_treg_value (rtx op);
+ extern HOST_WIDE_INT sh_disp_addr_displacement (rtx mem_op);
+ extern int sh_max_mov_insn_displacement (machine_mode mode, bool consider_sh2a);
+-extern bool sh_movsf_ie_ra_split_p (rtx, rtx, rtx);
++extern bool sh_movsf_ie_y_split_p (rtx, rtx);
++extern bool sh_movsf_ie_subreg_multiword_p (rtx, rtx);
+ extern void sh_expand_sym_label2reg (rtx, rtx, rtx, bool);
+ 
+ /* Result value of sh_find_set_of_reg.  */
+diff --git a/src/gcc/config/sh/sh.cc b/src/gcc/config/sh/sh.cc
+index 1bc34e0a3e3..d6c70ef9409 100644
+--- a/src/gcc/config/sh/sh.cc
++++ b/src/gcc/config/sh/sh.cc
+@@ -271,6 +271,7 @@ static bool sh_legitimate_address_p (machine_mode, rtx, bool,
+ static rtx sh_legitimize_address (rtx, rtx, machine_mode);
+ static rtx sh_delegitimize_address (rtx);
+ static bool sh_cannot_substitute_mem_equiv_p (rtx);
++static bool sh_cannot_substitute_const_equiv_p (rtx);
+ static bool sh_legitimize_address_displacement (rtx *, rtx *,
+ 						poly_int64, machine_mode);
+ static int scavenge_reg (HARD_REG_SET *s);
+@@ -612,6 +613,9 @@ TARGET_GNU_ATTRIBUTES (sh_attribute_table,
+ #undef TARGET_CANNOT_SUBSTITUTE_MEM_EQUIV_P
+ #define TARGET_CANNOT_SUBSTITUTE_MEM_EQUIV_P sh_cannot_substitute_mem_equiv_p
+ 
++#undef TARGET_CANNOT_SUBSTITUTE_CONST_EQUIV_P
++#define TARGET_CANNOT_SUBSTITUTE_CONST_EQUIV_P sh_cannot_substitute_const_equiv_p
++
+ #undef TARGET_LEGITIMIZE_ADDRESS_DISPLACEMENT
+ #define TARGET_LEGITIMIZE_ADDRESS_DISPLACEMENT \
+   sh_legitimize_address_displacement
+@@ -4829,6 +4833,7 @@ broken_move (rtx_insn *insn)
+ 		   we changed this to do a constant load.  In that case
+ 		   we don't have an r0 clobber, hence we must use fldi.  */
+ 		&& (TARGET_FMOVD
++		    || sh_lra_p ()
+ 		    || (GET_CODE (XEXP (XVECEXP (PATTERN (insn), 0, 2), 0))
+ 			== SCRATCH))
+ 		&& REG_P (SET_DEST (pat))
+@@ -11431,6 +11436,19 @@ sh_cannot_substitute_mem_equiv_p (rtx)
+   return true;
+ }
+ 
++static bool
++sh_cannot_substitute_const_equiv_p (rtx subst)
++{
++  /* If SUBST is SFmode const_double 0 or 1, the move insn may be
++     transformed into fldi0/1.  This is unsafe for fp mode switching
++     because fldi0/1 are single mode only instructions.  */
++  if (GET_MODE (subst) == SFmode
++      && (real_equal (CONST_DOUBLE_REAL_VALUE (subst), &dconst1)
++	  || real_equal (CONST_DOUBLE_REAL_VALUE (subst), &dconst0)))
++    return true;
++  return false;
++}
++
+ /* Implement TARGET_LEGITIMIZE_ADDRESS_DISPLACEMENT.  */
+ static bool
+ sh_legitimize_address_displacement (rtx *offset1, rtx *offset2,
+@@ -11452,30 +11470,37 @@ sh_legitimize_address_displacement (rtx *offset1, rtx *offset2,
+   return false;
+ }
+ 
+-/* Return true if movsf insn should be splited with an additional
+-   register.  */
++/* Return true if movsf insn should be splited with fpul register.  */
+ bool
+-sh_movsf_ie_ra_split_p (rtx op0, rtx op1, rtx op2)
++sh_movsf_ie_y_split_p (rtx op0, rtx op1)
+ {
+-  /* op0 == op1 */
+-  if (rtx_equal_p (op0, op1))
++  /* f, r */
++  if (REG_P (op0)
++      && (SUBREG_P (op1) && GET_MODE (SUBREG_REG (op1)) == SImode))
+     return true;
+-  /* fy, FQ, reg */
+-  if (GET_CODE (op1) == CONST_DOUBLE
+-      && ! satisfies_constraint_G (op1)
+-      && ! satisfies_constraint_H (op1)
+-      && REG_P (op0)
+-      && REG_P (op2))
++  /* r, f */
++  if (REG_P (op1)
++      && (SUBREG_P (op0) && GET_MODE (SUBREG_REG (op0)) == SImode))
+     return true;
+-  /* f, r, y */
+-  if (REG_P (op0) && FP_REGISTER_P (REGNO (op0))
+-      && REG_P (op1) && GENERAL_REGISTER_P (REGNO (op1))
+-      && REG_P (op2) && (REGNO (op2) == FPUL_REG))
++
++  return false;
++}
++
++/* Return true if it moves reg from/to subreg of multiword mode.  */
++bool
++sh_movsf_ie_subreg_multiword_p (rtx op0, rtx op1)
++{
++  if (REG_P (op0)
++      && (SUBREG_P (op1)
++	  && (GET_MODE (SUBREG_REG (op1)) == SCmode
++	      || GET_MODE (SUBREG_REG (op1)) == DImode
++	      || GET_MODE (SUBREG_REG (op1)) == TImode)))
+     return true;
+-  /* r, f, y */
+-  if (REG_P (op1) && FP_REGISTER_P (REGNO (op1))
+-      && REG_P (op0) && GENERAL_REGISTER_P (REGNO (op0))
+-      && REG_P (op2) && (REGNO (op2) == FPUL_REG))
++  if (REG_P (op1)
++      && (SUBREG_P (op0)
++	  && (GET_MODE (SUBREG_REG (op0)) == SCmode
++	      || GET_MODE (SUBREG_REG (op0)) == DImode
++	      || GET_MODE (SUBREG_REG (op0)) == TImode)))
+     return true;
+ 
+   return false;
+diff --git a/src/gcc/config/sh/sh.md b/src/gcc/config/sh/sh.md
+index 65b353da56e..1f905455b36 100644
+--- a/src/gcc/config/sh/sh.md
++++ b/src/gcc/config/sh/sh.md
+@@ -2194,13 +2194,24 @@
+ ;; there is nothing to prevent reload from using r0 to reload the address.
+ ;; This reload would clobber the value in r0 we are trying to store.
+ ;; If we let reload allocate r0, then this problem can never happen.
++;;
++;; In addition to that, we also must pin the input regs to hard-regs via the
++;; predicates.  When these insns are instantiated it also emits the
++;; accompanying mov insns to load the hard-regs.  However, subsequent RTL
++;; passes might move things around and reassign the operands to pseudo regs
++;; which might get allocated to different (wrong) hard-regs eventually.  To
++;; avoid that, only allow matching these insns if the operands are the
++;; expected hard-regs.
+ (define_insn "udivsi3_i1"
+   [(set (match_operand:SI 0 "register_operand" "=z,z")
+-	(udiv:SI (reg:SI R4_REG) (reg:SI R5_REG)))
++	(udiv:SI (match_operand:SI 3 "hard_reg_r4" "=r,r")
++		 (match_operand:SI 4 "hard_reg_r5" "=r,r")))
+    (clobber (reg:SI T_REG))
+    (clobber (reg:SI PR_REG))
+    (clobber (reg:SI R1_REG))
+-   (clobber (reg:SI R4_REG))
++   (clobber (match_dup 3))
++   (use (reg:SI R4_REG))
++   (use (reg:SI R5_REG))
+    (use (match_operand:SI 1 "arith_reg_operand" "r,r"))
+    (use (match_operand 2 "" "Z,Ccl"))]
+   "TARGET_SH1 && TARGET_DIVIDE_CALL_DIV1"
+@@ -2212,7 +2223,8 @@
+ 
+ (define_insn "udivsi3_i4"
+   [(set (match_operand:SI 0 "register_operand" "=y,y")
+-	(udiv:SI (reg:SI R4_REG) (reg:SI R5_REG)))
++	(udiv:SI (match_operand:SI 3 "hard_reg_r4" "=r,r")
++		 (match_operand:SI 4 "hard_reg_r5" "=r,r")))
+    (clobber (reg:SI T_REG))
+    (clobber (reg:SI PR_REG))
+    (clobber (reg:DF DR0_REG))
+@@ -2220,9 +2232,11 @@
+    (clobber (reg:DF DR4_REG))
+    (clobber (reg:SI R0_REG))
+    (clobber (reg:SI R1_REG))
+-   (clobber (reg:SI R4_REG))
+-   (clobber (reg:SI R5_REG))
++   (clobber (match_dup 3))
++   (clobber (match_dup 4))
+    (clobber (reg:SI FPSCR_STAT_REG))
++   (use (reg:SI R4_REG))
++   (use (reg:SI R5_REG))
+    (use (match_operand:SI 1 "arith_reg_operand" "r,r"))
+    (use (match_operand 2 "" "Z,Ccl"))
+    (use (reg:SI FPSCR_MODES_REG))]
+@@ -2236,7 +2250,8 @@
+ 
+ (define_insn "udivsi3_i4_single"
+   [(set (match_operand:SI 0 "register_operand" "=y,y")
+-	(udiv:SI (reg:SI R4_REG) (reg:SI R5_REG)))
++	(udiv:SI (match_operand:SI 3 "hard_reg_r4" "=r,r")
++		 (match_operand:SI 4 "hard_reg_r5" "=r,r")))
+    (clobber (reg:SI T_REG))
+    (clobber (reg:SI PR_REG))
+    (clobber (reg:DF DR0_REG))
+@@ -2244,8 +2259,10 @@
+    (clobber (reg:DF DR4_REG))
+    (clobber (reg:SI R0_REG))
+    (clobber (reg:SI R1_REG))
+-   (clobber (reg:SI R4_REG))
+-   (clobber (reg:SI R5_REG))
++   (clobber (match_dup 3))
++   (clobber (match_dup 4))
++   (use (reg:SI R4_REG))
++   (use (reg:SI R5_REG))
+    (use (match_operand:SI 1 "arith_reg_operand" "r,r"))
+    (use (match_operand 2 "" "Z,Ccl"))]
+   "TARGET_FPU_ANY && TARGET_FPU_SINGLE"
+@@ -2278,6 +2295,8 @@
+ {
+   rtx last;
+   rtx func_ptr = gen_reg_rtx (Pmode);
++  rtx r4 = gen_rtx_REG (SImode, R4_REG);
++  rtx r5 = gen_rtx_REG (SImode, R5_REG);
+ 
+   /* Emit the move of the address to a pseudo outside of the libcall.  */
+   if (TARGET_DIVIDE_CALL_TABLE)
+@@ -2305,9 +2324,9 @@
+     {
+       rtx lab = function_symbol (func_ptr, "__udivsi3_i4", SFUNC_STATIC).lab;
+       if (TARGET_FPU_SINGLE)
+-	last = gen_udivsi3_i4_single (operands[0], func_ptr, lab);
++	last = gen_udivsi3_i4_single (operands[0], func_ptr, lab, r4, r5);
+       else
+-	last = gen_udivsi3_i4 (operands[0], func_ptr, lab);
++	last = gen_udivsi3_i4 (operands[0], func_ptr, lab, r4, r5);
+     }
+   else if (TARGET_SH2A)
+     {
+@@ -2319,10 +2338,10 @@
+   else
+     {
+       rtx lab = function_symbol (func_ptr, "__udivsi3", SFUNC_STATIC).lab;
+-      last = gen_udivsi3_i1 (operands[0], func_ptr, lab);
++      last = gen_udivsi3_i1 (operands[0], func_ptr, lab, r4, r5);
+     }
+-  emit_move_insn (gen_rtx_REG (SImode, 4), operands[1]);
+-  emit_move_insn (gen_rtx_REG (SImode, 5), operands[2]);
++  emit_move_insn (r4, operands[1]);
++  emit_move_insn (r5, operands[2]);
+   emit_insn (last);
+   DONE;
+ })
+@@ -4801,7 +4820,37 @@
+ 
+ (define_expand "extend<mode>si2"
+   [(set (match_operand:SI 0 "arith_reg_dest")
+-	(sign_extend:SI (match_operand:QIHI 1 "general_extend_operand")))])
++	(sign_extend:SI (match_operand:QIHI 1 "general_extend_operand")))]
++  ""
++{
++  /* When the displacement addressing is used, RA will assign r0 to
++     the pseudo register operand for the QI/HImode load.
++     See the comment in sh.cc:prepare_move_operand and PR target/55212.  */
++  if (! lra_in_progress && ! reload_completed
++      && sh_lra_p ()
++      && ! TARGET_SH2A
++      && arith_reg_dest (operands[0], <MODE>mode)
++      && short_displacement_mem_operand (operands[1], <MODE>mode))
++    {
++      emit_insn (gen_extend<mode>si2_short_mem_disp_z (operands[0], operands[1]));
++      DONE;
++    }
++})
++
++(define_insn_and_split "extend<mode>si2_short_mem_disp_z"
++  [(set (match_operand:SI 0 "arith_reg_dest" "=r")
++	(sign_extend:SI
++	    (match_operand:QIHI 1 "short_displacement_mem_operand" "m")))
++   (clobber (reg:SI R0_REG))]
++  "TARGET_SH1 && ! TARGET_SH2A && sh_lra_p ()"
++  "#"
++  "&& 1"
++  [(set (match_dup 2) (sign_extend:SI (match_dup  1)))
++   (set (match_dup 0) (match_dup 2))]
++{
++  operands[2] = gen_rtx_REG (SImode, R0_REG);
++}
++  [(set_attr "type" "load")])
+ 
+ (define_insn_and_split "*extend<mode>si2_compact_reg"
+   [(set (match_operand:SI 0 "arith_reg_dest" "=r")
+@@ -5343,9 +5392,49 @@
+         operands[1] = gen_lowpart (<MODE>mode, reg);
+     }
+ 
++  if (! lra_in_progress && ! reload_completed
++      && sh_lra_p ()
++      && ! TARGET_SH2A
++      && arith_reg_operand (operands[1], <MODE>mode)
++      && satisfies_constraint_Sid (operands[0]))
++    {
++      rtx adr = XEXP (operands[0], 0);
++      rtx base = XEXP (adr, 0);
++      rtx idx = XEXP (adr, 1);
++      emit_insn (gen_mov<mode>_store_mem_index (base, idx,operands[1]));
++      DONE;
++    }
++
+   prepare_move_operands (operands, <MODE>mode);
+ })
+ 
++;; The "*mov<mode>_store_mem_index" pattern must come before the
++;; "mov<mode>_store_mem_index" pattern.  Matching order is important because
++;; the "hard_reg_r0" operand will match in both, but we want to prioritize
++;; the former.
++(define_insn "*mov<mode>_store_mem_index"
++  [(set (mem:QIHI (plus:SI (match_operand:SI 0 "arith_reg_operand" "%r")
++			   (match_operand:SI 1 "hard_reg_r0" "z")))
++	(match_operand:QIHI 2 "arith_reg_operand" "r"))]
++  "TARGET_SH1 && ! TARGET_SH2A && sh_lra_p ()"
++  "mov.<bw>	%2,@(%1,%0)"
++  [(set_attr "type" "store")])
++
++(define_insn_and_split "mov<mode>_store_mem_index"
++  [(set (mem:QIHI (plus:SI (match_operand:SI 0 "arith_reg_operand" "%r")
++			   (match_operand:SI 1 "arith_reg_operand" "^zr")))
++	(match_operand:QIHI 2 "arith_reg_operand" "r"))
++   (clobber (reg:SI R0_REG))]
++  "TARGET_SH1 && ! TARGET_SH2A && sh_lra_p ()"
++  "#"
++  "&& 1"
++  [(set (match_dup 3) (match_dup 1))
++    (set (mem:QIHI (plus:SI (match_dup 0) (match_dup 3))) (match_dup 2))]
++{
++  operands[3] = gen_rtx_REG (SImode, R0_REG);
++}
++  [(set_attr "type" "store")])
++
+ ;; The pre-dec and post-inc mems must be captured by the '<' and '>'
+ ;; constraints, otherwise wrong code might get generated.
+ (define_insn "*mov<mode>_load_predec"
+@@ -5631,6 +5720,22 @@
+ 					   (const_string "double")
+ 					   (const_string "none")))])
+ 
++;; LRA will try to satisfy the constraints in match_scratch for the memory
++;; displacements and it will make issues on this target.  Use R0 as a scratch
++;; register for the constant load.
++(define_insn "movdf_i4_F_z"
++  [(set (match_operand:DF 0 "fp_arith_reg_operand" "=d")
++	(match_operand:DF 1 "const_double_operand" "F"))
++   (use (reg:SI FPSCR_MODES_REG))
++   (clobber (reg:SI R0_REG))]
++  "TARGET_FPU_DOUBLE && sh_lra_p ()"
++  "#"
++  [(set_attr "type" "pcfload")
++   (set (attr "length") (if_then_else (eq_attr "fmovd" "yes") (const_int 4) (const_int 8)))
++   (set (attr "fp_mode") (if_then_else (eq_attr "fmovd" "yes")
++					   (const_string "double")
++					   (const_string "none")))])
++
+ ;; Moving DFmode between fp/general registers through memory
+ ;; (the top of the stack) is faster than moving through fpul even for
+ ;; little endian.  Because the type of an instruction is important for its
+@@ -5770,6 +5875,14 @@
+   [(set (match_dup 0) (match_dup 0))]
+   "")
+ 
++(define_split
++  [(set (match_operand:SF 0 "register_operand")
++	(match_operand:SF 1 "register_operand"))
++   (use (reg:SI FPSCR_MODES_REG))]
++  "TARGET_SH2E && sh_lra_p () && reload_completed
++   && true_regnum (operands[0]) == true_regnum (operands[1])"
++  [(set (match_dup 0) (match_dup 0))])
++
+ ;; fmovd substitute post-reload splits
+ (define_split
+   [(set (match_operand:DF 0 "register_operand" "")
+@@ -6014,6 +6127,14 @@
+   prepare_move_operands (operands, DFmode);
+   if (TARGET_FPU_DOUBLE)
+     {
++      if (sh_lra_p ()
++	  && (GET_CODE (operands[1]) == CONST_DOUBLE
++	  && REG_P (operands[0])))
++	{
++	  emit_insn (gen_movdf_i4_F_z (operands[0], operands[1]));
++	  DONE;
++	}
++
+       emit_insn (gen_movdf_i4 (operands[0], operands[1]));
+       DONE;
+     }
+@@ -6139,15 +6260,17 @@
+       (const_string "none")
+       (const_string "none")])])
+ 
+-(define_insn_and_split "movsf_ie_ra"
++;; LRA will try to satisfy the constraints in match_scratch for the memory
++;; displacements and it will make issues on this target.  movsf_ie is splitted
++;; into 4 patterns to avoid it when lra_in_progress is true.
++(define_insn "movsf_ie_ra"
+   [(set (match_operand:SF 0 "general_movdst_operand"
+-	 			"=f,r,f,f,fy,f,m, r,r,m,f,y,y,rf,r,y,<,y,y")
++				"=f,r,f,f,f,m, r,r,m,f,y,y,r,y,<,y,y")
+ 	(match_operand:SF 1 "general_movsrc_operand"
+-				" f,r,G,H,FQ,m,f,FQ,m,r,y,f,>,fr,y,r,y,>,y"))
+-   (use (reg:SI FPSCR_MODES_REG))
+-   (clobber (match_scratch:SF 2 "=r,r,X,X,&z,r,r, X,r,r,r,r,r, y,r,r,r,r,r"))
+-   (const_int 0)]
+-  "TARGET_SH2E
++				" f,r,G,H,m,f,FQ,m,r,y,f,>,y,r,y,>,y"))
++   (use (reg:SI FPSCR_MODES_REG))]
++  "TARGET_SH2E && sh_lra_p ()
++   && ! sh_movsf_ie_y_split_p (operands[0], operands[1])
+    && (arith_reg_operand (operands[0], SFmode)
+        || fpul_operand (operands[0], SFmode)
+        || arith_reg_operand (operands[1], SFmode)
+@@ -6157,7 +6280,6 @@
+ 	mov	%1,%0
+ 	fldi0	%0
+ 	fldi1	%0
+-	#
+ 	fmov.s	%1,%0
+ 	fmov.s	%1,%0
+ 	mov.l	%1,%0
+@@ -6166,31 +6288,19 @@
+ 	fsts	fpul,%0
+ 	flds	%1,fpul
+ 	lds.l	%1,%0
+-	#
+ 	sts	%1,%0
+ 	lds	%1,%0
+ 	sts.l	%1,%0
+ 	lds.l	%1,%0
+ 	! move optimized away"
+-  "reload_completed
+-   && sh_movsf_ie_ra_split_p (operands[0], operands[1], operands[2])"
+-  [(const_int 0)]
+-{
+-  if (! rtx_equal_p (operands[0], operands[1]))
+-    {
+-      emit_insn (gen_movsf_ie (operands[2], operands[1]));
+-      emit_insn (gen_movsf_ie (operands[0], operands[2]));
+-    }
+-}
+-  [(set_attr "type" "fmove,move,fmove,fmove,pcfload,fload,fstore,pcload,load,
+-		     store,fmove,fmove,load,*,fpul_gp,gp_fpul,fstore,load,nil")
+-   (set_attr "late_fp_use" "*,*,*,*,*,*,yes,*,*,*,*,*,*,*,yes,*,yes,*,*")
++  [(set_attr "type" "fmove,move,fmove,fmove,fload,fstore,pcload,load,
++		     store,fmove,fmove,load,fpul_gp,gp_fpul,fstore,load,nil")
++   (set_attr "late_fp_use" "*,*,*,*,*,yes,*,*,*,*,*,*,yes,*,yes,*,*")
+    (set_attr_alternative "length"
+      [(const_int 2)
+       (const_int 2)
+       (const_int 2)
+       (const_int 2)
+-      (const_int 4)
+       (if_then_else (match_operand 1 "displacement_mem_operand")
+ 		    (const_int 4) (const_int 2))
+       (if_then_else (match_operand 0 "displacement_mem_operand")
+@@ -6203,7 +6313,6 @@
+       (const_int 2)
+       (const_int 2)
+       (const_int 2)
+-      (const_int 4)
+       (const_int 2)
+       (const_int 2)
+       (const_int 2)
+@@ -6215,7 +6324,6 @@
+       (const_string "none")
+       (const_string "single")
+       (const_string "single")
+-      (const_string "none")
+       (if_then_else (eq_attr "fmovd" "yes")
+ 		    (const_string "single") (const_string "none"))
+       (if_then_else (eq_attr "fmovd" "yes")
+@@ -6230,15 +6338,75 @@
+       (const_string "none")
+       (const_string "none")
+       (const_string "none")
++      (const_string "none")])])
++
++(define_insn_and_split "movsf_ie_rffr"
++  [(set (match_operand:SF 0 "arith_reg_dest" "=f,r,rf")
++	(match_operand:SF 1 "arith_reg_operand" "f,r,fr"))
++   (use (reg:SI FPSCR_MODES_REG))
++   (clobber (match_scratch:SF 2 "=X,X,y"))]
++  "TARGET_SH2E && sh_lra_p ()"
++  "@
++	fmov	%1,%0
++	mov	%1,%0
++	#"
++  "reload_completed
++   && (FP_REGISTER_P (REGNO (operands[0]))
++       != FP_REGISTER_P (REGNO (operands[1])))"
++  [(const_int 0)]
++{
++  emit_insn (gen_movsf_ie_ra (operands[2], operands[1]));
++  emit_insn (gen_movsf_ie_ra (operands[0], operands[2]));
++}
++  [(set_attr "type" "fmove,move,*")
++   (set_attr_alternative "length"
++     [(const_int 2)
++      (const_int 2)
++      (const_int 4)])
++   (set_attr_alternative "fp_mode"
++     [(if_then_else (eq_attr "fmovd" "yes")
++		    (const_string "single") (const_string "none"))
+       (const_string "none")
+       (const_string "none")])])
+ 
++(define_insn "movsf_ie_F_z"
++  [(set (match_operand:SF 0 "fp_arith_reg_operand" "=f")
++	(match_operand:SF 1 "const_double_operand" "F"))
++   (use (reg:SI FPSCR_MODES_REG))
++   (clobber (reg:SI R0_REG))]
++  "TARGET_SH2E && sh_lra_p ()"
++  "#"
++  [(set_attr "type" "pcfload")
++   (set_attr "length" "4")])
++
++(define_insn "movsf_ie_Q_z"
++  [(set (match_operand:SF 0 "fpul_operand" "=y")
++	(match_operand:SF 1 "pc_relative_load_operand" "Q"))
++   (use (reg:SI FPSCR_MODES_REG))
++   (clobber (reg:SI R0_REG))]
++  "TARGET_SH2E && sh_lra_p ()"
++  "#"
++  [(set_attr "type" "pcfload")
++   (set_attr "length" "4")])
++
++(define_insn "movsf_ie_y"
++  [(set (match_operand:SF 0 "arith_reg_dest" "=fr")
++	(match_operand:SF 1 "arith_reg_operand" "rf"))
++   (use (reg:SI FPSCR_MODES_REG))
++   (clobber (reg:SI FPUL_REG))]
++  "TARGET_SH2E && sh_lra_p ()"
++  "#"
++  [(set_attr "type" "*")
++   (set_attr "length" "4")])
++
+ (define_split
+   [(set (match_operand:SF 0 "register_operand" "")
+ 	(match_operand:SF 1 "register_operand" ""))
+    (use (reg:SI FPSCR_MODES_REG))
+    (clobber (reg:SI FPUL_REG))]
+-  "TARGET_SH1"
++  "TARGET_SH1
++   && ! fpul_operand (operands[0], SFmode)
++   && ! fpul_operand (operands[1], SFmode)"
+   [(parallel [(set (reg:SF FPUL_REG) (match_dup 1))
+ 	      (use (reg:SI FPSCR_MODES_REG))
+ 	      (clobber (scratch:SI))])
+@@ -6247,6 +6415,66 @@
+ 	      (clobber (scratch:SI))])]
+   "")
+ 
++;; The "*movsf_ie_store_mem_index" pattern must come before the
++;; "movsf_ie_store_mem_index" pattern.  Matching order is important because
++;; the "hard_reg_r0" operand will match in both, but we want to prioritize
++;; the former.
++(define_insn "*movsf_ie_store_mem_index"
++  [(set (mem:SF (plus:SI (match_operand:SI 0 "arith_reg_operand" "%r")
++			 (match_operand:SI 1 "hard_reg_r0" "z")))
++	(match_operand:SF 2 "fp_arith_reg_operand" "f"))
++    (use (reg:SI FPSCR_MODES_REG))]
++  "TARGET_SH2E && sh_lra_p ()"
++  "fmov.s    %2,@(%1,%0)"
++  [(set_attr "type" "store")])
++
++(define_insn_and_split "movsf_ie_store_mem_index"
++  [(set (mem:SF (plus:SI (match_operand:SI 0 "arith_reg_operand" "%r")
++			 (match_operand:SI 1 "arith_reg_operand" "^zr")))
++	(match_operand:SF 2 "fp_arith_reg_operand" "f"))
++   (use (reg:SI FPSCR_MODES_REG))
++   (clobber (reg:SI R0_REG))]
++  "TARGET_SH2E && sh_lra_p ()"
++  "#"
++  "&& 1"
++  [(set (match_dup 3) (match_dup 1))
++   (parallel [(set (mem:SF (plus:SI (match_dup 0) (match_dup 3))) (match_dup 2))
++		(use (reg:SI FPSCR_MODES_REG))])]
++{
++  operands[3] = gen_rtx_REG (SImode, R0_REG);
++}
++  [(set_attr "type" "store")])
++
++;; The "*movsf_ie_load_mem_index" pattern must come before the
++;; "movsf_ie_load_mem_index" pattern.  Matching order is important because
++;; the "hard_reg_r0" operand will match in both, but we want to prioritize
++;; the former.
++(define_insn "*movsf_ie_load_mem_index"
++  [(set (match_operand:SF 0 "fp_arith_reg_operand" "=f")
++	(mem:SF (plus:SI (match_operand:SI 1 "arith_reg_operand" "%r")
++			 (match_operand:SI 2 "hard_reg_r0" "z"))))
++   (use (reg:SI FPSCR_MODES_REG))]
++  "TARGET_SH2E && sh_lra_p ()"
++  "fmov.s    @(%2,%1),%0"
++  [(set_attr "type" "load")])
++
++(define_insn_and_split "movsf_ie_load_mem_index"
++  [(set (match_operand:SF 0 "fp_arith_reg_operand" "=f")
++	(mem:SF (plus:SI (match_operand:SI 1 "arith_reg_operand" "%r")
++			 (match_operand:SI 2 "arith_reg_operand" "^zr"))))
++   (use (reg:SI FPSCR_MODES_REG))
++   (clobber (reg:SI R0_REG))]
++  "TARGET_SH2E && sh_lra_p ()"
++  "#"
++  "&& 1"
++  [(set (match_dup 3) (match_dup 2))
++   (parallel [(set (match_dup 0) (mem:SF (plus:SI (match_dup 1) (match_dup 3))))
++		(use (reg:SI FPSCR_MODES_REG))])]
++{
++  operands[3] = gen_rtx_REG (SImode, R0_REG);
++}
++  [(set_attr "type" "load")])
++
+ (define_expand "movsf"
+   [(set (match_operand:SF 0 "general_movdst_operand" "")
+         (match_operand:SF 1 "general_movsrc_operand" ""))]
+@@ -6255,11 +6483,62 @@
+   prepare_move_operands (operands, SFmode);
+   if (TARGET_SH2E)
+     {
+-      if (lra_in_progress)
++      if (sh_lra_p ())
+ 	{
+ 	  if (GET_CODE (operands[0]) == SCRATCH)
+ 	    DONE;
+-	  emit_insn (gen_movsf_ie_ra (operands[0], operands[1]));
++	  if (! lra_in_progress && ! reload_completed
++	      && fp_arith_reg_operand (operands[1], SFmode)
++	      && satisfies_constraint_Sid (operands[0]))
++	    {
++	      rtx adr = XEXP (operands[0], 0);
++	      rtx base = XEXP (adr, 0);
++	      rtx idx = XEXP (adr, 1);
++	      emit_insn (gen_movsf_ie_store_mem_index (base, idx, operands[1]));
++	      DONE;
++	    }
++	  if (! lra_in_progress && ! reload_completed
++	      && fp_arith_reg_operand (operands[0], SFmode)
++	      && satisfies_constraint_Sid (operands[1]))
++	    {
++	      rtx adr = XEXP (operands[1], 0);
++	      rtx base = XEXP (adr, 0);
++	      rtx idx = XEXP (adr, 1);
++	      emit_insn (gen_movsf_ie_load_mem_index (operands[0], base, idx));
++	      DONE;
++	    }
++	  /* reg from/to multiword subreg may be splitted to several reg from/to
++	     subreg of SImode by subreg1 pass.  This confuses our splitted
++	     movsf logic for LRA and will end up in bad code or ICE.  Use a special
++	     pattern so that LRA can optimize this case.  */
++	  if (! lra_in_progress && ! reload_completed
++	      && sh_movsf_ie_subreg_multiword_p (operands[0], operands[1]))
++	    {
++	      emit_insn (gen_movsf_ie_rffr (operands[0], operands[1]));
++	      DONE;
++	    }
++	  if (GET_CODE (operands[1]) == CONST_DOUBLE
++	      &&  ! satisfies_constraint_G (operands[1])
++	      &&  ! satisfies_constraint_H (operands[1])
++	      && REG_P (operands[0]))
++	    {
++	      if (lra_in_progress)
++	         emit_insn (gen_movsf_ie (operands[0], operands[1]));
++              else
++                 emit_insn (gen_movsf_ie_F_z (operands[0], operands[1]));
++	    }
++	  else if (REG_P (operands[0]) && REGNO (operands[0]) == FPUL_REG
++		   && satisfies_constraint_Q (operands[1]))
++	    emit_insn (gen_movsf_ie_Q_z (operands[0], operands[1]));
++	  else if (sh_movsf_ie_y_split_p (operands[0], operands[1]))
++	    {
++	      if (lra_in_progress)
++		emit_insn (gen_movsf_ie (operands[0], operands[1]));
++	      else
++		emit_insn (gen_movsf_ie_y (operands[0], operands[1]));
++	    }
++	  else
++	    emit_insn (gen_movsf_ie_ra (operands[0], operands[1]));
+ 	  DONE;
+ 	}
+ 
+@@ -8951,17 +9230,20 @@
+    (set_attr "needs_delay_slot" "yes")])
+ 
+ (define_insn "block_lump_real"
+-  [(parallel [(set (mem:BLK (reg:SI R4_REG))
+-		   (mem:BLK (reg:SI R5_REG)))
+-	      (use (match_operand:SI 0 "arith_reg_operand" "r,r"))
+-	      (use (match_operand 1 "" "Z,Ccl"))
+-	      (use (reg:SI R6_REG))
+-	      (clobber (reg:SI PR_REG))
+-	      (clobber (reg:SI T_REG))
+-	      (clobber (reg:SI R4_REG))
+-	      (clobber (reg:SI R5_REG))
+-	      (clobber (reg:SI R6_REG))
+-	      (clobber (reg:SI R0_REG))])]
++  [(set (mem:BLK (match_operand:SI 2 "hard_reg_r4" "=r,r"))
++	(mem:BLK (match_operand:SI 3 "hard_reg_r5" "=r,r")))
++   (use (match_operand:SI 0 "arith_reg_operand" "r,r"))
++   (use (match_operand 1 "" "Z,Ccl"))
++   (use (match_operand:SI 4 "hard_reg_r6" "=r,r"))
++   (use (reg:SI R4_REG))
++   (use (reg:SI R5_REG))
++   (use (reg:SI R6_REG))
++   (clobber (match_dup 2))
++   (clobber (match_dup 3))
++   (clobber (match_dup 4))
++   (clobber (reg:SI PR_REG))
++   (clobber (reg:SI T_REG))
++   (clobber (reg:SI R0_REG))]
+   "TARGET_SH1 && ! TARGET_HARD_SH4"
+   "@
+ 	jsr	@%0%#
+@@ -8986,20 +9268,23 @@
+    (set_attr "needs_delay_slot" "yes")])
+ 
+ (define_insn "block_lump_real_i4"
+-  [(parallel [(set (mem:BLK (reg:SI R4_REG))
+-		   (mem:BLK (reg:SI R5_REG)))
+-	      (use (match_operand:SI 0 "arith_reg_operand" "r,r"))
+-	      (use (match_operand 1 "" "Z,Ccl"))
+-	      (use (reg:SI R6_REG))
+-	      (clobber (reg:SI PR_REG))
+-	      (clobber (reg:SI T_REG))
+-	      (clobber (reg:SI R4_REG))
+-	      (clobber (reg:SI R5_REG))
+-	      (clobber (reg:SI R6_REG))
+-	      (clobber (reg:SI R0_REG))
+-	      (clobber (reg:SI R1_REG))
+-	      (clobber (reg:SI R2_REG))
+-	      (clobber (reg:SI R3_REG))])]
++  [(set (mem:BLK (match_operand:SI 2 "hard_reg_r4" "=r,r"))
++	(mem:BLK (match_operand:SI 3 "hard_reg_r5" "=r,r")))
++   (use (match_operand:SI 0 "arith_reg_operand" "r,r"))
++   (use (match_operand 1 "" "Z,Ccl"))
++   (use (match_operand:SI 4 "hard_reg_r6" "=r,r"))
++   (use (reg:SI R4_REG))
++   (use (reg:SI R5_REG))
++   (use (reg:SI R6_REG))
++   (clobber (match_dup 2))
++   (clobber (match_dup 3))
++   (clobber (match_dup 4))
++   (clobber (reg:SI PR_REG))
++   (clobber (reg:SI T_REG))
++   (clobber (reg:SI R0_REG))
++   (clobber (reg:SI R1_REG))
++   (clobber (reg:SI R2_REG))
++   (clobber (reg:SI R3_REG))]
+   "TARGET_HARD_SH4"
+   "@
+ 	jsr	@%0%#
+diff --git a/src/gcc/config/sh/sh.opt b/src/gcc/config/sh/sh.opt
+index beaf830037b..ce37746428e 100644
+--- a/src/gcc/config/sh/sh.opt
++++ b/src/gcc/config/sh/sh.opt
+@@ -299,5 +299,5 @@ Target Var(TARGET_FSRRA)
+ Enable the use of the fsrra instruction.
+ 
+ mlra
+-Target Var(sh_lra_flag) Init(0) Save
++Target Var(sh_lra_flag) Init(1) Save
+ Use LRA instead of reload (transitional).
+diff --git a/src/gcc/config/sh/sync.md b/src/gcc/config/sh/sync.md
+index e56c3e0becc..71b2360bceb 100644
+--- a/src/gcc/config/sh/sync.md
++++ b/src/gcc/config/sh/sync.md
+@@ -217,7 +217,9 @@
+ 	    (and (match_test "mode == SImode")
+ 		 (and (match_test "!TARGET_ATOMIC_HARD_LLCS")
+ 		      (match_test "!TARGET_SH4A || TARGET_ATOMIC_STRICT"))
+-		 (match_operand 0 "short_displacement_mem_operand")))))
++		 (match_operand 0 "short_displacement_mem_operand")))
++       (ior (match_test "!TARGET_ATOMIC_HARD_LLCS")
++	    (not (match_operand 0 "gbr_address_mem")))))
+ 
+ (define_expand "atomic_compare_and_swap<mode>"
+   [(match_operand:SI 0 "arith_reg_dest")		;; bool success output
+@@ -715,7 +717,9 @@
+ 				   && TARGET_SH4A && !TARGET_ATOMIC_STRICT
+ 				   && mode != SImode"))
+ 		 (ior (match_operand 0 "short_displacement_mem_operand")
+-		      (match_operand 0 "gbr_address_mem"))))))
++		      (match_operand 0 "gbr_address_mem"))))
++       (ior (match_test "!TARGET_ATOMIC_HARD_LLCS")
++            (not (match_operand 0 "gbr_address_mem")))))
+ 
+ (define_expand "atomic_fetch_<fetchop_name><mode>"
+   [(set (match_operand:QIHISI 0 "arith_reg_dest")
+diff --git a/src/gcc/lra-constraints.cc b/src/gcc/lra-constraints.cc
+index 7dbc7fe1e00..832db82426f 100644
+--- a/src/gcc/lra-constraints.cc
++++ b/src/gcc/lra-constraints.cc
+@@ -552,7 +552,11 @@ get_equiv (rtx x)
+       return res;
+     }
+   if ((res = ira_reg_equiv[regno].constant) != NULL_RTX)
+-    return res;
++    {
++      if (targetm.cannot_substitute_const_equiv_p (res))
++	return x;
++      return res;
++    }
+   if ((res = ira_reg_equiv[regno].invariant) != NULL_RTX)
+     return res;
+   gcc_unreachable ();
+@@ -1223,7 +1227,9 @@ match_reload (signed char out, signed char *ins, signed char *outs,
+     return;
+   /* See a comment for the input operand above.  */
+   narrow_reload_pseudo_class (out_rtx, goal_class);
+-  if (find_reg_note (curr_insn, REG_UNUSED, out_rtx) == NULL_RTX)
++  if (find_reg_note (curr_insn, REG_UNUSED, out_rtx) == NULL_RTX
++      && !ira_former_scratch_p (REGNO (SUBREG_P (out_rtx)
++				       ? SUBREG_REG (out_rtx) : out_rtx)))
+     {
+       reg = SUBREG_P (out_rtx) ? SUBREG_REG (out_rtx) : out_rtx;
+       start_sequence ();
+@@ -2972,7 +2978,8 @@ process_alt_operands (int only_alternative)
+ 		 objects with a REG_UNUSED note.  */
+ 	      if ((curr_static_id->operand[nop].type != OP_IN
+ 		   && no_output_reloads_p
+-		   && ! find_reg_note (curr_insn, REG_UNUSED, op))
++		   && ! find_reg_note (curr_insn, REG_UNUSED, op)
++		   && ! ira_former_scratch_p (REGNO (operand_reg[nop])))
+ 		  || (curr_static_id->operand[nop].type != OP_OUT
+ 		      && no_input_reloads_p && ! const_to_mem)
+ 		  || (this_alternative_matches >= 0
+@@ -2982,7 +2989,9 @@ process_alt_operands (int only_alternative)
+ 				  [this_alternative_matches].type != OP_IN)
+ 			      && ! find_reg_note (curr_insn, REG_UNUSED,
+ 						  no_subreg_reg_operand
+-						  [this_alternative_matches])))))
++						  [this_alternative_matches])
++			      && ! (ira_former_scratch_p
++				    (REGNO (operand_reg[nop])))))))
+ 		{
+ 		  if (lra_dump_file != NULL)
+ 		    fprintf
+@@ -4820,7 +4829,8 @@ curr_insn_transform (bool check_only_p)
+ 	  if (type != OP_IN
+ 	      && find_reg_note (curr_insn, REG_UNUSED, old) == NULL_RTX
+ 	      /* OLD can be an equivalent constant here.  */
+-	      && !CONSTANT_P (old))
++	      && !CONSTANT_P (old)
++	      && !ira_former_scratch_p (REGNO (old)))
+ 	    {
+ 	      start_sequence ();
+ 	      lra_emit_move (type == OP_INOUT ? copy_rtx (old) : old, new_reg);
+diff --git a/src/gcc/target.def b/src/gcc/target.def
+index 6c7cdc8126b..f69f1db7532 100644
+--- a/src/gcc/target.def
++++ b/src/gcc/target.def
+@@ -6167,9 +6167,24 @@ DEFHOOK
+ substitute safely pseudos with equivalent memory values during\n\
+ register allocation.\n\
+ The default version of this target hook returns @code{false}.\n\
+-On most machines, this default should be used.  For generally\n\
+-machines with non orthogonal register usage for addressing, such\n\
+-as SH, this hook can be used to avoid excessive spilling.",
++On most machines, this default should be used.  For machines with\n\
++non-orthogonal register usage for addressing, such as SH,\n\
++this hook can be used to avoid excessive spilling.",
++ bool, (rtx subst),
++ hook_bool_rtx_false)
++
++/* This target hook allows the backend to avoid unsafe substitution
++   during register allocation.  */
++DEFHOOK
++(cannot_substitute_const_equiv_p,
++ "A target hook which returns @code{true} if @var{subst} can't\n\
++substitute safely pseudos with equivalent constant values during\n\
++register allocation.\n\
++The default version of this target hook returns @code{false}.\n\
++On most machines, this default should be used.  For machines with\n\
++special constant load instructions that have additional constraints\n\
++or being dependent on mode-switching, such as SH, this hook can be\n\
++used to avoid unsafe substitution.",
+  bool, (rtx subst),
+  hook_bool_rtx_false)
+ 
+diff --git a/src/gcc/testsuite/g++.target/sh/sh.exp b/src/gcc/testsuite/g++.target/sh/sh.exp
+new file mode 100644
+index 00000000000..45c5b373857
+--- /dev/null
++++ b/src/gcc/testsuite/g++.target/sh/sh.exp
+@@ -0,0 +1,297 @@
++# Copyright (C) 2024 Free Software Foundation, Inc.
++
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 3 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with GCC; see the file COPYING3.  If not see
++# <http://www.gnu.org/licenses/>.
++
++# GCC testsuite that uses the `dg.exp' driver.
++
++# Exit immediately if this isn't an SH target.
++if ![istarget sh*-*-*] then {
++  return
++}
++
++# Load support procs.
++load_lib g++-dg.exp
++
++# Return 1 if target is SH2A
++proc check_effective_target_sh2a { } {
++    return [check_no_compiler_messages sh2a object {
++	     #ifndef __SH2A__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if target is SH1
++proc check_effective_target_sh1 { } {
++    return [check_no_compiler_messages sh1 object {
++	     #ifndef __SH1__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if target is SH4A
++proc check_effective_target_sh4a { } {
++    return [check_no_compiler_messages sh4a object {
++	     #ifndef __SH4A__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if target is big endian
++proc check_effective_target_big_endian { } {
++    return [check_no_compiler_messages big_endian object {
++	     #if __BYTE_ORDER__ != __ORDER_BIG_ENDIAN__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if target is little endian
++proc check_effective_target_little_endian { } {
++    return [check_no_compiler_messages little_endian object {
++	     #if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target has any FPU (single or double precision)
++proc check_effective_target_any_fpu { } {
++    return [check_no_compiler_messages any_fpu object {
++	     #ifndef __SH_FPU_ANY__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target has a double precision FPU which is allowed to be
++# used by the compiler as such.
++proc check_effective_target_double_fpu { } {
++    return [check_no_compiler_messages double_fpu object {
++	     #ifndef __SH_FPU_DOUBLE__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target has a double precision FPU but it is only being used
++# in single precision mode by the compiler
++proc check_effective_target_use_single_only_fpu { } {
++    return [check_no_compiler_messages use_single_only_fpu object {
++	     #if !(defined (__SH2A_SINGLE_ONLY__) \
++		   || defined (__SH4_SINGLE_ONLY__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target has an FPU and the default mode is single
++proc check_effective_target_default_single_fpu { } {
++    return [check_no_compiler_messages default_single_fpu object {
++	     #if !(defined (__SH2E__) || defined (__SH3E__) \
++		   || defined (__SH2A_SINGLE__) \
++		   || defined (__SH2A_SINGLE_ONLY__) \
++		   || defined (__SH4_SINGLE__) \
++		   || defined (__SH4_SINGLE_ONLY__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target has no FPU
++proc check_effective_target_no_fpu { } {
++    return [check_no_compiler_messages no_fpu object {
++	     #ifdef __SH_FPU_ANY__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++
++# Return 1 if the target has XF regs
++proc check_effective_target_has_xf_regs { } {
++    return [check_no_compiler_messages has_xf_regs object {
++	     #if !(defined (__SH_FPU_ANY__) \
++		   && (defined (__SH4__) \
++		       || defined (__SH4_SINGLE__) \
++		       || defined (__SH4_SINGLE_ONLY__) \
++		       || defined (__SH4A__)))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++
++# Return 1 if the target can do the fsca insn
++proc check_effective_target_has_fsca { } {
++    return [check_no_compiler_messages has_fsca object {
++	     #if !(defined (__SH_FPU_ANY__) \
++		   && (defined (__SH4__) \
++		       || defined (__SH4_SINGLE__) \
++		       || defined (__SH4_SINGLE_ONLY__) \
++		       || defined (__SH4A__)))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target can do the fsrra insn
++proc check_effective_target_has_fsrra { } {
++    return [check_no_compiler_messages has_fsrra object {
++	     #if !(defined (__SH_FPU_ANY__) \
++		   && (defined (__SH4__) \
++		       || defined (__SH4_SINGLE__) \
++		       || defined (__SH4_SINGLE_ONLY__) \
++		       || defined (__SH4A__)))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target can do the fpchg insn
++proc check_effective_target_has_fpchg { } {
++    return [check_no_compiler_messages has_fpchg object {
++	     #if !(defined (__SH4A__) && defined (__SH_FPU_ANY__) \
++		   && !defined (__SH4_SINGLE_ONLY__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target can do dynamic shifts
++proc check_effective_target_has_dyn_shift { } {
++    return [check_no_compiler_messages has_dyn_shift object {
++	     #if !(defined (__SH3__) \
++		   || defined (__SH3E__) \
++		   || defined (__SH2A__) \
++		   || defined (__SH4__) \
++		   || defined (__SH4_NOFPU__) \
++		   || defined (__SH4_SINGLE__) \
++		   || defined (__SH4_SINGLE_ONLY__) \
++		   || defined (__SH4A__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the mfmovd option is enabled
++proc check_effective_target_fmovd_enabled { } {
++    return [check_no_compiler_messages fmovd_enabled object {
++	     #ifndef __FMOVD_ENABLED__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target supports privileged mode
++proc check_effective_target_has_privileged { } {
++    return [check_no_compiler_messages has_privileged object {
++	     #if !(defined (__SH3__) \
++		   || defined (__SH3E__) \
++		   || defined (__SH4__) \
++		   || defined (__SH4_NOFPU__) \
++		   || defined (__SH4_SINGLE__) \
++		   || defined (__SH4_SINGLE_ONLY__) \
++		   || defined (__SH4A__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target supports the prefetch insn
++proc check_effective_target_has_pref { } {
++    return [check_no_compiler_messages has_pref object {
++	     #if !(defined (__SH3__) \
++		   || defined (__SH3E__) \
++		   || defined (__SH4__) \
++		   || defined (__SH4_NOFPU__) \
++		   || defined (__SH4_SINGLE__) \
++		   || defined (__SH4_SINGLE_ONLY__) \
++		   || defined (__SH4A__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if target does banked r0..r7 regs type of ISRs
++proc check_effective_target_banked_r0r7_isr { } {
++    return [check_no_compiler_messages banked_r0r7_isr object {
++	     #if !(defined (__SH3__) || defined (__SH3E__) \
++		   || defined (__SH4__) \
++		   || defined (__SH4_SINGLE__) \
++		   || defined (__SH4_SINGLE_ONLY__) \
++		   || defined (__SH4_NOFPU__) \
++		   || defined (__SH4A__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if target does stack only type of ISRs
++proc check_effective_target_stack_save_isr { } {
++    return [check_no_compiler_messages stack_save_isr object {
++	     #if !(defined (__SH1__) \
++		   || defined (__SH2__) \
++		   || defined (__SH2E__) \
++		   || defined (__SH2A__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if target supports atomic-model=soft-gusa
++proc check_effective_target_atomic_model_soft_gusa_available { } {
++    return [check_no_compiler_messages atomic_model_soft_gusa_available object {
++	     int x = 0;
++    } "-matomic-model=soft-gusa"]
++}
++
++# Return 1 if target supports atomic-model=soft-tcb
++proc check_effective_target_atomic_model_soft_tcb_available { } {
++    return [check_no_compiler_messages atomic_model_soft_tcb_available object {
++	     int x = 0;
++    } "-matomic-model=soft-tcb,gbr-offset=0"]
++}
++
++# Return 1 if target supports atomic-model=soft-imask
++proc check_effective_target_atomic_model_soft_imask_available { } {
++    return [check_no_compiler_messages atomic_model_soft_imask_available object {
++	     int x = 0;
++    } "-matomic-model=soft-imask -mno-usermode"]
++}
++
++# Return 1 if target supports atomic-model=hard-llcs
++proc check_effective_target_atomic_model_hard_llcs_available { } {
++    return [check_no_compiler_messages atomic_model_hard_llcs_available object {
++	     int x = 0;
++    } "-matomic-model=hard-llcs"]
++}
++
++# If a testcase doesn't have special options, use these.
++global DEFAULT_CXXFLAGS
++if ![info exists DEFAULT_CXXFLAGS] then {
++    set DEFAULT_CXXFLAGS " -pedantic-errors"
++}
++
++# Initialize `dg'.
++dg-init
++
++# Main loop.
++dg-runtest [lsort [glob -nocomplain $srcdir/$subdir/*.C]] "" $DEFAULT_CXXFLAGS
++
++# All done.
++dg-finish
+diff --git a/src/gcc/testsuite/g++.target/sh/torture/pr55212-c311.C b/src/gcc/testsuite/g++.target/sh/torture/pr55212-c311.C
+new file mode 100644
+index 00000000000..cc31dbcc443
+--- /dev/null
++++ b/src/gcc/testsuite/g++.target/sh/torture/pr55212-c311.C
+@@ -0,0 +1,73 @@
++/* { dg-additional-options "-mlra -fpic" }  */
++/* { dg-do compile }  */
++
++
++typedef signed int int32_t;
++typedef signed long long int int64_t;
++static constexpr int32_t SK_MaxS32 = 214748364;;
++static constexpr int32_t SK_MinS32 = -SK_MaxS32;
++
++extern double fabs (double __x) noexcept (true) __attribute__ ((__const__));
++
++namespace std __attribute__ ((__visibility__ ("default")))
++{
++using ::fabs;
++
++template<typename _Tp> [[__nodiscard__]] constexpr inline const _Tp& min(const _Tp& __a, const _Tp& __b)
++{
++   if (__b < __a) return __b;
++   return __a;
++}
++
++template<typename _Tp> [[__nodiscard__]] constexpr inline const _Tp& max(const _Tp& __a, const _Tp& __b)
++{
++  return __a;
++}
++
++}
++
++
++static constexpr int32_t Sk64_pin_to_s32(int64_t x)
++{
++  return x < SK_MinS32 ? SK_MinS32 : (x > SK_MaxS32 ? SK_MaxS32 : (int32_t)x);
++}
++
++static constexpr int32_t Sk32_sat_sub(int32_t a, int32_t b)
++{
++  return Sk64_pin_to_s32((int64_t)a - (int64_t)b);
++};
++
++struct SkPoint
++{
++  float fX;
++  float fY;
++};
++
++typedef float SkScalar;
++static inline bool SkScalarNearlyEqual(SkScalar x, SkScalar y, SkScalar tolerance = (1.0f / (1 << 12)))
++{
++  return std::fabs(x-y) <= tolerance;
++}
++
++class SkCubicMap
++{
++public:
++  SkCubicMap(SkPoint p1, SkPoint p2);
++private:
++  enum Type
++  {
++    kLine_Type, kCubeRoot_Type, kSolver_Type,
++  };
++
++  Type fType;
++};
++
++SkCubicMap::SkCubicMap(SkPoint p1, SkPoint p2)
++{
++  p1.fX = std::min(std::max(p1.fX, 0.0f), 1.0f);
++  p2.fX = std::min(std::max(p2.fX, 0.0f), 1.0f);
++  if (SkScalarNearlyEqual(p1.fX, p1.fY) && SkScalarNearlyEqual(p2.fX, p2.fY))
++  {
++    fType = kLine_Type;
++  }
++}
+diff --git a/src/gcc/testsuite/g++.target/sh/torture/pr55212-c333.C b/src/gcc/testsuite/g++.target/sh/torture/pr55212-c333.C
+new file mode 100644
+index 00000000000..afab629cdf2
+--- /dev/null
++++ b/src/gcc/testsuite/g++.target/sh/torture/pr55212-c333.C
+@@ -0,0 +1,259 @@
++/* { dg-additional-options "-std=c++20 -mlra -fpic -w " }  */
++/* { dg-do compile }  */
++
++typedef unsigned int size_t;
++
++extern "C++"
++{
++
++namespace std __attribute__ ((__visibility__ ("default")))
++{
++
++template<typename _Tp, _Tp __v> struct integral_constant
++{
++  static constexpr _Tp value = __v;
++  using value_type = _Tp;
++  constexpr operator value_type() const noexcept { return value; }
++
++  constexpr value_type operator()() const noexcept { }
++ };
++
++template<bool __v> using __bool_constant = integral_constant<bool, __v>;
++using true_type = __bool_constant<true>;
++using false_type = __bool_constant<false>;
++
++template<bool, typename _Tp = void> struct enable_if { };
++
++template<typename _Tp> struct enable_if<true, _Tp> {  using type = _Tp; };
++
++template<bool _Cond, typename _Tp = void> using __enable_if_t = typename enable_if<_Cond, _Tp>::type;
++template<bool> struct __conditional {  template<typename _Tp, typename> using type = _Tp;  };
++template<bool _Cond, typename _If, typename _Else> using __conditional_t = typename __conditional<_Cond>::template type<_If, _Else>;
++template <typename _Type> struct __type_identity {  };
++
++namespace __detail
++{
++template<typename _Tp, typename...> using __first_t = _Tp;
++template<typename... _Bn> auto __and_fn(int) -> __first_t<true_type, __enable_if_t<bool(_Bn::value)>...>;
++}
++
++template<typename... _Bn> struct __and_ : decltype(__detail::__and_fn<_Bn...>(0)) { };
++template<typename _Pp> struct __not_ : __bool_constant<!bool(_Pp::value)> { };
++
++template <typename _Tp, size_t = sizeof(_Tp)> constexpr true_type __is_complete_or_unbounded(__type_identity<_Tp>) {  return { }; }
++template<typename _Tp> struct is_pointer : public __bool_constant<__is_pointer(_Tp)> { };
++template<typename _Tp> struct is_empty : public __bool_constant<__is_empty(_Tp)> { };
++template<typename _Tp, typename... _Args> using __is_constructible_impl = __bool_constant<__is_constructible(_Tp, _Args...)>;
++
++template<typename _Tp> struct is_default_constructible : public __is_constructible_impl<_Tp> {  };
++template<typename _Tp> using __add_lval_ref_t = __add_lvalue_reference(_Tp);
++template<typename _Tp> using __add_rval_ref_t = __add_rvalue_reference(_Tp);
++template<typename _Tp> struct is_move_constructible : public __is_constructible_impl<_Tp, __add_rval_ref_t<_Tp>>
++{
++ static_assert(std::__is_complete_or_unbounded(__type_identity<_Tp>{ }
++), "template argument must be a complete class or an unbounded array");
++};
++
++template<typename _Tp, typename _Up> using __is_assignable_impl = __bool_constant<__is_assignable(_Tp, _Up)>;
++template<typename _Tp> struct is_move_assignable : public __is_assignable_impl<__add_lval_ref_t<_Tp>, __add_rval_ref_t<_Tp>>
++{
++  static_assert(std::__is_complete_or_unbounded(__type_identity<_Tp> {}
++), "template argument must be a complete class or an unbounded array");
++
++};
++
++template<size_t __i, typename _Tp> struct tuple_element;
++template<size_t __i, typename _Tp> using __tuple_element_t = typename tuple_element<__i, _Tp>::type;
++template<size_t _Np, typename... _Types> struct _Nth_type
++{
++  using type = __type_pack_element<_Np, _Types...>;
++};
++
++template<typename...> class tuple;
++template<size_t __i, typename... _Elements> constexpr const __tuple_element_t<__i, tuple<_Elements...>>& get(const tuple<_Elements...>& __t) noexcept;
++}
++}
++
++inline constexpr float SK_FloatSqrt2 = 1.41421356f;
++
++struct SkPoint
++{
++  float fY;
++};
++
++extern void sk_free(void*);
++enum
++{
++ SK_MALLOC_ZERO_INITIALIZE = 1 << 0, SK_MALLOC_THROW = 1 << 1,
++};
++
++extern void* sk_malloc_flags(size_t size, unsigned flags);
++
++static inline void* sk_calloc_throw(size_t size)
++{
++  return sk_malloc_flags(size, SK_MALLOC_THROW | SK_MALLOC_ZERO_INITIALIZE);
++}
++
++typedef struct
++{
++   union
++   {
++   } __value;
++
++} __mbstate_t;
++
++namespace std __attribute__ ((__visibility__ ("default")))
++{
++template<typename _Tp> struct __is_empty_non_tuple : is_empty<_Tp> { };
++
++template<typename _Tp> using __empty_not_final = __conditional_t<__is_final(_Tp), false_type, __is_empty_non_tuple<_Tp>>;
++template<size_t _Idx, typename _Head, bool = __empty_not_final<_Head>::value> struct _Head_base;
++template<size_t _Idx, typename _Head> struct _Head_base<_Idx, _Head, false> { };
++template<size_t _Idx, typename... _Elements> struct _Tuple_impl;
++template<size_t _Idx, typename _Head, typename... _Tail> struct _Tuple_impl<_Idx, _Head, _Tail...> : public _Tuple_impl<_Idx + 1, _Tail...>, private _Head_base<_Idx, _Head> { };
++template<size_t _Idx, typename _Head> struct _Tuple_impl<_Idx, _Head> : private _Head_base<_Idx, _Head> { };
++template<typename... _Elements> class tuple : public _Tuple_impl<0, _Elements...> { };
++template<size_t __i, typename... _Types> struct tuple_element<__i, tuple<_Types...>>
++{
++  using type = typename _Nth_type<__i, _Types...>::type;
++};
++
++template<typename _Tp> struct default_delete
++{
++};
++
++template <typename _Tp, typename _Dp> class __uniq_ptr_impl
++{
++  template <typename _Up, typename _Ep, typename = void> struct _Ptr {  using type = _Up*;  };
++
++public:
++   using _DeleterConstraint = enable_if< __and_<__not_<is_pointer<_Dp>>, is_default_constructible<_Dp>>::value>;
++   using pointer = typename _Ptr<_Tp, _Dp>::type;
++   constexpr __uniq_ptr_impl(pointer __p) : _M_t() { }
++   constexpr pointer _M_ptr() const noexcept { return std::get<0>(_M_t); }
++private:
++  tuple<pointer, _Dp> _M_t;
++};
++
++template <typename _Tp, typename _Dp, bool = is_move_constructible<_Dp>::value, bool = is_move_assignable<_Dp>::value> struct __uniq_ptr_data : __uniq_ptr_impl<_Tp, _Dp>{ };
++
++template <typename _Tp, typename _Dp = default_delete<_Tp>> class unique_ptr
++{
++  template <typename _Up> using _DeleterConstraint = typename __uniq_ptr_impl<_Tp, _Up>::_DeleterConstraint::type;
++  __uniq_ptr_data<_Tp, _Dp> _M_t;
++public:
++  using pointer = typename __uniq_ptr_impl<_Tp, _Dp>::pointer;
++  template<typename _Del = _Dp, typename = _DeleterConstraint<_Del>> constexpr explicit unique_ptr(pointer __p) noexcept : _M_t(__p) { }
++
++   constexpr pointer get() const noexcept { return _M_t._M_ptr(); }
++};
++
++}
++
++template <typename T, T* P> struct SkOverloadedFunctionObject
++{
++};
++
++namespace skia_private
++{
++  using UniqueVoidPtr = std::unique_ptr<void, SkOverloadedFunctionObject<void(void*), sk_free>>;
++}
++
++class SkNoncopyable
++{
++};
++
++template <size_t kSizeRequested> class SkAutoSMalloc : SkNoncopyable
++{
++  public: SkAutoSMalloc() { }
++
++  explicit SkAutoSMalloc(size_t size) { }
++
++  void* get() const { return fPtr; }
++
++  void* fPtr;
++};
++
++         class SkPointPriv {
++       public: enum Side {
++    kLeft_Side = -1, kOn_Side = 0, kRight_Side = 1, };
++       static bool SetLengthFast(SkPoint* pt, float length);
++       };
++         using namespace skia_private;
++         struct DFData {
++       float fAlpha;
++       SkPoint fDistVector;
++       };
++         enum NeighborFlags {
++       kLeft_NeighborFlag = 0x01, kRight_NeighborFlag = 0x02, kTopLeft_NeighborFlag = 0x04, kTop_NeighborFlag = 0x08, kTopRight_NeighborFlag = 0x10, kBottomLeft_NeighborFlag = 0x20, kBottom_NeighborFlag = 0x40, kBottomRight_NeighborFlag = 0x80, kAll_NeighborFlags = 0xff, kNeighborFlagCount = 8 };
++         static void init_glyph_data(DFData* data, unsigned char* edges, const unsigned char* image, int dataWidth, int dataHeight, int imageWidth, int imageHeight, int pad) {
++       for (int j = 0;
++       j < imageHeight;
++       ++j) {
++    for (int i = 0;
++    i < imageWidth;
++    ++i) {
++ if (255 == *image) {
++ }
++ }
++    }
++       }
++
++static void init_distances(DFData* data, unsigned char* edges, int width, int height)
++{
++  DFData* currData = data;
++  DFData* prevData = data - width;
++  DFData* nextData = data + width;
++  for (int j = 0; j < height; ++j)
++  {
++    for (int i = 0;i < width;++i)
++    {
++      if (*edges)
++      {
++        SkPoint currGrad;
++        currGrad.fY = (nextData-1)->fAlpha - (prevData-1)->fAlpha + SK_FloatSqrt2*nextData->fAlpha - SK_FloatSqrt2*prevData->fAlpha + (nextData+1)->fAlpha - (prevData+1)->fAlpha;
++        SkPointPriv::SetLengthFast(&currGrad, 1.0f);
++        currData->fDistVector.fY = 1000.f;
++      }
++     ++currData;
++     ++prevData;
++     ++nextData;
++    }
++  }
++}
++
++static void B1(DFData* curr, int width)
++{
++}
++
++static bool generate_distance_field_from_image(unsigned char* distanceField, const unsigned char* copyPtr, int width, int height)
++{
++  int pad = 4 + 1;
++  int dataWidth = width + 2*pad;
++  int dataHeight = height + 2*pad;
++  UniqueVoidPtr storage(sk_calloc_throw(dataWidth*dataHeight*(sizeof(DFData) + 1)));
++  DFData* dataPtr = (DFData*)storage.get();
++  unsigned char* edgePtr = (unsigned char*)storage.get() + dataWidth*dataHeight*sizeof(DFData);
++  init_distances(dataPtr, edgePtr, dataWidth, dataHeight);
++  unsigned char* currEdge = edgePtr+dataWidth+1;
++  for (int j = 1; j < dataHeight-1; ++j)
++  {
++    for (int i = 1; i < dataWidth-1; ++i)
++    {
++      if (!*currEdge)
++      {
++      }
++    }
++  }
++
++  // return true;
++  // ICE triggered only without return statement
++}
++
++
++bool SkGenerateDistanceFieldFromA8Image(unsigned char* distanceField, const unsigned char* image, int width, int height, size_t rowBytes)
++{
++  SkAutoSMalloc<1024> copyStorage((width+2)*(height+2)*sizeof(char));
++  unsigned char* copyPtr = (unsigned char*) copyStorage.get();
++  return generate_distance_field_from_image(distanceField, copyPtr, width, height);
++}
+diff --git a/src/gcc/testsuite/g++.target/sh/torture/pr55212-c373.C b/src/gcc/testsuite/g++.target/sh/torture/pr55212-c373.C
+new file mode 100644
+index 00000000000..d1f30cb93c4
+--- /dev/null
++++ b/src/gcc/testsuite/g++.target/sh/torture/pr55212-c373.C
+@@ -0,0 +1,612 @@
++/* { dg-additional-options "-std=c++20 -mlra -fpic -w " }  */
++/* { dg-do compile }  */
++
++      namespace std {
++     typedef unsigned int size_t;
++     }
++       namespace std {
++     __attribute__((__always_inline__)) constexpr inline bool __is_constant_evaluated() noexcept {
++   return __builtin_is_constant_evaluated();
++   }
++     }
++      typedef unsigned int size_t;
++       extern "C" {
++     typedef struct {
++   }
++     lldiv_t;
++     extern "C" {
++   typedef unsigned char __uint8_t;
++   typedef unsigned int __uint32_t;
++   typedef union {
++ struct {
++ }
++ __value32;
++ }
++   __atomic_wide_counter;
++   }
++     }
++      extern "C++" {
++     namespace std __attribute__ ((__visibility__ ("default"))) {
++   }
++     }
++       extern "C++" {
++     namespace std __attribute__ ((__visibility__ ("default"))) {
++   template<typename _Tp, _Tp __v> struct integral_constant {
++ static constexpr _Tp value = __v;
++ using value_type = _Tp;
++ constexpr operator value_type() const noexcept {
++ }
++ };
++   template<bool __v> using __bool_constant = integral_constant<bool, __v>;
++   using true_type = __bool_constant<true>;
++   using false_type = __bool_constant<false>;
++   template<bool, typename _Tp = void> struct enable_if {
++ };
++   template<typename _Tp> struct enable_if<true, _Tp> {
++ using type = _Tp;
++ };
++   template<bool> struct __conditional {
++ };
++   template<bool _Cond, typename _If, typename _Else> using __conditional_t = typename __conditional<_Cond>::template type<_If, _Else>;
++   template <typename _Type> struct __type_identity {
++ };
++   namespace __detail {
++ template<typename... _Bn> auto __and_fn(...) -> false_type;
++ }
++   template<typename... _Bn> struct __and_ : decltype(__detail::__and_fn<_Bn...>(0)) {
++ };
++   template<typename> struct remove_cv;
++   template <typename _Tp, size_t = sizeof(_Tp)> constexpr true_type __is_complete_or_unbounded(__type_identity<_Tp>) {
++ return {
++};
++ }
++   template<typename _Tp> struct is_void : public false_type {
++ };
++   template<typename _Tp> struct is_member_object_pointer : public __bool_constant<__is_member_object_pointer(_Tp)> {
++ };
++   template<typename _Tp> struct is_member_function_pointer : public __bool_constant<__is_member_function_pointer(_Tp)> {
++ };
++   template<typename _Tp> struct is_empty : public __bool_constant<__is_empty(_Tp)> {
++ };
++   template<typename _Tp> _Tp __declval(long);
++   template<typename _Tp> auto declval() noexcept -> decltype(__declval<_Tp>(0));
++   template<typename _Tp, typename... _Args> using __is_constructible_impl = __bool_constant<__is_constructible(_Tp, _Args...)>;
++   template<typename _Tp> using __add_lval_ref_t = __add_lvalue_reference(_Tp);
++   template<typename _Tp> struct is_copy_constructible : public __is_constructible_impl<_Tp, __add_lval_ref_t<const _Tp>> {
++ static_assert(std::__is_complete_or_unbounded(__type_identity<_Tp>{
++}
++), "template argument must be a complete class or an unbounded array");
++ };
++   template<typename _Tp> using __add_rval_ref_t = __add_rvalue_reference(_Tp);
++   template<typename _Tp> struct is_move_constructible : public __is_constructible_impl<_Tp, __add_rval_ref_t<_Tp>> {
++ static_assert(std::__is_complete_or_unbounded(__type_identity<_Tp>{
++}
++), "template argument must be a complete class or an unbounded array");
++ };
++   template<typename _Tp, typename _Up> using __is_assignable_impl = __bool_constant<__is_assignable(_Tp, _Up)>;
++   template<typename _Tp> struct is_copy_assignable : public __is_assignable_impl<__add_lval_ref_t<_Tp>, __add_lval_ref_t<const _Tp>> {
++ static_assert(std::__is_complete_or_unbounded(__type_identity<_Tp>{
++}
++), "template argument must be a complete class or an unbounded array");
++ };
++   template<typename _Tp, typename _Up> struct is_same : public __bool_constant<__is_same(_Tp, _Up)> {
++ };
++   template<typename _Tp> struct remove_const {
++ };
++   template<typename _Tp> struct add_const {
++ };
++   template<typename _Tp> struct remove_reference {
++ };
++   template<typename _Tp> using remove_reference_t = typename remove_reference<_Tp>::type;
++   template<typename _Tp> struct add_pointer {
++ };
++   template<typename _Tp> using __remove_cvref_t = typename remove_cv<typename remove_reference<_Tp>::type>::type;
++   template<bool _Cond, typename _Iftrue, typename _Iffalse> struct conditional {
++ };
++   struct __failure_type {
++ };
++   struct __invoke_memfun_ref {
++ };
++   struct __invoke_other {
++ };
++   template<typename _Tp, typename _Up = __remove_cvref_t<_Tp>> struct __inv_unwrap {
++ };
++   template<bool, bool, typename _Functor, typename... _ArgTypes> struct __result_of_impl {
++ };
++   template<typename _Functor, typename... _ArgTypes> struct __invoke_result : public __result_of_impl< is_member_object_pointer< typename remove_reference<_Functor>::type >::value, is_member_function_pointer< typename remove_reference<_Functor>::type >::value, _Functor, _ArgTypes... >::type {
++ };
++   template<typename _Result, typename _Ret, bool = is_void<_Ret>::value, typename = void> struct __is_invocable_impl : false_type {
++ };
++   template<typename _Fn, typename _Tp, typename... _Args> constexpr bool __call_is_nt(__invoke_memfun_ref) {
++ using _Up = typename __inv_unwrap<_Tp>::type;
++ return noexcept((std::declval<_Up>().*std::declval<_Fn>())( std::declval<_Args>()...));
++ }
++   template<typename _Result, typename _Fn, typename... _Args> struct __call_is_nothrow : __bool_constant< std::__call_is_nt<_Fn, _Args...>(typename _Result::__invoke_type{
++}
++  ) > {
++ };
++   template<typename _Ret, typename _Fn, typename... _ArgTypes> struct is_invocable_r : __is_invocable_impl<__invoke_result<_Fn, _ArgTypes...>, _Ret>::type {
++ static_assert(std::__is_complete_or_unbounded(__type_identity<_Fn>{
++}
++), "_Fn must be a complete class or an unbounded array");
++ static_assert((std::__is_complete_or_unbounded( __type_identity<_ArgTypes>{
++}
++) && ...), "each argument type must be a complete class or an unbounded array");
++ static_assert(std::__is_complete_or_unbounded(__type_identity<_Ret>{
++}
++), "_Ret must be a complete class or an unbounded array");
++ };
++   template <typename _Tp> inline constexpr bool is_lvalue_reference_v = false;
++   template <typename _Tp> inline constexpr bool is_enum_v = __is_enum(_Tp);
++   template <typename _Tp> inline constexpr bool is_union_v = __is_union(_Tp);
++   template <typename _Tp> inline constexpr bool is_class_v = __is_class(_Tp);
++   template <typename _Tp> inline constexpr bool is_trivial_v = __is_trivial(_Tp);
++   template <typename _Tp> inline constexpr bool is_standard_layout_v = __is_standard_layout(_Tp);
++   template <typename _Tp, typename... _Args> inline constexpr bool is_constructible_v = __is_constructible(_Tp, _Args...);
++   template <typename _Tp, typename _Up> inline constexpr bool is_same_v = __is_same(_Tp, _Up);
++   template <typename _Base, typename _Derived> inline constexpr bool is_base_of_v = __is_base_of(_Base, _Derived);
++   template <typename _From, typename _To> inline constexpr bool is_convertible_v = __is_convertible(_From, _To);
++   template<typename... _Tp> struct common_reference;
++   template<typename... _Tp> using common_reference_t = typename common_reference<_Tp...>::type;
++   }
++     }
++       namespace std __attribute__ ((__visibility__ ("default"))) {
++     template<typename _Tp> inline constexpr _Tp* __addressof(_Tp& __r) noexcept {
++   }
++     template<typename _Tp> [[__nodiscard__]] constexpr typename std::remove_reference<_Tp>::type&& move(_Tp&& __t) noexcept {
++   }
++     namespace __detail {
++   template<typename _Tp, typename _Up> concept __same_as = std::is_same_v<_Tp, _Up>;
++   }
++     template<typename _Tp, typename _Up> concept same_as = __detail::__same_as<_Tp, _Up> && __detail::__same_as<_Up, _Tp>;
++     template<typename _From, typename _To> concept convertible_to = is_convertible_v<_From, _To> && requires {
++   static_cast<_To>(std::declval<_From>());
++   };
++     template<typename _Tp, typename _Up> concept common_reference_with = same_as<common_reference_t<_Tp, _Up>, common_reference_t<_Up, _Tp>> && convertible_to<_Tp, common_reference_t<_Tp, _Up>> && convertible_to<_Up, common_reference_t<_Tp, _Up>>;
++     namespace __detail {
++   template<typename _Tp> using __cref = const remove_reference_t<_Tp>&;
++   template<typename _Tp> concept __class_or_enum = is_class_v<_Tp> || is_union_v<_Tp> || is_enum_v<_Tp>;
++   template<typename _Tp> constexpr bool __destructible_impl = false;
++   template<typename _Tp> requires requires(_Tp& __t) {
++ {
++ __t.~_Tp() }
++ noexcept;
++ }
++   constexpr bool __destructible_impl<_Tp> = true;
++   template<typename _Tp> constexpr bool __destructible = __destructible_impl<_Tp>;
++   }
++     template<typename _Lhs, typename _Rhs> concept assignable_from = is_lvalue_reference_v<_Lhs> && common_reference_with<__detail::__cref<_Lhs>, __detail::__cref<_Rhs>> && requires(_Lhs __lhs, _Rhs&& __rhs) {
++   {
++ __lhs = static_cast<_Rhs&&>(__rhs) }
++   -> same_as<_Lhs>;
++   };
++     template<typename _Tp> concept destructible = __detail::__destructible<_Tp>;
++     template<typename _Tp, typename... _Args> concept constructible_from = destructible<_Tp> && is_constructible_v<_Tp, _Args...>;
++     template<typename _Tp> concept default_initializable = constructible_from<_Tp> && requires {
++   (void) ::new _Tp;
++   };
++     template<typename _Tp> concept move_constructible = constructible_from<_Tp, _Tp> && convertible_to<_Tp, _Tp>;
++     namespace ranges {
++   namespace __swap {
++ template<typename _Tp, typename _Up> concept __adl_swap = (std::__detail::__class_or_enum<remove_reference_t<_Tp>> || std::__detail::__class_or_enum<remove_reference_t<_Up>>) && requires(_Tp&& __t, _Up&& __u) {
++ swap(static_cast<_Tp&&>(__t), static_cast<_Up&&>(__u));
++ };
++ struct _Swap {
++ private: template<typename _Tp, typename _Up> static constexpr bool _S_noexcept() {
++ if constexpr (__adl_swap<_Tp, _Up>) return noexcept(swap(std::declval<_Tp>(), std::declval<_Up>()));
++ }
++ public: template<typename _Tp, typename _Up> requires __adl_swap<_Tp, _Up> || (same_as<_Tp, _Up> && is_lvalue_reference_v<_Tp> && move_constructible<remove_reference_t<_Tp>> && assignable_from<_Tp, remove_reference_t<_Tp>>) constexpr void operator()(_Tp&& __t, _Up&& __u) const noexcept(_S_noexcept<_Tp, _Up>()) {
++ if constexpr (__adl_swap<_Tp, _Up>) swap(static_cast<_Tp&&>(__t), static_cast<_Up&&>(__u));
++ else {
++ }
++ }
++ template<typename _Tp, typename _Up, size_t _Num> requires requires(const _Swap& __swap, _Tp& __e1, _Up& __e2) {
++ __swap(__e1, __e2);
++ }
++ constexpr void operator()(_Tp (&__e1)[_Num], _Up (&__e2)[_Num]) const noexcept(noexcept(std::declval<const _Swap&>()(*__e1, *__e2))) {
++ for (size_t __n = 0;
++ __n < _Num;
++ ++__n) (*this)(__e1[__n], __e2[__n]);
++ }
++ };
++ }
++   inline namespace _Cpo {
++ inline constexpr __swap::_Swap swap{
++};
++ }
++   }
++     template<typename _Tp> concept swappable = requires(_Tp& __a, _Tp& __b) {
++   ranges::swap(__a, __b);
++   };
++     template<typename _Tp, typename _Up> concept swappable_with = common_reference_with<_Tp, _Up> && requires(_Tp&& __t, _Up&& __u) {
++   ranges::swap(static_cast<_Tp&&>(__t), static_cast<_Tp&&>(__t));
++   };
++     namespace __detail {
++   template<typename _Tp> concept __boolean_testable_impl = convertible_to<_Tp, bool>;
++   template<typename _Tp> concept __boolean_testable = __boolean_testable_impl<_Tp> && requires(_Tp&& __t) {
++ {
++ !static_cast<_Tp&&>(__t) }
++ -> __boolean_testable_impl;
++ };
++   template<typename _Tp, typename _Up> concept __weakly_eq_cmp_with = requires(__detail::__cref<_Tp> __t, __detail::__cref<_Up> __u) {
++ {
++ __t == __u }
++ -> __boolean_testable;
++ {
++ __u == __t }
++ -> __boolean_testable;
++ {
++ __u != __t }
++ -> __boolean_testable;
++ };
++   }
++     namespace __detail {
++   template<typename _Tp, typename _Up> concept __partially_ordered_with = requires(const remove_reference_t<_Tp>& __t, const remove_reference_t<_Up>& __u) {
++ {
++ __t < __u }
++ -> __boolean_testable;
++ {
++ __t <= __u }
++ -> __boolean_testable;
++ {
++ __t >= __u }
++ -> __boolean_testable;
++ {
++ __u < __t }
++ -> __boolean_testable;
++ };
++   }
++     template<typename _Tp> struct __get_first_arg {
++   };
++     template<typename _Ptr, typename = void> struct __ptr_traits_elem : __get_first_arg<_Ptr> {
++   };
++     template<typename _Ptr> requires requires {
++   typename _Ptr::element_type;
++   }
++     struct __ptr_traits_elem<_Ptr, void> {
++   };
++     template<typename _Ptr, typename _Elt, bool = is_void<_Elt>::value> struct __ptr_traits_ptr_to {
++   using pointer = _Ptr;
++   using element_type = _Elt;
++   static pointer pointer_to(element_type& __r) requires requires {
++ {
++ pointer::pointer_to(__r) }
++ -> convertible_to<pointer>;
++ }
++   {
++ }
++   };
++     namespace __detail {
++   template<typename _Tp> using __with_ref = _Tp&;
++   template<typename _Tp> concept __can_reference = requires {
++ typename __with_ref<_Tp>;
++ };
++   template<typename _Tp> concept __dereferenceable = requires(_Tp& __t) {
++ {
++ *__t }
++ -> __can_reference;
++ };
++   }
++     namespace ranges {
++   namespace __imove {
++ template<typename _Tp> concept __adl_imove = (std::__detail::__class_or_enum<remove_reference_t<_Tp>>) && requires(_Tp&& __t) {
++ iter_move(static_cast<_Tp&&>(__t));
++ };
++ struct _IterMove {
++ private: template<typename _Tp> struct __result {
++ };
++ template<typename _Tp> static constexpr bool _S_noexcept() {
++ if constexpr (__adl_imove<_Tp>) return noexcept(iter_move(std::declval<_Tp>()));
++ }
++ public: template<std::__detail::__dereferenceable _Tp> using __type = typename __result<_Tp>::type;
++ template<std::__detail::__dereferenceable _Tp> [[nodiscard]] constexpr __type<_Tp> operator()(_Tp&& __e) const noexcept(_S_noexcept<_Tp>()) {
++ }
++ };
++ }
++   }
++     template<typename> struct incrementable_traits {
++   };
++     namespace __detail {
++   }
++     template<size_t __i, typename _Tp> struct tuple_element;
++     template<size_t __i, typename _Tp> using __tuple_element_t = typename tuple_element<__i, _Tp>::type;
++     template<typename _Tp, typename... _Types> constexpr size_t __find_uniq_type_in_pack() {
++   constexpr size_t __sz = sizeof...(_Types);
++   constexpr bool __found[__sz] = {
++ __is_same(_Tp, _Types) ... };
++   size_t __n = __sz;
++   for (size_t __i = 0;
++   __i < __sz;
++   ++__i) {
++ if (__found[__i]) {
++ if (__n < __sz) return __sz;
++ }
++ }
++   };
++     template<typename _Tp, _Tp... _Idx> struct integer_sequence {
++   };
++     template<typename _Tp, _Tp _Num> using make_integer_sequence = integer_sequence<_Tp, __integer_pack(_Num)...>;
++     template<size_t... _Idx> using index_sequence = integer_sequence<size_t, _Idx...>;
++     template<size_t _Num> using make_index_sequence = make_integer_sequence<size_t, _Num>;
++     template<typename... _Types> using index_sequence_for = make_index_sequence<sizeof...(_Types)>;
++     template<typename _Tp> struct in_place_type_t {
++   };
++     template<typename...> class tuple;
++     template<typename _U1, typename _U2> class __pair_base {
++   };
++     namespace __detail {
++   template<typename _Iterator> struct __move_iter_cat {
++ };
++   }
++     template<typename _Iterator> class move_iterator : public __detail::__move_iter_cat<_Iterator> {
++   };
++     template<typename _IteratorL, typename _IteratorR> [[__nodiscard__]] inline constexpr bool operator<(const move_iterator<_IteratorL>& __x, const move_iterator<_IteratorR>& __y) requires requires {
++   {
++ __x.base() < __y.base() }
++   -> convertible_to<bool>;
++   }
++     {
++   return !(__x < __y);
++   }
++     namespace __ops {
++   template<typename _Compare> struct _Iter_comp_iter {
++ _Compare _M_comp;
++ explicit constexpr _Iter_comp_iter(_Compare __comp) : _M_comp(std::move(__comp)) {
++ }
++ template<typename _Iterator1, typename _Iterator2> constexpr bool operator()(_Iterator1 __it1, _Iterator2 __it2) {
++ return bool(_M_comp(*__it1, *__it2));
++ }
++ };
++   template<typename _Compare> constexpr inline _Iter_comp_iter<_Compare> __iter_comp_iter(_Compare __comp) {
++ }
++   }
++     template<typename _Tp> [[__nodiscard__]] constexpr inline const _Tp& min(const _Tp& __a, const _Tp& __b) {
++   return __a;
++   }
++     template<typename _Tp> [[__nodiscard__]] constexpr inline const _Tp& max(const _Tp& __a, const _Tp& __b) {
++   if (__a < __b) return __b;
++   }
++     template<typename _Iterator, typename _Predicate> constexpr inline _Iterator __find_if(_Iterator __first, _Iterator __last, _Predicate __pred) {
++   }
++     }
++       namespace std __attribute__ ((__visibility__ ("default"))) {
++     struct allocator_arg_t {
++   struct _Sink {
++ void constexpr operator=(const void*) {
++ }
++ }
++   _M_a;
++   };
++     template<typename _Res, typename _Fn, typename... _Args> constexpr _Res __invoke_impl(__invoke_other, _Fn&& __f, _Args&&... __args) {
++   }
++     template<class _E> class initializer_list {
++   typedef size_t size_type;
++   typedef const _E* iterator;
++   private: iterator _M_array;
++   size_type _M_len;
++   };
++     template<typename _Tp> struct __is_empty_non_tuple : is_empty<_Tp> {
++   };
++     template<typename _Tp> using __empty_not_final = __conditional_t<__is_final(_Tp), false_type, __is_empty_non_tuple<_Tp>>;
++     template<size_t _Idx, typename _Head, bool = __empty_not_final<_Head>::value> struct _Head_base;
++     template<size_t _Idx, typename... _Elements> struct _Tuple_impl;
++     template<size_t _Idx, typename _Head, typename... _Tail> struct _Tuple_impl<_Idx, _Head, _Tail...> : public _Tuple_impl<_Idx + 1, _Tail...>, private _Head_base<_Idx, _Head> {
++   };
++     template<size_t __i, typename... _Elements> constexpr __tuple_element_t<__i, tuple<_Elements...>>& get(tuple<_Elements...>& __t) noexcept {
++   }
++     template<typename... _Tps, typename... _Ups> requires (sizeof...(_Tps) == sizeof...(_Ups)) && (requires (const _Tps& __t, const _Ups& __u) {
++   {
++ __t == __u }
++   -> __detail::__boolean_testable;
++   }
++     && ...) constexpr bool operator== [[nodiscard]] (const tuple<_Tps...>& __t, const tuple<_Ups...>& __u) {
++   return [&]<size_t... _Inds>(index_sequence<_Inds...>) {
++ }
++  (index_sequence_for<_Tps...>{
++}
++  );
++   }
++     }
++       typedef struct {
++     union {
++   }
++     __value;
++     }
++       __mbstate_t;
++       namespace std __attribute__ ((__visibility__ ("default"))) {
++     }
++       static inline int __gthread_yield (void) {
++     }
++      namespace std __attribute__ ((__visibility__ ("default"))) {
++     template <typename _Tp, size_t _Nm> [[nodiscard, __gnu__::__always_inline__]] constexpr _Tp* data(_Tp (&__array)[_Nm]) noexcept {
++   };
++     }
++      typedef __uint8_t uint8_t;
++       typedef __uint32_t uint32_t;
++      namespace std {
++     namespace __detail {
++   inline void __thread_yield() noexcept {
++ }
++   inline void __thread_relax() noexcept {
++ }
++   inline constexpr auto __atomic_spin_count = 16;
++   struct __default_spin_policy {
++ bool operator()() const noexcept {
++ }
++ };
++   template<typename _Pred, typename _Spin = __default_spin_policy> bool __atomic_spin(_Pred& __pred, _Spin __spin = _Spin{
++ }
++  ) noexcept {
++ for (auto __i = 0;
++ __i < __atomic_spin_count;
++ ++__i) {
++ }
++ }
++   }
++     struct __numeric_limits_base {
++   };
++     template<typename _Tp> struct numeric_limits : public __numeric_limits_base {
++   static constexpr bool is_signed = true;
++   static constexpr bool is_integer = true;
++   };
++     template<> struct numeric_limits<unsigned int> {
++   static constexpr bool is_signed = false;
++   static constexpr bool is_integer = true;
++   };
++     }
++       namespace WTF {
++     template <typename T> struct IsSmartPtr {
++   };
++     template <typename ExpectedType, typename ArgType, bool isBaseType = std::is_base_of_v<ExpectedType, ArgType>> struct TypeCastTraits {
++   };
++     template<typename T> class TypeHasRefMemberFunction {
++   };
++     }
++       namespace WTF {
++     }
++       namespace std {
++     namespace experimental {
++   };
++     }
++       namespace std __attribute__ ((__visibility__ ("default"))) {
++     template<typename _Tp, std::size_t _Nm> struct array {
++   };
++     }
++      extern "C" {
++     extern float sqrtf (float __x) noexcept (true);
++     extern float floorf (float __x) noexcept (true) __attribute__ ((__const__));
++     namespace std __attribute__ ((__visibility__ ("default"))) {
++   constexpr bool isnan(float __x) {
++ return __builtin_isnan(__x);
++ }
++   }
++     }
++       constexpr float piFloat = static_cast<float>( 3.14159265358979323846 );
++       template<typename TargetType, typename SourceType> typename std::enable_if<!std::is_same<TargetType, SourceType>::value && std::numeric_limits<SourceType>::is_integer && std::numeric_limits<TargetType>::is_integer && std::numeric_limits<TargetType>::is_signed && !std::numeric_limits<SourceType>::is_signed && sizeof(SourceType) >= sizeof(TargetType), TargetType>::type clampTo(SourceType value) {
++     return static_cast<TargetType>(value);
++     }
++       namespace WTF {
++     constexpr uint32_t roundUpToPowerOfTwo(uint32_t v) {
++   return v;
++   };
++     template<bool isPod, typename T> struct VectorTraitsBase;
++     template<typename T> struct VectorTraits : VectorTraitsBase<std::is_standard_layout_v<T> && std::is_trivial_v<T>, T> {
++   };
++     }
++       namespace WTF {
++     class StringHasher {
++   };
++     enum class DestructionThread : uint8_t {
++   Any, Main, MainRunLoop };
++     }
++       namespace WebCore {
++     class IntSize {
++   public: constexpr IntSize() = default;
++   void setWidth(int width) {
++ m_width = width;
++ }
++   void setHeight(int height) {
++ m_height = height;
++ }
++   private: int m_width {
++ 0 };
++   int m_height {
++ 0 };
++   };
++     inline IntSize& operator+=(IntSize& a, const IntSize& b) {
++   }
++     }
++       namespace WebCore {
++     class FloatSize {
++   public: constexpr FloatSize() = default;
++   constexpr float width() const {
++ return m_width;
++ }
++   constexpr float height() const {
++ return m_height;
++ }
++   private: float m_width {
++ 0 };
++   float m_height {
++ 0 };
++   };
++     }
++       namespace WTF {
++     class ThreadSafeRefCountedBase {
++   };
++     template<typename T, DestructionThread destructionThread = DestructionThread::Any> class ThreadSafeRefCountedAndCanMakeThreadSafeWeakPtr {
++   };
++     }
++       using WTF::ThreadSafeRefCountedAndCanMakeThreadSafeWeakPtr;
++       namespace WebCore {
++     class FloatPoint {
++   };
++     inline FloatSize toFloatSize(const FloatPoint& a) {
++   }
++     }
++       namespace WTF {
++     }
++       namespace WebCore {
++     template<typename T, size_t N> struct ColorComponents {
++   template<typename F> constexpr auto map(F&& function) const -> ColorComponents<decltype(function(std::declval<T>())), N>;
++   };
++     template<typename> struct AlphaTraits;
++     inline constexpr ColorComponents<float, 4> resolveColorComponents(const ColorComponents<float, 4>& colorComponents) {
++   return colorComponents.map([] (float component) {
++ return std::isnan(component) ? 0.0f : component;
++ }
++  );
++   };
++     enum class WhitePoint {
++   D50, D65 };
++     template<typename Parent> struct ColorWithAlphaHelper {
++   };
++     template<typename T, typename D, typename ColorType, typename M, typename TF> struct RGBAType : ColorWithAlphaHelper<ColorType> {
++   constexpr RGBAType(T red, T green, T blue, T alpha = AlphaTraits<T>::opaque) : red {
++ red }
++   {
++ }
++   protected: T red;
++   };
++     }
++       namespace WebCore {
++     class RenderingResource : public ThreadSafeRefCountedAndCanMakeThreadSafeWeakPtr<RenderingResource> {
++   };
++     class FilterFunction : public RenderingResource {
++   };
++     class FilterEffect : public FilterFunction {
++   };
++     class AffineTransform {
++   public: constexpr AffineTransform();
++   private: std::array<double, 6> m_transform;
++   };
++     constexpr AffineTransform::AffineTransform() : m_transform {
++   }
++     {
++   }
++     }
++       namespace WTF {
++     }
++       namespace WebCore {
++     class FEGaussianBlur : public FilterEffect {
++   static IntSize calculateUnscaledKernelSize(FloatSize stdDeviation);
++   };
++     }
++       namespace WTF {
++     }
++       namespace WebCore {
++     static inline float gaussianKernelFactor() {
++   return 3 / 4.f * sqrtf(2 * piFloat);
++   }
++     static int clampedToKernelSize(float value) {
++   static constexpr unsigned maxKernelSize = 500;
++   unsigned size = std::max<unsigned>(2, static_cast<unsigned>(floorf(value * gaussianKernelFactor() + 0.5f)));
++   return clampTo<int>(std::min(size, maxKernelSize));
++   }
++     IntSize FEGaussianBlur::calculateUnscaledKernelSize(FloatSize stdDeviation) {
++   IntSize kernelSize;
++   if (stdDeviation.width()) kernelSize.setWidth(clampedToKernelSize(stdDeviation.width()));
++   if (stdDeviation.height()) kernelSize.setHeight(clampedToKernelSize(stdDeviation.height()));
++   return kernelSize;
++   }
++     }
+diff --git a/src/gcc/testsuite/g++.target/sh/torture/pr55212-c384.C b/src/gcc/testsuite/g++.target/sh/torture/pr55212-c384.C
+new file mode 100644
+index 00000000000..f46136489b5
+--- /dev/null
++++ b/src/gcc/testsuite/g++.target/sh/torture/pr55212-c384.C
+@@ -0,0 +1,429 @@
++/* { dg-additional-options "-std=c++20 -mlra -fpic -w " }  */
++/* { dg-do compile }  */
++
++   typedef unsigned int size_t;
++        extern "C" {
++      typedef signed int __int32_t;
++      typedef struct {
++    }
++      __fpos64_t;
++      }
++        extern "C++" {
++      namespace std __attribute__ ((__visibility__ ("default"))) {
++    template<typename _Tp, _Tp __v> struct integral_constant {
++  using value_type = _Tp;
++  constexpr operator value_type() const noexcept {
++  }
++  };
++    }
++      typedef __int32_t int32_t;
++      typedef struct {
++    }
++      ldiv_t;
++      }
++        extern "C" {
++      typedef unsigned int hashval_t;
++      enum insert_option {
++   NO_INSERT, INSERT};
++      }
++        typedef const union tree_node *const_tree;
++          struct varpool_node;
++        struct cgraph_edge;
++        template<typename T> inline T * ggc_alloc () {
++      }
++        struct vl_embed {
++      };
++        struct vl_ptr {
++      };
++        struct va_heap {
++      typedef vl_ptr default_layout;
++      };
++       struct va_gc {
++      typedef vl_embed default_layout;
++      };
++        template<typename T, typename A = va_heap, typename L = typename A::default_layout> struct vec {
++      };
++        template<typename T, typename A, typename L> T* begin (vec<T,A,L> *v) {
++      }
++        template<typename T, typename A, typename L> T* end (vec<T,A,L> *v) {
++      }
++        struct vnull {
++      };
++        template<typename T, typename A> struct vec<T, A, vl_embed> {
++      bool is_empty (void) const {
++    }
++      T &operator[] (unsigned);
++      };
++        template<typename T, typename A> inline unsigned vec_safe_length (const vec<T, A, vl_embed> *v) {
++      }
++        template<typename T, size_t N = 0> class auto_vec;
++        template<typename T> struct vec<T, va_heap, vl_ptr> {
++      public: vec () = default;
++      vec (vnull): m_vec () {
++    }
++      T &operator[] (unsigned ix) {
++    return (*m_vec)[ix];
++    }
++      vec<T, va_heap, vl_embed> *m_vec;
++      };
++        template<typename T, size_t N > class auto_vec : public vec<T, va_heap> {
++      public: auto_vec () {
++    }
++      auto_vec (size_t s ) {
++    }
++      };
++        enum mem_alloc_origin {
++      HASH_TABLE_ORIGIN, HASH_MAP_ORIGIN, HASH_SET_ORIGIN, VEC_ORIGIN, BITMAP_ORIGIN, GGC_ORIGIN, ALLOC_POOL_ORIGIN, MEM_ALLOC_ORIGIN_LENGTH };
++        template <typename Type> struct typed_noop_remove {
++      };
++        template <typename Type> struct int_hash_base : typed_noop_remove <Type> {
++      typedef Type value_type;
++      };
++        template <typename Type, Type Empty, Type Deleted = Empty> struct int_hash : int_hash_base <Type> {
++     };
++        template <typename T> struct default_hash_traits : T {
++     };
++        template <typename H, typename Value> struct simple_hashmap_traits {
++      typedef typename H::value_type key_type;
++      static inline hashval_t hash (const key_type &);
++      };
++        template <typename Type> struct xcallocator {
++      };
++        template <typename Descriptor, bool Lazy = false, template<typename Type> class Allocator = xcallocator> class hash_table {
++      typedef typename Descriptor::value_type value_type;
++      typedef typename Descriptor::compare_type compare_type;
++      public: explicit hash_table (size_t, bool ggc = false, bool sanitize_eq_and_hash = true, bool gather_mem_stats = 0, mem_alloc_origin origin = HASH_TABLE_ORIGIN );
++      value_type *find_slot_with_hash (const compare_type &comparable, hashval_t hash, enum insert_option insert);
++      };
++        template<typename Key, typename Value, typename Traits = simple_hashmap_traits<default_hash_traits<Key>, Value> > class hash_map;
++        class mem_location {
++      };
++        const size_t default_hash_map_size = 13;
++        template<typename KeyId, typename Value, typename Traits > class hash_map {
++      typedef typename Traits::key_type Key;
++      struct hash_entry {
++    Value m_value;
++    typedef hash_entry value_type;
++    typedef Key compare_type;
++    };
++      public: explicit hash_map (size_t n = default_hash_map_size, bool ggc = false, bool sanitize_eq_and_hash = true, bool gather_mem_stats = 0 ) : m_table (n, ggc, sanitize_eq_and_hash, gather_mem_stats, HASH_MAP_ORIGIN ) {
++    }
++      Value &get_or_insert (const Key &k, bool *existed = nullptr) {
++    hash_entry *e = m_table.find_slot_with_hash (k, Traits::hash (k), INSERT);
++    return e->m_value;
++    }
++      hash_table<hash_entry> m_table;
++      };
++        enum optgroup_flag {
++      OPTGROUP_NONE = 0, OPTGROUP_IPA = (1 << 1), OPTGROUP_LOOP = (1 << 2), OPTGROUP_INLINE = (1 << 3), OPTGROUP_OMP = (1 << 4), OPTGROUP_VEC = (1 << 5), OPTGROUP_OTHER = (1 << 6), OPTGROUP_ALL = (OPTGROUP_IPA | OPTGROUP_LOOP | OPTGROUP_INLINE | OPTGROUP_OMP | OPTGROUP_VEC | OPTGROUP_OTHER) };
++        typedef enum optgroup_flag optgroup_flags_t;
++        enum reorder_blocks_algorithm {
++      };
++        enum tree_node_structure_enum {
++      TS_BASE, TS_TYPED, TS_COMMON, TS_INT_CST, TS_POLY_INT_CST, TS_REAL_CST, TS_FIXED_CST, TS_VECTOR, TS_STRING, TS_COMPLEX, TS_IDENTIFIER, TS_DECL_MINIMAL, TS_DECL_COMMON, TS_DECL_WRTL, TS_DECL_NON_COMMON, TS_DECL_WITH_VIS, TS_FIELD_DECL, TS_VAR_DECL, TS_PARM_DECL, TS_LABEL_DECL, TS_RESULT_DECL, TS_CONST_DECL, TS_TYPE_DECL, TS_FUNCTION_DECL, TS_TRANSLATION_UNIT_DECL, TS_TYPE_COMMON, TS_TYPE_WITH_LANG_SPECIFIC, TS_TYPE_NON_COMMON, TS_LIST, TS_VEC, TS_EXP, TS_SSA_NAME, TS_BLOCK, TS_BINFO, TS_STATEMENT_LIST, TS_CONSTRUCTOR, TS_OMP_CLAUSE, TS_OPTIMIZATION, TS_TARGET_OPTION, LAST_TS_ENUM };
++        struct tree_base {
++      union {
++    struct {
++  }
++    bits;
++    }
++      u;
++      };
++        struct tree_typed {
++      };
++        inline const_tree contains_struct_check (const_tree __t, const enum tree_node_structure_enum __s, const char *__f, int __l, const char *__g) {
++      }
++        struct gimple {
++      };
++        typedef enum {
++      TV_NONE, TV_TOTAL, TV_PHASE_SETUP, TV_PHASE_PARSING, TV_PHASE_DEFERRED, TV_PHASE_LATE_PARSING_CLEANUPS, TV_PHASE_OPT_GEN, TV_PHASE_LATE_ASM, TV_PHASE_STREAM_IN, TV_PHASE_STREAM_OUT, TV_PHASE_FINALIZE, TV_NAME_LOOKUP, TV_OVERLOAD, TV_GC, TV_DUMP, TV_PCH_SAVE, TV_PCH_CPP_SAVE, TV_PCH_PTR_REALLOC, TV_PCH_PTR_SORT, TV_PCH_RESTORE, TV_PCH_CPP_RESTORE, TV_CGRAPH, TV_CGRAPHOPT, TV_CGRAPH_FUNC_EXPANSION, TV_CGRAPH_IPA_PASSES, TV_IPA_ODR, TV_IPA_FNSUMMARY, TV_IPA_UNREACHABLE, TV_IPA_INHERITANCE, TV_IPA_VIRTUAL_CALL, TV_IPA_DEVIRT, TV_IPA_CONSTANT_PROP, TV_IPA_INLINING, TV_IPA_FNSPLIT, TV_IPA_COMDATS, TV_IPA_OPT, TV_IPA_LTO_DECOMPRESS, TV_IPA_LTO_COMPRESS, TV_IPA_LTO_OUTPUT, TV_IPA_LTO_GIMPLE_IN, TV_IPA_LTO_GIMPLE_OUT, TV_IPA_LTO_DECL_IN, TV_IPA_LTO_DECL_OUT, TV_IPA_LTO_CTORS_IN, TV_IPA_LTO_CTORS_OUT, TV_IPA_LTO_CGRAPH_IO, TV_IPA_LTO_DECL_MERGE, TV_IPA_LTO_CGRAPH_MERGE, TV_LTO, TV_WHOPR_WPA, TV_WHOPR_WPA_IO, TV_WHOPR_PARTITIONING, TV_WHOPR_LTRANS, TV_IPA_REFERENCE, TV_IPA_PROFILE, TV_IPA_AUTOFDO, TV_IPA_PURE_CONST, TV_IPA_ICF, TV_IPA_PTA, TV_IPA_SRA, TV_IPA_FREE_LANG_DATA, TV_IPA_FREE_INLINE_SUMMARY, TV_IPA_MODREF, TV_CFG, TV_CLEANUP_CFG, TV_CFG_VERIFY, TV_DELETE_TRIVIALLY_DEAD, TV_DF_SCAN, TV_DF_MD, TV_DF_RD, TV_DF_LR, TV_DF_LIVE, TV_DF_MIR, TV_DF_CHAIN, TV_DF_WORD_LR, TV_DF_NOTE, TV_REG_STATS, TV_ALIAS_ANALYSIS, TV_ALIAS_STMT_WALK, TV_REG_SCAN, TV_REBUILD_JUMP, TV_CPP, TV_LEX, TV_PARSE_GLOBAL, TV_PARSE_STRUCT, TV_PARSE_ENUM, TV_PARSE_FUNC, TV_PARSE_INLINE, TV_PARSE_INMETH, TV_TEMPLATE_INST, TV_CONSTEXPR, TV_CONSTRAINT_NORM, TV_CONSTRAINT_SAT, TV_CONSTRAINT_SUB, TV_MODULE_IMPORT, TV_MODULE_EXPORT, TV_MODULE_MAPPER, TV_FLATTEN_INLINING, TV_EARLY_INLINING, TV_INLINE_PARAMETERS, TV_INTEGRATION, TV_TREE_GIMPLIFY, TV_TREE_EH, TV_TREE_CFG, TV_TREE_CLEANUP_CFG, TV_TREE_TAIL_MERGE, TV_TREE_VRP, TV_TREE_VRP_THREADER, TV_TREE_EARLY_VRP, TV_TREE_FAST_VRP, TV_TREE_ARRAY_BOUNDS, TV_TREE_COPY_PROP, TV_FIND_REFERENCED_VARS, TV_TREE_PTA, TV_TREE_SSA_OTHER, TV_TREE_INTO_SSA, TV_TREE_SSA_INCREMENTAL, TV_TREE_OPS, TV_TREE_SSA_DOMINATOR_OPTS, TV_TREE_SSA_THREAD_JUMPS, TV_TREE_SRA, TV_ISOLATE_ERRONEOUS_PATHS, TV_TREE_CCP, TV_TREE_SPLIT_EDGES, TV_TREE_REASSOC, TV_TREE_PRE, TV_TREE_FRE, TV_TREE_RPO_VN, TV_TREE_SINK, TV_TREE_PHIOPT, TV_TREE_BACKPROP, TV_TREE_FORWPROP, TV_TREE_PHIPROP, TV_TREE_DCE, TV_TREE_CD_DCE, TV_TREE_CALL_CDCE, TV_TREE_DSE, TV_TREE_MERGE_PHI, TV_TREE_LOOP, TV_TREE_NOLOOP, TV_TREE_LOOP_BOUNDS, TV_LIM, TV_LINTERCHANGE, TV_TREE_LOOP_IVCANON, TV_SCEV_CONST, TV_TREE_LOOP_UNSWITCH, TV_LOOP_SPLIT, TV_LOOP_JAM, TV_COMPLETE_UNROLL, TV_SCALAR_CLEANUP, TV_TREE_PARALLELIZE_LOOPS, TV_TREE_VECTORIZATION, TV_TREE_SLP_VECTORIZATION, TV_GRAPHITE, TV_GRAPHITE_TRANSFORMS, TV_GRAPHITE_DATA_DEPS, TV_GRAPHITE_CODE_GEN, TV_TREE_LOOP_DISTRIBUTION, TV_CHECK_DATA_DEPS, TV_TREE_PREFETCH, TV_TREE_LOOP_IVOPTS, TV_PREDCOM, TV_TREE_CH, TV_TREE_SSA_UNCPROP, TV_TREE_NRV, TV_TREE_COPY_RENAME, TV_TREE_SSA_VERIFY, TV_TREE_STMT_VERIFY, TV_TREE_SWITCH_CONVERSION, TV_TREE_SWITCH_LOWERING, TV_TREE_RECIP, TV_TREE_SINCOS, TV_TREE_POW, TV_TREE_WIDEN_MUL, TV_TRANS_MEM, TV_TREE_STRLEN, TV_TREE_MODREF, TV_TREE_ASSUMPTIONS, TV_CGRAPH_VERIFY, TV_DOM_FRONTIERS, TV_DOMINANCE, TV_CONTROL_DEPENDENCES, TV_OUT_OF_SSA, TV_VAR_EXPAND, TV_EXPAND, TV_POST_EXPAND, TV_VARCONST, TV_LOWER_SUBREG, TV_JUMP, TV_FWPROP, TV_CSE, TV_DCE, TV_DSE1, TV_DSE2, TV_LOOP, TV_LOOP_INIT, TV_LOOP_VERSIONING, TV_LOOP_MOVE_INVARIANTS, TV_LOOP_UNROLL, TV_LOOP_DOLOOP, TV_LOOP_FINI, TV_CPROP, TV_PRE, TV_HOIST, TV_LSM, TV_TRACER, TV_WEB, TV_AUTO_INC_DEC, TV_CSE2, TV_BRANCH_PROB, TV_COMBINE, TV_IFCVT, TV_MODE_SWITCH, TV_SMS, TV_LIVE_RANGE_SHRINKAGE, TV_SCHED, TV_EARLY_REMAT, TV_IRA, TV_LRA, TV_LRA_ELIMINATE, TV_LRA_INHERITANCE, TV_LRA_CREATE_LIVE_RANGES, TV_LRA_ASSIGN, TV_LRA_COALESCE, TV_LRA_REMAT, TV_RELOAD, TV_RELOAD_CSE_REGS, TV_GCSE_AFTER_RELOAD, TV_REE, TV_THREAD_PROLOGUE_AND_EPILOGUE, TV_IFCVT2, TV_SPLIT_PATHS, TV_COMBINE_STACK_ADJUST, TV_PEEPHOLE2, TV_RENAME_REGISTERS, TV_SCHED_FUSION, TV_CPROP_REGISTERS, TV_SCHED2, TV_MACH_DEP, TV_DBR_SCHED, TV_REORDER_BLOCKS, TV_SHORTEN_BRANCH, TV_REG_STACK, TV_FINAL, TV_VAROUT, TV_SYMOUT, TV_VAR_TRACKING, TV_VAR_TRACKING_DATAFLOW, TV_VAR_TRACKING_EMIT, TV_TREE_IFCOMBINE, TV_TREE_IF_TO_SWITCH, TV_TREE_UNINIT, TV_PLUGIN_INIT, TV_PLUGIN_RUN, TV_GIMPLE_SLSR, TV_GIMPLE_STORE_MERGING, TV_VTABLE_VERIFICATION, TV_TREE_UBSAN, TV_INITIALIZE_RTL, TV_GIMPLE_LADDRESS, TV_TREE_LOOP_IFCVT, TV_WARN_ACCESS, TV_EARLY_LOCAL, TV_OPTIMIZE, TV_REST_OF_COMPILATION, TV_POSTRELOAD, TV_LATE_COMPILATION, TV_REMOVE_UNUSED, TV_ADDRESS_TAKEN, TV_TODO, TV_VERIFY_LOOP_CLOSED, TV_VERIFY_RTL_SHARING, TV_REBUILD_FREQUENCIES, TV_REPAIR_LOOPS, TV_JIT_REPLAY, TV_ASSEMBLE, TV_LINK, TV_LOAD, TV_JIT_ACQUIRING_MUTEX, TV_JIT_CLIENT_CODE, TV_ANALYZER, TV_ANALYZER_SUPERGRAPH, TV_ANALYZER_STATE_PURGE, TV_ANALYZER_PLAN, TV_ANALYZER_SCC, TV_ANALYZER_WORKLIST, TV_ANALYZER_INFINITE_LOOPS, TV_ANALYZER_DUMP, TV_ANALYZER_DIAGNOSTICS, TV_ANALYZER_SHORTEST_PATHS, TIMEVAR_LAST }
++        timevar_id_t;
++        enum opt_pass_type {
++      GIMPLE_PASS, RTL_PASS, SIMPLE_IPA_PASS, IPA_PASS };
++        struct pass_data {
++      enum opt_pass_type type;
++      const char *name;
++      optgroup_flags_t optinfo_flags;
++      timevar_id_t tv_id;
++      unsigned int properties_required;
++      unsigned int properties_provided;
++      unsigned int properties_destroyed;
++      unsigned int todo_flags_start;
++      unsigned int todo_flags_finish;
++      };
++        namespace gcc {
++      class context;
++      }
++        class opt_pass : public pass_data {
++      protected: opt_pass (const pass_data&, gcc::context *);
++      };
++        class ipa_opt_pass_d : public opt_pass {
++      public: void (*generate_summary) (void);
++      void (*write_summary) (void);
++      void (*read_summary) (void);
++      void (*write_optimization_summary) (void);
++      void (*read_optimization_summary) (void);
++      void (*stmt_fixup) (struct cgraph_node *, gimple **);
++      unsigned int function_transform_todo_flags_start;
++      unsigned int (*function_transform) (struct cgraph_node *);
++      void (*variable_transform) (varpool_node *);
++      protected: ipa_opt_pass_d (const pass_data& data, gcc::context *ctxt, void (*generate_summary) (void), void (*write_summary) (void), void (*read_summary) (void), void (*write_optimization_summary) (void), void (*read_optimization_summary) (void), void (*stmt_fixup) (struct cgraph_node *, gimple **), unsigned int function_transform_todo_flags_start, unsigned int (*function_transform) (struct cgraph_node *), void (*variable_transform) (varpool_node *)) : opt_pass (data, ctxt), generate_summary (generate_summary), write_summary (write_summary), read_summary (read_summary), write_optimization_summary (write_optimization_summary), read_optimization_summary (read_optimization_summary), stmt_fixup (stmt_fixup), function_transform_todo_flags_start (function_transform_todo_flags_start), function_transform (function_transform), variable_transform (variable_transform) {
++    }
++      };
++        struct symtab_node {
++      struct lto_file_decl_data * lto_file_data;
++      };
++        struct cgraph_node : public symtab_node {
++      cgraph_edge *callees;
++      cgraph_edge *indirect_calls;
++      };
++        class cgraph_edge {
++      public: friend struct cgraph_node;
++      inline int get_uid () {
++    return m_uid;
++    }
++      cgraph_edge *next_callee;
++      private: int m_uid;
++      };
++        template <class T> class function_summary;
++        class symbol_table {
++      };
++        template <class T> class function_summary_base {
++      };
++        template <class T> class function_summary <T *>: public function_summary_base<T> {
++      T* get (cgraph_node *node) __attribute__ ((__pure__)) {
++    }
++      };
++        template <class T> class call_summary_base {
++      };
++        template <class T> class call_summary {
++      };
++        template <class T> class call_summary <T *>: public call_summary_base<T> {
++      public: call_summary (symbol_table *symtab, bool ggc = false ) : call_summary_base<T> (symtab, call_summary::symtab_removal, call_summary::symtab_duplication ), m_ggc (ggc), m_map (13, ggc, true, 0 ) {
++   }
++      T* get_create (cgraph_edge *edge) {
++    bool existed;
++    T **v = &m_map.get_or_insert (edge->get_uid (), &existed);
++    return *v;
++    }
++      protected: bool m_ggc;
++      typedef int_hash <int, 0, -1> map_hash;
++      hash_map <map_hash, T *> m_map;
++      };
++        enum lto_section_type {
++      LTO_section_decls = 0, LTO_section_function_body, LTO_section_static_initializer, LTO_section_symtab, LTO_section_symtab_extension, LTO_section_refs, LTO_section_asm, LTO_section_jump_functions, LTO_section_ipa_pure_const, LTO_section_ipa_reference, LTO_section_ipa_profile, LTO_section_symtab_nodes, LTO_section_opts, LTO_section_cgraph_opt_sum, LTO_section_ipa_fn_summary, LTO_section_ipcp_transform, LTO_section_ipa_icf, LTO_section_offload_table, LTO_section_mode_table, LTO_section_lto, LTO_section_ipa_sra, LTO_section_odr_types, LTO_section_ipa_modref, LTO_N_SECTION_TYPES };
++        class lto_input_block {
++      public: lto_input_block (const char *data_, unsigned int p_, unsigned int len_, const lto_file_decl_data *file_data_) : data (data_), file_data (file_data_), p (p_), len (len_) {
++   }
++      lto_input_block (const char *data_, unsigned int len_, const lto_file_decl_data *file_data_) : data (data_), file_data (file_data_), p (0), len (len_) {
++   }
++      const char *data;
++      const lto_file_decl_data *file_data;
++      unsigned int p;
++      unsigned int len;
++      };
++        struct lto_simple_header {
++      int32_t main_size;
++      };
++        struct lto_simple_header_with_strings : lto_simple_header {
++      };
++        struct lto_function_header : lto_simple_header_with_strings {
++      int32_t cfg_size;
++      };
++        typedef struct lto_symtab_encoder_d *lto_symtab_encoder_t;
++        struct lto_symtab_encoder_iterator {
++      };
++        struct lto_out_decl_state {
++      lto_symtab_encoder_t symtab_node_encoder;
++      };
++        struct output_block {
++      struct lto_out_decl_state *decl_state;
++      };
++        extern struct lto_file_decl_data **lto_get_file_decl_data (void);
++        extern const char *lto_get_summary_section_data (struct lto_file_decl_data *, enum lto_section_type, size_t *);
++        extern struct output_block *create_output_block (enum lto_section_type);
++        inline bool lsei_end_p (lto_symtab_encoder_iterator lsei) {
++      }
++        inline void lsei_next_function_in_partition (lto_symtab_encoder_iterator *lsei) {
++      }
++        inline lto_symtab_encoder_iterator lsei_start_function_in_partition (lto_symtab_encoder_t encoder) {
++      }
++        static unsigned const BITS_PER_BITPACK_WORD = 64;
++        typedef unsigned long long bitpack_word_t;
++        struct bitpack_d {
++      unsigned pos;
++      bitpack_word_t word;
++      void *stream;
++      };
++        unsigned long long streamer_read_uhwi (class lto_input_block *);
++        inline struct bitpack_d bitpack_create (struct lto_output_stream *s) {
++      }
++        inline struct bitpack_d streamer_read_bitpack (class lto_input_block *ib) {
++      struct bitpack_d bp;
++      return bp;
++      }
++        inline bitpack_word_t bp_unpack_value (struct bitpack_d *bp, unsigned nbits) {
++      bitpack_word_t mask, val;
++      int pos = bp->pos;
++      mask = (nbits == BITS_PER_BITPACK_WORD ? (bitpack_word_t) -1 : ((bitpack_word_t) 1 << nbits) - 1);
++      if (pos + nbits > BITS_PER_BITPACK_WORD) {
++    bp->word = val = streamer_read_uhwi ((class lto_input_block *)bp->stream);
++    bp->pos = nbits;
++    return val & mask;
++    }
++      val = bp->word;
++      val >>= pos;
++      bp->pos = pos + nbits;
++      return val & mask;
++      }
++        class ipcp_transformation;
++        class ipa_argagg_value_list {
++      template<typename pred_function> void remove_argaggs_if (pred_function &&predicate) {
++    }
++      };
++        inline ipcp_transformation * ipcp_get_transformation_summary (cgraph_node *node) {
++      }
++        struct param_access {
++      };
++        struct isra_param_desc {
++      vec <param_access *, va_gc> *accesses;
++      unsigned remove_only_when_retval_removed : 1;
++      };
++        class isra_func_summary {
++      public: isra_func_summary () : m_parameters (nullptr), m_candidate (false), m_returns_value (false), m_return_ignored (false), m_queued (false) {
++   }
++      vec<isra_param_desc, va_gc> *m_parameters;
++      unsigned m_candidate : 1;
++      unsigned m_returns_value : 1;
++      unsigned m_return_ignored : 1;
++      unsigned m_queued : 1;
++      };
++        struct isra_param_flow {
++      char length;
++      unsigned char inputs[7];
++      unsigned aggregate_pass_through : 1;
++      unsigned pointer_pass_through : 1;
++      unsigned safe_to_import_accesses : 1;
++      };
++        class isra_call_summary {
++      public: isra_call_summary () : m_arg_flow (), m_return_ignored (false), m_return_returned (false), m_bit_aligned_arg (false), m_before_any_store (false) {
++   }
++      auto_vec <isra_param_flow> m_arg_flow;
++      unsigned m_return_ignored : 1;
++      unsigned m_return_returned : 1;
++      unsigned m_bit_aligned_arg : 1;
++      unsigned m_before_any_store : 1;
++      };
++        class ipa_sra_function_summaries : public function_summary <isra_func_summary *> {
++      };
++        class ipa_sra_call_summaries: public call_summary <isra_call_summary *> {
++      };
++        static ipa_sra_call_summaries *call_sums;
++        namespace {
++      static void verify_splitting_accesses (cgraph_node *node, bool certain_must_exist) {
++    }
++      static void ipa_sra_generate_summary (void) {
++    }
++      static void isra_write_edge_summary (output_block *ob, cgraph_edge *e) {
++    }
++      static void isra_write_node_summary (output_block *ob, cgraph_node *node) {
++    for (cgraph_edge *e = node->callees;
++    e;
++    e = e->next_callee) isra_write_edge_summary (ob, e);
++    }
++      static void ipa_sra_write_summary (void) {
++    struct output_block *ob = create_output_block (LTO_section_ipa_sra);
++    lto_symtab_encoder_t encoder = ob->decl_state->symtab_node_encoder;
++    lto_symtab_encoder_iterator lsei;
++    for (lsei = lsei_start_function_in_partition (encoder);
++    !lsei_end_p (lsei);
++    lsei_next_function_in_partition (&lsei)) {
++  }
++    }
++      static void isra_read_edge_summary (struct lto_input_block *ib, cgraph_edge *cs) {
++    isra_call_summary *csum = call_sums->get_create (cs);
++    unsigned input_count = streamer_read_uhwi (ib);
++    for (unsigned i = 0;
++    i < input_count;
++    i++) {
++  isra_param_flow *ipf = &csum->m_arg_flow[i];
++  bitpack_d bp = streamer_read_bitpack (ib);
++  for (int j = 0;
++  j < ipf->length;
++  j++) ipf->inputs[j] = bp_unpack_value (&bp, 8);
++  ipf->aggregate_pass_through = bp_unpack_value (&bp, 1);
++  ipf->pointer_pass_through = bp_unpack_value (&bp, 1);
++  ipf->safe_to_import_accesses = bp_unpack_value (&bp, 1);
++  }
++    }
++      static void isra_read_node_info (struct lto_input_block *ib, cgraph_node *node, struct data_in *data_in) {
++    for (cgraph_edge *e = node->indirect_calls;
++    e;
++    e = e->next_callee) isra_read_edge_summary (ib, e);
++    }
++      static void isra_read_summary_section (struct lto_file_decl_data *file_data, const char *data, size_t len) {
++    const struct lto_function_header *header = (const struct lto_function_header *) data;
++    const int cfg_offset = sizeof (struct lto_function_header);
++    const int main_offset = cfg_offset + header->cfg_size;
++    struct data_in *data_in;
++    unsigned int i;
++    unsigned int count;
++    lto_input_block ib_main ((const char *) data + main_offset, header->main_size, file_data);
++    count = streamer_read_uhwi (&ib_main);
++    for (i = 0;
++    i < count;
++    i++) {
++  struct cgraph_node *node;
++  isra_read_node_info (&ib_main, node, data_in);
++  }
++    }
++      static void ipa_sra_read_summary (void) {
++    struct lto_file_decl_data **file_data_vec = lto_get_file_decl_data ();
++    struct lto_file_decl_data *file_data;
++    unsigned int j = 0;
++    while ((file_data = file_data_vec[j++])) {
++  size_t len;
++  const char *data = lto_get_summary_section_data (file_data, LTO_section_ipa_sra, &len);
++  if (data) isra_read_summary_section (file_data, data, len);
++  }
++    }
++      static bool all_callee_accesses_present_p (isra_param_desc *param_desc, isra_param_desc *arg_desc) {
++    unsigned aclen = vec_safe_length (arg_desc->accesses);
++    for (unsigned j = 0;
++    j < aclen;
++    j++) {
++  }
++    }
++      enum acc_prop_kind {
++   ACC_PROP_DONT, ACC_PROP_COPY, ACC_PROP_CERTAIN};
++      static const char * pull_accesses_from_callee (cgraph_node *caller, isra_param_desc *param_desc, isra_param_desc *arg_desc, unsigned delta_offset, unsigned arg_size, bool *change_p) {
++    unsigned aclen = vec_safe_length (arg_desc->accesses);
++    for (unsigned j = 0;
++    j < aclen;
++    j++) {
++  }
++    }
++      static bool adjust_parameter_descriptions (cgraph_node *node, isra_func_summary *ifs) {
++    unsigned len = vec_safe_length (ifs->m_parameters);
++    for (unsigned i = 0;
++    i < len;
++    i++) {
++  isra_param_desc *desc = &(*ifs->m_parameters)[i];
++  if (desc->remove_only_when_retval_removed && !ifs->m_return_ignored) {
++  for (const param_access *pa : desc->accesses) {
++  }
++  }
++  }
++    }
++      const pass_data pass_data_ipa_sra = {
++    IPA_PASS, "sra", OPTGROUP_NONE, TV_IPA_SRA, 0, 0, 0, 0, ( (1 << 7) | (1 << 8) ), };
++      class pass_ipa_sra : public ipa_opt_pass_d {
++    public: pass_ipa_sra (gcc::context *ctxt) : ipa_opt_pass_d (pass_data_ipa_sra, ctxt, ipa_sra_generate_summary, ipa_sra_write_summary, ipa_sra_read_summary, nullptr , nullptr, nullptr, 0, nullptr, nullptr) {
++ }
++    };
++      }
++        ipa_opt_pass_d * make_pass_ipa_sra (gcc::context *ctxt) {
++      return new pass_ipa_sra (ctxt);
++      }
++
++
+diff --git a/src/gcc/testsuite/g++.target/sh/torture/pr55212-c413.C b/src/gcc/testsuite/g++.target/sh/torture/pr55212-c413.C
+new file mode 100644
+index 00000000000..13eb1ff4d89
+--- /dev/null
++++ b/src/gcc/testsuite/g++.target/sh/torture/pr55212-c413.C
+@@ -0,0 +1,38 @@
++/* { dg-additional-options "-std=c++20 -mlra -fpic -w " }  */
++/* { dg-do compile }  */
++
++struct Trans_NS_WTF_HashMap
++{
++  template <typename V> void set(int *, V);
++};
++
++struct AscentAndDescent
++{
++  float ascent;
++  float descent;
++};
++
++bool isRubyAnnotationBox();
++
++struct EnclosingAscentDescent
++{
++  float ascent;
++  float descent;
++};
++
++AscentAndDescent primaryFontMetricsForInlineBox();
++int adjustInlineBoxHeightsForLineBoxContainIfApplicable___trans_tmp_1;
++
++void adjustInlineBoxHeightsForLineBoxContainIfApplicable()
++{
++  Trans_NS_WTF_HashMap inlineBoxBoundsMap;
++  auto ensureFontMetricsBasedHeight = [&](auto inlineBox)
++  {
++    auto [ascent, descent] = primaryFontMetricsForInlineBox();
++    auto halfLeading = isRubyAnnotationBox() ? ascent + descent : 0.f;
++    ascent += halfLeading;
++    inlineBoxBoundsMap.set(&inlineBox, EnclosingAscentDescent{ascent, descent});
++  };
++  ensureFontMetricsBasedHeight(
++      adjustInlineBoxHeightsForLineBoxContainIfApplicable___trans_tmp_1);
++}
+diff --git a/src/gcc/testsuite/g++.target/sh/torture/sh-torture.exp b/src/gcc/testsuite/g++.target/sh/torture/sh-torture.exp
+new file mode 100644
+index 00000000000..8be516ebd25
+--- /dev/null
++++ b/src/gcc/testsuite/g++.target/sh/torture/sh-torture.exp
+@@ -0,0 +1,299 @@
++# Copyright (C) 2024 Free Software Foundation, Inc.
++
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 3 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with GCC; see the file COPYING3.  If not see
++# <http://www.gnu.org/licenses/>.
++
++# GCC testsuite that uses the `gcc-dg.exp' driver, looping over
++# optimization options.
++
++# Exit immediately if this isn't an SH target.
++if { ![istarget sh*-*-*] } then {
++  return
++}
++
++# Load support procs.
++load_lib g++-dg.exp
++
++# Return 1 if target is SH2A
++proc check_effective_target_sh2a { } {
++    return [check_no_compiler_messages sh2a object {
++	     #ifndef __SH2A__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if target is SH1
++proc check_effective_target_sh1 { } {
++    return [check_no_compiler_messages sh1 object {
++	     #ifndef __SH1__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if target is SH4A
++proc check_effective_target_sh4a { } {
++    return [check_no_compiler_messages sh4a object {
++	     #ifndef __SH4A__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if target is big endian
++proc check_effective_target_big_endian { } {
++    return [check_no_compiler_messages big_endian object {
++	     #if __BYTE_ORDER__ != __ORDER_BIG_ENDIAN__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if target is little endian
++proc check_effective_target_little_endian { } {
++    return [check_no_compiler_messages little_endian object {
++	     #if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target has any FPU (single or double precision)
++proc check_effective_target_any_fpu { } {
++    return [check_no_compiler_messages any_fpu object {
++	     #ifndef __SH_FPU_ANY__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target has a double precision FPU which is allowed to be
++# used by the compiler as such.
++proc check_effective_target_double_fpu { } {
++    return [check_no_compiler_messages double_fpu object {
++	     #ifndef __SH_FPU_DOUBLE__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target has a double precision FPU but it is only being used
++# in single precision mode by the compiler
++proc check_effective_target_use_single_only_fpu { } {
++    return [check_no_compiler_messages use_single_only_fpu object {
++	     #if !(defined (__SH2A_SINGLE_ONLY__) \
++		   || defined (__SH4_SINGLE_ONLY__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target has an FPU and the default mode is single
++proc check_effective_target_default_single_fpu { } {
++    return [check_no_compiler_messages default_single_fpu object {
++	     #if !(defined (__SH2E__) || defined (__SH3E__) \
++		   || defined (__SH2A_SINGLE__) \
++		   || defined (__SH2A_SINGLE_ONLY__) \
++		   || defined (__SH4_SINGLE__) \
++		   || defined (__SH4_SINGLE_ONLY__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target has no FPU
++proc check_effective_target_no_fpu { } {
++    return [check_no_compiler_messages no_fpu object {
++	     #ifdef __SH_FPU_ANY__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++
++# Return 1 if the target has XF regs
++proc check_effective_target_has_xf_regs { } {
++    return [check_no_compiler_messages has_xf_regs object {
++	     #if !(defined (__SH_FPU_ANY__) \
++		   && (defined (__SH4__) \
++		       || defined (__SH4_SINGLE__) \
++		       || defined (__SH4_SINGLE_ONLY__) \
++		       || defined (__SH4A__)))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++
++# Return 1 if the target can do the fsca insn
++proc check_effective_target_has_fsca { } {
++    return [check_no_compiler_messages has_fsca object {
++	     #if !(defined (__SH_FPU_ANY__) \
++		   && (defined (__SH4__) \
++		       || defined (__SH4_SINGLE__) \
++		       || defined (__SH4_SINGLE_ONLY__) \
++		       || defined (__SH4A__)))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target can do the fsrra insn
++proc check_effective_target_has_fsrra { } {
++    return [check_no_compiler_messages has_fsrra object {
++	     #if !(defined (__SH_FPU_ANY__) \
++		   && (defined (__SH4__) \
++		       || defined (__SH4_SINGLE__) \
++		       || defined (__SH4_SINGLE_ONLY__) \
++		       || defined (__SH4A__)))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target can do the fpchg insn
++proc check_effective_target_has_fpchg { } {
++    return [check_no_compiler_messages has_fpchg object {
++	     #if !(defined (__SH4A__) && defined (__SH_FPU_ANY__) \
++		   && !defined (__SH4_SINGLE_ONLY__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target can do dynamic shifts
++proc check_effective_target_has_dyn_shift { } {
++    return [check_no_compiler_messages has_dyn_shift object {
++	     #if !(defined (__SH3__) \
++		   || defined (__SH3E__) \
++		   || defined (__SH2A__) \
++		   || defined (__SH4__) \
++		   || defined (__SH4_NOFPU__) \
++		   || defined (__SH4_SINGLE__) \
++		   || defined (__SH4_SINGLE_ONLY__) \
++		   || defined (__SH4A__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the mfmovd option is enabled
++proc check_effective_target_fmovd_enabled { } {
++    return [check_no_compiler_messages fmovd_enabled object {
++	     #ifndef __FMOVD_ENABLED__
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target supports privileged mode
++proc check_effective_target_has_privileged { } {
++    return [check_no_compiler_messages has_privileged object {
++	     #if !(defined (__SH3__) \
++		   || defined (__SH3E__) \
++		   || defined (__SH4__) \
++		   || defined (__SH4_NOFPU__) \
++		   || defined (__SH4_SINGLE__) \
++		   || defined (__SH4_SINGLE_ONLY__) \
++		   || defined (__SH4A__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if the target supports the prefetch insn
++proc check_effective_target_has_pref { } {
++    return [check_no_compiler_messages has_pref object {
++	     #if !(defined (__SH3__) \
++		   || defined (__SH3E__) \
++		   || defined (__SH4__) \
++		   || defined (__SH4_NOFPU__) \
++		   || defined (__SH4_SINGLE__) \
++		   || defined (__SH4_SINGLE_ONLY__) \
++		   || defined (__SH4A__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if target does banked r0..r7 regs type of ISRs
++proc check_effective_target_banked_r0r7_isr { } {
++    return [check_no_compiler_messages banked_r0r7_isr object {
++	     #if !(defined (__SH3__) || defined (__SH3E__) \
++		   || defined (__SH4__) \
++		   || defined (__SH4_SINGLE__) \
++		   || defined (__SH4_SINGLE_ONLY__) \
++		   || defined (__SH4_NOFPU__) \
++		   || defined (__SH4A__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if target does stack only type of ISRs
++proc check_effective_target_stack_save_isr { } {
++    return [check_no_compiler_messages stack_save_isr object {
++	     #if !(defined (__SH1__) \
++		   || defined (__SH2__) \
++		   || defined (__SH2E__) \
++		   || defined (__SH2A__))
++	     #error ""
++	     #endif
++    } ""]
++}
++
++# Return 1 if target supports atomic-model=soft-gusa
++proc check_effective_target_atomic_model_soft_gusa_available { } {
++    return [check_no_compiler_messages atomic_model_soft_gusa_available object {
++	     int x = 0;
++    } "-matomic-model=soft-gusa"]
++}
++
++# Return 1 if target supports atomic-model=soft-tcb
++proc check_effective_target_atomic_model_soft_tcb_available { } {
++    return [check_no_compiler_messages atomic_model_soft_tcb_available object {
++	     int x = 0;
++    } "-matomic-model=soft-tcb,gbr-offset=0"]
++}
++
++# Return 1 if target supports atomic-model=soft-imask
++proc check_effective_target_atomic_model_soft_imask_available { } {
++    return [check_no_compiler_messages atomic_model_soft_imask_available object {
++	     int x = 0;
++    } "-matomic-model=soft-imask -mno-usermode"]
++}
++
++# Return 1 if target supports atomic-model=hard-llcs
++proc check_effective_target_atomic_model_hard_llcs_available { } {
++    return [check_no_compiler_messages atomic_model_hard_llcs_available object {
++	     int x = 0;
++    } "-matomic-model=hard-llcs"]
++}
++
++# If a testcase doesn't have special options, use these.
++global DEFAULT_CXXFLAGS
++if ![info exists DEFAULT_CXXFLAGS] then {
++    set DEFAULT_CXXFLAGS " -pedantic-errors"
++}
++
++# Initialize `dg'.
++dg-init
++
++# Main loop.
++gcc-dg-runtest [lsort [glob -nocomplain $srcdir/$subdir/*.C]] "" $DEFAULT_CXXFLAGS
++
++
++# All done.
++dg-finish
+diff --git a/src/gcc/testsuite/gcc.target/sh/pr55212-c248.c b/src/gcc/testsuite/gcc.target/sh/pr55212-c248.c
+new file mode 100644
+index 00000000000..94fd6afaab3
+--- /dev/null
++++ b/src/gcc/testsuite/gcc.target/sh/pr55212-c248.c
+@@ -0,0 +1,31 @@
++/* { dg-do run }  */
++/* { dg-options "-O2 -m4 -mlra -ffixed-r7 -ffixed-r8 -ffixed-r9 -ffixed-r10 -ffixed-r11 -ffixed-r12 -ffixed-r13" } */
++#include <stdlib.h>
++#include <string.h>
++
++typedef struct { int c[64]; } obj;
++obj obj0;
++obj obj1;
++
++void __attribute__ ((noinline))
++bar (int a, int b, int c, int d, obj *q)
++{
++  if (q->c[0] != 0x12345678 || q->c[1] != 0xdeadbeef) 
++    abort ();
++}
++
++void foo (obj *p)
++{
++  obj bobj;
++  bobj = *p;
++  bar (0, 0, 0, 0, &bobj);
++}
++
++int
++main ()
++{
++  obj0.c[0] = 0x12345678;
++  obj0.c[1] = 0xdeadbeef;
++  foo (&obj0);
++  exit (0);
++}
+-- 
+2.50.0
+

@@ -1,0 +1,92 @@
+# DP: updates from the 15 branch upto 20251217 (documentation).
+
+LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
+	5115c7e447fc07457443df874bf57840e8316d5f f1d72baa71ffac0f94f1beddb44793ffb8fade37 \
+	| awk '/^diff .*\.texi/ {skip=0; print; next} /^diff / {skip=1; next} skip==0' \
+        | grep -v -E '^(diff|index)'
+
+--- a/src/gcc/doc/avr-mmcu.texi
++++ b/src/gcc/doc/avr-mmcu.texi
+@@ -54,7 +54,7 @@
+ 
+ @item @anchor{avrxmega3}avrxmega3
+ ``XMEGA'' devices with up to 64@tie{}KiB of combined program memory and RAM, and with program memory visible in the RAM address space.
+-@*@var{mcu}@tie{}= @code{attiny202}, @code{attiny204}, @code{attiny212}, @code{attiny214}, @code{attiny402}, @code{attiny404}, @code{attiny406}, @code{attiny412}, @code{attiny414}, @code{attiny416}, @code{attiny416auto}, @code{attiny417}, @code{attiny424}, @code{attiny426}, @code{attiny427}, @code{attiny804}, @code{attiny806}, @code{attiny807}, @code{attiny814}, @code{attiny816}, @code{attiny817}, @code{attiny824}, @code{attiny826}, @code{attiny827}, @code{attiny1604}, @code{attiny1606}, @code{attiny1607}, @code{attiny1614}, @code{attiny1616}, @code{attiny1617}, @code{attiny1624}, @code{attiny1626}, @code{attiny1627}, @code{attiny3214}, @code{attiny3216}, @code{attiny3217}, @code{attiny3224}, @code{attiny3226}, @code{attiny3227}, @code{atmega808}, @code{atmega809}, @code{atmega1608}, @code{atmega1609}, @code{atmega3208}, @code{atmega3209}, @code{atmega4808}, @code{atmega4809}, @code{avr16dd14}, @code{avr16dd20}, @code{avr16dd28}, @code{avr16dd32}, @code{avr16du14}, @code{avr16du20}, @code{avr16du28}, @code{avr16du32}, @code{avr16ea28}, @code{avr16ea32}, @code{avr16ea48}, @code{avr16eb14}, @code{avr16eb20}, @code{avr16eb28}, @code{avr16eb32}, @code{avr32da28}, @code{avr32da28s}, @code{avr32da32}, @code{avr32da32s}, @code{avr32da48}, @code{avr32da48s}, @code{avr32db28}, @code{avr32db32}, @code{avr32db48}, @code{avr32dd14}, @code{avr32dd20}, @code{avr32dd28}, @code{avr32dd32}, @code{avr32du14}, @code{avr32du20}, @code{avr32du28}, @code{avr32du32}, @code{avr32ea28}, @code{avr32ea32}, @code{avr32ea48}, @code{avr32sd20}, @code{avr32sd28}, @code{avr32sd32}.
++@*@var{mcu}@tie{}= @code{attiny202}, @code{attiny204}, @code{attiny212}, @code{attiny214}, @code{attiny402}, @code{attiny404}, @code{attiny406}, @code{attiny412}, @code{attiny414}, @code{attiny416}, @code{attiny416auto}, @code{attiny417}, @code{attiny424}, @code{attiny426}, @code{attiny427}, @code{attiny804}, @code{attiny806}, @code{attiny807}, @code{attiny814}, @code{attiny816}, @code{attiny817}, @code{attiny824}, @code{attiny826}, @code{attiny827}, @code{attiny1604}, @code{attiny1606}, @code{attiny1607}, @code{attiny1614}, @code{attiny1616}, @code{attiny1617}, @code{attiny1624}, @code{attiny1626}, @code{attiny1627}, @code{attiny3214}, @code{attiny3216}, @code{attiny3217}, @code{attiny3224}, @code{attiny3226}, @code{attiny3227}, @code{atmega808}, @code{atmega809}, @code{atmega1608}, @code{atmega1609}, @code{atmega3208}, @code{atmega3209}, @code{atmega4808}, @code{atmega4809}, @code{avr16dd14}, @code{avr16dd20}, @code{avr16dd28}, @code{avr16dd32}, @code{avr16du14}, @code{avr16du20}, @code{avr16du28}, @code{avr16du32}, @code{avr16ea28}, @code{avr16ea32}, @code{avr16ea48}, @code{avr16eb14}, @code{avr16eb20}, @code{avr16eb28}, @code{avr16eb32}, @code{avr16la14}, @code{avr16la20}, @code{avr16la28}, @code{avr16la32}, @code{avr32da28}, @code{avr32da28s}, @code{avr32da32}, @code{avr32da32s}, @code{avr32da48}, @code{avr32da48s}, @code{avr32db28}, @code{avr32db32}, @code{avr32db48}, @code{avr32dd14}, @code{avr32dd20}, @code{avr32dd28}, @code{avr32dd32}, @code{avr32du14}, @code{avr32du20}, @code{avr32du28}, @code{avr32du32}, @code{avr32ea28}, @code{avr32ea32}, @code{avr32ea48}, @code{avr32eb14}, @code{avr32eb20}, @code{avr32eb28}, @code{avr32eb32}, @code{avr32la14}, @code{avr32la20}, @code{avr32la28}, @code{avr32la32}, @code{avr32sd20}, @code{avr32sd28}, @code{avr32sd32}.
+ 
+ @item @anchor{avrxmega4}avrxmega4
+ ``XMEGA'' devices with more than 64@tie{}KiB and up to 128@tie{}KiB of program memory.
+--- a/src/gcc/doc/extend.texi
++++ b/src/gcc/doc/extend.texi
+@@ -16971,7 +16971,8 @@ is computed.
+ 
+ @smallexample
+ struct V @{ char buf1[10]; int b; char buf2[10]; @} var;
+-char *p = &var.buf1[1], *q = &var.b;
++char *p = &var.buf1[1];
++int *q = &var.b;
+ 
+ /* Here the object p points to is var.  */
+ assert (__builtin_object_size (p, 0) == sizeof (var) - 1);
+--- a/src/gcc/doc/invoke.texi
++++ b/src/gcc/doc/invoke.texi
+@@ -7189,7 +7189,7 @@ switch (cond)
+ @end group
+ @end smallexample
+ 
+-C++17 provides a standard way to suppress the @option{-Wimplicit-fallthrough}
++C++17 and C23 provide a standard way to suppress the @option{-Wimplicit-fallthrough}
+ warning using @code{[[fallthrough]];} instead of the GNU attribute.  In C++11
+ or C++14 users can use @code{[[gnu::fallthrough]];}, which is a GNU extension.
+ Instead of these attributes, it is also possible to add a fallthrough comment
+@@ -15743,7 +15743,7 @@ as a parameter of @code{free} call or compared with @code{NULL}.  If
+ with @option{-fmalloc-dce=2} also comparisons with @code{NULL} pointer are
+ considered safe to remove.
+ 
+-The default is @option{-fmalloc-dce=2}.  See also @option{-fallocation-dce}. 
++The default is @option{-fmalloc-dce=2}.  See also @option{-fallocation-dce}.
+ 
+ @opindex fmove-loop-invariants
+ @item -fmove-loop-invariants
+@@ -21967,7 +21967,7 @@ and the features that they enable by default:
+ @item @samp{armv9.2-a} @tab Armv9.2-A @tab @samp{armv9.1-a}, @samp{+wfxt}, @samp{+xs}
+ @item @samp{armv9.3-a} @tab Armv9.3-A @tab @samp{armv9.2-a}, @samp{+mops}
+ @item @samp{armv9.4-a} @tab Armv9.4-A @tab @samp{armv9.3-a}, @samp{+sve2p1}
+-@item @samp{armv9.5-a} @tab Armv9.4-A @tab @samp{armv9.4-a}, @samp{cpa}, @samp{+faminmax}, @samp{+lut}
++@item @samp{armv9.5-a} @tab Armv9.5-A @tab @samp{armv9.4-a}, @samp{cpa}, @samp{+faminmax}, @samp{+lut}
+ @item @samp{armv8-r} @tab Armv8-R @tab @samp{armv8-r}
+ @end multitable
+ 
+@@ -35188,8 +35188,8 @@ SSSE3, SSE4.1, SSE4.2, POPCNT, AES, PREFETCHW, PCLMUL, RDRND, XSAVE, XSAVEC,
+ XSAVES, XSAVEOPT, FSGSBASE, PTWRITE, RDPID, SGX, GFNI-SSE, CLWB, MOVDIRI,
+ MOVDIR64B, WAITPKG, ADCX, AVX, AVX2, BMI, BMI2, F16C, FMA, LZCNT, PCONFIG, PKU,
+ VAES, VPCLMULQDQ, SERIALIZE, HRESET, AVX-VNNI, UINTR, AVXIFMA, AVXVNNIINT8,
+-AVXNECONVERT, CMPCCXADD, AVXVNNIINT16, SHA512, SM3, SM4 and PREFETCHI
+-instruction set support.
++AVXNECONVERT, CMPCCXADD, AVXVNNIINT16, SHA512, SM3 and SM4 instruction set
++support.
+ 
+ @item sapphirerapids
+ @itemx emeraldrapids
+@@ -35236,8 +35236,7 @@ MOVDIRI, MOVDIR64B, ENQCMD, CLDEMOTE, PTWRITE, WAITPKG, SERIALIZE, TSXLDTRK,
+ UINTR, AMX-BF16, AMX-TILE, AMX-INT8, AVX-VNNI, AVX512FP16, AVX512BF16, AMX-FP16,
+ PREFETCHI, AMX-COMPLEX, AVX10.1-512, AVX-IFMA, AVX-NE-CONVERT, AVX-VNNI-INT16,
+ AVX-VNNI-INT8, CMPccXADD, SHA512, SM3, SM4, AVX10.2-512, APX_F, AMX-AVX512,
+-AMX-FP8, AMX-TF32, AMX-TRANSPOSE, MOVRS, AMX-MOVRS and USER_MSR instruction set
+-support.
++AMX-FP8, AMX-TF32, MOVRS and AMX-MOVRS instruction set support.
+ 
+ @item bonnell
+ @itemx atom
+--- a/src/gcc/doc/sourcebuild.texi
++++ b/src/gcc/doc/sourcebuild.texi
+@@ -2379,6 +2379,9 @@ whether it does so by default).
+ @item aarch64_sve2p1_hw
+ AArch64 target that is able to generate and execute SVE2.1 code (regardless of
+ whether it does so by default).
++@item aarch64_sme_hw
++AArch64 target that is able to generate and execute SME code (regardless of
++whether it does so by default).
+ 
+ @item aarch64_fjcvtzs_hw
+ AArch64 target that is able to generate and execute armv8.3-a FJCVTZS

@@ -1,0 +1,28 @@
+#!/bin/sh
+# autopkgtest check: Build and run a simple program against libga68,
+# to verify basic compile-time and run-time linking functionality.
+
+set -e
+
+BV=$(sed '/^Depends: gcc-\([0-9.]\+\).*/!d;s//\1/;q' debian/tests/control)
+GA68=ga68-$BV
+
+cd "$AUTOPKGTEST_TMP"
+cat <<EOF > hello.a68
+begin
+  putchar ("H");
+  putchar ("e");
+  putchar ("l");
+  putchar ("l");
+  putchar ("o");
+  putchar ("!");
+  puts ("\n")
+end
+EOF
+
+$GA68 hello.a68
+echo "build: OK"
+ldd a.out
+[ -x a.out ]
+./a.out
+echo "run: OK"

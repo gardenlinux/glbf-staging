@@ -1,0 +1,23 @@
+commit f13e8e21599ff12ea76980d6a8b19b0a5ebe9bed
+Author: Andrew Stubbs <ams@baylibre.com>
+Date:   Thu Aug 7 13:09:41 2025 +0000
+
+    amdgcn, libm: fix infinite loop
+
+
+--- a/newlib-4.5.0.20241231/newlib/libm/machine/amdgcn/v64sf_fmod.c
++++ b/newlib-4.5.0.20241231/newlib/libm/machine/amdgcn/v64sf_fmod.c
+@@ -70,8 +70,11 @@ DEF_VS_MATH_FUNC (v64sf, fmodf, v64sf x, v64sf y)
+   v64si iy;
+   VECTOR_IF (hy < 0x00800000, cond)	// subnormal y
+     iy = VECTOR_INIT (-126);
+-    for (v64si i = (hy << 8); !ALL_ZEROES_P (cond & (i >= 0)); i <<= 1)
+-      VECTOR_COND_MOVE (iy, iy - 1, cond & (i >= 0));
++    for (v64si i = (hy << 8); !ALL_ZEROES_P (cond & (i >= 0)); /* i <<= 1 */)
++      {
++	VECTOR_COND_MOVE (iy, iy - 1, cond & (i >= 0));
++	VECTOR_COND_MOVE (i, i << 1, cond & (i >= 0));
++      }
+   VECTOR_ELSE (cond)
+     VECTOR_COND_MOVE (iy, (hy >> 23) - 127, cond);
+   VECTOR_ENDIF

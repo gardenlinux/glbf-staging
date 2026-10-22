@@ -1,0 +1,17 @@
+--- a/src/gcc/ada/s-oscons-tmplt.c
++++ b/src/gcc/ada/s-oscons-tmplt.c
+@@ -1769,9 +1769,12 @@ CNS(MAX_tv_sec, "")
+   struct timespec ts;
+ /*
+    --  Sizes (in bytes) of the components of struct timespec.
+-   --  The tv_sec field is the same than in struct timeval.
++   --  The tv_sec component is the same size as in struct timeval.
++   --  In order to avoid the endian issues in the glibc __timespec64
++   --  struct, we use the same size for the tv_nsec component as the
++   --  tv_sec component.
+ */
+-#define SIZEOF_tv_nsec (sizeof (ts.tv_nsec))
++#define SIZEOF_tv_nsec (sizeof (ts.tv_sec))
+ CND(SIZEOF_tv_nsec, "tv_nsec");
+ }
+ 

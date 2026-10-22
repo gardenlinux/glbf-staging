@@ -1,0 +1,143 @@
+git diff --src-prefix=a/src/ --dst-prefix=b/src/ master..a68 | grep -E -v '^(diff|index|new)'
+
+--- a/src/gcc/Makefile.in
++++ b/src/gcc/Makefile.in
+@@ -2965,6 +2994,7 @@ s-tm-texi: build/genhooks$(build_exeext) $(srcdir)/doc/tm.texi.in
+ 	    || test $(srcdir)/doc/tm.texi -nt $(srcdir)/common/common-target.def \
+ 	    || test $(srcdir)/doc/tm.texi -nt $(srcdir)/d/d-target.def \
+ 	    || test $(srcdir)/doc/tm.texi -nt $(srcdir)/rust/rust-target.def \
++	    || test $(srcdir)/doc/tm.texi -nt $(srcdir)/algol68/algol68-target.def \
+ 	  ); then \
+ 	  echo >&2 ; \
+ 	  echo You should edit $(srcdir)/doc/tm.texi.in rather than $(srcdir)/doc/tm.texi . >&2 ; \
+--- a/src/gcc/doc/tm.texi
++++ b/src/gcc/doc/tm.texi
+@@ -54,6 +54,7 @@ through the macros defined in the @file{.h} file.
+ * C++ ABI::             Controlling C++ ABI changes.
+ * D Language and ABI::  Controlling D ABI changes.
+ * Rust Language and ABI:: Controlling Rust ABI changes.
++* ALGOL 68 Language and ABI:: Controlling ALGOL 68 ABI changes.
+ * Named Address Spaces:: Adding support for named address spaces
+ * Misc::                Everything else.
+ @end menu
+@@ -11352,6 +11353,23 @@ Similar to @code{TARGET_RUST_CPU_INFO}, but is used for configuration info
+ relating to the target operating system.
+ @end deftypefn
+ 
++@node ALGOL 68 Language and ABI
++@section ALGOL 68 ABI parameters
++@cindex parameters, ALGOL 68 abi
++
++@deftypefn {Algol68 Target Hook} void TARGET_ALGOL68_CPU_INFO (void)
++Declare all environmental CPU info and features relating to the target CPU
++using the function @code{algol68_add_target_info}, which takes a string
++representing the feature key and a string representing the feature value.
++Configuration pairs predefined by this hook apply to all files that are being
++compiled.
++@end deftypefn
++
++@deftypefn {Algol68 Target Hook} void TARGET_ALGOL68_OS_INFO (void)
++Similar to @code{TARGET_ALGOL68_CPU_INFO}, but is used for configuration info
++relating to the target operating system.
++@end deftypefn
++
+ @node Named Address Spaces
+ @section Adding support for named address spaces
+ @cindex named address spaces
+--- a/src/gcc/doc/tm.texi.in
++++ b/src/gcc/doc/tm.texi.in
+@@ -54,6 +54,7 @@ through the macros defined in the @file{.h} file.
+ * C++ ABI::             Controlling C++ ABI changes.
+ * D Language and ABI::  Controlling D ABI changes.
+ * Rust Language and ABI:: Controlling Rust ABI changes.
++* ALGOL 68 Language and ABI:: Controlling ALGOL 68 ABI changes.
+ * Named Address Spaces:: Adding support for named address spaces
+ * Misc::                Everything else.
+ @end menu
+@@ -7278,6 +7279,14 @@ floating-point support; they are not included in this mechanism.
+ 
+ @hook TARGET_RUST_OS_INFO
+ 
++@node ALGOL 68 Language and ABI
++@section ALGOL 68 ABI parameters
++@cindex parameters, ALGOL 68 abi
++
++@hook TARGET_ALGOL68_CPU_INFO
++
++@hook TARGET_ALGOL68_OS_INFO
++
+ @node Named Address Spaces
+ @section Adding support for named address spaces
+ @cindex named address spaces
+--- a/src/gcc/doc/install.texi
++++ b/src/gcc/doc/install.texi
+@@ -2100,13 +2100,13 @@ their runtime libraries should be built.  For a list of valid values for
+ grep ^language= */config-lang.in
+ @end smallexample
+ Currently, you can use any of the following:
+-@code{all}, @code{default}, @code{ada}, @code{c}, @code{c++},
++@code{all}, @code{default}, @code{ada}, @code{algol68}, @code{c}, @code{c++},
+ @code{cobol}, @code{d}, @code{fortran}, @code{go}, @code{jit},
+ @code{lto}, @code{m2}, @code{objc}, @code{obj-c++}.
+ Building the Ada compiler has special requirements, see below.
+ If you do not pass this flag, or specify the option @code{default}, then the
+ default languages available in the @file{gcc} sub-tree will be configured.
+-Ada, COBOL, D, Go, Jit, Objective-C++ and Modula-2 are not default languages.
++Algol 68, Ada, COBOL, D, Go, Jit, Objective-C++ and Modula-2 are not default languages.
+ LTO is not a
+ default language, but is built by default because @option{--enable-lto} is
+ enabled by default.  The other languages are default languages.  If
+@@ -2899,6 +2899,41 @@ In order to avoid shell and @command{make} quoting issues for complex
+ overrides, you can pass a setting for @env{CONFIG_SITE} and set
+ variables in the site file.
+ 
++@subheading Algol 68-Specific Options
++
++The following options apply to the build of the Algol 68 runtime library.
++
++@table @code
++@item --enable-algol68-gc
++Specify that an additional variant of the GNU Algol 68 runtime library
++is built, using an external build of the Boehm-Demers-Weiser garbage
++collector (@uref{https://www.hboehm.info/gc/}).
++
++This library needs to be available for each multilib variant, unless
++configured with @option{--enable-objc-gc=@samp{auto}} in which case
++the build of the additional runtime library is skipped when not
++available and the build continues.
++
++@item --with-target-bdw-gc=@var{list}
++@itemx --with-target-bdw-gc-include=@var{list}
++@itemx --with-target-bdw-gc-lib=@var{list}
++Specify search directories for the garbage collector header files and
++libraries. @var{list} is a comma separated list of key value pairs of the
++form @samp{@var{multilibdir}=@var{path}}, where the default multilib key
++is named as @samp{.} (dot), or is omitted (e.g.@:
++@samp{--with-target-bdw-gc=/opt/bdw-gc,32=/opt-bdw-gc32}).
++
++The options @option{--with-target-bdw-gc-include} and
++@option{--with-target-bdw-gc-lib} must always be specified together
++for each multilib variant and they take precedence over
++@option{--with-target-bdw-gc}.  If @option{--with-target-bdw-gc-include}
++is missing values for a multilib, then the value for the default
++multilib is used (e.g.@: @samp{--with-target-bdw-gc-include=/opt/bdw-gc/include}
++@samp{--with-target-bdw-gc-lib=/opt/bdw-gc/lib64,32=/opt-bdw-gc/lib32}).
++If none of these options are specified, the library is assumed in
++default locations.
++@end table
++
+ @subheading Objective-C-Specific Options
+ 
+ The following options apply to the build of the Objective-C runtime library.
+--- a/src/gcc/doc/sourcebuild.texi
++++ b/src/gcc/doc/sourcebuild.texi
+@@ -91,6 +91,9 @@ The Decimal Float support library.
+ @item libffi
+ The @code{libffi} library, used as part of the Go runtime library.
+ 
++@item libga68
++The Algol 68 runtime library.
++
+ @item libgcc
+ The GCC runtime library.
+ 

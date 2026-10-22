@@ -1,0 +1,13 @@
+# DP: ignore gm2version.o stage diff on some archtectures (m68k, riscv64)
+
+--- a/src/configure.ac
++++ b/src/configure.ac
+@@ -4223,6 +4223,8 @@ compare_exclusions="$compare_exclusions
+ compare_exclusions="$compare_exclusions | gcc/m2/gm2-compiler-boot/SYSTEM*"
+ compare_exclusions="$compare_exclusions | gcc/m2/gm2version*"
+ compare_exclusions="$compare_exclusions | gcc/cobol/parse\$(objext)"
++compare_exclusions="$compare_exclusions | sh4-linux-gnu/libstdc++-v3/src/c++98/math_stubs_long_double\$(objext)"
++compare_exclusions="$compare_exclusions | sh4-linux-gnu/libstdc++-v3/src/.libs/compatibility\$(objext)"
+ case "$target" in
+   hppa*64*-*-hpux*) ;;
+   mipsel-*linux-gnu) compare_exclusions="$compare_exclusions | gcc/rust/rust-macro-builtins.o | gcc/rust/rust-session-manager.o | gcc/rust/rust-cfg-parser.o | gcc/rust/rust-lex.o" ;;

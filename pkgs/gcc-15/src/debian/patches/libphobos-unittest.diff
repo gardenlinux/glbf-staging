@@ -1,0 +1,13 @@
+# DP: https://github.com/dlang/phobos/pull/10586
+
+--- a/src/libphobos/src/std/process.d
++++ b/src/libphobos/src/std/process.d
+@@ -2835,7 +2835,7 @@ void kill(Pid pid, int codeOrSignal)
+     do { s = tryWait(pid); } while (!s.terminated);
+     version (Windows)    assert(s.status == 123);
+     else version (Posix) assert(s.status == -SIGKILL);
+-    assertThrown!ProcessException(kill(pid)); // Already terminated
++    assert(pid.processID == Pid.terminated);
+ }
+ 
+ @system unittest // wait() and kill() detached process

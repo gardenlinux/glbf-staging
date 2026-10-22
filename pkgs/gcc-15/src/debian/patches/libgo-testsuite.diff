@@ -1,0 +1,76 @@
+# DP: Only run the libgo testsuite for flags configured in CHECK_MULTISUBDIRS
+
+--- a/src/libgo/Makefile.am
++++ b/src/libgo/Makefile.am
+@@ -948,21 +948,29 @@ CHECK = \
+ 	$(MKDIR_P) $(@D); \
+ 	rm -f $@-testsum $@-testlog; \
+ 	files=`$(SHELL) $(srcdir)/match.sh --goarch=$(GOARCH) --goos=$(GOOS) --srcdir=$(srcdir)/go/$(@D) --extrafiles="$(extra_go_files_$(subst .,_,$(subst /,_,$(@D))))" $(matchargs_$(subst /,_,$(@D)))`; \
++	run_check=; \
++	if [ -z "$(MULTISUBDIR)" ] || echo "$$CHECK_MULTISUBDIRS" | grep -q "$(MULTISUBDIR)"; then \
++	  run_check=yes; \
++	fi; \
++	if test "$$run_check" = "yes"; then \
+ 	if test "$(USE_DEJAGNU)" = "yes"; then \
+ 	  $(SHELL) $(srcdir)/testsuite/gotest --goarch=$(GOARCH) --goos=$(GOOS) --dejagnu=yes --basedir=$(srcdir) --srcdir=$(srcdir)/go/$(@D) --pkgpath="$(@D)" --pkgfiles="$$files" --testname="$(@D)" $(GOTESTFLAGS); \
+ 	elif test "$(GOBENCH)" != ""; then \
+ 	  $(SHELL) $(srcdir)/testsuite/gotest --goarch=$(GOARCH) --goos=$(GOOS) --basedir=$(srcdir) --srcdir=$(srcdir)/go/$(@D) --pkgpath="$(@D)" --pkgfiles="$$files" --bench="$(GOBENCH)" $(GOTESTFLAGS); \
+ 	else \
+ 	  if $(SHELL) $(srcdir)/testsuite/gotest --goarch=$(GOARCH) --goos=$(GOOS) --basedir=$(srcdir) --srcdir=$(srcdir)/go/$(@D) --pkgpath="$(@D)" --pkgfiles="$$files" $(GOTESTFLAGS) >>$@-testlog 2>&1; then \
+-	    echo "PASS: $(@D)" >> $@-testlog; \
+-	    echo "PASS: $(@D)"; \
+-	    echo "PASS: $(@D)" > $@-testsum; \
++	    echo "PASS: $(@D)$(MULTISUBDIR)" >> $@-testlog; \
++	    echo "PASS: $(@D)$(MULTISUBDIR)"; \
++	    echo "PASS: $(@D)$(MULTISUBDIR)" > $@-testsum; \
+ 	  else \
+-	    echo "FAIL: $(@D)" >> $@-testlog; \
++	    echo "FAIL: $(@D)$(MULTISUBDIR)" >> $@-testlog; \
+ 	    cat $@-testlog; \
+-	    echo "FAIL: $(@D)" > $@-testsum; \
++	    echo "FAIL: $(@D)$(MULTISUBDIR)" > $@-testsum; \
+ 	    exit 1; \
+ 	  fi; \
++	fi; \
++	else \
++	echo "SKIP: $(@D)$(MULTISUBDIR)"; \
+ 	fi
+ 
+ # Build all packages before checking any.
+--- a/src/libgo/Makefile.in
++++ b/src/libgo/Makefile.in
+@@ -1066,21 +1066,29 @@ CHECK = \
+ 	$(MKDIR_P) $(@D); \
+ 	rm -f $@-testsum $@-testlog; \
+ 	files=`$(SHELL) $(srcdir)/match.sh --goarch=$(GOARCH) --goos=$(GOOS) --srcdir=$(srcdir)/go/$(@D) --extrafiles="$(extra_go_files_$(subst .,_,$(subst /,_,$(@D))))" $(matchargs_$(subst /,_,$(@D)))`; \
++	run_check=; \
++	if [ -z "$(MULTISUBDIR)" ] || echo "$$CHECK_MULTISUBDIRS" | grep -q "$(MULTISUBDIR)"; then \
++	  run_check=yes; \
++	fi; \
++	if test "$$run_check" = "yes"; then \
+ 	if test "$(USE_DEJAGNU)" = "yes"; then \
+ 	  $(SHELL) $(srcdir)/testsuite/gotest --goarch=$(GOARCH) --goos=$(GOOS) --dejagnu=yes --basedir=$(srcdir) --srcdir=$(srcdir)/go/$(@D) --pkgpath="$(@D)" --pkgfiles="$$files" --testname="$(@D)" $(GOTESTFLAGS); \
+ 	elif test "$(GOBENCH)" != ""; then \
+ 	  $(SHELL) $(srcdir)/testsuite/gotest --goarch=$(GOARCH) --goos=$(GOOS) --basedir=$(srcdir) --srcdir=$(srcdir)/go/$(@D) --pkgpath="$(@D)" --pkgfiles="$$files" --bench="$(GOBENCH)" $(GOTESTFLAGS); \
+ 	else \
+ 	  if $(SHELL) $(srcdir)/testsuite/gotest --goarch=$(GOARCH) --goos=$(GOOS) --basedir=$(srcdir) --srcdir=$(srcdir)/go/$(@D) --pkgpath="$(@D)" --pkgfiles="$$files" $(GOTESTFLAGS) >>$@-testlog 2>&1; then \
+-	    echo "PASS: $(@D)" >> $@-testlog; \
+-	    echo "PASS: $(@D)"; \
+-	    echo "PASS: $(@D)" > $@-testsum; \
++	    echo "PASS: $(@D)$(MULTISUBDIR)" >> $@-testlog; \
++	    echo "PASS: $(@D)$(MULTISUBDIR)"; \
++	    echo "PASS: $(@D)$(MULTISUBDIR)" > $@-testsum; \
+ 	  else \
+-	    echo "FAIL: $(@D)" >> $@-testlog; \
++	    echo "FAIL: $(@D)$(MULTISUBDIR)" >> $@-testlog; \
+ 	    cat $@-testlog; \
+-	    echo "FAIL: $(@D)" > $@-testsum; \
++	    echo "FAIL: $(@D)$(MULTISUBDIR)" > $@-testsum; \
+ 	    exit 1; \
+ 	  fi; \
++	fi; \
++	else \
++	echo "SKIP: $(@D)$(MULTISUBDIR)"; \
+ 	fi
+ 
+ 
