@@ -1,0 +1,52 @@
+name: delete-branch-on-close
+
+# Delete an update bot's staging branch when its PR is closed, whether merged or
+# not, so re-running the same update is not blocked by the leftover branch.
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+
+jobs:
+  delete-branch:
+    # Cheap pre-filter; the authoritative gates (bot authorship by numeric id,
+    # branch convention) run in the step.
+    if: startsWith(github.event.pull_request.head.ref, 'update-staging/')
+    runs-on: ubuntu-latest
+    env:
+      HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+      AUTHOR_ID:   ${{ github.event.pull_request.user.id }}
+    steps:
+      - name: Mint a GitHub App installation token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GLBF_UPDATE_APP_ID }}
+          private-key: ${{ secrets.GLBF_UPDATE_APP_KEY }}
+
+      - name: Delete the staging branch if it is a bot update branch
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          BOT_SLUG: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          set -euo pipefail
+
+          # Bot authorship by stable numeric id, never a login spelling.
+          bot_id="$(gh api "/users/${BOT_SLUG}[bot]" --jq .id)"
+          if [ "$AUTHOR_ID" != "$bot_id" ]; then
+            echo "::notice::PR author id $AUTHOR_ID is not the update bot ($bot_id); leaving $HEAD_BRANCH"
+            exit 0
+          fi
+
+          # Attempt the delete; a merge may already have removed the branch, so a
+          # failure is only fatal if the branch is in fact still present.
+          if gh api -X DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${HEAD_BRANCH}"; then
+            echo "deleted $HEAD_BRANCH"
+          elif git ls-remote --exit-code --heads "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" "$HEAD_BRANCH" >/dev/null 2>&1; then
+            echo "::error::failed to delete $HEAD_BRANCH"
+            exit 1
+          else
+            echo "$HEAD_BRANCH already gone"
+          fi
