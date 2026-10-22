@@ -18,8 +18,7 @@ variables:
 
   # These are a wrong positive from lintian:
   # - shared-library-is-executable can't be overriden for udeb packages
-  # - unpack-message-for-deb-data can't be overriden due to multiarch (see #1099166, #1099167)
-  SALSA_CI_LINTIAN_SUPPRESS_TAGS: 'shared-library-is-executable,unpack-message-for-deb-data'
+  SALSA_CI_LINTIAN_SUPPRESS_TAGS: 'shared-library-is-executable'
 
 build:
   extends: .build-package
