@@ -1,0 +1,2 @@
+libgdiagnostics.so.0 #PACKAGE# #MINVER#
+ (symver)LIBGDIAGNOSTICS_ABI_0 15

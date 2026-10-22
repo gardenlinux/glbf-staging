@@ -1,0 +1,128 @@
+From f1496a2ebee717137ba0b3c96aa4cbf8c96f51ec Mon Sep 17 00:00:00 2001
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Date: Sat, 19 Apr 2025 08:07:58 -0600
+Subject: [PATCH] [PATCH v2] sh: Correct NaN signalling bit and propagation
+ rules [PR111814]
+
+As per architecture, SuperH has a reversed NaN signalling bit
+vs IEEE754-2008, it also has a NaN propgation rule similar to
+MIPS style.
+
+Use mips style float format and mode for all float types, and
+correct sfp-machine header accordingly.
+
+	PR target/111814
+
+gcc/ChangeLog:
+
+	* config/sh/sh-modes.def (RESET_FLOAT_FORMAT): Use mips format.
+	(FLOAT_MODE): Use mips mode.
+
+libgcc/ChangeLog:
+
+	* config/sh/sfp-machine.h (_FP_NANFRAC_B): Reverse signaling bit.
+	(_FP_NANFRAC_H): Likewise.
+	(_FP_NANFRAC_S): Likewise.
+	(_FP_NANFRAC_D): Likewise.
+	(_FP_NANFRAC_Q): Likewise.
+	(_FP_KEEPNANFRACP): Enable for target.
+	(_FP_QNANNEGATEDP): Enable for target.
+	(_FP_CHOOSENAN): Port from MIPS.
+
+gcc/testsuite/ChangeLog:
+
+	* gcc.target/sh/pr111814.c: New test.
+---
+ gcc/config/sh/sh-modes.def             |  6 +++++
+ gcc/testsuite/gcc.target/sh/pr111814.c |  7 +++++
+ libgcc/config/sh/sfp-machine.h         | 36 ++++++++++++++++----------
+ 3 files changed, 36 insertions(+), 13 deletions(-)
+ create mode 100644 gcc/testsuite/gcc.target/sh/pr111814.c
+
+diff --git a/src/gcc/config/sh/sh-modes.def b/src/gcc/config/sh/sh-modes.def
+index 80650b429e4..e31ae694a48 100644
+--- a/src/gcc/config/sh/sh-modes.def
++++ b/src/gcc/config/sh/sh-modes.def
+@@ -17,6 +17,12 @@ You should have received a copy of the GNU General Public License
+ along with GCC; see the file COPYING3.  If not see
+ <http://www.gnu.org/licenses/>.  */
+ 
++/* SH has the same reversed quiet bit as MIPS.  */
++RESET_FLOAT_FORMAT (SF, mips_single_format);
++RESET_FLOAT_FORMAT (DF, mips_double_format);
++/* TFmode: IEEE quad floating point (software).  */
++FLOAT_MODE (TF, 16, mips_quad_format);
++
+ /* Vector modes.  */
+ VECTOR_MODE  (INT, QI, 2);    /*                 V2QI */
+ VECTOR_MODES (INT, 4);        /*            V4QI V2HI */
+diff --git a/src/gcc/testsuite/gcc.target/sh/pr111814.c b/src/gcc/testsuite/gcc.target/sh/pr111814.c
+new file mode 100644
+index 00000000000..a88e5d786ba
+--- /dev/null
++++ b/src/gcc/testsuite/gcc.target/sh/pr111814.c
+@@ -0,0 +1,7 @@
++/* Verify that __builtin_nan("") produces a constant matches
++   architecture specification. */
++/* { dg-do compile } */
++
++double d = __builtin_nan ("");
++
++/* { dg-final { scan-assembler "\t.long\t-1\n\t.long\t2146959359\n" } } */
+diff --git a/src/libgcc/config/sh/sfp-machine.h b/src/libgcc/config/sh/sfp-machine.h
+index 66984d45755..67bc41516a3 100644
+--- a/src/libgcc/config/sh/sfp-machine.h
++++ b/src/libgcc/config/sh/sfp-machine.h
+@@ -39,11 +39,11 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+ #define _FP_DIV_MEAT_D(R,X,Y)	_FP_DIV_MEAT_2_udiv(D,R,X,Y)
+ #define _FP_DIV_MEAT_Q(R,X,Y)	_FP_DIV_MEAT_4_udiv(Q,R,X,Y)
+ 
+-#define _FP_NANFRAC_B	_FP_QNANBIT_B
+-#define _FP_NANFRAC_H	_FP_QNANBIT_H
+-#define _FP_NANFRAC_S	_FP_QNANBIT_S
+-#define _FP_NANFRAC_D	_FP_QNANBIT_D, 0
+-#define _FP_NANFRAC_Q	_FP_QNANBIT_Q, 0, 0, 0
++#define _FP_NANFRAC_B	(_FP_QNANBIT_B - 1)
++#define _FP_NANFRAC_H	(_FP_QNANBIT_H - 1)
++#define _FP_NANFRAC_S	(_FP_QNANBIT_S - 1)
++#define _FP_NANFRAC_D	(_FP_QNANBIT_D - 1), -1
++#define _FP_NANFRAC_Q	(_FP_QNANBIT_Q - 1), -1, -1, -1
+ 
+ /* The type of the result of a floating point comparison.  This must
+    match __libgcc_cmp_return__ in GCC for the target.  */
+@@ -56,14 +56,24 @@ typedef int __gcc_CMPtype __attribute__ ((mode (__libgcc_cmp_return__)));
+ #define _FP_NANSIGN_D	0
+ #define _FP_NANSIGN_Q	0
+ 
+-#define _FP_KEEPNANFRACP 0
+-#define _FP_QNANNEGATEDP 0
+-
+-#define _FP_CHOOSENAN(fs, wc, R, X, Y, OP)  \
+-  do {                      \
+-    R##_s = _FP_NANSIGN_##fs;           \
+-    _FP_FRAC_SET_##wc(R,_FP_NANFRAC_##fs);  \
+-    R##_c = FP_CLS_NAN;             \
++#define _FP_KEEPNANFRACP 1
++#define _FP_QNANNEGATEDP 1
++
++/* X is chosen unless one of the NaNs is sNaN.  */
++# define _FP_CHOOSENAN(fs, wc, R, X, Y, OP)			\
++  do {								\
++    if ((_FP_FRAC_HIGH_RAW_##fs(X) |				\
++	 _FP_FRAC_HIGH_RAW_##fs(Y)) & _FP_QNANBIT_##fs)		\
++      {								\
++	R##_s = _FP_NANSIGN_##fs;				\
++	_FP_FRAC_SET_##wc(R,_FP_NANFRAC_##fs);			\
++      }								\
++    else							\
++      {								\
++	R##_s = X##_s;						\
++	_FP_FRAC_COPY_##wc(R,X);				\
++      }								\
++    R##_c = FP_CLS_NAN;						\
+   } while (0)
+ 
+ #define _FP_TININESS_AFTER_ROUNDING 1
+-- 
+2.50.0
+
