@@ -11,7 +11,6 @@ Rules-Requires-Root: no
 Package: base-files
 Provides: base, usr-is-merged
 Architecture: any
-Pre-Depends: awk
 Depends: ${misc:Depends}
 Essential: yes
 Priority: required

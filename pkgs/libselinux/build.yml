@@ -1,0 +1,6 @@
+build_profiles: [nocheck]
+build_options: [nocheck]
+runtime_depends:
+  libselinux1:
+    - glibc:libc6
+    - pcre2:libpcre2-8-0

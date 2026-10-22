@@ -1,0 +1,11 @@
+build_profiles: [nocheck]
+build_options: [nocheck]
+runtime_depends:
+  libssl3t64:
+    - glibc:libc6
+    - libzstd:libzstd1
+    - zlib:zlib1g
+    - openssl:openssl-provider-legacy
+  openssl-provider-legacy:
+    - glibc:libc6
+    - openssl:libssl3t64

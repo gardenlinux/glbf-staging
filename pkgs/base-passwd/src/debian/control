@@ -10,7 +10,6 @@ Build-Depends:
  debhelper-compat (= 13),
  docbook <!nodoc>,
  docbook-utils <!nodoc>,
- libdebconfclient0-dev,
  libselinux1-dev [linux-any],
  po4a,
 Vcs-Git: https://salsa.debian.org/debian/base-passwd.git

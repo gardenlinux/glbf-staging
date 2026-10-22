@@ -1,0 +1,5 @@
+build_profiles: [nocheck]
+build_options: [nocheck]
+runtime_depends:
+  zlib1g:
+    - glibc:libc6

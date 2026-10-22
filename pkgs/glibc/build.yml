@@ -1,0 +1,6 @@
+build_profiles: [nocheck]
+build_options: [nocheck]
+runtime_depends:
+  libc6:
+    - gcc-15:libgcc-s1
+    - glibc:libc-gconv-modules-extra

@@ -5,7 +5,7 @@
 export DEB_BUILD_MAINT_OPTIONS := hardening=+all
 export DEB_CFLAGS_MAINT_APPEND := -Wall
 
-confflags =
+confflags = --disable-debconf
 
 ifneq ($(filter nodoc,$(DEB_BUILD_PROFILES)),)
 confflags += --disable-docs
