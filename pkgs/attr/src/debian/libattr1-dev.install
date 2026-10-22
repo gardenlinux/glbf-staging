@@ -1,0 +1,5 @@
+usr/include/attr/
+usr/lib/*/libattr.a
+usr/lib/*/libattr.so
+usr/lib/*/pkgconfig/libattr.pc
+usr/share/man/man3/
