@@ -1,0 +1,6 @@
+sources:
+    - file: libcap2_2.75.orig.tar.xz
+      sha256: de4e7e064c9ba451d5234dd46e897d7c71c96a9ebf9a0c445bc04f4742d83632
+      urls:
+        - https://snapshot.debian.org/archive/debian/20260101T000000Z/pool/main/libc/libcap2/libcap2_2.75.orig.tar.xz
+        - https://snapshot.debian.org/file/1551cef1dd86c56a41c6e5793a79d7a7a9c648fb/libcap2_2.75.orig.tar.xz
