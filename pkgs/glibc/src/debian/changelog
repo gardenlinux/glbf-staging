@@ -1,3 +1,27 @@
+glibc (2.42-7) unstable; urgency=medium
+
+  [ Aurelien Jarno ]
+  * debian/control.in/libc, debian/rules.d/debhelper.mk: drop libcrypt-dev
+    dependency from libc6-dev. Thanks to Helmut Grohne for proposing that,
+    doing an archive rebuild and filling the bug reports.
+  * debian/control.in/main, debian/sysdeps/linux.mk: enable SystemTap static
+    probes.
+  * debian/debhelper.in/libc-dev.NEWS: add a NEWS entry about the removal of
+    the obsolete termio interface.  Closes: #1124068.
+  * debian/rules.d/debhelper.mk: ensure that linker scripts work even when
+    /usr is unmerged.  Closes: #1120508
+  * debian/debhelper.in/libc-dev{,-alt}.lintian-overrides,
+    source/lintian-overrides, rules.d/debhelper.mk, salsa-ci.yml: drop
+    unpack-message-for-{orig,source} overrides, fixed in lintian 2.128.0.
+  * debian/control.in/main: drop Rules-Requires-Root: no, this is now the
+    default.
+  * debian/libc6.symbols.i386, debian/libc6-i386.symbols.{amd64,x32}: remove
+    the workaround for GLIBC_ABI_GNU_TLS.  Closes: #1122038.
+  * debian/control.in/{libc,i386}: ensure that libdpkg-perl is fixed wrt
+    GLIBC_ABI_GNU_TLS.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 04 Jan 2026 10:07:24 +0100
+
 glibc (2.42-6) unstable; urgency=medium
 
   [ Benjamin Drung ]

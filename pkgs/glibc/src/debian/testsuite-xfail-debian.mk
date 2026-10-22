@@ -345,7 +345,7 @@ test-xfail-tst-strerror = yes
 # We always have several threads
 test-xfail-tst-single_threaded-pthread = yes
 # known to be fixed by the siginfo patch by fixing the returned value
-# #  But for dlsym errors it still returns 9 instead of 127...
+# But for dlsym errors it still returns 9 instead of 127...
 test-xfail-tst-latepthread = yes
 test-xfail-tst-initfinilazyfail = yes
 

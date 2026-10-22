@@ -13,8 +13,8 @@ Build-Depends: gettext, xz-utils, file, quilt,
  libidn2-0 <!nocheck>,
  libc-bin (>= 2.42) <cross>,
  libgd-dev <!stage1 !stage2>,
+ systemtap-sdt-dev [linux-any] <!stage1 !stage2 !pkg.glibc.nosystemtap>,
 Build-Depends-Indep: perl, po-debconf
-Rules-Requires-Root: no
 Maintainer: GNU Libc Maintainers <debian-glibc@lists.debian.org>
 Uploaders: Clint Adams <clint@debian.org>, Aurelien Jarno <aurel32@debian.org>, Samuel Thibault <sthibault@debian.org>
 Standards-Version: 4.6.2
@@ -201,7 +201,7 @@ Architecture: amd64 arc arm64 armel armhf hppa i386 loong64 m68k mips mipsel mip
 Section: libdevel
 Priority: optional
 Multi-Arch: same
-Depends: libc6 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${libcrypt-dev:Depends}, ${rpcsvc-proto:Depends}
+Depends: libc6 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${rpcsvc-proto:Depends}
 Suggests: glibc-doc, manpages-dev
 Provides: libc-dev (= ${binary:Version}), libc6-dev [alpha hurd-any]
 Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), binutils (<< 2.45) [amd64 arm64]
@@ -272,7 +272,7 @@ Architecture: alpha
 Section: libdevel
 Priority: optional
 Multi-Arch: same
-Depends: libc6.1 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${libcrypt-dev:Depends}, ${rpcsvc-proto:Depends}
+Depends: libc6.1 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${rpcsvc-proto:Depends}
 Suggests: glibc-doc, manpages-dev
 Provides: libc-dev (= ${binary:Version}), libc6-dev [alpha hurd-any]
 Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), binutils (<< 2.45) [amd64 arm64]
@@ -343,7 +343,7 @@ Architecture: hurd-i386 hurd-amd64
 Section: libdevel
 Priority: optional
 Multi-Arch: same
-Depends: libc0.3 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${libcrypt-dev:Depends}, ${rpcsvc-proto:Depends}
+Depends: libc0.3 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${rpcsvc-proto:Depends}
 Suggests: glibc-doc, manpages-dev
 Provides: libc-dev (= ${binary:Version}), libc6-dev [alpha hurd-any]
 Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), binutils (<< 2.45) [amd64 arm64]

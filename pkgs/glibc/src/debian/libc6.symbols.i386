@@ -1,9 +1,7 @@
 #include "libc6.symbols.common"
 ld-linux.so.2 #PACKAGE# #MINVER#
 #include "symbols.wildcards"
-# Minimal dependency set to 2.42 to ensure GLIBC_ABI_GNU_TLS is available, even
-# if not handled by dpkg-shlibdeps
-libc.so.6 #PACKAGE# (>= 2.42), #PACKAGE# #MINVER#
+libc.so.6 #PACKAGE# #MINVER#
 #include "symbols.wildcards"
 ### sysconf(_SC_MINSIGSTKSZ) and sysconf(_SC_SIGSTKSZ) added in glibc 2.34
  __sysconf@GLIBC_2.2 2.34
