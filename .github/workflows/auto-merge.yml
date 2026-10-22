@@ -31,6 +31,7 @@ jobs:
     env:
       HEAD_SHA:    ${{ github.event.workflow_run.head_sha }}
       HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+      RUN_ID:      ${{ github.event.workflow_run.id }}
     steps:
       - name: Mint a GitHub App installation token
         id: app-token
@@ -117,4 +118,5 @@ jobs:
           #    base branch attributes to the bot and triggers canonicalization.
           echo "all gates passed; merging PR #$pr into $base"
           gh pr merge "$pr" --merge --delete-branch
-          gh pr comment "$pr" --body "Build green on \`$HEAD_SHA\` and opted into auto-merge — merged into \`$base\` 🤖"
+          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}"
+          gh pr comment "$pr" --body "Build [${RUN_ID}](${run_url}) passed and auto-merge enabled; merged into \`$base\`"
