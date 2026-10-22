@@ -1,0 +1,3 @@
+Exclude-doc-Makefile.patch
+trust-vsprintf-return.patch
+fix-acinclude-m4-for-gcc-15.patch
