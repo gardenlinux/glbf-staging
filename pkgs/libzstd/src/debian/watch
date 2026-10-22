@@ -1,0 +1,10 @@
+Version: 5
+
+Source: https://api.github.com/repos/facebook/zstd/releases
+Matching-Pattern: https://github.com/[^"']*/zstd-(\d[\d.]+)\.tar\.gz
+Compression: xz
+Dversion-Mangle: s/\+dfsg\d*//g
+Pgp-Sig-Url-Mangle: s/$/.sig/
+Repack: yes
+Repack-Suffix: +dfsg
+Search-Mode: plain
