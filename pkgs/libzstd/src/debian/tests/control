@@ -27,3 +27,12 @@ Restrictions:
  allow-stderr,
 Features:
  test-name=build-cmake,
+
+Test-Command: debputy reformat --no-auto-fix --linter-exit-code
+Depends:
+ dh-debputy,
+ python3-lsprotocol,
+Features:
+ test-name=debian-debputy,
+Restrictions:
+ superficial,

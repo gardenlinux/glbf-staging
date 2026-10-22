@@ -1,3 +1,13 @@
+libzstd (1.5.7+dfsg-3) unstable; urgency=medium
+
+  * Add a superficial `debputy reformat` autopkgtest.
+  * Rebuild with debhelper 13.29 for Multi-Arch: same for
+    the -dbgsym packages.
+  * Declare Standards-Version 4.7.3, drop the implied Priority: optional.
+  * Add the year 2026 to my debian/* copyright notice.
+
+ -- Peter Pentchev <roam@debian.org>  Mon, 05 Jan 2026 15:30:24 +0200
+
 libzstd (1.5.7+dfsg-2) unstable; urgency=medium
 
   * Fix the autopkgtest with CMake 4.x: declare the minimum policy
