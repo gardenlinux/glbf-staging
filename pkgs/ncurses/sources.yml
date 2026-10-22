@@ -1,0 +1,6 @@
+sources:
+    - file: ncurses_6.5+20251123.orig.tar.gz
+      sha256: 3fe6f4dd90f82900b837c41d6053a4c81585792181e36a5d7bab96f7349ad508
+      urls:
+        - https://snapshot.debian.org/archive/debian/20260101T000000Z/pool/main/n/ncurses/ncurses_6.5+20251123.orig.tar.gz
+        - https://snapshot.debian.org/file/a12cd0f42fd2ac2002e43994c895f6129024cf33/ncurses_6.5+20251123.orig.tar.gz

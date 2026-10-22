@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -eu
+
+cd "$AUTOPKGTEST_TMP"
+cat <<EOF > smoketest.c
+#include <ncurses.h>
+
+int main(void)
+{   initscr();
+    endwin();
+    return 0;
+}
+EOF
+
+echo "Checking if compiling a test program works as expected ..."
+gcc -o /dev/null smoketest.c $(ncurses6-config --libs)
+gcc -o /dev/null smoketest.c $(ncursesw6-config --libs)
+gcc -o /dev/null smoketest.c $(pkg-config --libs ncurses)
+gcc -o /dev/null smoketest.c $(pkg-config --libs ncursesw)
