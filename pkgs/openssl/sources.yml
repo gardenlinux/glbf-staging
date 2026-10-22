@@ -1,0 +1,6 @@
+sources:
+    - file: openssl_3.5.4.orig.tar.gz
+      sha256: 967311f84955316969bdb1d8d4b983718ef42338639c621ec4c34fddef355e99
+      urls:
+        - https://snapshot.debian.org/archive/debian/20260101T000000Z/pool/main/o/openssl/openssl_3.5.4.orig.tar.gz
+        - https://snapshot.debian.org/file/b75daac8e10f189abe28a076ba5905d363e4801f/openssl_3.5.4.orig.tar.gz
