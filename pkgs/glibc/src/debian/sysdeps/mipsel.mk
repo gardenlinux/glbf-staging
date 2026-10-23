@@ -2,28 +2,28 @@
 ifeq (,$(filter nobiarch, $(DEB_BUILD_PROFILES)))
 
 # build 32-bit (n32) alternative library
-GLIBC_PASSES += mipsn32
+GLIBC_PASSES += mipsn32el
 DEB_ARCH_MULTILIB_PACKAGES += libc6-mipsn32 libc6-dev-mipsn32
-libc6-mipsn32_shlib_dep = libc6-mipsn32 (>= $(shlib_dep_ver))
-mipsn32_configure_target = mips64el-linux-gnuabin32
-mipsn32_CC = $(CC) -mabi=n32
-mipsn32_CXX = $(CXX) -mabi=n32
-mipsn32_rtlddir = /lib32
-mipsn32_slibdir = /lib32
-mipsn32_libdir = /usr/lib32
+libc6-mipsn32el_shlib_dep = libc6-mipsn32 (>= $(shlib_dep_ver))
+mipsn32el_configure_target = mips64el-linux-gnuabin32
+mipsn32el_CC = $(CC) -mabi=n32
+mipsn32el_CXX = $(CXX) -mabi=n32
+mipsn32el_rtlddir = /lib32
+mipsn32el_slibdir = /lib32
+mipsn32el_libdir = /usr/lib32
 
 # build 64-bit alternative library
-GLIBC_PASSES += mips64
+GLIBC_PASSES += mips64el
 DEB_ARCH_MULTILIB_PACKAGES += libc6-mips64 libc6-dev-mips64
-libc6-mips64_shlib_dep = libc6-mips64 (>= $(shlib_dep_ver))
-mips64_configure_target = mips64el-linux-gnuabi64
-mips64_CC = $(CC) -mabi=64
-mips64_CXX = $(CXX) -mabi=64
-mips64_rtlddir = /lib64
-mips64_slibdir = /lib64
-mips64_libdir = /usr/lib64
+libc6-mips64el_shlib_dep = libc6-mips64 (>= $(shlib_dep_ver))
+mips64el_configure_target = mips64el-linux-gnuabi64
+mips64el_CC = $(CC) -mabi=64
+mips64el_CXX = $(CXX) -mabi=64
+mips64el_rtlddir = /lib64
+mips64el_slibdir = /lib64
+mips64el_libdir = /usr/lib64
 
-define libc6-dev-mips64_extra_pkg_install
+define libc6-dev-mips64el_extra_pkg_install
 
 $(call generic_multilib_extra_pkg_install,libc6-dev-mips64)
 
@@ -34,7 +34,7 @@ cp -a debian/tmp-mips64/usr/include/gnu/lib-names-n64_hard.h \
 
 endef
 
-define libc6-dev-mipsn32_extra_pkg_install
+define libc6-dev-mipsn32el_extra_pkg_install
 
 mkdir -p debian/libc6-dev-mipsn32/usr/include/mipsel-linux-gnu/gnu
 cp -a debian/tmp-mipsn32/usr/include/gnu/lib-names-n32_hard.h \
@@ -44,7 +44,7 @@ cp -a debian/tmp-mipsn32/usr/include/gnu/lib-names-n32_hard.h \
 endef
 
 # Need to put a tri-arch aware version of ldd in the base package
-define mipsn32_extra_install
+define mipsn32el_extra_install
 cp debian/tmp-mipsn32/usr/bin/ldd debian/tmp/usr/bin
 endef
 

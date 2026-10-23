@@ -1,3 +1,52 @@
+glibc (2.42-14) unstable; urgency=medium
+
+  [ Samuel Thibault ]
+  * debian/patches/hurd-i386/git-mach_send_eintr.diff: Fix assertion failure
+    on eintr during message send.
+  * debian/patches/hurd-i386/git-itimer-lock.diff: Fix setitimer mutex
+    inversion.
+  * debian/patches/hurd-i386/git-posix-timers.diff: Set _POSIX_TIMERS to
+    200809L.  Closes: #1128631.
+  * debian/patches/hurd-i386/sig-alarm.diff: Fix it_interval in setitimer, thus
+    alarm too, on hurd-amd64.
+  * debian/patches/hurd-i386/git-libio-mtsafe.diff: Fix mt-safeness of libio.
+  * debian/patches/hurd-i386/git-cancel-sig.diff: Complete fix.
+  * debian/patches/hurd-i386/git-timedrwlock-unlock.diff: Fix race between
+    timedrd/wrlock and unlock.
+  * debian/patches/hurd-i386/git-sigtimedwait-timeout.diff: Fix cleaning on
+    sigtimedwait timing out.
+  * debian/testsuite-xfail-debian.mk: Update for 2.44.
+
+  [ Aurelien Jarno ]
+  * debian/sysdeps/mips*.mk: rename extra passes to matche the dpkg
+    architecture name.
+  * debian/rules.d/build.mk: add a makefile function that queries the dpkg
+    build flags for the current pass.
+  * debian/rules.d/build.mk: enable stack protection depending on
+    -fstack-protector* flags returned by dpkg-buildflags.
+  * debian/rules.d/build.mk: add a makefile function to filter out dpkg build
+    flags incompatible with glibc and define CFLAGS from dpkg build flags.
+    Closes: #1129746.
+  * debian/control.in/{libc,i386}: downgrade the libdpkg-dev break to the
+    trixie version now that bug#1122107 got fixed in trixie. Also apply it to
+    amd64 and x32, as they are also using symbol versions used as ABI flag.
+    Limit the break to libc6, multilib packages will get the break
+    transitively through the strict depends.
+  * debian/symbols.wildcards: adjust ABI flags version, we need to match the
+    first version where the flag got introduced, not the first version where
+    the fix got introduced.
+  * debian/patches/git-updates.diff: update from upstream stable branch:
+    - Fix a null pointer dereference in the nss_database_check_reload_and_get
+      function.
+    - Fix invalid pointer arithmetic in ANSI_X3.110 iconv module
+    - Fix a typo preventing new tst-wordexp-reuse-mem to run
+    - Fix incorrect handling of DNS responses in gethostbyaddr and
+      gethostbyaddr_r (CVE-2026-4437).  Closes: #1131435.
+    - Fix invalid DNS hostnames returned by gethostbyaddr and
+      gethostbyaddr_r (CVE-2026-4438).  Closes: #113887.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Fri, 27 Mar 2026 22:08:16 +0100
+
 glibc (2.42-13) unstable; urgency=medium
 
   [ Samuel Thibault ]
