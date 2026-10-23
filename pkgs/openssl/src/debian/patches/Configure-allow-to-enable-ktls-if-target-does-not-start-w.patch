@@ -36,7 +36,7 @@ index cba57b41273f..7fa3eeae412f 100644
      "linux-latomic" => {
          inherit_from     => [ "linux-generic32" ],
 diff --git a/Configure b/Configure
-index 499585438a16..98c0bcb92a79 100755
+index 499585438a16..339c7c758c94 100755
 --- a/Configure
 +++ b/Configure
 @@ -1836,7 +1836,7 @@ unless ($disabled{devcryptoeng}) {
@@ -44,7 +44,7 @@ index 499585438a16..98c0bcb92a79 100755
      $config{ktls}="";
      my $cc = $config{CROSS_COMPILE}.$config{CC};
 -    if ($target =~ m/^linux/) {
-+    if (grep { $_ eq 'afalgeng' } @{$target{enable}}) {
++    if (grep { $_ eq 'ktls' } @{$target{enable}}) {
          system("printf '#include <sys/types.h>\n#include <linux/tls.h>' | $cc -E - >/dev/null 2>&1");
          if ($? != 0) {
              disable('too-old-kernel', 'ktls');
