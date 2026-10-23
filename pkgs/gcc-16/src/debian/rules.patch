@@ -65,7 +65,6 @@ debian_patches += \
 	gcc-arm-disable-guality-tests \
 	musl-ssp \
 	arc-stddef \
-	pr107475 \
 	gccrs-bootstrap-mipsel \
 	D-22464 \
 	libsanitizer-static-tls \

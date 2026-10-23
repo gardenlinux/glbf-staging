@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 15 amd64 i386
+# SymbolsHelper-Confirmed: 16 amd64 i386
 libasan.so.8 libx32asan8 #MINVER#
  _Unwind_RaiseException@Base 15
  _ZdaPv@Base 15
@@ -129,6 +129,7 @@ libasan.so.8 libx32asan8 #MINVER#
  ___interceptor_fflush@Base 15
  ___interceptor_fgetgrent@Base 15
  ___interceptor_fgetgrent_r@Base 15
+ ___interceptor_fgetpos@Base 16
  ___interceptor_fgetpwent@Base 15
  ___interceptor_fgetpwent_r@Base 15
  ___interceptor_fgets@Base 15
@@ -148,10 +149,15 @@ libasan.so.8 libx32asan8 #MINVER#
  ___interceptor_frexpf@Base 15
  ___interceptor_frexpl@Base 15
  ___interceptor_fscanf@Base 15
+ ___interceptor_fseek@Base 16
+ ___interceptor_fseeko@Base 16
+ ___interceptor_fsetpos@Base 16
  ___interceptor_fstatfs64@Base 15
  ___interceptor_fstatfs@Base 15
  ___interceptor_fstatvfs64@Base 15
  ___interceptor_fstatvfs@Base 15
+ ___interceptor_ftell@Base 16
+ ___interceptor_ftello@Base 16
  ___interceptor_ftime@Base 15
  ___interceptor_fwrite@Base 15
  ___interceptor_get_current_dir_name@Base 15
@@ -202,6 +208,9 @@ libasan.so.8 libx32asan8 #MINVER#
  ___interceptor_getrandom@Base 15
  ___interceptor_getresgid@Base 15
  ___interceptor_getresuid@Base 15
+ ___interceptor_getservbyname_r@Base 16
+ ___interceptor_getservbyport_r@Base 16
+ ___interceptor_getservent_r@Base 16
  ___interceptor_getsockname@Base 15
  ___interceptor_getsockopt@Base 15
  ___interceptor_getusershell@Base 15
@@ -367,6 +376,7 @@ libasan.so.8 libx32asan8 #MINVER#
  ___interceptor_remquo@Base 15
  ___interceptor_remquof@Base 15
  ___interceptor_remquol@Base 15
+ ___interceptor_rewind@Base 16
  ___interceptor_scandir64@Base 15
  ___interceptor_scandir@Base 15
  ___interceptor_scanf@Base 15
@@ -454,9 +464,14 @@ libasan.so.8 libx32asan8 #MINVER#
  ___interceptor_tempnam@Base 15
  ___interceptor_textdomain@Base 15
  ___interceptor_time@Base 15
+ ___interceptor_timer_create@Base 16
+ ___interceptor_timer_delete@Base 16
+ ___interceptor_timer_gettime@Base 16
+ ___interceptor_timer_settime@Base 16
  ___interceptor_timerfd_gettime@Base 15
  ___interceptor_timerfd_settime@Base 15
  ___interceptor_times@Base 15
+ ___interceptor_timespec_get@Base 16
  ___interceptor_tmpnam@Base 15
  ___interceptor_tmpnam_r@Base 15
  ___interceptor_tsearch@Base 15
@@ -480,9 +495,11 @@ libasan.so.8 libx32asan8 #MINVER#
  ___interceptor_waitpid@Base 15
  ___interceptor_wcrtomb@Base 15
  ___interceptor_wcscat@Base 15
+ ___interceptor_wcscpy@Base 16
  ___interceptor_wcsdup@Base 15
  ___interceptor_wcslen@Base 15
  ___interceptor_wcsncat@Base 15
+ ___interceptor_wcsncpy@Base 16
  ___interceptor_wcsnlen@Base 15
  ___interceptor_wcsnrtombs@Base 15
  ___interceptor_wcsrtombs@Base 15
@@ -856,6 +873,7 @@ libasan.so.8 libx32asan8 #MINVER#
  __interceptor_fflush@Base 15
  __interceptor_fgetgrent@Base 15
  __interceptor_fgetgrent_r@Base 15
+ __interceptor_fgetpos@Base 16
  __interceptor_fgetpwent@Base 15
  __interceptor_fgetpwent_r@Base 15
  __interceptor_fgets@Base 15
@@ -875,10 +893,15 @@ libasan.so.8 libx32asan8 #MINVER#
  __interceptor_frexpf@Base 15
  __interceptor_frexpl@Base 15
  __interceptor_fscanf@Base 15
+ __interceptor_fseek@Base 16
+ __interceptor_fseeko@Base 16
+ __interceptor_fsetpos@Base 16
  __interceptor_fstatfs64@Base 15
  __interceptor_fstatfs@Base 15
  __interceptor_fstatvfs64@Base 15
  __interceptor_fstatvfs@Base 15
+ __interceptor_ftell@Base 16
+ __interceptor_ftello@Base 16
  __interceptor_ftime@Base 15
  __interceptor_fwrite@Base 15
  __interceptor_get_current_dir_name@Base 15
@@ -929,6 +952,9 @@ libasan.so.8 libx32asan8 #MINVER#
  __interceptor_getrandom@Base 15
  __interceptor_getresgid@Base 15
  __interceptor_getresuid@Base 15
+ __interceptor_getservbyname_r@Base 16
+ __interceptor_getservbyport_r@Base 16
+ __interceptor_getservent_r@Base 16
  __interceptor_getsockname@Base 15
  __interceptor_getsockopt@Base 15
  __interceptor_getusershell@Base 15
@@ -1094,6 +1120,7 @@ libasan.so.8 libx32asan8 #MINVER#
  __interceptor_remquo@Base 15
  __interceptor_remquof@Base 15
  __interceptor_remquol@Base 15
+ __interceptor_rewind@Base 16
  __interceptor_scandir64@Base 15
  __interceptor_scandir@Base 15
  __interceptor_scanf@Base 15
@@ -1181,9 +1208,14 @@ libasan.so.8 libx32asan8 #MINVER#
  __interceptor_tempnam@Base 15
  __interceptor_textdomain@Base 15
  __interceptor_time@Base 15
+ __interceptor_timer_create@Base 16
+ __interceptor_timer_delete@Base 16
+ __interceptor_timer_gettime@Base 16
+ __interceptor_timer_settime@Base 16
  __interceptor_timerfd_gettime@Base 15
  __interceptor_timerfd_settime@Base 15
  __interceptor_times@Base 15
+ __interceptor_timespec_get@Base 16
  __interceptor_tmpnam@Base 15
  __interceptor_tmpnam_r@Base 15
  __interceptor_trampoline__Unwind_RaiseException@Base 15
@@ -1294,6 +1326,7 @@ libasan.so.8 libx32asan8 #MINVER#
  __interceptor_trampoline_fflush@Base 15
  __interceptor_trampoline_fgetgrent@Base 15
  __interceptor_trampoline_fgetgrent_r@Base 15
+ __interceptor_trampoline_fgetpos@Base 16
  __interceptor_trampoline_fgetpwent@Base 15
  __interceptor_trampoline_fgetpwent_r@Base 15
  __interceptor_trampoline_fgets@Base 15
@@ -1313,10 +1346,15 @@ libasan.so.8 libx32asan8 #MINVER#
  __interceptor_trampoline_frexpf@Base 15
  __interceptor_trampoline_frexpl@Base 15
  __interceptor_trampoline_fscanf@Base 15
+ __interceptor_trampoline_fseek@Base 16
+ __interceptor_trampoline_fseeko@Base 16
+ __interceptor_trampoline_fsetpos@Base 16
  __interceptor_trampoline_fstatfs64@Base 15
  __interceptor_trampoline_fstatfs@Base 15
  __interceptor_trampoline_fstatvfs64@Base 15
  __interceptor_trampoline_fstatvfs@Base 15
+ __interceptor_trampoline_ftell@Base 16
+ __interceptor_trampoline_ftello@Base 16
  __interceptor_trampoline_ftime@Base 15
  __interceptor_trampoline_fwrite@Base 15
  __interceptor_trampoline_get_current_dir_name@Base 15
@@ -1367,6 +1405,9 @@ libasan.so.8 libx32asan8 #MINVER#
  __interceptor_trampoline_getrandom@Base 15
  __interceptor_trampoline_getresgid@Base 15
  __interceptor_trampoline_getresuid@Base 15
+ __interceptor_trampoline_getservbyname_r@Base 16
+ __interceptor_trampoline_getservbyport_r@Base 16
+ __interceptor_trampoline_getservent_r@Base 16
  __interceptor_trampoline_getsockname@Base 15
  __interceptor_trampoline_getsockopt@Base 15
  __interceptor_trampoline_getusershell@Base 15
@@ -1532,6 +1573,7 @@ libasan.so.8 libx32asan8 #MINVER#
  __interceptor_trampoline_remquo@Base 15
  __interceptor_trampoline_remquof@Base 15
  __interceptor_trampoline_remquol@Base 15
+ __interceptor_trampoline_rewind@Base 16
  __interceptor_trampoline_scandir64@Base 15
  __interceptor_trampoline_scandir@Base 15
  __interceptor_trampoline_scanf@Base 15
@@ -1619,9 +1661,14 @@ libasan.so.8 libx32asan8 #MINVER#
  __interceptor_trampoline_tempnam@Base 15
  __interceptor_trampoline_textdomain@Base 15
  __interceptor_trampoline_time@Base 15
+ __interceptor_trampoline_timer_create@Base 16
+ __interceptor_trampoline_timer_delete@Base 16
+ __interceptor_trampoline_timer_gettime@Base 16
+ __interceptor_trampoline_timer_settime@Base 16
  __interceptor_trampoline_timerfd_gettime@Base 15
  __interceptor_trampoline_timerfd_settime@Base 15
  __interceptor_trampoline_times@Base 15
+ __interceptor_trampoline_timespec_get@Base 16
  __interceptor_trampoline_tmpnam@Base 15
  __interceptor_trampoline_tmpnam_r@Base 15
  __interceptor_trampoline_tsearch@Base 15
@@ -1645,9 +1692,11 @@ libasan.so.8 libx32asan8 #MINVER#
  __interceptor_trampoline_waitpid@Base 15
  __interceptor_trampoline_wcrtomb@Base 15
  __interceptor_trampoline_wcscat@Base 15
+ __interceptor_trampoline_wcscpy@Base 16
  __interceptor_trampoline_wcsdup@Base 15
  __interceptor_trampoline_wcslen@Base 15
  __interceptor_trampoline_wcsncat@Base 15
+ __interceptor_trampoline_wcsncpy@Base 16
  __interceptor_trampoline_wcsnlen@Base 15
  __interceptor_trampoline_wcsnrtombs@Base 15
  __interceptor_trampoline_wcsrtombs@Base 15
@@ -1711,9 +1760,11 @@ libasan.so.8 libx32asan8 #MINVER#
  __interceptor_waitpid@Base 15
  __interceptor_wcrtomb@Base 15
  __interceptor_wcscat@Base 15
+ __interceptor_wcscpy@Base 16
  __interceptor_wcsdup@Base 15
  __interceptor_wcslen@Base 15
  __interceptor_wcsncat@Base 15
+ __interceptor_wcsncpy@Base 16
  __interceptor_wcsnlen@Base 15
  __interceptor_wcsnrtombs@Base 15
  __interceptor_wcsrtombs@Base 15
@@ -1892,6 +1943,7 @@ libasan.so.8 libx32asan8 #MINVER#
  __sanitizer_syscall_post_impl_clock_settime@Base 15
  __sanitizer_syscall_post_impl_close@Base 15
  __sanitizer_syscall_post_impl_connect@Base 15
+ __sanitizer_syscall_post_impl_copy_file_range@Base 16
  __sanitizer_syscall_post_impl_creat@Base 15
  __sanitizer_syscall_post_impl_delete_module@Base 15
  __sanitizer_syscall_post_impl_dup2@Base 15
@@ -2049,6 +2101,7 @@ libasan.so.8 libx32asan8 #MINVER#
  __sanitizer_syscall_post_impl_olduname@Base 15
  __sanitizer_syscall_post_impl_open@Base 15
  __sanitizer_syscall_post_impl_open_by_handle_at@Base 15
+ __sanitizer_syscall_post_impl_openat2@Base 16
  __sanitizer_syscall_post_impl_openat@Base 15
  __sanitizer_syscall_post_impl_pause@Base 15
  __sanitizer_syscall_post_impl_pciconfig_iobase@Base 15
@@ -2238,6 +2291,7 @@ libasan.so.8 libx32asan8 #MINVER#
  __sanitizer_syscall_pre_impl_clock_settime@Base 15
  __sanitizer_syscall_pre_impl_close@Base 15
  __sanitizer_syscall_pre_impl_connect@Base 15
+ __sanitizer_syscall_pre_impl_copy_file_range@Base 16
  __sanitizer_syscall_pre_impl_creat@Base 15
  __sanitizer_syscall_pre_impl_delete_module@Base 15
  __sanitizer_syscall_pre_impl_dup2@Base 15
@@ -2395,6 +2449,7 @@ libasan.so.8 libx32asan8 #MINVER#
  __sanitizer_syscall_pre_impl_olduname@Base 15
  __sanitizer_syscall_pre_impl_open@Base 15
  __sanitizer_syscall_pre_impl_open_by_handle_at@Base 15
+ __sanitizer_syscall_pre_impl_openat2@Base 16
  __sanitizer_syscall_pre_impl_openat@Base 15
  __sanitizer_syscall_pre_impl_pause@Base 15
  __sanitizer_syscall_pre_impl_pciconfig_iobase@Base 15
@@ -2647,6 +2702,7 @@ libasan.so.8 libx32asan8 #MINVER#
  fflush@Base 15
  fgetgrent@Base 15
  fgetgrent_r@Base 15
+ fgetpos@Base 16
  fgetpwent@Base 15
  fgetpwent_r@Base 15
  fgets@Base 15
@@ -2666,10 +2722,15 @@ libasan.so.8 libx32asan8 #MINVER#
  frexpf@Base 15
  frexpl@Base 15
  fscanf@Base 15
+ fseek@Base 16
+ fseeko@Base 16
+ fsetpos@Base 16
  fstatfs64@Base 15
  fstatfs@Base 15
  fstatvfs64@Base 15
  fstatvfs@Base 15
+ ftell@Base 16
+ ftello@Base 16
  ftime@Base 15
  fwrite@Base 15
  get_current_dir_name@Base 15
@@ -2720,6 +2781,9 @@ libasan.so.8 libx32asan8 #MINVER#
  getrandom@Base 15
  getresgid@Base 15
  getresuid@Base 15
+ getservbyname_r@Base 16
+ getservbyport_r@Base 16
+ getservent_r@Base 16
  getsockname@Base 15
  getsockopt@Base 15
  getusershell@Base 15
@@ -2885,6 +2949,7 @@ libasan.so.8 libx32asan8 #MINVER#
  remquo@Base 15
  remquof@Base 15
  remquol@Base 15
+ rewind@Base 16
  scandir64@Base 15
  scandir@Base 15
  scanf@Base 15
@@ -2972,9 +3037,14 @@ libasan.so.8 libx32asan8 #MINVER#
  tempnam@Base 15
  textdomain@Base 15
  time@Base 15
+ timer_create@Base 16
+ timer_delete@Base 16
+ timer_gettime@Base 16
+ timer_settime@Base 16
  timerfd_gettime@Base 15
  timerfd_settime@Base 15
  times@Base 15
+ timespec_get@Base 16
  tmpnam@Base 15
  tmpnam_r@Base 15
  tsearch@Base 15
@@ -2998,9 +3068,11 @@ libasan.so.8 libx32asan8 #MINVER#
  waitpid@Base 15
  wcrtomb@Base 15
  wcscat@Base 15
+ wcscpy@Base 16
  wcsdup@Base 15
  wcslen@Base 15
  wcsncat@Base 15
+ wcsncpy@Base 16
  wcsnlen@Base 15
  wcsnrtombs@Base 15
  wcsrtombs@Base 15

@@ -5053,7 +5053,8 @@ Architecture: ifdef(`TARGET',`CROSS_ARCH',`any')
 ifdef(`MULTIARCH', `Multi-Arch: same
 ')`'dnl
 Section: libdevel
-Depends: BASELDEP, libga68-`'GA68_V`'LS (>= ${ga68:Version}),
+Depends: BASELDEP,ifdef(`TARGET',`',` libgc-dev,')
+  libga68-`'GA68_V`'LS (>= ${ga68:Version}),
   ${shlibs:Depends}, ${misc:Depends}
 BUILT_USING`'dnl
 Description: GNU Algol 68 standard library
