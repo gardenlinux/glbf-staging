@@ -1,3 +1,17 @@
+gcc-15 (15.2.0-15) unstable; urgency=medium
+
+  * Update to git 20260307 from the gcc-15 branch.
+    - Fix PR ada/124226, PR ada/124224, PR target/123807 (loongarch).
+      PR middle-end/124250, PR ipa/122856, PR target/122097 (loongarch),
+      PR ada/124285, PR ada/123306, PR c++/123845, PR lto/121588,
+      PR libstdc++/124363, PR libstdc++/114865, PR libstdc++/123875.
+  * Fix backport builds for Ubuntu 24.04.
+  * Fix PR demangler/106641, taken from the trunk.
+  * libsanitizer/TSan: Fix determining static TLS blocks. Addresses: #1126312.
+  * Stop building packages now built by GCC 16.
+
+ -- Matthias Klose <doko@debian.org>  Sat, 07 Mar 2026 12:32:03 +0100
+
 gcc-15 (15.2.0-14) unstable; urgency=medium
 
   * Update to git 20260223 from the gcc-15 branch.

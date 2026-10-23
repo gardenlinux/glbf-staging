@@ -7,7 +7,7 @@ Standards-Version: 4.7.3
 Build-Depends: debhelper (>= 11), dpkg-dev (>= 1.17.14), g++-multilib [amd64 i386 mips mips64 mips64el mips64r6 mips64r6el mipsel mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6 mipsr6el powerpc ppc64 s390 sparc sparc64 x32] <!cross>,
   libc6.1-dev (>= 2.23-1~) [alpha ia64] | libc0.3-dev (>= 2.23-1~) [hurd-amd64 hurd-i386] | libc6-dev (>= 2.23-1~), libc6-dev-amd64 [i386 x32], libc6-dev-sparc64 [sparc], libc6-dev-sparc [sparc64], libc6-dev-s390x [s390], libc6-dev-i386 [amd64 x32], libc6-dev-powerpc [ppc64], libc6-dev-ppc64 [powerpc], lib32gcc-s1 [amd64 ppc64 mipsn32 mipsn32el mips64 mips64el mipsn32r6 mipsn32r6el mips64r6 mips64r6el sparc64 x32], libn32gcc-s1 [mips mipsel mips64 mips64el mipsr6 mipsr6el mips64r6 mips64r6el], lib64gcc-s1 [i386 mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el powerpc sparc s390 x32], libc6-dev-mips64 [mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el], libc6-dev-mipsn32 [mips mipsel mips64 mips64el mipsr6 mipsr6el mips64r6 mips64r6el], libc6-dev-mips32 [mipsn32 mipsn32el mips64 mips64el mipsn32r6 mipsn32r6el mips64r6 mips64r6el], libc6-dev-x32 [amd64 i386], libx32gcc-s1 [amd64 i386], libc6.1-dbg [alpha ia64] | libc0.3-dbg [hurd-amd64 hurd-i386] | libc6-dbg,
   linux-libc-dev [m68k],
-  m4, libtool, autoconf2.69,
+  m4, libtool, autoconf2.69, gcc-16-base,
   dwz, libunwind8-dev [ia64], libatomic-ops-dev [ia64],
   gawk, lzma, xz-utils, patchutils,
   libzstd-dev, zlib1g-dev, systemtap-sdt-dev [linux-any],
@@ -38,57 +38,6 @@ Description: GCC, the GNU Compiler Collection (base package)
  This package contains files common to all languages and libraries
  contained in the GNU Compiler Collection (GCC).
 
-Package: libgcc-s1
-X-DH-Build-For-Type: target
-Architecture: any
-Section: libs
-Depends: gcc-15-base (= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Provides: libgcc1 (= ${gcc:EpochVersion}),
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-XB-Important: yes
-Protected: yes
-Breaks: ${libgcc:Breaks}
-Replaces: libgcc1 (<< 1:10)
-Description: GCC support library
- Shared version of the support library, a library of internal subroutines
- that GCC uses to overcome shortcomings of particular machines, or
- special needs for some languages.
-
-Package: libgcc-s2
-X-DH-Build-For-Type: target
-Architecture: m68k
-Section: libs
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-XB-Important: yes
-Protected: yes
-Depends: gcc-15-base (= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Provides: libgcc2 (= ${gcc:EpochVersion}),
-Breaks: ${libgcc:Breaks}
-Replaces: libgcc2 (<< 1:10)
-Description: GCC support library
- Shared version of the support library, a library of internal subroutines
- that GCC uses to overcome shortcomings of particular machines, or
- special needs for some languages.
-
-Package: libgcc-s4
-X-DH-Build-For-Type: target
-Architecture: hppa
-Multi-Arch: same
-XB-Important: yes
-Protected: yes
-Pre-Depends: ${misc:Pre-Depends}
-Provides: libgcc4 (= ${gcc:EpochVersion})
-Breaks: ${libgcc:Breaks}
-Replaces: libgcc4 (<< 1:10)
-Section: libs
-Depends: gcc-15-base (= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: GCC support library
- Shared version of the support library, a library of internal subroutines
- that GCC uses to overcome shortcomings of particular machines, or
- special needs for some languages.
-
 Package: libgcc-15-dev
 X-DH-Build-For-Type: target
 Architecture: any
@@ -105,18 +54,6 @@ Description: GCC support library (development files)
  This package contains the headers and static library files necessary for
  building C programs which use libgcc, libgomp, libquadmath, libssp or libitm.
 
-Package: lib64gcc-s1
-X-DH-Build-For-Type: target
-Architecture: i386 powerpc sparc s390 mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el x32
-Section: libs
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${misc:Depends}
-Breaks: lib64gcc1 (<< 1:10)
-Replaces: lib64gcc1 (<< 1:10)
-Description: GCC support library (64bit)
- Shared version of the support library, a library of internal subroutines
- that GCC uses to overcome shortcomings of particular machines, or
- special needs for some languages.
-
 Package: lib64gcc-15-dev
 X-DH-Build-For-Type: target
 Architecture: i386 powerpc sparc s390 mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el x32
@@ -131,19 +68,6 @@ Depends: gcc-15-base (= ${gcc:Version}), ${dep:libgccbiarch}, ${dep:libsspbiarch
 Description: GCC support library (64bit development files)
  This package contains the headers and static library files necessary for
  building C programs which use libgcc, libgomp, libquadmath, libssp or libitm.
-
-Package: lib32gcc-s1
-X-DH-Build-For-Type: target
-Architecture: amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mips64 mips64el mipsn32r6 mipsn32r6el mips64r6 mips64r6el
-Section: libs
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${misc:Depends}
-Conflicts: ${confl:lib32}
-Breaks: lib32gcc1 (<< 1:10)
-Replaces: lib32gcc1 (<< 1:10)
-Description: GCC support library (32 bit Version)
- Shared version of the support library, a library of internal subroutines
- that GCC uses to overcome shortcomings of particular machines, or
- special needs for some languages.
 
 Package: lib32gcc-15-dev
 X-DH-Build-For-Type: target
@@ -160,19 +84,6 @@ Description: GCC support library (32 bit development files)
  This package contains the headers and static library files necessary for
  building C programs which use libgcc, libgomp, libquadmath, libssp or libitm.
 
-Package: libn32gcc-s1
-X-DH-Build-For-Type: target
-Architecture: mips mipsel mips64 mips64el mipsr6 mipsr6el mips64r6 mips64r6el
-Section: libs
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${misc:Depends}
-Breaks: libn32gcc1 (<< 1:10)
-Replaces: libn32gcc1 (<< 1:10)
-Conflicts: lib32gcc-s1 [amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mipsn32r6 mipsn32r6el]
-Description: GCC support library (n32)
- Shared version of the support library, a library of internal subroutines
- that GCC uses to overcome shortcomings of particular machines, or
- special needs for some languages.
-
 Package: libn32gcc-15-dev
 X-DH-Build-For-Type: target
 Architecture: mips mipsel mips64 mips64el mipsr6 mipsr6el mips64r6 mips64r6el
@@ -187,18 +98,6 @@ Depends: gcc-15-base (= ${gcc:Version}), ${dep:libgccbiarch}, ${dep:libsspbiarch
 Description: GCC support library (n32 development files)
  This package contains the headers and static library files necessary for
  building C programs which use libgcc, libgomp, libquadmath, libssp or libitm.
-
-Package: libx32gcc-s1
-X-DH-Build-For-Type: target
-Architecture: amd64 i386
-Section: libs
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${misc:Depends}
-Breaks: libx32gcc1 (<< 1:10)
-Replaces: libx32gcc1 (<< 1:10)
-Description: GCC support library (x32)
- Shared version of the support library, a library of internal subroutines
- that GCC uses to overcome shortcomings of particular machines, or
- special needs for some languages.
 
 Package: libx32gcc-15-dev
 X-DH-Build-For-Type: target
@@ -1564,385 +1463,6 @@ Description: GNU C++ compiler (multilib support)
  This is a dependency package, depending on development packages
  for the non-default multilib architecture(s).
 
-Package: libgomp1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Breaks: ${multiarch:breaks}
-Depends: gcc-15-base (= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: GCC OpenMP (GOMP) support library
- GOMP is an implementation of OpenMP for the C, C++, and Fortran compilers
- in the GNU Compiler Collection.
-
-Package: lib32gomp1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mips64 mips64el mipsn32r6 mipsn32r6el mips64r6 mips64r6el
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: ${confl:lib32}
-Description: GCC OpenMP (GOMP) support library (32bit)
- GOMP is an implementation of OpenMP for the C, C++, and Fortran compilers
- in the GNU Compiler Collection.
-
-Package: lib64gomp1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: i386 powerpc sparc s390 mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el x32
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: GCC OpenMP (GOMP) support library (64bit)
- GOMP is an implementation of OpenMP for the C, C++, and Fortran compilers
- in the GNU Compiler Collection.
-
-Package: libn32gomp1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: mips mipsel mips64 mips64el mipsr6 mipsr6el mips64r6 mips64r6el
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: lib32gomp1 [amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mipsn32r6 mipsn32r6el]
-Description: GCC OpenMP (GOMP) support library (n32)
- GOMP is an implementation of OpenMP for the C, C++, and Fortran compilers
- in the GNU Compiler Collection.
-
-Package: libx32gomp1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 i386
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: GCC OpenMP (GOMP) support library (x32)
- GOMP is an implementation of OpenMP for the C, C++, and Fortran compilers
- in the GNU Compiler Collection.
-
-Package: libitm1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: gcc-15-base (= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: GNU Transactional Memory Library
- GNU Transactional Memory Library (libitm) provides transaction support for
- accesses to the memory of a process, enabling easy-to-use synchronization of
- accesses to shared memory by several threads.
-
-Package: lib32itm1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mips64 mips64el mipsn32r6 mipsn32r6el mips64r6 mips64r6el
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: ${confl:lib32}
-Description: GNU Transactional Memory Library (32bit)
- GNU Transactional Memory Library (libitm) provides transaction support for
- accesses to the memory of a process, enabling easy-to-use synchronization of
- accesses to shared memory by several threads.
-
-Package: lib64itm1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: i386 powerpc sparc s390 mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el x32
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: GNU Transactional Memory Library (64bit)
- GNU Transactional Memory Library (libitm) provides transaction support for
- accesses to the memory of a process, enabling easy-to-use synchronization of
- accesses to shared memory by several threads.
-
-#Package: libn32itm`'ITM_SO`'LS
-#Section: ifdef(`TARGET',`devel',`libs')
-#Architecture: ifdef(`TARGET',`CROSS_ARCH',`biarchn32_archs')
-#Priority: optional
-#Depends: BASELDEP, ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-#ifdef(`TARGET',`dnl',`Conflicts: lib32itm`'ITM_SO [biarch32_conflicts]')
-#BUILT_USING`'dnl
-#Description: GNU Transactional Memory Library (n32)
-# GNU Transactional Memory Library (libitm) provides transaction support for
-# accesses to the memory of a process, enabling easy-to-use synchronization of
-# accesses to shared memory by several threads.
-
-#Package: libn32itm`'ITM_SO-dbg`'LS
-#Architecture: ifdef(`TARGET',`CROSS_ARCH',`biarchn32_archs')
-#Section: debug
-#Priority: optional
-#Depends: BASELDEP, libdep(itm`'ITM_SO,n32,=), ${misc:Depends}
-#ifdef(`TARGET',`dnl',`Conflicts: lib32itm`'ITM_SO-dbg [biarch32_conflicts]')
-#BUILT_USING`'dnl
-#Description: GNU Transactional Memory Library (n32 debug symbols)
-# GNU Transactional Memory Library (libitm) provides transaction support for
-# accesses to the memory of a process, enabling easy-to-use synchronization of
-# accesses to shared memory by several threads.
-
-Package: libx32itm1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 i386
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: GNU Transactional Memory Library (x32)
- This manual documents the usage and internals of libitm. It provides
- transaction support for accesses to the memory of a process, enabling
- easy-to-use synchronization of accesses to shared memory by several threads.
-
-Package: libatomic1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: gcc-15-base (= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: support library providing __atomic built-in functions
- library providing __atomic built-in functions. When an atomic call cannot
- be turned into lock-free instructions, GCC will make calls into this library.
-
-Package: lib32atomic1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mips64 mips64el mipsn32r6 mipsn32r6el mips64r6 mips64r6el
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: ${confl:lib32}
-Description: support library providing __atomic built-in functions (32bit)
- library providing __atomic built-in functions. When an atomic call cannot
- be turned into lock-free instructions, GCC will make calls into this library.
-
-Package: lib64atomic1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: i386 powerpc sparc s390 mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el x32
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: support library providing __atomic built-in functions (64bit)
- library providing __atomic built-in functions. When an atomic call cannot
- be turned into lock-free instructions, GCC will make calls into this library.
-
-Package: libn32atomic1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: mips mipsel mips64 mips64el mipsr6 mipsr6el mips64r6 mips64r6el
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: lib32atomic1 [amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mipsn32r6 mipsn32r6el]
-Description: support library providing __atomic built-in functions (n32)
- library providing __atomic built-in functions. When an atomic call cannot
- be turned into lock-free instructions, GCC will make calls into this library.
-
-Package: libx32atomic1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 i386
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: support library providing __atomic built-in functions (x32)
- library providing __atomic built-in functions. When an atomic call cannot
- be turned into lock-free instructions, GCC will make calls into this library.
-
-Package: libasan8
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: gcc-15-base (= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: AddressSanitizer -- a fast memory error detector
- AddressSanitizer (ASan) is a fast memory error detector.  It finds
- use-after-free and {heap,stack,global}-buffer overflow bugs in C/C++ programs.
-
-Package: lib32asan8
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mips64 mips64el mipsn32r6 mipsn32r6el mips64r6 mips64r6el
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: ${confl:lib32}
-Description: AddressSanitizer -- a fast memory error detector (32bit)
- AddressSanitizer (ASan) is a fast memory error detector.  It finds
- use-after-free and {heap,stack,global}-buffer overflow bugs in C/C++ programs.
-
-Package: lib64asan8
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: i386 powerpc sparc s390 mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el x32
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: AddressSanitizer -- a fast memory error detector (64bit)
- AddressSanitizer (ASan) is a fast memory error detector.  It finds
- use-after-free and {heap,stack,global}-buffer overflow bugs in C/C++ programs.
-
-#Package: libn32asan`'ASAN_SO`'LS
-#Section: ifdef(`TARGET',`devel',`libs')
-#Architecture: ifdef(`TARGET',`CROSS_ARCH',`biarchn32_archs')
-#Priority: optional
-#Depends: BASELDEP, ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-#ifdef(`TARGET',`dnl',`Conflicts: lib32asan`'ASAN_SO [biarch32_conflicts]')
-#BUILT_USING`'dnl
-#Description: AddressSanitizer -- a fast memory error detector (n32)
-# AddressSanitizer (ASan) is a fast memory error detector.  It finds
-# use-after-free and {heap,stack,global}-buffer overflow bugs in C/C++ programs.
-
-#Package: libn32asan`'ASAN_SO-dbg`'LS
-#Architecture: ifdef(`TARGET',`CROSS_ARCH',`biarchn32_archs')
-#Section: debug
-#Priority: optional
-#Depends: BASELDEP, libdep(asan`'ASAN_SO,n32,=), ${misc:Depends}
-#ifdef(`TARGET',`dnl',`Conflicts: lib32asan`'ASAN_SO-dbg [biarch32_conflicts]')
-#BUILT_USING`'dnl
-#Description: AddressSanitizer -- a fast memory error detector (n32 debug symbols)
-# AddressSanitizer (ASan) is a fast memory error detector.  It finds
-# use-after-free and {heap,stack,global}-buffer overflow bugs in C/C++ programs.
-
-Package: libx32asan8
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 i386
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: AddressSanitizer -- a fast memory error detector (x32)
- AddressSanitizer (ASan) is a fast memory error detector.  It finds
- use-after-free and {heap,stack,global}-buffer overflow bugs in C/C++ programs.
-
-Package: libhwasan0
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: gcc-15-base (= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: AddressSanitizer -- a fast memory error detector
- AddressSanitizer (HWASan) is a fast memory error detector.  It finds
- use-after-free and {heap,stack,global}-buffer overflow bugs in C/C++ programs.
-
-Package: liblsan0
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: gcc-15-base (= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: LeakSanitizer -- a memory leak detector (runtime)
- LeakSanitizer (Lsan) is a memory leak detector which is integrated
- into AddressSanitizer.
-
-Package: libtsan2
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: gcc-15-base (= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: ThreadSanitizer -- a Valgrind-based detector of data races (runtime)
- ThreadSanitizer (Tsan) is a data race detector for C/C++ programs.
- The Linux and Mac versions are based on Valgrind.
-
-Package: libubsan1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: gcc-15-base (= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: UBSan -- undefined behaviour sanitizer (runtime)
- UndefinedBehaviorSanitizer can be enabled via -fsanitize=undefined.
- Various computations will be instrumented to detect undefined behavior
- at runtime. Available for C and C++.
-
-Package: lib32ubsan1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mips64 mips64el mipsn32r6 mipsn32r6el mips64r6 mips64r6el
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: ${confl:lib32}
-Description: UBSan -- undefined behaviour sanitizer (32bit)
- UndefinedBehaviorSanitizer can be enabled via -fsanitize=undefined.
- Various computations will be instrumented to detect undefined behavior
- at runtime. Available for C and C++.
-
-Package: lib64ubsan1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: i386 powerpc sparc s390 mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el x32
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: UBSan -- undefined behaviour sanitizer (64bit)
- UndefinedBehaviorSanitizer can be enabled via -fsanitize=undefined.
- Various computations will be instrumented to detect undefined behavior
- at runtime. Available for C and C++.
-
-#Package: libn32ubsan`'UBSAN_SO`'LS
-#Section: ifdef(`TARGET',`devel',`libs')
-#Architecture: ifdef(`TARGET',`CROSS_ARCH',`biarchn32_archs')
-#Priority: optional
-#Depends: BASELDEP, ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-#ifdef(`TARGET',`dnl',`Conflicts: lib32ubsan`'UBSAN_SO [biarch32_conflicts]')
-#BUILT_USING`'dnl
-#Description: UBSan -- undefined behaviour sanitizer (n32)
-# UndefinedBehaviorSanitizer can be enabled via -fsanitize=undefined.
-# Various computations will be instrumented to detect undefined behavior
-# at runtime. Available for C and C++.
-
-Package: libx32ubsan1
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 i386
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: UBSan -- undefined behaviour sanitizer (x32)
- UndefinedBehaviorSanitizer can be enabled via -fsanitize=undefined.
- Various computations will be instrumented to detect undefined behavior
- at runtime. Available for C and C++.
-
-Package: libquadmath0
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: gcc-15-base (= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: GCC Quad-Precision Math Library
- A library, which provides quad-precision mathematical functions on targets
- supporting the __float128 datatype. The library is used to provide on such
- targets the REAL(16) type in the GNU Fortran compiler.
-
-Package: lib32quadmath0
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mips64 mips64el mipsn32r6 mipsn32r6el mips64r6 mips64r6el
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: ${confl:lib32}
-Description: GCC Quad-Precision Math Library (32bit)
- A library, which provides quad-precision mathematical functions on targets
- supporting the __float128 datatype. The library is used to provide on such
- targets the REAL(16) type in the GNU Fortran compiler.
-
-Package: lib64quadmath0
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: i386 powerpc sparc s390 mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el x32
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: GCC Quad-Precision Math Library  (64bit)
- A library, which provides quad-precision mathematical functions on targets
- supporting the __float128 datatype. The library is used to provide on such
- targets the REAL(16) type in the GNU Fortran compiler.
-
-#Package: libn32quadmath`'QMATH_SO`'LS
-#Section: ifdef(`TARGET',`devel',`libs')
-#Architecture: ifdef(`TARGET',`CROSS_ARCH',`biarchn32_archs')
-#Priority: optional
-#Depends: BASELDEP, ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-#ifdef(`TARGET',`dnl',`Conflicts: lib32quadmath`'QMATH_SO [biarch32_conflicts]')
-#BUILT_USING`'dnl
-#Description: GCC Quad-Precision Math Library (n32)
-# A library, which provides quad-precision mathematical functions on targets
-# supporting the __float128 datatype. The library is used to provide on such
-# targets the REAL(16) type in the GNU Fortran compiler.
-
-Package: libx32quadmath0
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 i386
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: GCC Quad-Precision Math Library (x32)
- A library, which provides quad-precision mathematical functions on targets
- supporting the __float128 datatype. The library is used to provide on such
- targets the REAL(16) type in the GNU Fortran compiler.
-
-Package: libcc1-0
-Section: libs
-Architecture: any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: gcc-15-base (= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: GCC cc1 plugin for GDB
- libcc1 is a plugin for GDB.
-
 Package: libgccjit15
 Section: libs
 Architecture: any
@@ -1977,21 +1497,6 @@ Suggests: libgccjit-15-dbg
 Description: GCC just-in-time compilation (development files)
  libgccjit provides an embeddable shared library with an API for adding
  compilation to existing programs using GCC.
-
-Package: libgdiagnostics0
-Section: libs
-Architecture: any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: gcc-15-base (= ${gcc:Version}),
-  ${shlibs:Depends}, ${misc:Depends}
-Description: GCC diagnostic-handling code wrapped into a library (shared library)
- GCCs diagnostic-handling code covers things like
-  - quoting pertinent source code (with a cache)
-  - underlining points and ranges in the source code, possibly with labels
-  - emitting fix-it hints
-  - generating patches from fix-it hints
-  - SARIF output
 
 #Package: libgdiagnostics`'PV-doc
 #Section: doc
@@ -2819,50 +2324,6 @@ Description: Runtime library for GNU Objective-C applications (x32 development f
  This package contains the headers and static library files needed to build
  GNU ObjC applications.
 
-Package: libobjc4
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: gcc-15-base (= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: Runtime library for GNU Objective-C applications
- Library needed for GNU ObjC applications linked against the shared library.
-
-Package: lib64objc4
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: i386 powerpc sparc s390 mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el x32
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: Runtime library for GNU Objective-C applications (64bit)
- Library needed for GNU ObjC applications linked against the shared library.
-
-Package: lib32objc4
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mips64 mips64el mipsn32r6 mipsn32r6el mips64r6 mips64r6el
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: ${confl:lib32}
-Description: Runtime library for GNU Objective-C applications (32bit)
- Library needed for GNU ObjC applications linked against the shared library.
-
-Package: libn32objc4
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: mips mipsel mips64 mips64el mipsr6 mipsr6el mips64r6 mips64r6el
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: lib32objc4 [amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mipsn32r6 mipsn32r6el]
-Description: Runtime library for GNU Objective-C applications (n32)
- Library needed for GNU ObjC applications linked against the shared library.
-
-Package: libx32objc4
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 i386
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: Runtime library for GNU Objective-C applications (x32)
- Library needed for GNU ObjC applications linked against the shared library.
-
 Package: gfortran-15-alpha-linux-gnu
 Architecture: alpha
 Multi-Arch: foreign
@@ -3264,56 +2725,6 @@ Depends: gcc-15-base (= ${gcc:Version}), libx32gcc-15-dev (= ${gcc:Version}), li
 Description: Runtime library for GNU Fortran applications (x32 development files)
  This package contains the headers and static library files needed to build
  GNU Fortran applications.
-
-Package: libgfortran5
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Breaks: ${multiarch:breaks}
-Depends: gcc-15-base (= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: Runtime library for GNU Fortran applications
- Library needed for GNU Fortran applications linked against the
- shared library.
-
-Package: lib64gfortran5
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: i386 powerpc sparc s390 mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el x32
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: Runtime library for GNU Fortran applications (64bit)
- Library needed for GNU Fortran applications linked against the
- shared library.
-
-Package: lib32gfortran5
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mips64 mips64el mipsn32r6 mipsn32r6el mips64r6 mips64r6el
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: ${confl:lib32}
-Description: Runtime library for GNU Fortran applications (32bit)
- Library needed for GNU Fortran applications linked against the
- shared library.
-
-Package: libn32gfortran5
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: mips mipsel mips64 mips64el mipsr6 mipsr6el mips64r6 mips64r6el
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Conflicts: lib32gfortran5 [amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mipsn32r6 mipsn32r6el]
-Description: Runtime library for GNU Fortran applications (n32)
- Library needed for GNU Fortran applications linked against the
- shared library.
-
-Package: libx32gfortran5
-X-DH-Build-For-Type: target
-Section: libs
-Architecture: amd64 i386
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, ${misc:Depends}
-Description: Runtime library for GNU Fortran applications (x32)
- Library needed for GNU Fortran applications linked against the
- shared library.
 
 Package: gccgo-15-alpha-linux-gnu
 Architecture: alpha
@@ -3783,75 +3194,6 @@ Depends: gcc-15-base (= ${gcc:Version}), ${dep:libcbiarch}, ${shlibs:Depends}, $
 Description: Runtime library for GNU Go applications (x32)
  Library needed for GNU Go applications linked against the
  shared library.
-
-Package: libstdc++6
-X-DH-Build-For-Type: target
-Architecture: any
-Section: libs
-Depends: gcc-15-base (= ${gcc:Version}), ${dep:libc}, ${shlibs:Depends}, ${misc:Depends}
-Provides:
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Breaks: ${multiarch:breaks}
-Conflicts: scim (<< 1.4.2-1)
-Replaces: libstdc++6-15-dbg (<< 4.9.0-3)
-Description: GNU Standard C++ Library v3
- This package contains an additional runtime library for C++ programs
- built with the GNU compiler.
- .
- libstdc++-v3 is a complete rewrite from the previous libstdc++-v2, which
- was included up to g++-2.95. The first version of libstdc++-v3 appeared
- in g++-3.0.
-
-Package: lib32stdc++6
-X-DH-Build-For-Type: target
-Architecture: amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mips64 mips64el mipsn32r6 mipsn32r6el mips64r6 mips64r6el
-Section: libs
-Depends: gcc-15-base (= ${gcc:Version}), lib32gcc-s1 (>= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Conflicts: ${confl:lib32}
-Description: GNU Standard C++ Library v3 (32 bit Version)
- This package contains an additional runtime library for C++ programs
- built with the GNU compiler.
-
-Package: lib64stdc++6
-X-DH-Build-For-Type: target
-Architecture: i386 powerpc sparc s390 mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el x32
-Section: libs
-Depends: gcc-15-base (= ${gcc:Version}), lib64gcc-s1 (>= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: GNU Standard C++ Library v3 (64bit)
- This package contains an additional runtime library for C++ programs
- built with the GNU compiler.
- .
- libstdc++-v3 is a complete rewrite from the previous libstdc++-v2, which
- was included up to g++-2.95. The first version of libstdc++-v3 appeared
- in g++-3.0.
-
-Package: libn32stdc++6
-X-DH-Build-For-Type: target
-Architecture: mips mipsel mips64 mips64el mipsr6 mipsr6el mips64r6 mips64r6el
-Section: libs
-Depends: gcc-15-base (= ${gcc:Version}), libn32gcc-s1 (>= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Conflicts: lib32stdc++6 [amd64 ppc64 sparc64 x32 mipsn32 mipsn32el mipsn32r6 mipsn32r6el]
-Description: GNU Standard C++ Library v3 (n32)
- This package contains an additional runtime library for C++ programs
- built with the GNU compiler.
- .
- libstdc++-v3 is a complete rewrite from the previous libstdc++-v2, which
- was included up to g++-2.95. The first version of libstdc++-v3 appeared
- in g++-3.0.
-
-Package: libx32stdc++6
-X-DH-Build-For-Type: target
-Architecture: amd64 i386
-Section: libs
-Depends: gcc-15-base (= ${gcc:Version}), libx32gcc-s1 (>= ${gcc:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: GNU Standard C++ Library v3 (x32)
- This package contains an additional runtime library for C++ programs
- built with the GNU compiler.
- .
- libstdc++-v3 is a complete rewrite from the previous libstdc++-v2, which
- was included up to g++-2.95. The first version of libstdc++-v3 appeared
- in g++-3.0.
 
 Package: libstdc++-15-dev
 X-DH-Build-For-Type: target

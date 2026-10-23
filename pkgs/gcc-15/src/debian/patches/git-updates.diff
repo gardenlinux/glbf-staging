@@ -1,7 +1,7 @@
-# DP: updates from the 15 branch upto 20260223 (ababaaf45fa).
+# DP: updates from the 15 branch upto 20260307 (1a43136f0d2).
 
 LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
-	5115c7e447fc07457443df874bf57840e8316d5f 546758a8ac5412285ab6bee799fb3d882de77041 \
+	5115c7e447fc07457443df874bf57840e8316d5f 1a43136f0d2b5cb3472b106b4fa95c2ee5653f50 \
 	| awk '/^diff .*\.texi/ {skip=1; next} /^diff / { skip=0 } skip==0' \
 	| grep -v -E '^(diff|index)'
 
@@ -111,7 +111,81 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
      c_fix_arg = "^(extern int __sigsetjmp \\(struct __jmp_buf_tag) "
 --- a/src/gcc/ChangeLog
 +++ b/src/gcc/ChangeLog
-@@ -1,3 +1,2086 @@
+@@ -1,3 +1,2160 @@
++2026-03-05  Xi Ruoyao  <xry111@xry111.site>
++
++	Backported from master:
++	2026-03-05  Xi Ruoyao  <xry111@xry111.site>
++
++	PR target/123807
++	PR middle-end/124250
++	* config/loongarch/loongarch.cc
++	(loongarch_expand_vector_init_same): Revert r16-7163 change.
++
++2026-03-04  Martin Jambor  <mjambor@suse.cz>
++
++	Backported from master:
++	2026-02-20  Martin Jambor  <mjambor@suse.cz>
++
++	PR ipa/122856
++	* ipa-cp.cc (self_recursive_pass_through_p): Test jump function type first.
++	(self_recursive_ancestor_p): New function.
++	(find_scalar_values_for_callers_subset): Test also for self-recursive
++	ancestor jump functions.
++	(push_agg_values_for_index_from_edge): Likewise.
++
++2026-03-04  Xi Ruoyao  <xry111@xry111.site>
++
++	Backported from master:
++	2026-02-26  Xi Ruoyao  <xry111@xry111.site>
++
++	PR middle-end/124250
++	PR target/123807
++	* optabs.cc (expand_binop): Extend the shift amount if it's
++	narrower than the element of the shifted vector.
++
++2026-02-26  Xi Ruoyao  <xry111@xry111.site>
++
++	Revert:
++	2025-11-08  Lulu Cheng  <chenglulu@loongson.cn>
++
++	PR target/122097
++	* config/loongarch/loongarch.cc
++	(loongarch_const_vector_same_bytes_p): Add processing for
++	floating-point vector data.
++
++2026-02-26  Xi Ruoyao  <xry111@xry111.site>
++
++	Backported from master:
++	2026-02-03  Xi Ruoyao  <xry111@xry111.site>
++
++	* config/loongarch/predicates.md (const_vector_neg_fp_operand):
++	New define_predicate.
++	(reg_or_vector_neg_fp_operand): New define_predicate.
++	* config/loongarch/lasx.md (copysign<mode>3): Remove.
++	(xorsign<mode>3): Remove.
++	* config/loongarch/lsx.md (copysign<mode>3): Remove.
++	(@xorsign<mode>3): Remove.
++	* config/loongarch/simd.md (copysign<mode>3): New define_expand.
++	(@xorsign<mode>3): New define_expand.
++	(and<mode>3): Only allow IVEC instead of ALLVEC.
++	(ior<mode>3): Likewise.
++	(xor<mode>3): Likewise.
++	* config/loongarch/loongarch.cc (loongarch_print_operand): No
++	longer allow floating-point vector constants for %V.
++	(loongarch_const_vector_bitimm_set_p): Always return false for
++	floating-point vector constants.
++	(loongarch_build_signbit_mask): Factor out force_reg.
++	(loongarch_emit_swrsqrtsf): Use integer vector mode instead of
++	floating-point vector mode when masking zero inputs.
++
++2026-02-25  Christophe Lyon  <christophe.lyon@linaro.org>
++
++	Backported from master:
++	2025-06-02  Christophe Lyon  <christophe.lyon@linaro.org>
++
++	* doc/sourcebuild.texi (tls_link): Add documentation.
++
 +2026-02-22  Nathaniel Shead  <nathanieloshead@gmail.com>
 +
 +	Backported from master:
@@ -2202,10 +2276,44 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
 +++ b/src/gcc/DATESTAMP
 @@ -1 +1 @@
 -20250808
-+20260223
++20260307
 --- a/src/gcc/ada/ChangeLog
 +++ b/src/gcc/ada/ChangeLog
-@@ -1,3 +1,345 @@
+@@ -1,3 +1,379 @@
++2026-02-28  Eric Botcazou  <ebotcazou@adacore.com>
++
++	PR ada/124285
++	* gcc-interface/decl.cc (components_to_record): Force a packed
++	layout for the innermost variant of an unchecked union type with
++	fixed part and full representation clause.
++
++2026-02-27  Eric Botcazou  <ebotcazou@adacore.com>
++
++	PR ada/123306
++	* freeze.adb (Freeze_Entity): For a class-wide equivalent type of
++	a non-interface root type, freeze the root type before it.
++	* sem_ch3.adb (Derived_Type_Declaration): Minor tweak.
++	* sem_ch12.adb (Analyze_One_Association): Revert latest change.
++	* sem_ch13.adb (Analyze_Attribute_Definition_Clause) <Size>: When
++	the prefix is a class-wide type, insert the declaration of the CW-
++	equivalent type immediately after that of the root type, and the
++	size check for the root type into its own freezing actions.
++
++2026-02-25  Eric Botcazou  <ebotcazou@adacore.com>
++
++	PR ada/124226
++	* sem_res.adb (Resolve_Implicit_Dereference): Move declaration to...
++	* sem_res.ads (Resolve_Implicit_Dereference): ...here.
++	* sem_attr.adb (Resolve_Attribute) <Attribute_Access>: Also call
++	Resolve_Implicit_Dereference when resolving a protected operation.
++
++2026-02-24  Eric Botcazou  <ebotcazou@adacore.com>
++	    Liam Powell  <liam@liampwll.com>
++
++	PR ada/124224
++	* sem_aggr.adb (Resolve_Container_Aggregate): Minor tweaks.
++	(Resolve_Iterated_Association): Compute Typ on all paths.
++
 +2026-02-20  Eric Botcazou  <ebotcazou@adacore.com>
 +
 +	* libgnat/s-stposu.adb (Finalize_Pool): Pass a local copy of the
@@ -3262,6 +3370,94 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
                 then
                    Error_Msg_N
                      ("& is an 8-bit Ada Boolean?x?", Formal);
+@@ -7353,6 +7355,15 @@ package body Freeze is
+ 
+          elsif Ekind (E) in E_Record_Type | E_Record_Subtype then
+             if not In_Generic_Scope (E) then
++               --  If this is a class-wide equivalent type for a non-interface
++               --  root type, freeze the root type.
++
++               if Is_Class_Wide_Equivalent_Type (E)
++                 and then Present (Parent_Subtype (E))
++               then
++                  Freeze_And_Append (Parent_Subtype (E), N, Result);
++               end if;
++
+                Freeze_Record_Type (E);
+             end if;
+ 
+--- a/src/gcc/ada/gcc-interface/decl.cc
++++ b/src/gcc/ada/gcc-interface/decl.cc
+@@ -8217,7 +8217,7 @@ typedef struct vinfo
+ 
+    DEBUG_INFO is true if we need to write debug information about the type.
+ 
+-   IN_VARIANT is true if the componennt list is that of a variant.
++   IN_VARIANT is true if the component list is that of a variant.
+ 
+    FIRST_FREE_POS, if nonzero, is the first (lowest) free field position in
+    the outer record type down to this variant level.  It is nonzero only if
+@@ -8334,7 +8334,7 @@ components_to_record (Node_Id gnat_component_list, Entity_Id gnat_record_type,
+       tree gnu_union_type;
+       tree this_first_free_pos, gnu_variant_list = NULL_TREE;
+       bool union_field_needs_strict_alignment = false;
+-      bool innermost_variant_level = true;
++      bool innermost_of_unchecked_union = false;
+       auto_vec <vinfo_t, 16> variant_types;
+       vinfo_t *gnu_variant;
+       unsigned int variants_align = 0;
+@@ -8383,15 +8383,19 @@ components_to_record (Node_Id gnat_component_list, Entity_Id gnat_record_type,
+       /* For an unchecked union with a fixed part, we need to compute whether
+ 	 we are at the innermost level of the variant part.  */
+       if (unchecked_union && gnu_field_list)
+-	for (variant = First_Non_Pragma (Variants (gnat_variant_part));
+-	     Present (variant);
+-	     variant = Next_Non_Pragma (variant))
+-	  if (Present (Component_List (variant))
+-	      && Present (Variant_Part (Component_List (variant))))
+-	    {
+-	      innermost_variant_level = false;
+-	      break;
+-	    }
++	{
++	  innermost_of_unchecked_union = true;
++
++	  for (variant = First_Non_Pragma (Variants (gnat_variant_part));
++	       Present (variant);
++	       variant = Next_Non_Pragma (variant))
++	    if (Present (Component_List (variant))
++		&& Present (Variant_Part (Component_List (variant))))
++	      {
++		innermost_of_unchecked_union = false;
++		break;
++	      }
++	}
+ 
+       /* We build the variants in two passes.  The bulk of the work is done in
+ 	 the first pass, that is to say translating the GNAT nodes, building
+@@ -8438,17 +8442,17 @@ components_to_record (Node_Id gnat_component_list, Entity_Id gnat_record_type,
+ 	     the outer variant, so as to flatten the rep-ed layout as much as
+ 	     possible, the reason being that we cannot do any flattening when
+ 	     a subtype statically selects a variant later on, for example for
+-	     an aggregate.  */
++	     an aggregate; in that case, we force a packed layout because the
++	     moved fields may overlap with packed bit-fields.  */
+ 	  has_rep
+ 	    = components_to_record (Component_List (variant), gnat_record_type,
+-				    NULL_TREE, gnu_variant_type, packed,
++				    NULL_TREE, gnu_variant_type, packed ||
++				    (all_rep && innermost_of_unchecked_union),
+ 				    definition, !all_rep_and_size, all_rep,
+ 				    unchecked_union, true, needs_xv_encodings,
+ 				    true, this_first_free_pos,
+ 				    (all_rep || this_first_free_pos)
+-				    && !(unchecked_union
+-				         && gnu_field_list
+-					 && innermost_variant_level)
++				    && !innermost_of_unchecked_union
+ 				    ? NULL : &gnu_rep_list);
+ 
+ 	  /* Translate the qualifier and annotate the GNAT node.  */
 --- a/src/gcc/ada/gcc-interface/trans.cc
 +++ b/src/gcc/ada/gcc-interface/trans.cc
 @@ -6855,9 +6855,22 @@ gnat_to_gnu (Node_Id gnat_node)
@@ -3743,7 +3939,26 @@ new file mode 100644
  
 --- a/src/gcc/ada/sem_aggr.adb
 +++ b/src/gcc/ada/sem_aggr.adb
-@@ -3826,10 +3826,9 @@ package body Sem_Aggr is
+@@ -3790,7 +3790,7 @@ package body Sem_Aggr is
+       --  a subtype indication or an iterator specification that determines
+       --  an element type.
+ 
+-      Asp   : constant Node_Id := Find_Value_Of_Aspect (Typ, Aspect_Aggregate);
++      Asp : constant Node_Id := Find_Value_Of_Aspect (Typ, Aspect_Aggregate);
+ 
+       Empty_Subp          : Node_Id := Empty;
+       Add_Named_Subp      : Node_Id := Empty;
+@@ -3807,7 +3807,8 @@ package body Sem_Aggr is
+          Key_Type  : Entity_Id;
+          Elmt_Type : Entity_Id)
+       is
+-         Loc           : constant Source_Ptr := Sloc (N);
++         Loc : constant Source_Ptr := Sloc (N);
++
+          Choice        : Node_Id;
+          Copy          : Node_Id;
+          Ent           : Entity_Id;
+@@ -3826,10 +3827,9 @@ package body Sem_Aggr is
           --  is present.
  
           if Nkind (Comp) = N_Iterated_Element_Association then
@@ -3756,7 +3971,7 @@ new file mode 100644
  
              Ent := New_Internal_Entity
                       (E_Loop, Current_Scope, Sloc (Comp), 'L');
-@@ -3841,8 +3840,7 @@ package body Sem_Aggr is
+@@ -3841,8 +3841,7 @@ package body Sem_Aggr is
                 Copy := Copy_Separate_Tree (Comp);
                 Set_Parent (Copy, Parent (Comp));
  
@@ -3766,7 +3981,7 @@ new file mode 100644
  
                 if Present (Iterator_Specification (Copy)) then
                    Loop_Param_Id :=
-@@ -3853,9 +3851,11 @@ package body Sem_Aggr is
+@@ -3853,9 +3852,11 @@ package body Sem_Aggr is
                 end if;
  
                 Id_Name := Chars (Loop_Param_Id);
@@ -3779,7 +3994,7 @@ new file mode 100644
  
                 Loop_Param_Id := Defining_Identifier (Copy);
  
-@@ -3876,17 +3876,19 @@ package body Sem_Aggr is
+@@ -3876,17 +3877,19 @@ package body Sem_Aggr is
                         & "(RM22 4.3.5(24))",
                       Comp);
                 else
@@ -3802,7 +4017,99 @@ new file mode 100644
  
              Ent := New_Internal_Entity
                       (E_Loop, Current_Scope, Sloc (Comp), 'L');
-@@ -6590,7 +6592,7 @@ package body Sem_Aggr is
+@@ -3936,7 +3939,7 @@ package body Sem_Aggr is
+               and then Present (Key_Type)
+               and then Base_Type (Entity (Choice)) = Base_Type (Key_Type)
+             then
+-               null;
++               Typ := Entity (Choice);
+ 
+             elsif Is_Object_Reference (Choice) then
+                declare
+@@ -3948,13 +3951,13 @@ package body Sem_Aggr is
+                       Reverse_Present     => Reverse_Present (Comp),
+                       Iterator_Filter     => Empty,
+                       Subtype_Indication  => Empty);
++
+                begin
++                  --  Recurse to expand association as iterator_spec
++
+                   Set_Iterator_Specification (Comp, I_Spec);
+                   Set_Defining_Identifier (Comp, Empty);
+-
+                   Resolve_Iterated_Association (Comp, Key_Type, Elmt_Type);
+-                  --  Recursive call to expand association as iterator_spec
+-
+                   return;
+                end;
+ 
+@@ -3966,8 +3969,7 @@ package body Sem_Aggr is
+                Typ := Etype (Choice);  --  assume unique for now
+             end if;
+ 
+-            Loop_Param_Id :=
+-              Defining_Identifier (Comp);
++            Loop_Param_Id := Defining_Identifier (Comp);
+ 
+             Id_Name := Chars (Loop_Param_Id);
+          end if;
+@@ -3976,9 +3978,8 @@ package body Sem_Aggr is
+          --  visible in the expression for the component, and needed for its
+          --  analysis.
+ 
+-         Id := Make_Defining_Identifier (Sloc (Comp), Id_Name);
+-         Ent := New_Internal_Entity (E_Loop,
+-                  Current_Scope, Sloc (Comp), 'L');
++         Id  := Make_Defining_Identifier (Sloc (Comp), Id_Name);
++         Ent := New_Internal_Entity (E_Loop, Current_Scope, Sloc (Comp), 'L');
+          Set_Etype  (Ent, Standard_Void_Type);
+          Set_Parent (Ent, Parent (Comp));
+          Push_Scope (Ent);
+@@ -4080,12 +4081,10 @@ package body Sem_Aggr is
+                   Comp : Node_Id := First (Component_Associations (N));
+                begin
+                   while Present (Comp) loop
+-                     if Nkind (Comp) in
+-                       N_Iterated_Component_Association |
+-                       N_Iterated_Element_Association
++                     if Nkind (Comp) in N_Iterated_Component_Association
++                                      | N_Iterated_Element_Association
+                      then
+-                        Resolve_Iterated_Association
+-                          (Comp, Empty, Elmt_Type);
++                        Resolve_Iterated_Association (Comp, Empty, Elmt_Type);
+                      else
+                         Error_Msg_N ("illegal component association "
+                           & "for unnamed container aggregate", Comp);
+@@ -4141,12 +4140,10 @@ package body Sem_Aggr is
+ 
+                   Analyze_And_Resolve (Expression (Comp), Elmt_Type);
+ 
+-               elsif Nkind (Comp) in
+-                 N_Iterated_Component_Association |
+-                 N_Iterated_Element_Association
++               elsif Nkind (Comp) in N_Iterated_Component_Association
++                                   | N_Iterated_Element_Association
+                then
+-                  Resolve_Iterated_Association
+-                    (Comp, Key_Type, Elmt_Type);
++                  Resolve_Iterated_Association (Comp, Key_Type, Elmt_Type);
+                end if;
+ 
+                Next (Comp);
+@@ -4201,9 +4198,8 @@ package body Sem_Aggr is
+                         Analyze_And_Resolve (Expression (Comp), Comp_Type);
+                      end if;
+ 
+-                  elsif Nkind (Comp) in
+-                    N_Iterated_Component_Association |
+-                    N_Iterated_Element_Association
++                  elsif Nkind (Comp) in N_Iterated_Component_Association
++                                      | N_Iterated_Element_Association
+                   then
+                      Resolve_Iterated_Association
+                        (Comp, Index_Type, Comp_Type);
+@@ -6590,7 +6586,7 @@ package body Sem_Aggr is
  
           --  Typ is not a derived tagged type
  
@@ -3813,7 +4120,15 @@ new file mode 100644
              if Null_Present (Record_Def) then
 --- a/src/gcc/ada/sem_attr.adb
 +++ b/src/gcc/ada/sem_attr.adb
-@@ -12723,7 +12723,10 @@ package body Sem_Attr is
+@@ -11620,6 +11620,7 @@ package body Sem_Attr is
+                end if;
+ 
+                Resolve (Prefix (P));
++               Resolve_Implicit_Dereference (Prefix (P));
+ 
+                if not Is_Overloaded (P) then
+                   Generate_Reference (Entity (Selector_Name (P)), P);
+@@ -12723,7 +12724,10 @@ package body Sem_Attr is
                 end Proper_Op;
  
              begin
@@ -3825,7 +4140,7 @@ new file mode 100644
                 if Is_Overloaded (Reducer_Subp_Name) then
                    Outer :
                    for Retry in Boolean loop
-@@ -12745,14 +12748,18 @@ package body Sem_Attr is
+@@ -12745,14 +12749,18 @@ package body Sem_Attr is
                 then
                    Op := Reducer_Subp_Name;
  
@@ -3941,28 +4256,7 @@ new file mode 100644
           end loop;
  
           raise Program_Error; -- it must be present
-@@ -2590,9 +2596,20 @@ package body Sem_Ch12 is
-                if Ekind (Etype (Match)) /= E_Void
-                  and then Is_Mutably_Tagged_Type (Etype (Match))
-                then
-+                  --  The declaration of the CW-equivalent type of a mutably
-+                  --  tagged type is analyzed when the tagged type is frozen.
-+
-+                  if Nkind (I_Node) /= N_Formal_Package_Declaration
-+                    and then Ekind (Defining_Identifier (Assoc.An_Formal)) /=
-+                                                              E_Incomplete_Type
-+                  then
-+                     Freeze_Before (I_Node, Root_Type (Etype (Match)));
-+                  end if;
-+
-                   Rewrite (Match, New_Occurrence_Of
-                     (Class_Wide_Equivalent_Type
-                       (Etype (Match)), Sloc (Match)));
-+
-                   Analyze (Match);
-                end if;
- 
-@@ -17378,7 +17395,6 @@ package body Sem_Ch12 is
+@@ -17378,7 +17384,6 @@ package body Sem_Ch12 is
           ----------------------------------
  
           procedure Save_References_In_Aggregate (N : Node_Id) is
@@ -3970,7 +4264,7 @@ new file mode 100644
              Qual  : Node_Id   := Empty;
              Typ   : Entity_Id := Empty;
  
-@@ -17434,16 +17450,16 @@ package body Sem_Ch12 is
+@@ -17434,16 +17439,16 @@ package body Sem_Ch12 is
                    end;
                 end if;
  
@@ -3991,7 +4285,7 @@ new file mode 100644
                 --  entities in an instance. This resolves most of the problems
                 --  with missing type information on aggregates in instances.
  
-@@ -17453,24 +17469,40 @@ package body Sem_Ch12 is
+@@ -17453,24 +17458,40 @@ package body Sem_Ch12 is
                   and then Present (Typ)
                   and then Comes_From_Source (Typ)
                 then
@@ -4026,11 +4320,7 @@ new file mode 100644
 +                        S := Scope (S);
 +                        exit when Is_Generic_Unit (S);
 +                     end loop;
- 
--                  Qual :=
--                    Make_Qualified_Expression (Loc,
--                      Subtype_Mark => Nam,
--                      Expression   => Relocate_Node (N));
++
 +                     if not Is_Generic_Unit (S)
 +                       and then (not In_Open_Scopes (S)
 +                                  or else Current_Entity (S) = S)
@@ -4039,7 +4329,11 @@ new file mode 100644
 +                     else
 +                        Nam := Make_Identifier (Loc, Chars (Typ));
 +                     end if;
-+
+ 
+-                  Qual :=
+-                    Make_Qualified_Expression (Loc,
+-                      Subtype_Mark => Nam,
+-                      Expression   => Relocate_Node (N));
 +                     Qual :=
 +                       Make_Qualified_Expression (Loc,
 +                         Subtype_Mark => Nam,
@@ -4092,6 +4386,32 @@ new file mode 100644
                    end if;
  
                 when Aspect_External_Initialization =>
+@@ -7109,17 +7121,17 @@ package body Sem_Ch13 is
+                            Set_Class_Wide_Equivalent_Type (Etyp,
+                              Make_CW_Equivalent_Type (Etyp, Empty, Actions));
+ 
+-                           --  Add a Compile_Time_Error sizing check as a hint
+-                           --  to the backend.
++                           --  Insert its declaration immediately after that of
++                           --  the root type.
+ 
+-                           Append_To (Actions,
+-                             Make_CW_Size_Compile_Check
+-                               (Etype (Etyp), U_Ent));
++                           Insert_Actions_After
++                             (Declaration_Node (Etype (Etyp)), Actions);
+ 
+-                           --  Set the expansion to occur during freezing when
+-                           --  everything is analyzed
++                           --  Add a Compile_Time_Error size check for the root
++                           --  type at the freeze point.
+ 
+-                           Append_Freeze_Actions (Etyp, Actions);
++                           Append_Freeze_Action (Etype (Etyp),
++                             Make_CW_Size_Compile_Check (Etype (Etyp), U_Ent));
+ 
+                            Set_Is_Mutably_Tagged_Type (Etyp);
+                         end;
 @@ -17224,15 +17236,12 @@ package body Sem_Ch13 is
        -----------------------
  
@@ -4297,6 +4617,22 @@ new file mode 100644
        end if;
  
        --  Set the SPARK mode from the current context (may be overwritten later
+@@ -18021,12 +17998,10 @@ package body Sem_Ch3 is
+ 
+                   Insert_List_After_And_Analyze (N, Actions);
+ 
+-                  --  Add a Compile_Time_Error sizing check as a hint
+-                  --  to the backend since we don't know the true size of
+-                  --  anything at this point.
++                  --  Add a Compile_Time_Error size check at the freeze point
+ 
+-                  Append_Freeze_Actions (T,
+-                    New_List (Make_CW_Size_Compile_Check (T, Root_Class_Typ)));
++                  Append_Freeze_Action (T,
++                    Make_CW_Size_Compile_Check (T, Root_Class_Typ));
+                end if;
+             end if;
+          end;
 --- a/src/gcc/ada/sem_ch4.adb
 +++ b/src/gcc/ada/sem_ch4.adb
 @@ -4381,16 +4381,16 @@ package body Sem_Ch4 is
@@ -4453,7 +4789,20 @@ new file mode 100644
  
 --- a/src/gcc/ada/sem_res.adb
 +++ b/src/gcc/ada/sem_res.adb
-@@ -11433,16 +11433,16 @@ package body Sem_Res is
+@@ -278,12 +278,6 @@ package body Sem_Res is
+    --  is the context type, which is used when the operation is a protected
+    --  function with no arguments, and the return value is indexed.
+ 
+-   procedure Resolve_Implicit_Dereference (P : Node_Id);
+-   --  Called when P is the prefix of an indexed component, or of a selected
+-   --  component, or of a slice. If P is of an access type, we unconditionally
+-   --  rewrite it as an explicit dereference. This ensures that the expander
+-   --  and the code generator have a fully explicit tree to work with.
+-
+    procedure Resolve_Intrinsic_Operator (N : Node_Id; Typ : Entity_Id);
+    --  A call to a user-defined intrinsic operator is rewritten as a call to
+    --  the corresponding predefined operator, with suitable conversions. Note
+@@ -11433,16 +11427,16 @@ package body Sem_Res is
                 T := It.Typ;
              end if;
  
@@ -4474,6 +4823,21 @@ new file mode 100644
                 end if;
  
                 Comp := First_Entity (T);
+--- a/src/gcc/ada/sem_res.ads
++++ b/src/gcc/ada/sem_res.ads
+@@ -133,6 +133,12 @@ package Sem_Res is
+    --  own type. For now we assume that the prefix cannot be overloaded and
+    --  the name of the entry plays no role in the resolution.
+ 
++   procedure Resolve_Implicit_Dereference (P : Node_Id);
++   --  Called when P is the prefix of an indexed component, or of a selected
++   --  component, or of a slice. If P is of an access type, we unconditionally
++   --  rewrite it as an explicit dereference. This ensures that the expander
++   --  and the code generator have a fully explicit tree to work with.
++
+    procedure Resolve_Membership_Equality (N : Node_Id; Typ : Entity_Id);
+    --  Resolve the equality operator in an individual membership test
+ 
 --- a/src/gcc/ada/sem_type.adb
 +++ b/src/gcc/ada/sem_type.adb
 @@ -109,7 +109,7 @@ package body Sem_Type is
@@ -9537,7 +9901,67 @@ new file mode 100644
  (define_expand "sqrt<mode>2"
    [(set (match_operand:FLASX 0 "register_operand")
      (sqrt:FLASX (match_operand:FLASX 1 "register_operand")))]
-@@ -3498,7 +3435,7 @@ (define_insn "lasx_xvinsve0_<lasxfmt_f>_scalar"
+@@ -2699,59 +2636,6 @@ (define_insn "lasx_xvsigncov_<lasxfmt>"
+   [(set_attr "type" "simd_int_arith")
+    (set_attr "mode" "<MODE>")])
+ 
+-(define_expand "copysign<mode>3"
+-  [(set (match_dup 4)
+-	(and:FLASX
+-	  (not:FLASX (match_dup 3))
+-	  (match_operand:FLASX 1 "register_operand")))
+-   (set (match_dup 5)
+-	(and:FLASX (match_dup 3)
+-		   (match_operand:FLASX 2 "reg_or_vector_same_val_operand")))
+-   (set (match_operand:FLASX 0 "register_operand")
+-	(ior:FLASX (match_dup 4) (match_dup 5)))]
+-  "ISA_HAS_LASX"
+-{
+-  /* copysign (x, -1) should instead be expanded as setting the sign
+-     bit.  */
+-  if (!REG_P (operands[2]))
+-    {
+-      rtx op2_elt = unwrap_const_vec_duplicate (operands[2]);
+-      if (GET_CODE (op2_elt) == CONST_DOUBLE
+-	  && real_isneg (CONST_DOUBLE_REAL_VALUE (op2_elt)))
+-	{
+-	  rtx n = GEN_INT (8 * GET_MODE_SIZE (<UNITMODE>mode) - 1);
+-	  operands[0] = lowpart_subreg (<VIMODE256>mode, operands[0],
+-					<MODE>mode);
+-	  operands[1] = lowpart_subreg (<VIMODE256>mode, operands[1],
+-					<MODE>mode);
+-	  emit_insn (gen_lasx_xvbitseti_<lasxfmt> (operands[0],
+-						   operands[1], n));
+-	  DONE;
+-	}
+-    }
+-
+-  operands[2] = force_reg (<MODE>mode, operands[2]);
+-  operands[3] = loongarch_build_signbit_mask (<MODE>mode, 1, 0);
+-
+-  operands[4] = gen_reg_rtx (<MODE>mode);
+-  operands[5] = gen_reg_rtx (<MODE>mode);
+-})
+-
+-(define_expand "xorsign<mode>3"
+-  [(set (match_dup 4)
+-    (and:FLASX (match_dup 3)
+-        (match_operand:FLASX 2 "register_operand")))
+-   (set (match_operand:FLASX 0 "register_operand")
+-    (xor:FLASX (match_dup 4)
+-         (match_operand:FLASX 1 "register_operand")))]
+-  "ISA_HAS_LASX"
+-{
+-  operands[3] = loongarch_build_signbit_mask (<MODE>mode, 1, 0);
+-
+-  operands[4] = gen_reg_rtx (<MODE>mode);
+-})
+-
+-
+ (define_insn "absv4df2"
+   [(set (match_operand:V4DF 0 "register_operand" "=f")
+ 	(abs:V4DF (match_operand:V4DF 1 "register_operand" "f")))]
+@@ -3498,7 +3382,7 @@ (define_insn "lasx_xvinsve0_<lasxfmt_f>_scalar"
    [(set (match_operand:FLASX 0 "register_operand" "=f")
      (vec_merge:FLASX
        (vec_duplicate:FLASX
@@ -9738,7 +10162,7 @@ new file mode 100644
  DEF_LARCH_FTYPE(2,(V16QI,CVPOINTER,CVPOINTER))
 --- a/src/gcc/config/loongarch/loongarch.cc
 +++ b/src/gcc/config/loongarch/loongarch.cc
-@@ -1718,14 +1718,36 @@ loongarch_symbol_binds_local_p (const_rtx x)
+@@ -1718,14 +1718,15 @@ loongarch_symbol_binds_local_p (const_rtx x)
  bool
  loongarch_const_vector_bitimm_set_p (rtx op, machine_mode mode)
  {
@@ -9747,29 +10171,7 @@ new file mode 100644
 +      && (GET_MODE_CLASS (mode) == MODE_VECTOR_FLOAT
 +	  || GET_MODE_CLASS (mode) == MODE_VECTOR_INT))
      {
--      unsigned HOST_WIDE_INT val = UINTVAL (CONST_VECTOR_ELT (op, 0));
-+      unsigned HOST_WIDE_INT val;
-+
-+      if (GET_MODE_CLASS (mode) == MODE_VECTOR_FLOAT)
-+	{
-+	  rtx val_s = CONST_VECTOR_ELT (op, 0);
-+	  const REAL_VALUE_TYPE *x = CONST_DOUBLE_REAL_VALUE (val_s);
-+	  if (GET_MODE (val_s) == DFmode)
-+	    {
-+	      long tmp[2];
-+	      REAL_VALUE_TO_TARGET_DOUBLE (*x, tmp);
-+	      val = (unsigned HOST_WIDE_INT) tmp[1] << 32 | tmp[0];
-+	    }
-+	  else
-+	    {
-+	      long tmp;
-+	      REAL_VALUE_TO_TARGET_SINGLE (*x, tmp);
-+	      val = (unsigned HOST_WIDE_INT) tmp;
-+	    }
-+	}
-+      else
-+	val = UINTVAL (CONST_VECTOR_ELT (op, 0));
-+
+       unsigned HOST_WIDE_INT val = UINTVAL (CONST_VECTOR_ELT (op, 0));
        int vlog2 = exact_log2 (val & GET_MODE_MASK (GET_MODE_INNER (mode)));
  
        if (vlog2 != -1)
@@ -9778,7 +10180,7 @@ new file mode 100644
  	  gcc_assert (vlog2 >= 0 && vlog2 <= GET_MODE_UNIT_BITSIZE (mode) - 1);
  	  return loongarch_const_vector_same_val_p (op, mode);
  	}
-@@ -1740,14 +1762,35 @@ loongarch_const_vector_bitimm_set_p (rtx op, machine_mode mode)
+@@ -1740,14 +1741,35 @@ loongarch_const_vector_bitimm_set_p (rtx op, machine_mode mode)
  bool
  loongarch_const_vector_bitimm_clr_p (rtx op, machine_mode mode)
  {
@@ -9817,36 +10219,7 @@ new file mode 100644
  	  gcc_assert (vlog2 >= 0 && vlog2 <= GET_MODE_UNIT_BITSIZE (mode) - 1);
  	  return loongarch_const_vector_same_val_p (op, mode);
  	}
-@@ -1792,7 +1835,27 @@ loongarch_const_vector_same_bytes_p (rtx op, machine_mode mode)
- 
-   first = CONST_VECTOR_ELT (op, 0);
-   bytes = GET_MODE_UNIT_SIZE (mode);
--  val = INTVAL (first);
-+
-+  if (GET_MODE_CLASS (mode) == MODE_VECTOR_FLOAT)
-+    {
-+      rtx val_s = CONST_VECTOR_ELT (op, 0);
-+      const REAL_VALUE_TYPE *x = CONST_DOUBLE_REAL_VALUE (val_s);
-+      if (GET_MODE (val_s) == DFmode)
-+	{
-+	  long tmp[2];
-+	  REAL_VALUE_TO_TARGET_DOUBLE (*x, tmp);
-+	  val = (unsigned HOST_WIDE_INT) tmp[1] << 32 | tmp[0];
-+	}
-+      else
-+	{
-+	  long tmp;
-+	  REAL_VALUE_TO_TARGET_SINGLE (*x, tmp);
-+	  val = (unsigned HOST_WIDE_INT) tmp;
-+	}
-+    }
-+  else
-+    val = UINTVAL (first);
-+
-   first_byte = val & 0xff;
-   for (i = 1; i < bytes; i++)
-     {
-@@ -4390,6 +4453,7 @@ loongarch_vector_costs::add_stmt_cost (int count, vect_cost_for_stmt kind,
+@@ -4390,6 +4412,7 @@ loongarch_vector_costs::add_stmt_cost (int count, vect_cost_for_stmt kind,
  	    break;
  	  }
        else if (TARGET_RECIP_VEC_DIV
@@ -9854,7 +10227,7 @@ new file mode 100644
  	       && gimple_code (stmt_info->stmt) == GIMPLE_ASSIGN)
  	{
  	  machine_mode mode = TYPE_MODE (vectype);
-@@ -5436,12 +5500,32 @@ loongarch_expand_conditional_move (rtx *operands)
+@@ -5436,12 +5459,32 @@ loongarch_expand_conditional_move (rtx *operands)
  	    }
  	}
  
@@ -9890,37 +10263,35 @@ new file mode 100644
  	  /* Make sure that both value_if_true and value_if_false
  	     has the same var.  */
  	  && rtx_equal_p (XEXP (value_if_true_insn_src, 0),
-@@ -6398,7 +6482,28 @@ loongarch_print_operand (FILE *file, rtx op, int letter)
+@@ -6398,15 +6441,19 @@ loongarch_print_operand (FILE *file, rtx op, int letter)
        if (CONST_VECTOR_P (op))
  	{
  	  machine_mode mode = GET_MODE_INNER (GET_MODE (op));
 -	  unsigned HOST_WIDE_INT val = UINTVAL (CONST_VECTOR_ELT (op, 0));
+-	  int vlog2 = exact_log2 (val & GET_MODE_MASK (mode));
+-	  if (vlog2 != -1)
+-	    fprintf (file, "%d", vlog2);
+-	  else
+-	    output_operand_lossage ("invalid use of '%%%c'", letter);
 +	  rtx val_s = CONST_VECTOR_ELT (op, 0);
-+	  unsigned HOST_WIDE_INT val;
-+
-+	  if (GET_MODE_CLASS (mode) == MODE_FLOAT)
++	  if (CONST_INT_P (val_s))
 +	    {
-+	      const REAL_VALUE_TYPE *x = CONST_DOUBLE_REAL_VALUE (val_s);
-+	      if (GET_MODE (val_s) == DFmode)
++	      unsigned HOST_WIDE_INT val = UINTVAL (val_s);
++	      int vlog2 = exact_log2 (val & GET_MODE_MASK (mode));
++	      if (vlog2 != -1)
 +		{
-+		  long tmp[2];
-+		  REAL_VALUE_TO_TARGET_DOUBLE (*x, tmp);
-+		  val = (unsigned HOST_WIDE_INT) (tmp[1] << 32 | tmp[0]);
-+		}
-+	      else
-+		{
-+		  long tmp;
-+		  REAL_VALUE_TO_TARGET_SINGLE (*x, tmp);
-+		  val = (unsigned HOST_WIDE_INT) tmp;
++		  fprintf (file, "%d", vlog2);
++		  break;
 +		}
 +	    }
-+	  else
-+	    val = UINTVAL (val_s);
-+
- 	  int vlog2 = exact_log2 (val & GET_MODE_MASK (mode));
- 	  if (vlog2 != -1)
- 	    fprintf (file, "%d", vlog2);
-@@ -8883,57 +8988,13 @@ loongarch_expand_vec_perm_1 (rtx operands[])
+ 	}
+-      else
+-	output_operand_lossage ("invalid use of '%%%c'", letter);
++      output_operand_lossage ("invalid use of '%%%c'", letter);
+       break;
+ 
+     case 'W':
+@@ -8883,57 +8930,13 @@ loongarch_expand_vec_perm_1 (rtx operands[])
    /* Number of elements in the vector.  */
    w = GET_MODE_NUNITS (mode);
  
@@ -9984,15 +10355,14 @@ new file mode 100644
      }
  
    if (mode == V4DImode || mode == V4DFmode)
-@@ -10146,30 +10207,14 @@ loongarch_expand_vector_init_same (rtx target, rtx vals, unsigned nvar)
+@@ -10146,32 +10149,7 @@ loongarch_expand_vector_init_same (rtx target, rtx vals, unsigned nvar)
  	}
      }
  
 -  if (imode == GET_MODE (same))
 -    temp = same;
 -  else if (GET_MODE_SIZE (imode) >= UNITS_PER_WORD)
-+  if (GET_CODE (same) == MEM && GET_MODE (same) != imode)
-     {
+-    {
 -      if (GET_CODE (same) == MEM)
 -	{
 -	  rtx reg_tmp = gen_reg_rtx (GET_MODE (same));
@@ -10001,11 +10371,8 @@ new file mode 100644
 -	}
 -      else
 -	temp = simplify_gen_subreg (imode, same, GET_MODE (same), 0);
-+      rtx reg_tmp = gen_reg_rtx (GET_MODE (same));
-+      loongarch_emit_move (reg_tmp, same);
-+      temp = lowpart_subreg (imode, reg_tmp, GET_MODE (reg_tmp));
-     }
-   else
+-    }
+-  else
 -    {
 -      if (GET_CODE (same) == MEM)
 -	{
@@ -10016,11 +10383,38 @@ new file mode 100644
 -      else
 -	temp = lowpart_subreg (imode, same, GET_MODE (same));
 -    }
-+    temp = same;
+-
+-  temp = force_reg (imode, temp);
++  temp = force_reg (imode, same);
  
-   temp = force_reg (imode, temp);
+   switch (vmode)
+     {
+@@ -10920,7 +10898,7 @@ loongarch_build_signbit_mask (machine_mode mode, bool vect, bool invert)
+     return force_reg (inner_mode, mask);
  
-@@ -11152,6 +11197,81 @@ loongarch_c_mode_for_suffix (char suffix)
+   v = loongarch_build_const_vector (vec_mode, vect, mask);
+-  return force_reg (vec_mode, v);
++  return v;
+ }
+ 
+ /* Use rsqrte instruction and Newton-Rhapson to compute the approximation of
+@@ -10969,10 +10947,11 @@ void loongarch_emit_swrsqrtsf (rtx res, rtx a, machine_mode mode, bool recip)
+       if (VECTOR_MODE_P (mode))
+ 	{
+ 	  machine_mode imode = related_int_vector_mode (mode).require ();
+-	  rtx mask = gen_reg_rtx (imode);
+-	  emit_insn (gen_rtx_SET (mask, gen_rtx_NE (imode, a, zero)));
+-	  emit_insn (gen_rtx_SET (x0, gen_rtx_AND (mode, x0,
+-						   gen_lowpart (mode, mask))));
++	  rtx mask = force_reg (imode, gen_rtx_NE (imode, a, zero));
++	  emit_move_insn (gen_lowpart (imode, x0),
++			  gen_rtx_AND (imode,
++				       gen_lowpart (imode, x0),
++				       mask));
+ 	}
+       else
+ 	{
+@@ -11152,6 +11131,81 @@ loongarch_c_mode_for_suffix (char suffix)
    return VOIDmode;
  }
  
@@ -10102,7 +10496,7 @@ new file mode 100644
  /* Initialize the GCC target structure.  */
  #undef TARGET_ASM_ALIGNED_HI_OP
  #define TARGET_ASM_ALIGNED_HI_OP "\t.half\t"
-@@ -11426,6 +11546,12 @@ loongarch_c_mode_for_suffix (char suffix)
+@@ -11426,6 +11480,12 @@ loongarch_c_mode_for_suffix (char suffix)
  #undef TARGET_C_MODE_FOR_SUFFIX
  #define TARGET_C_MODE_FOR_SUFFIX loongarch_c_mode_for_suffix
  
@@ -10226,6 +10620,98 @@ new file mode 100644
  (define_expand "sqrt<mode>2"
    [(set (match_operand:FLSX 0 "register_operand")
      (sqrt:FLSX (match_operand:FLSX 1 "register_operand")))]
+@@ -2289,59 +2226,6 @@ (define_insn "lsx_vsigncov_<lsxfmt>"
+   [(set_attr "type" "simd_int_arith")
+    (set_attr "mode" "<MODE>")])
+ 
+-(define_expand "copysign<mode>3"
+-  [(set (match_dup 4)
+-	(and:FLSX
+-	  (not:FLSX (match_dup 3))
+-	  (match_operand:FLSX 1 "register_operand")))
+-   (set (match_dup 5)
+-	(and:FLSX (match_dup 3)
+-		  (match_operand:FLSX 2 "reg_or_vector_same_val_operand")))
+-   (set (match_operand:FLSX 0 "register_operand")
+-	(ior:FLSX (match_dup 4) (match_dup 5)))]
+-  "ISA_HAS_LSX"
+-{
+-  /* copysign (x, -1) should instead be expanded as setting the sign
+-     bit.  */
+-  if (!REG_P (operands[2]))
+-    {
+-      rtx op2_elt = unwrap_const_vec_duplicate (operands[2]);
+-      if (GET_CODE (op2_elt) == CONST_DOUBLE
+-	  && real_isneg (CONST_DOUBLE_REAL_VALUE (op2_elt)))
+-	{
+-	  rtx n = GEN_INT (8 * GET_MODE_SIZE (<UNITMODE>mode) - 1);
+-	  operands[0] = lowpart_subreg (<VIMODE>mode, operands[0],
+-					<MODE>mode);
+-	  operands[1] = lowpart_subreg (<VIMODE>mode, operands[1],
+-					<MODE>mode);
+-	  emit_insn (gen_lsx_vbitseti_<lsxfmt> (operands[0], operands[1],
+-						n));
+-	  DONE;
+-	}
+-    }
+-
+-  operands[2] = force_reg (<MODE>mode, operands[2]);
+-  operands[3] = loongarch_build_signbit_mask (<MODE>mode, 1, 0);
+-
+-  operands[4] = gen_reg_rtx (<MODE>mode);
+-  operands[5] = gen_reg_rtx (<MODE>mode);
+-})
+-
+-(define_expand "@xorsign<mode>3"
+-  [(set (match_dup 4)
+-    (and:FLSX (match_dup 3)
+-        (match_operand:FLSX 2 "register_operand")))
+-   (set (match_operand:FLSX 0 "register_operand")
+-    (xor:FLSX (match_dup 4)
+-         (match_operand:FLSX 1 "register_operand")))]
+-  "ISA_HAS_LSX"
+-{
+-  operands[3] = loongarch_build_signbit_mask (<MODE>mode, 1, 0);
+-
+-  operands[4] = gen_reg_rtx (<MODE>mode);
+-})
+-
+-
+ (define_insn "absv2df2"
+   [(set (match_operand:V2DF 0 "register_operand" "=f")
+ 	(abs:V2DF (match_operand:V2DF 1 "register_operand" "f")))]
+--- a/src/gcc/config/loongarch/predicates.md
++++ b/src/gcc/config/loongarch/predicates.md
+@@ -647,6 +647,18 @@ (define_predicate "const_vector_same_uimm_operand"
+   return loongarch_const_vector_same_int_p (op, mode);
+ })
+ 
++(define_predicate "const_vector_neg_fp_operand"
++  (match_code "const_vector")
++{
++  machine_mode imode = related_int_vector_mode (mode).require ();
++  rtx mask = loongarch_build_signbit_mask (imode, 1, 0);
++
++  op = gen_lowpart (imode, op);
++  return rtx_equal_p (mask,
++		      simplify_const_binary_operation (AND, imode, mask,
++						       op));
++})
++
+ (define_predicate "par_const_vector_shf_set_operand"
+   (match_code "parallel")
+ {
+@@ -673,6 +685,10 @@ (define_predicate "reg_or_vector_same_uimm_operand"
+   (ior (match_operand 0 "register_operand")
+        (match_operand 0 "const_vector_same_uimm_operand")))
+ 
++(define_predicate "reg_or_vector_neg_fp_operand"
++  (ior (match_operand 0 "register_operand")
++       (match_operand 0 "const_vector_neg_fp_operand")))
++
+ ;; PARALLEL for a vec_select that selects all the even or all the odd
+ ;; elements of a vector of MODE.
+ (define_special_predicate "vect_par_cnst_even_or_odd_half"
 --- a/src/gcc/config/loongarch/simd.md
 +++ b/src/gcc/config/loongarch/simd.md
 @@ -431,6 +431,17 @@ (define_insn "<optab><mode>3"
@@ -10255,15 +10741,15 @@ new file mode 100644
  	      (vec_select:<VEC_HALF>
  		(match_operand:IVEC 3 "register_operand" "f")
  		(match_dup 4))))
-@@ -972,6 +983,77 @@ (define_expand "<simd_isa>_<x>v<insn>ri_<simdfmt>"
+@@ -972,6 +983,105 @@ (define_expand "<simd_isa>_<x>v<insn>ri_<simdfmt>"
    DONE;
  })
  
 +(define_insn "xor<mode>3"
-+  [(set (match_operand:ALLVEC 0 "register_operand" "=f,f,f")
-+	(xor:ALLVEC
-+	  (match_operand:ALLVEC 1 "register_operand" "f,f,f")
-+	  (match_operand:ALLVEC 2 "reg_or_vector_same_val_operand" "f,YC,Urv8")))]
++  [(set (match_operand:IVEC 0 "register_operand" "=f,f,f")
++	(xor:IVEC
++	  (match_operand:IVEC 1 "register_operand" "f,f,f")
++	  (match_operand:IVEC 2 "reg_or_vector_same_val_operand" "f,YC,Urv8")))]
 +  ""
 +  "@
 +   <x>vxor.v\t%<wu>0,%<wu>1,%<wu>2
@@ -10273,10 +10759,10 @@ new file mode 100644
 +   (set_attr "mode" "<MODE>")])
 +
 +(define_insn "ior<mode>3"
-+  [(set (match_operand:ALLVEC 0 "register_operand" "=f,f,f")
-+	(ior:ALLVEC
-+	  (match_operand:ALLVEC 1 "register_operand" "f,f,f")
-+	  (match_operand:ALLVEC 2 "reg_or_vector_same_val_operand" "f,YC,Urv8")))]
++  [(set (match_operand:IVEC 0 "register_operand" "=f,f,f")
++	(ior:IVEC
++	  (match_operand:IVEC 1 "register_operand" "f,f,f")
++	  (match_operand:IVEC 2 "reg_or_vector_same_val_operand" "f,YC,Urv8")))]
 +  ""
 +  "@
 +   <x>vor.v\t%<wu>0,%<wu>1,%<wu>2
@@ -10286,10 +10772,10 @@ new file mode 100644
 +   (set_attr "mode" "<MODE>")])
 +
 +(define_insn "and<mode>3"
-+  [(set (match_operand:ALLVEC 0 "register_operand" "=f,f,f")
-+	(and:ALLVEC
-+	  (match_operand:ALLVEC 1 "register_operand" "f,f,f")
-+	  (match_operand:ALLVEC 2 "reg_or_vector_same_val_operand" "f,YZ,Urv8")))]
++  [(set (match_operand:IVEC 0 "register_operand" "=f,f,f")
++	(and:IVEC
++	  (match_operand:IVEC 1 "register_operand" "f,f,f")
++	  (match_operand:IVEC 2 "reg_or_vector_same_val_operand" "f,YZ,Urv8")))]
 +  ""
 +{
 +  switch (which_alternative)
@@ -10298,27 +10784,9 @@ new file mode 100644
 +      return "<x>vand.v\t%<wu>0,%<wu>1,%<wu>2";
 +    case 1:
 +      {
-+	rtx elt0 = CONST_VECTOR_ELT (operands[2], 0);
-+	unsigned HOST_WIDE_INT val;
-+	if (GET_MODE_CLASS (<MODE>mode) == MODE_VECTOR_FLOAT)
-+	  {
-+	  const REAL_VALUE_TYPE *x = CONST_DOUBLE_REAL_VALUE (elt0);
-+	  if (GET_MODE (elt0) == DFmode)
-+	    {
-+	      long tmp[2];
-+	      REAL_VALUE_TO_TARGET_DOUBLE (*x, tmp);
-+	      val = ~((unsigned HOST_WIDE_INT) tmp[1] << 32 | tmp[0]);
-+	    }
-+	  else
-+	    {
-+	      long tmp;
-+	      REAL_VALUE_TO_TARGET_SINGLE (*x, tmp);
-+	      val = ~((unsigned HOST_WIDE_INT) tmp);
-+	    }
-+	  }
-+	else
-+	  val = ~UINTVAL (elt0);
-+	operands[2] = loongarch_gen_const_int_vector (<VIMODE>mode, val & (-val));
++	operands[2] = simplify_const_unary_operation (NOT, <MODE>mode,
++						      operands[2],
++						      <MODE>mode);
 +	return "<x>vbitclri.%v0\t%<wu>0,%<wu>1,%V2";
 +      }
 +    case 2:
@@ -10329,6 +10797,52 @@ new file mode 100644
 +}
 +  [(set_attr "type" "simd_logic,simd_bit,simd_logic")
 +   (set_attr "mode" "<MODE>")])
++
++(define_expand "copysign<mode>3"
++  [(match_operand:FVEC 0 "register_operand")
++   (match_operand:FVEC 1 "register_operand")
++   (match_operand:FVEC 2 "reg_or_vector_neg_fp_operand")]
++  ""
++{
++  machine_mode imode = <VIMODE>mode;
++  rtx op[3], mask = loongarch_build_signbit_mask (imode, 1, 0);
++
++  /* Pun the operation into fixed-point bitwise operations.  */
++  for (int i = 0; i < 3; i++)
++    op[i] = lowpart_subreg (imode, operands[i], <MODE>mode);
++
++  /* Copysign from a positive const should have been already simplified
++     to abs, ignore the case here.  Copysign from a negative const is
++     a simple vbitset which is an alternative of ior (see above).  */
++  if (const_vector_neg_fp_operand (operands[2], <MODE>mode))
++    emit_insn (gen_ior<vimode>3 (op[0], op[1], mask));
++  else
++    {
++      mask = force_reg (imode, mask);
++      emit_insn (gen_<simd_isa>_<x>vbitsel_<simdfmt_as_i> (op[0], op[1],
++							   op[2], mask));
++    }
++
++  DONE;
++})
++
++(define_expand "@xorsign<mode>3"
++  [(match_operand:FVEC 0 "register_operand")
++   (match_operand:FVEC 1 "register_operand")
++   (match_operand:FVEC 2 "register_operand")]
++  ""
++{
++  machine_mode imode = <VIMODE>mode;
++  rtx op[3];
++
++  for (int i = 0; i < 3; i++)
++    op[i] = lowpart_subreg (imode, operands[i], <MODE>mode);
++
++  rtx t = loongarch_build_signbit_mask (imode, 1, 0);
++  t = force_reg (imode, simplify_gen_binary (AND, imode, op[2], t));
++  emit_move_insn (op[0], simplify_gen_binary (XOR, imode, op[1], t));
++  DONE;
++})
 +
  ; The LoongArch SX Instructions.
  (include "lsx.md")
@@ -12080,7 +12594,20 @@ new file mode 100644
    [(set (match_dup 3)
 --- a/src/gcc/cp/ChangeLog
 +++ b/src/gcc/cp/ChangeLog
-@@ -1,3 +1,478 @@
+@@ -1,3 +1,491 @@
++2026-03-03  Patrick Palka  <ppalka@redhat.com>
++
++	Backported from master:
++	2026-01-30  Patrick Palka  <ppalka@redhat.com>
++
++	PR c++/123845
++	PR libstdc++/114865
++	* constexpr.cc (build_data_member_initialization): Remove
++	C++11-specific recognition of MODIFY_EXPR.
++	(check_constexpr_ctor_body): Relax error diagnostic to a
++	pedwarn and don't clear DECL_DECLARED_CONSTEXPR_P upon
++	error.  Return true if complaining.
++
 +2026-02-19  Patrick Palka  <ppalka@redhat.com>
 +
 +	Backported from master:
@@ -12664,7 +13191,20 @@ new file mode 100644
  	    /* We can't check satisfaction in dependent context, wait until
 --- a/src/gcc/cp/constexpr.cc
 +++ b/src/gcc/cp/constexpr.cc
-@@ -464,6 +464,9 @@ build_data_member_initialization (tree t, vec<constructor_elt, va_gc> **vec)
+@@ -399,11 +399,7 @@ build_data_member_initialization (tree t, vec<constructor_elt, va_gc> **vec)
+     }
+   if (TREE_CODE (t) == CONVERT_EXPR)
+     t = TREE_OPERAND (t, 0);
+-  if (TREE_CODE (t) == INIT_EXPR
+-      /* vptr initialization shows up as a MODIFY_EXPR.  In C++14 we only
+-	 use what this function builds for cx_check_missing_mem_inits, and
+-	 assignment in the ctor body doesn't count.  */
+-      || (cxx_dialect < cxx14 && TREE_CODE (t) == MODIFY_EXPR))
++  if (TREE_CODE (t) == INIT_EXPR)
+     {
+       member = TREE_OPERAND (t, 0);
+       init = break_out_target_exprs (TREE_OPERAND (t, 1));
+@@ -464,6 +460,9 @@ build_data_member_initialization (tree t, vec<constructor_elt, va_gc> **vec)
        if (TREE_CODE (aggr) != COMPONENT_REF)
  	/* Normal member initialization.  */
  	member = TREE_OPERAND (member, 1);
@@ -12674,7 +13214,23 @@ new file mode 100644
        else if (ANON_AGGR_TYPE_P (TREE_TYPE (aggr)))
  	/* Initializing a member of an anonymous union.  */
  	return build_anon_member_initialization (member, init, vec);
-@@ -2459,7 +2462,11 @@ cxx_dynamic_cast_fn_p (tree fndecl)
+@@ -562,11 +561,11 @@ check_constexpr_ctor_body (tree last, tree list, bool complain)
+   else if (list != last
+ 	   && !check_constexpr_ctor_body_1 (last, list))
+     ok = false;
+-  if (!ok)
++  if (!ok && complain)
+     {
+-      if (complain)
+-	error ("%<constexpr%> constructor does not have empty body");
+-      DECL_DECLARED_CONSTEXPR_P (current_function_decl) = false;
++      pedwarn (input_location, OPT_Wc__14_extensions,
++	       "%<constexpr%> constructor does not have empty body");
++      ok = true;
+     }
+   return ok;
+ }
+@@ -2459,7 +2458,11 @@ cxx_dynamic_cast_fn_p (tree fndecl)
  {
    return (cxx_dialect >= cxx20
  	  && id_equal (DECL_NAME (fndecl), "__dynamic_cast")
@@ -12687,7 +13243,7 @@ new file mode 100644
  }
  
  /* Often, we have an expression in the form of address + offset, e.g.
-@@ -5746,7 +5753,9 @@ cxx_eval_vec_init_1 (const constexpr_ctx *ctx, tree atype, tree init,
+@@ -5746,7 +5749,9 @@ cxx_eval_vec_init_1 (const constexpr_ctx *ctx, tree atype, tree init,
  	  eltinit = (perform_implicit_conversion_flags
  		     (elttype, eltinit, complain,
  		      LOOKUP_IMPLICIT|LOOKUP_NO_NARROWING));
@@ -12698,7 +13254,7 @@ new file mode 100644
  	    /* Clarify what object is being initialized (118285).  */
  	    eltinit = build2 (INIT_EXPR, elttype, new_ctx.object, eltinit);
  	  eltinit = cxx_eval_constant_expression (&new_ctx, eltinit, lval,
-@@ -9230,6 +9239,17 @@ cxx_eval_outermost_constant_expr (tree t, bool allow_non_constant,
+@@ -9230,6 +9235,17 @@ cxx_eval_outermost_constant_expr (tree t, bool allow_non_constant,
  	r = TARGET_EXPR_INITIAL (r);
      }
  
@@ -15549,6 +16105,63 @@ new file mode 100644
      }
    else
      {
+@@ -5314,9 +5318,9 @@ self_recursive_pass_through_p (cgraph_edge *cs, ipa_jump_func *jfunc, int i,
+ 			       bool simple = true)
+ {
+   enum availability availability;
+-  if (cs->caller == cs->callee->function_symbol (&availability)
++  if (jfunc->type == IPA_JF_PASS_THROUGH
++      && cs->caller == cs->callee->function_symbol (&availability)
+       && availability > AVAIL_INTERPOSABLE
+-      && jfunc->type == IPA_JF_PASS_THROUGH
+       && (!simple || ipa_get_jf_pass_through_operation (jfunc) == NOP_EXPR)
+       && ipa_get_jf_pass_through_formal_id (jfunc) == i
+       && ipa_node_params_sum->get (cs->caller)
+@@ -5325,6 +5329,25 @@ self_recursive_pass_through_p (cgraph_edge *cs, ipa_jump_func *jfunc, int i,
+   return false;
+ }
+ 
++/* Return true if JFUNC, which describes the i-th parameter of call CS, is an
++   ancestor function with zero offset to itself when the cgraph_node involved
++   is not an IPA-CP clone.  */
++
++static bool
++self_recursive_ancestor_p (cgraph_edge *cs, ipa_jump_func *jfunc, int i)
++{
++  enum availability availability;
++  if (jfunc->type == IPA_JF_ANCESTOR
++      && cs->caller == cs->callee->function_symbol (&availability)
++      && availability > AVAIL_INTERPOSABLE
++      && ipa_get_jf_ancestor_offset (jfunc) == 0
++      && ipa_get_jf_ancestor_formal_id (jfunc) == i
++      && ipa_node_params_sum->get (cs->caller)
++      && !ipa_node_params_sum->get (cs->caller)->ipcp_orig_node)
++    return true;
++  return false;
++}
++
+ /* Return true if JFUNC, which describes a part of an aggregate represented or
+    pointed to by the i-th parameter of call CS, is a pass-through function to
+    itself when the cgraph_node involved is not an IPA-CP clone..  When
+@@ -5411,6 +5434,8 @@ find_more_scalar_values_for_callers_subset (struct cgraph_node *node,
+ 				op_type);
+ 	      t = ipacp_value_safe_for_type (type, t);
+ 	    }
++	  else if (self_recursive_ancestor_p (cs, jump_func, i))
++	    continue;
+ 	  else
+ 	    t = ipa_value_from_jfunc (ipa_node_params_sum->get (cs->caller),
+ 				      jump_func, type);
+@@ -5576,7 +5601,8 @@ push_agg_values_for_index_from_edge (struct cgraph_edge *cs, int index,
+ 	      && !src_plats->aggs_bottom
+ 	      && (agg_jf_preserved || !src_plats->aggs_by_ref))
+ 	    {
+-	      if (interim && self_recursive_pass_through_p (cs, jfunc, index))
++	      if (interim && (self_recursive_pass_through_p (cs, jfunc, index)
++			      || self_recursive_ancestor_p (cs, jfunc, index)))
+ 		{
+ 		  interim->push_adjusted_values (src_idx, index, unit_delta,
+ 						 res);
 --- a/src/gcc/ipa-modref-tree.cc
 +++ b/src/gcc/ipa-modref-tree.cc
 @@ -59,7 +59,7 @@ modref_access_node::operator == (modref_access_node &a) const
@@ -15933,7 +16546,16 @@ new file mode 100644
  	  if (fd == -1)
 --- a/src/gcc/lto/ChangeLog
 +++ b/src/gcc/lto/ChangeLog
-@@ -1,3 +1,22 @@
+@@ -1,3 +1,31 @@
++2026-02-26  Michal Jires  <mjires@suse.cz>
++
++	Backported from master:
++	2026-01-11  Michal Jires  <mjires@suse.cz>
++
++	PR lto/121588
++	* lto-symtab.cc (lto_symtab_merge_symbols): Set body_removed
++	for symbols resolved outside of IR.
++
 +2025-12-03  Siddhesh Poyarekar  <siddhesh@gotplt.org>
 +
 +	Backported from master:
@@ -16025,6 +16647,16 @@ new file mode 100644
      }
    else
      {
+--- a/src/gcc/lto/lto-symtab.cc
++++ b/src/gcc/lto/lto-symtab.cc
+@@ -1040,6 +1040,7 @@ lto_symtab_merge_symbols (void)
+ 		      node->analyzed = node->definition = false;
+ 		      node->remove_all_references ();
+ 		    }
++		  node->body_removed = true;
+ 		}
+ 	      DECL_EXTERNAL (node->decl) = 1;
+ 	    }
 --- a/src/gcc/lto/lto.h
 +++ b/src/gcc/lto/lto.h
 @@ -58,7 +58,7 @@ extern int lto_link_dump_id, decl_merge_dump_id, partition_dump_id;
@@ -16249,6 +16881,55 @@ new file mode 100644
        if (o != t)
  	{
  	  ldata->decls->safe_push (DECL_VALUE_EXPR (*tp));
+--- a/src/gcc/optabs.cc
++++ b/src/gcc/optabs.cc
+@@ -422,9 +422,9 @@ force_expand_binop (machine_mode mode, optab binoptab,
+   return true;
+ }
+ 
+-/* Create a new vector value in VMODE with all elements set to OP.  The
+-   mode of OP must be the element mode of VMODE.  If OP is a constant,
+-   then the return value will be a constant.  */
++/* Create a new vector value in VMODE with all elements set to OP.  If OP
++   is not a constant, the mode of it must be the element mode of VMODE.
++   If OP is a constant, then the return value will be a constant.  */
+ 
+ rtx
+ expand_vector_broadcast (machine_mode vmode, rtx op)
+@@ -1623,15 +1623,25 @@ expand_binop (machine_mode mode, optab binoptab, rtx op0, rtx op1,
+       if (otheroptab
+ 	  && (icode = optab_handler (otheroptab, mode)) != CODE_FOR_nothing)
+ 	{
+-	  /* The scalar may have been extended to be too wide.  Truncate
+-	     it back to the proper size to fit in the broadcast vector.  */
++	  /* The scalar may be wider or narrower than the vector element.
++	     Truncate or extend it to the proper size to fit in the
++	     broadcast vector.  */
+ 	  scalar_mode inner_mode = GET_MODE_INNER (mode);
+-	  if (!CONST_INT_P (op1)
+-	      && (GET_MODE_BITSIZE (as_a <scalar_int_mode> (GET_MODE (op1)))
+-		  > GET_MODE_BITSIZE (inner_mode)))
+-	    op1 = force_reg (inner_mode,
+-			     simplify_gen_unary (TRUNCATE, inner_mode, op1,
+-						 GET_MODE (op1)));
++	  if (!CONST_INT_P (op1))
++	    {
++	      auto mode1 = as_a <scalar_int_mode> (GET_MODE (op1));
++	      int size1 = GET_MODE_BITSIZE (mode1);
++	      int inner_size = GET_MODE_BITSIZE (inner_mode);
++
++	      if (size1 != inner_size)
++		{
++		  auto unary = size1 > inner_size ? TRUNCATE : ZERO_EXTEND;
++		  op1 = force_reg (inner_mode,
++				   simplify_gen_unary (unary, inner_mode,
++						       op1, mode1));
++		}
++	    }
++
+ 	  rtx vop1 = expand_vector_broadcast (mode, op1);
+ 	  if (vop1)
+ 	    {
 --- a/src/gcc/po/ChangeLog
 +++ b/src/gcc/po/ChangeLog
 @@ -1,3 +1,29 @@
@@ -717387,7 +718068,112 @@ new file mode 100644
  # include <new>
 --- a/src/gcc/testsuite/ChangeLog
 +++ b/src/gcc/testsuite/ChangeLog
-@@ -1,3 +1,2414 @@
+@@ -1,3 +1,2519 @@
++2026-03-04  Martin Jambor  <mjambor@suse.cz>
++
++	Backported from master:
++	2026-02-20  Martin Jambor  <mjambor@suse.cz>
++
++	PR ipa/122856
++	* g++.dg/ipa/pr122856.C: New test.
++
++2026-03-04  Xi Ruoyao  <xry111@xry111.site>
++
++	Backported from master:
++	2026-02-26  Xi Ruoyao  <xry111@xry111.site>
++
++	PR middle-end/124250
++	PR target/123807
++	* gcc.c-torture/compile/pr124250.c: New test.
++
++2026-03-03  Patrick Palka  <ppalka@redhat.com>
++
++	Backported from master:
++	2026-01-30  Patrick Palka  <ppalka@redhat.com>
++
++	PR c++/123845
++	PR libstdc++/114865
++	* g++.dg/cpp0x/constexpr-ex3.C: Adjust C++11 non-empty
++	constexpr constructor dg-error to a dg-warning.  Expect
++	a follow-up missing member initializer diagnostic in C++11 mode.
++	* g++.dg/cpp2a/constexpr-try1.C: Expect a follow-up
++	compound-statement in constexpr function diagnostic in C++11
++	mode.
++	* g++.dg/cpp2a/constexpr-try2.C: Likewise.  Adjust C++11
++	non-empty constexpr constructor dg-error to a dg-warning.
++	* g++.dg/cpp2a/constexpr-try3.C:  Adjust C++11 non-empty
++	constexpr constructor dg-error to a dg-warning.
++	* g++.dg/cpp0x/constexpr-ctor23.C: New test.
++
++2026-03-02  Tamar Christina  <tamar.christina@arm.com>
++
++	Backported from master:
++	2026-02-25  Tamar Christina  <tamar.christina@arm.com>
++
++	PR target/124236
++	* lib/target-supports.exp
++	(check_effective_target_arm_v8_3a_complex_neon_hw): Fix default value.
++
++2026-02-28  Eric Botcazou  <ebotcazou@adacore.com>
++
++	* gnat.dg/specs/unchecked_union3.ads: New test.
++
++2026-02-27  Eric Botcazou  <ebotcazou@adacore.com>
++
++	* gnat.dg/specs/mutably_tagged2.ads: New test.
++
++2026-02-27  Xi Ruoyao  <xry111@xry111.site>
++
++	PR target/122097
++	* gcc.target/loongarch/pr122097.c (dg-final): Remove.
++
++2026-02-26  Michal Jires  <mjires@suse.cz>
++
++	Backported from master:
++	2026-01-11  Michal Jires  <mjires@suse.cz>
++
++	PR lto/121588
++	* gcc.dg/lto/attr-weakref-2_0.c: New test.
++	* gcc.dg/lto/attr-weakref-2_1.c: New test.
++
++2026-02-25  Eric Botcazou  <ebotcazou@adacore.com>
++
++	* gnat.dg/protected_deref1.adb: New test.
++
++2026-02-25  Christophe Lyon  <christophe.lyon@linaro.org>
++
++	Backported from master:
++	2025-06-02  Christophe Lyon  <christophe.lyon@linaro.org>
++
++	* lib/target-supports.exp (check_effective_target_tls_link): New.
++	* g++.dg/tls/pr102496-1.C: Require tls_link.
++	* g++.dg/tls/pr77285-1.C: Likewise.
++
++2026-02-25  Alexandre Oliva  <oliva@adacore.com>
++
++	Backported from master:
++	2026-01-21  Alexandre Oliva  <oliva@adacore.com>
++
++	* g++.dg/lto/pr62026_0.C: Silence -flinker-output warning.
++
++2026-02-25  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
++
++	PR testsuite/124065
++	* gcc.dg/analyzer/zlib-3.c: Drop xfail.
++
++2026-02-24  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
++
++	Backported from master:
++	2026-02-24  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
++
++	PR testsuite/124064
++	* g++.target/arm/bfloat_cpp_typecheck.C: Drop xfail.
++
++2026-02-24  Eric Botcazou  <ebotcazou@adacore.com>
++	    Liam Powell  <liam@liampwll.com>
++
++	* gnat.dg/specs/aggr12.ads: New test.
++
 +2026-02-22  Nathaniel Shead  <nathanieloshead@gmail.com>
 +
 +	Backported from master:
@@ -720262,6 +721048,48 @@ new file mode 100644
 +template void f<&a>();
 new file mode 100644
 --- /dev/null
++++ b/src/gcc/testsuite/g++.dg/cpp0x/constexpr-ctor23.C
+@@ -0,0 +1,26 @@
++// Verify we diagnose and accept, as an extension, a non-empty constexpr
++// constructor body in C++11 mode.
++// PR c++/123845
++// { dg-do compile { target c++11_only } }
++// { dg-options "" }
++
++constexpr int negate(int n) { return -n; }
++
++struct A {
++  int m;
++  constexpr A() : m(42) {
++    ++m;
++    m = negate(m);
++  } // { dg-warning "does not have empty body \[-Wc++14-extensions\]" }
++};
++static_assert(A().m == -43, "");
++
++template<class T>
++struct B {
++  int m;
++  constexpr B() : m(42) {
++    ++m;
++    m = negate(m);
++  } // { dg-warning "does not have empty body \[-Wc++14-extensions\]" }
++};
++static_assert(B<int>().m == -43, "");
+--- a/src/gcc/testsuite/g++.dg/cpp0x/constexpr-ex3.C
++++ b/src/gcc/testsuite/g++.dg/cpp0x/constexpr-ex3.C
+@@ -6,7 +6,8 @@
+ struct A
+ {
+   int i;
+-  constexpr A(int _i) { i = _i; } // { dg-error "empty body|A::i" "" { target c++17_down } }
++  constexpr A(int _i) { i = _i; } // { dg-warning "empty body" "" { target c++11_only } }
++				  // { dg-error "'A::i' must be init" "" { target c++17_down } .-1 }
+ };
+ 
+ template <class T>
+new file mode 100644
+--- /dev/null
 +++ b/src/gcc/testsuite/g++.dg/cpp0x/gen-attrs-89.C
 @@ -0,0 +1,8 @@
 +// PR c++/121524
@@ -721038,6 +721866,39 @@ new file mode 100644
 +
 +#include <cxxabi.h>
 +#include "constexpr-dynamic1.C"
+--- a/src/gcc/testsuite/g++.dg/cpp2a/constexpr-try1.C
++++ b/src/gcc/testsuite/g++.dg/cpp2a/constexpr-try1.C
+@@ -32,6 +32,7 @@ struct S {
+     } catch (int) {	// { dg-error "compound-statement in 'constexpr' function" "" { target c++11_only } }
+     }			// { dg-error "compound-statement in 'constexpr' function" "" { target c++11_only } .-2 }
+   } catch (...) {	// { dg-error "'constexpr' constructor does not have empty body" "" { target c++11_only } }
++		        // { dg-error "compound-statement in 'constexpr' function" "" { target c++11_only } .-1 }
+   }
+   int m;
+ };
+--- a/src/gcc/testsuite/g++.dg/cpp2a/constexpr-try2.C
++++ b/src/gcc/testsuite/g++.dg/cpp2a/constexpr-try2.C
+@@ -32,7 +32,8 @@ struct S {
+     try {		// { dg-warning "'try' in 'constexpr' function only available with" "" { target c++17_down } }
+     } catch (int) {	// { dg-warning "compound-statement in 'constexpr' function" "" { target c++11_only } }
+     }			// { dg-warning "compound-statement in 'constexpr' function" "" { target c++11_only } .-2 }
+-  } catch (...) {	// { dg-error "'constexpr' constructor does not have empty body" "" { target c++11_only } }
++  } catch (...) {	// { dg-warning "'constexpr' constructor does not have empty body" "" { target c++11_only } }
++			// { dg-warning "compound-statement in 'constexpr' function" "" { target c++11_only } .-1 }
+   }
+   int m;
+ };
+--- a/src/gcc/testsuite/g++.dg/cpp2a/constexpr-try3.C
++++ b/src/gcc/testsuite/g++.dg/cpp2a/constexpr-try3.C
+@@ -31,7 +31,7 @@ struct S {
+     try {		// { dg-warning "'try' in 'constexpr' function only available with" "" { target c++17_down } }
+     } catch (int) {
+     }
+-  } catch (...) {	// { dg-error "'constexpr' constructor does not have empty body" "" { target c++11_only } }
++  } catch (...) {	// { dg-warning "'constexpr' constructor does not have empty body" "" { target c++11_only } }
+   }
+   int m;
+ };
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/g++.dg/cpp2a/lambda-targ20.C
@@ -721286,6 +722147,36 @@ new file mode 100644
 +
 new file mode 100644
 --- /dev/null
++++ b/src/gcc/testsuite/g++.dg/ipa/pr122856.C
+@@ -0,0 +1,26 @@
++/* { dg-do compile } */
++/* { dg-options "-O3 -std=gnu++11" } */
++
++template <typename T>
++class Base {
++public:
++    virtual int get();
++    virtual ~Base() = default;
++};
++
++template <typename T>
++class Derived : public Base<T> {
++public:
++    int get() override { return Base<T>::get(); }
++};
++
++template <typename T>
++int Base<T>::get() {
++
++    return static_cast<Derived<int>*>(this)->get();
++}
++
++int main() {
++    Derived<int> d;
++    return d.get();
++}
+new file mode 100644
+--- /dev/null
 +++ b/src/gcc/testsuite/g++.dg/lto/pr121831_0.C
 @@ -0,0 +1,17 @@
 +/* PR middle-end/121831 */
@@ -721373,6 +722264,16 @@ new file mode 100644
 +    if (c.t[i] != (i < 512 ? (i & 127) + 1 : 0))
 +      __builtin_abort ();
 +}
+--- a/src/gcc/testsuite/g++.dg/lto/pr62026_0.C
++++ b/src/gcc/testsuite/g++.dg/lto/pr62026_0.C
+@@ -1,5 +1,7 @@
+ // { dg-lto-do link }
+ // { dg-lto-options {{-flto -O3 -r -Wno-return-type}} }
++// { dg-extra-ld-options "-flinker-output=nolto-rel" }
++
+ class C;
+ class F {
+   virtual C m_fn1();
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/g++.dg/modules/concept-12_a.C
@@ -722021,6 +722922,25 @@ new file mode 100644
 +  A<set> a;
 +  a.size();
 +}
+--- a/src/gcc/testsuite/g++.dg/tls/pr102496-1.C
++++ b/src/gcc/testsuite/g++.dg/tls/pr102496-1.C
+@@ -1,6 +1,6 @@
+ // PR c++/102496
+ // { dg-do link { target c++11 } }
+-// { dg-require-effective-target tls }
++// { dg-require-effective-target tls_link }
+ // { dg-add-options tls }
+ // { dg-additional-sources pr102496-2.C }
+ 
+--- a/src/gcc/testsuite/g++.dg/tls/pr77285-1.C
++++ b/src/gcc/testsuite/g++.dg/tls/pr77285-1.C
+@@ -1,5 +1,5 @@
+ // { dg-do link { target c++11 } }
+-// { dg-require-effective-target tls }
++// { dg-require-effective-target tls_link }
+ // { dg-add-options tls }
+ // { dg-additional-sources pr77285-2.C }
+ 
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/g++.dg/torture/pr117217-1.C
@@ -722480,6 +723400,19 @@ new file mode 100644
 +
 +/* { dg-final { scan-assembler-not {\tld1b\t(z[0-9]+)\.d, p[0-7]/z, \[(z[0-9]+)\.d, #64\]} } } */
 +
+--- a/src/gcc/testsuite/g++.target/arm/bfloat_cpp_typecheck.C
++++ b/src/gcc/testsuite/g++.target/arm/bfloat_cpp_typecheck.C
+@@ -7,8 +7,8 @@
+ 
+ void foo (void)
+ {
+-  bfloat16_t (); /* { dg-bogus {invalid conversion to type 'bfloat16_t'} "" { xfail *-*-* } } */
+-  bfloat16_t a = bfloat16_t(); /* { dg-bogus {invalid conversion to type 'bfloat16_t'} "" { xfail *-*-* } } */
++  bfloat16_t (); /* { dg-bogus {invalid conversion to type 'bfloat16_t'} } */
++  bfloat16_t a = bfloat16_t(); /* { dg-bogus {invalid conversion to type 'bfloat16_t'} } */
+   bfloat16_t (0x1234); /* { dg-error {invalid conversion to type 'bfloat16_t'} } */
+   bfloat16_t (0.1); /* { dg-error {invalid conversion to type 'bfloat16_t'} } */
+ }
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/g++.target/i386/avx512fp16-pr123607.C
@@ -723581,6 +724514,18 @@ new file mode 100644
 +}
 new file mode 100644
 --- /dev/null
++++ b/src/gcc/testsuite/gcc.c-torture/compile/pr124250.c
+@@ -0,0 +1,8 @@
++typedef long long v2i64 __attribute__ ((vector_size (16), aligned (16)));
++v2i64 a, b;
++
++void
++test (int l)
++{
++  a = b >> (-l);
++}
+new file mode 100644
+--- /dev/null
 +++ b/src/gcc/testsuite/gcc.c-torture/execute/pr122943.c
 @@ -0,0 +1,130 @@
 +/* PR tree-optimization/122943 */
@@ -723734,6 +724679,17 @@ new file mode 100644
    sink (p);
  }
  
+--- a/src/gcc/testsuite/gcc.dg/analyzer/zlib-3.c
++++ b/src/gcc/testsuite/gcc.dg/analyzer/zlib-3.c
+@@ -184,7 +184,7 @@ static int huft_build(uInt *b, uInt n, uInt s, const uInt *d, const uInt *e,
+       mask = (1 << w) - 1;
+       /* The analyzer thinks that h can be -1 here.
+          This is probably a false positive. */
+-      while ((i & mask) !=  x[h]) { /* { dg-bogus "under-read" "" { xfail *-*-* } } */
++      while ((i & mask) !=  x[h]) { /* { dg-bogus "under-read" } */
+         h--;
+         w -= l;
+         mask = (1 << w) - 1;
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/gcc.dg/bitint-125.c
@@ -723851,6 +724807,28 @@ new file mode 100644
 +	v[i][j][k] = 0;
 +  bar (i, j, k);
 +}
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gcc.dg/lto/attr-weakref-2_0.c
+@@ -0,0 +1,11 @@
++/* { dg-lto-do link } */
++/* { dg-lto-options {{-O2 -flto}} } */
++
++#define __weak __attribute__((__weak__))
++void __weak other() {}
++void __weak fn() {}
++
++int main() {
++  fn();
++  other();
++}
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gcc.dg/lto/attr-weakref-2_1.c
+@@ -0,0 +1,3 @@
++/* { dg-options {{-fno-lto}} } */
++
++void fn() {}
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/gcc.dg/lto/pr122515_0.c
@@ -730112,10 +731090,9 @@ new file mode 100644
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/gcc.target/loongarch/pr122097.c
-@@ -0,0 +1,271 @@
+@@ -0,0 +1,270 @@
 +/* { dg-do compile } */
 +/* { dg-options "-O3 -mabi=lp64d -mlsx" } */
-+/* { dg-final { scan-assembler "vbitseti\.d\t\\\$vr\[0-9\]+,\\\$vr\[0-9\]+,63" } } */
 +
 +typedef long unsigned int size_t;
 +typedef unsigned char simde__mmask8;
@@ -734421,6 +735398,42 @@ new file mode 100644
 +end Prefix4_Pkg;
 new file mode 100644
 --- /dev/null
++++ b/src/gcc/testsuite/gnat.dg/protected_deref1.adb
+@@ -0,0 +1,32 @@
++-- { dg-do run }
++
++with Ada.Text_IO;
++
++procedure Protected_Deref1 is
++
++   protected type Fallback_Hit_Counter_Type is
++      procedure Handler;
++   end Fallback_Hit_Counter_Type;
++
++   protected body Fallback_Hit_Counter_Type is
++      procedure Handler is
++      begin
++         Ada.Text_IO.Put_Line ("Test");
++      end Handler;
++   end Fallback_Hit_Counter_Type;
++
++   Fallback_Hit_Counter : access Fallback_Hit_Counter_Type :=
++     new Fallback_Hit_Counter_Type;
++
++   type X is access protected procedure;
++
++   A : X := Fallback_Hit_Counter.all.Handler'Access;
++   B : X := Fallback_Hit_Counter.Handler'Access;
++
++begin
++   A.all;
++   B.all;
++   if A /= B then
++      raise Program_Error;
++   end if;
++end;
+new file mode 100644
+--- /dev/null
 +++ b/src/gcc/testsuite/gnat.dg/protected_type1.adb
 @@ -0,0 +1,25 @@
 +--  { dg-do compile }
@@ -734639,6 +735652,24 @@ new file mode 100644
 +end Aggr11;
 new file mode 100644
 --- /dev/null
++++ b/src/gcc/testsuite/gnat.dg/specs/aggr12.ads
+@@ -0,0 +1,14 @@
++-- PR ada/124224
++-- { dg-do compile }
++-- { dg-options "-gnat2022" }
++
++with Ada.Containers.Ordered_Maps;
++
++package Aggr12 is
++
++  package Maps is new
++    Ada.Containers.Ordered_Maps (Character, Boolean);
++
++  M : Maps.Map := [for C in Character => False];
++
++end Aggr12;
+new file mode 100644
+--- /dev/null
 +++ b/src/gcc/testsuite/gnat.dg/specs/aggr9.ads
 @@ -0,0 +1,26 @@
 +-- PR ada/123289
@@ -734748,6 +735779,29 @@ new file mode 100644
 +end Mutably_Tagged1;
 new file mode 100644
 --- /dev/null
++++ b/src/gcc/testsuite/gnat.dg/specs/mutably_tagged2.ads
+@@ -0,0 +1,19 @@
++-- { dg-do compile }
++-- { dg-options "-gnatX0" }
++
++generic
++package Mutably_Tagged2 is
++   generic
++   package Config is
++      type Mutably_Tagged is tagged null record with Size'Class => 128;
++   end Config;
++
++   package My_Config is new Config;
++
++   generic
++      type T is private;
++   package G is
++   end G;
++
++   package My_G is new G (My_Config.Mutably_Tagged'Class);
++end Mutably_Tagged2;
+new file mode 100644
+--- /dev/null
 +++ b/src/gcc/testsuite/gnat.dg/specs/put_image2.ads
 @@ -0,0 +1,21 @@
 +-- { dg-do compile }
@@ -734771,6 +735825,90 @@ new file mode 100644
 +    abstract tagged limited null record;
 +
 +end Put_Image2;
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gnat.dg/specs/unchecked_union3.ads
+@@ -0,0 +1,80 @@
++-- { dg-do compile }
++
++with Interfaces;
++
++package Unchecked_Union3 is
++
++   type T_CAN_ID is mod 2**29 with
++      Default_Value => 0,
++      Size          => 29;
++
++   type T_Node_ID is mod 2**7 with
++      Size          => 7,
++      Default_Value => 0;
++
++   type T_Message_Type_ID is new Interfaces.Unsigned_16;
++
++   type T_Service_Type_ID is new Interfaces.Unsigned_8;
++
++   type T_Priority is mod 2**5 with
++      Size          => 5,
++      Default_Value => 0;
++
++   type T_Format_Selector is
++     (CAN_Fields,
++      DroneCAN_Fields);
++
++   type T_Frame_Selector is
++     (Message_Frame,
++      Anonymous_Frame,
++      Service_Frame);
++
++   type Unsigned_2 is mod 2**2 with
++      Size          => 2,
++      Default_Value => 0;
++
++   type Unsigned_14 is mod 2**14 with
++      Size          => 14,
++      Default_Value => 0;
++
++   type T_Header (Format_Selector : T_Format_Selector := DroneCAN_Fields;
++      Frame_Selector              : T_Frame_Selector  := Message_Frame) is record
++      case Format_Selector is
++         when CAN_Fields =>
++            CAN_ID : T_CAN_ID;
++
++         when DroneCAN_Fields =>
++            Source_Node_ID      : T_Node_ID;
++            Service_Not_Message : Boolean := False;
++            Priority            : T_Priority;
++
++            case Frame_Selector is
++               when Message_Frame =>
++                  Message_Type_ID : T_Message_Type_ID;
++               when Anonymous_Frame =>
++                  Message_Type_ID_Lower_Bits : Unsigned_2;
++                  Discriminator              : Unsigned_14;
++               when Service_Frame =>
++                  Destination_Node_ID  : T_Node_ID;
++                  Request_Not_Response : Boolean := False;
++                  Service_Type_ID      : T_Service_Type_ID;
++            end case;
++      end case;
++   end record with
++      Unchecked_Union,
++      Size => 29;
++
++   for T_Header use record
++      CAN_ID                     at 0 range  0 .. 28;
++      Source_Node_ID             at 0 range  0 ..  6;
++      Service_Not_Message        at 0 range  7 ..  7;
++      Priority                   at 0 range 24 .. 28;
++      Message_Type_ID            at 0 range  8 .. 23;
++      Message_Type_ID_Lower_Bits at 0 range  8 ..  9;
++      Discriminator              at 0 range 10 .. 23;
++      Destination_Node_ID        at 0 range  8 .. 14;
++      Request_Not_Response       at 0 range 15 .. 15;
++      Service_Type_ID            at 0 range 16 .. 23;
++   end record;
++
++end Unchecked_Union3;
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/gnat.dg/subpools2.adb
@@ -735012,7 +736150,24 @@ new file mode 100644
      foreach entry $multiline_expected_outputs {
 --- a/src/gcc/testsuite/lib/target-supports.exp
 +++ b/src/gcc/testsuite/lib/target-supports.exp
-@@ -5726,6 +5726,13 @@ proc add_options_for_aarch64_sve { flags } {
+@@ -1051,6 +1051,16 @@ proc check_effective_target_tls {} {
+     }]
+ }
+ 
++# Return 1 if we can link using TLS, 0 otherwise.
++
++proc check_effective_target_tls_link {} {
++    return [check_no_compiler_messages tls_link executable {
++	__thread int i;
++	int main (void) { return i; }
++	void g (int j) { i = j; }
++    }]
++}
++
+ # Return 1 if *native* thread local storage (TLS) is supported, 0 otherwise.
+ 
+ proc check_effective_target_tls_native {} {
+@@ -5726,6 +5736,13 @@ proc add_options_for_aarch64_sve { flags } {
      return "$flags -march=armv8.2-a+sve"
  }
  
@@ -735026,7 +736181,7 @@ new file mode 100644
  # Return 1 if this is an ARM target supporting the FP16 alternative
  # format.  Some multilibs may be incompatible with the options needed.  Also
  # set et_arm_fp16_alternative_flags to the best options to add.
-@@ -6080,6 +6087,7 @@ foreach { armfunc armflag armdefs } {
+@@ -6080,6 +6097,7 @@ foreach { armfunc armflag armdefs } {
  # flags).  See above for setting -march=.
  foreach { armfunc armflag armdefs } {
  	    xscale_arm "-mcpu=xscale -mtune=xscale -mfloat-abi=soft -marm" "__XSCALE__ && !__thumb__"
@@ -735034,7 +736189,7 @@ new file mode 100644
  	    cortex_a57 "-mcpu=cortex-a57 -mtune=cortex-a57" __ARM_ARCH_8A__
  	    cortex_m0 "-mcpu=cortex-m0 -mtune=cortex-m0 -mfloat-abi=soft -mthumb" "__ARM_ARCH_6M__ && __thumb__"
  	    cortex_m0_small "-mcpu=cortex-m0.small-multiply -mtune=cortex-m0.small-multiply -mfloat-abi=soft -mthumb" "__ARM_ARCH_6M__ && __thumb__"
-@@ -6465,6 +6473,22 @@ foreach N { 128 256 512 1024 2048 } {
+@@ -6465,6 +6483,22 @@ foreach N { 128 256 512 1024 2048 } {
      }]
  }
  
@@ -735057,7 +736212,16 @@ new file mode 100644
  proc check_effective_target_arm_neonv2_hw { } {
      return [check_runtime arm_neon_hwv2_available {
  	#include "arm_neon.h"
-@@ -14393,3 +14417,11 @@ proc check_effective_target_speculation_barrier_defined { } {
+@@ -13485,7 +13519,7 @@ proc add_options_for_arm_v8_3a_fp16_complex_neon { flags } {
+ 
+ proc check_effective_target_arm_v8_3a_complex_neon_hw { } {
+     if { ![check_effective_target_arm_v8_3a_complex_neon_ok] } {
+-	return 1;
++	return 0;
+     }
+     return [check_runtime arm_v8_3a_complex_neon_hw_available {
+ 	#include "arm_neon.h"
+@@ -14393,3 +14427,11 @@ proc check_effective_target_speculation_barrier_defined { } {
  	    }
  	}]
  }
@@ -738995,7 +740159,46 @@ new file mode 100644
              extern (C) int cmp(scope const void* p1, scope const void* p2, scope void* ti)
 --- a/src/libstdc++-v3/ChangeLog
 +++ b/src/libstdc++-v3/ChangeLog
-@@ -1,3 +1,531 @@
+@@ -1,3 +1,570 @@
++2026-03-04  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2026-03-04  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/124363
++	* include/std/string_view: Adjust comment on #endif to match #if
++	condition. Likewise for header guard.
++
++2026-03-03  Patrick Palka  <ppalka@redhat.com>
++
++	Backported from master:
++	2026-02-12  Patrick Palka  <ppalka@redhat.com>
++
++	PR libstdc++/114865
++	* include/std/atomic (atomic<_Tp>::atomic(_Tp)) [C++11]:
++	Enable __builtin_clear_padding logic.
++	* testsuite/29_atomics/atomic/compare_exchange_padding.cc: Enable
++	this test in earlier modes, including C++11.
++	* testsuite/29_atomics/atomic/cons/zero_padding.cc [C++11]:
++	Enable tests verifying cleared padding bits for a non-static-init
++	std::atomic object.
++
++2026-02-26  Tomasz Kamiński  <tkaminsk@redhat.com>
++
++	PR libstdc++/123875
++	* include/bits/atomic_base.h (__atomic_impl::__clear_padding):
++	Use if constexpr unconditionally.
++	(__atomic_float<_Fp>::__atomic_float(_Fp)): Skip __clear_padding
++	call for constant evaluation.
++	* include/std/atomic (atomic<_Tp>::atomic(_Tp)): Likewise.
++	* testsuite/29_atomics/atomic/cons/zero_padding.cc: New test.
++	* testsuite/29_atomics/atomic_float/zero_padding.cc: New test.
++	(cherry picked from commits
++	6b550d69fe7cb62ea6e240ce7a4ba29ce33aa1b1
++	682c95b808724e6f876ea709b873ac6771704d7b
++	060d7c2a9c1fe16d23d98a74287fdb7c73ddb784
++	f3ba5ad088cebe117f857329a35b95d18d97a808)
++
 +2026-02-10  Jonathan Wakely  <jwakely@redhat.com>
 +
 +	Backported from master:
@@ -741631,6 +742834,48 @@ new file mode 100644
  
  </section>
  
+--- a/src/libstdc++-v3/include/bits/atomic_base.h
++++ b/src/libstdc++-v3/include/bits/atomic_base.h
+@@ -964,13 +964,16 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+ #endif
+       }
+ 
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wc++17-extensions"
++
+     template<typename _Tp>
+       _GLIBCXX_ALWAYS_INLINE _GLIBCXX14_CONSTEXPR _Tp*
+       __clear_padding(_Tp& __val) noexcept
+       {
+ 	auto* __ptr = std::__addressof(__val);
+ #if __has_builtin(__builtin_clear_padding)
+-	if _GLIBCXX17_CONSTEXPR (__atomic_impl::__maybe_has_padding<_Tp>())
++	if constexpr (__atomic_impl::__maybe_has_padding<_Tp>())
+ 	  __builtin_clear_padding(__ptr);
+ #endif
+ 	return __ptr;
+@@ -980,9 +983,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+     template<typename _Tp>
+       using _Val = typename remove_volatile<_Tp>::type;
+ 
+-#pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wc++17-extensions"
+-
+     template<bool _AtomicRef = false, typename _Tp>
+       _GLIBCXX_ALWAYS_INLINE bool
+       __compare_exchange(_Tp& __val, _Val<_Tp>& __e, _Val<_Tp>& __i,
+@@ -1314,7 +1314,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+ 
+       constexpr
+       __atomic_float(_Fp __t) : _M_fp(__t)
+-      { __atomic_impl::__clear_padding(_M_fp); }
++      { 
++ 	if (!std::__is_constant_evaluated())
++	  __atomic_impl::__clear_padding(_M_fp);
++      }
+ 
+       __atomic_float(const __atomic_float&) = delete;
+       __atomic_float& operator=(const __atomic_float&) = delete;
 --- a/src/libstdc++-v3/include/bits/atomic_wait.h
 +++ b/src/libstdc++-v3/include/bits/atomic_wait.h
 @@ -188,7 +188,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
@@ -742503,7 +743748,27 @@ new file mode 100644
  
 --- a/src/libstdc++-v3/include/std/atomic
 +++ b/src/libstdc++-v3/include/std/atomic
-@@ -401,21 +401,20 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+@@ -241,13 +241,17 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+       atomic& operator=(const atomic&) = delete;
+       atomic& operator=(const atomic&) volatile = delete;
+ 
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wc++14-extensions" // constexpr ctor body
+       constexpr atomic(_Tp __i) noexcept : _M_i(__i)
+       {
+-#if __cplusplus >= 201402L && __has_builtin(__builtin_clear_padding)
++#if __has_builtin(__builtin_clear_padding)
+ 	if _GLIBCXX17_CONSTEXPR (__atomic_impl::__maybe_has_padding<_Tp>())
+-	  __builtin_clear_padding(std::__addressof(_M_i));
++	  if (!std::__is_constant_evaluated())
++	    __builtin_clear_padding(std::__addressof(_M_i));
+ #endif
+       }
++#pragma GCC diagnostic pop
+ 
+       operator _Tp() const noexcept
+       { return load(); }
+@@ -401,21 +405,20 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        void
        wait(_Tp __old, memory_order __m = memory_order_seq_cst) const noexcept
        {
@@ -742635,6 +743900,17 @@ new file mode 100644
        bool
        _M_clocklock(clockid_t __clockid, const __gthread_time_t& __ts)
        { return !pthread_mutex_clocklock(&_M_mutex, __clockid, &__ts); }
+--- a/src/libstdc++-v3/include/std/string_view
++++ b/src/libstdc++-v3/include/std/string_view
+@@ -910,6 +910,6 @@ _GLIBCXX_END_NAMESPACE_VERSION
+ 
+ #include <bits/string_view.tcc>
+ 
+-#endif // __cplusplus <= 201402L
++#endif // C++17
+ 
+-#endif // _GLIBCXX_EXPERIMENTAL_STRING_VIEW
++#endif // _GLIBCXX_STRING_VIEW
 --- a/src/libstdc++-v3/include/std/type_traits
 +++ b/src/libstdc++-v3/include/std/type_traits
 @@ -41,6 +41,7 @@
@@ -744263,6 +745539,93 @@ new file mode 100644
    test_directories();
 +  test_pr122726();
  }
+--- a/src/libstdc++-v3/testsuite/29_atomics/atomic/compare_exchange_padding.cc
++++ b/src/libstdc++-v3/testsuite/29_atomics/atomic/compare_exchange_padding.cc
+@@ -1,4 +1,4 @@
+-// { dg-do run { target c++20 } }
++// { dg-do run { target c++11 } }
+ // { dg-require-atomic-cmpxchg-word "" }
+ // { dg-add-options libatomic }
+ // { dg-additional-options "-fno-tree-sra" }
+new file mode 100644
+--- /dev/null
++++ b/src/libstdc++-v3/testsuite/29_atomics/atomic/cons/zero_padding.cc
+@@ -0,0 +1,75 @@
++// { dg-do run { target c++11 } }
++// { dg-require-atomic-cmpxchg-word "" }
++// { dg-add-options libatomic }
++
++#include <atomic>
++#include <cstring>
++#include <testsuite_hooks.h>
++
++struct TailPadding { int i; char c; };
++TailPadding ztail{1, 2}; // zeroed-padding
++constexpr std::atomic<TailPadding> ctail(TailPadding{1,2});
++std::atomic<TailPadding> gtail(TailPadding{1,2});
++
++struct MidPadding { char c; int x; };
++MidPadding zmid{1, 2}; // zeroed-padding
++constexpr std::atomic<MidPadding> cmid(MidPadding{1,2});
++std::atomic<MidPadding> gmid(MidPadding{1,2});
++
++struct BitPadding { int : 4; int i : 5; int : 4; int j : 5; int : 4;  };
++BitPadding zbit{1, 2}; // zeroed-padding
++constexpr std::atomic<BitPadding> cbit(BitPadding{1,2});
++std::atomic<BitPadding> gbit(BitPadding{1,2});
++
++struct Ctor
++{
++  Ctor() = default;
++
++  constexpr Ctor(char pc, char pi)
++    : c(pc), i(pi)
++  {}
++
++  char c;
++  int i;
++};
++
++Ctor zctor{1, 2}; // zeroed-padding
++constexpr std::atomic<Ctor> cctor(Ctor{1,2});
++std::atomic<Ctor> gctor(Ctor{1,2});
++
++template<typename T>
++void test_struct(std::atomic<T>& g, const T& zp)
++{
++  T const d{3, 4};
++  T t;
++
++  std::memcpy(&t, &zp, sizeof(T));
++  VERIFY( g.compare_exchange_strong(t, d) );
++
++  static std::atomic<T> st(T{1, 2});
++  std::memcpy(&t, &zp, sizeof(T));
++  VERIFY( st.compare_exchange_strong(t, d) );
++
++  thread_local std::atomic<T> tl(T{1, 2});
++  std::memcpy(&t, &zp, sizeof(T));
++  VERIFY( tl.compare_exchange_strong(t, d) );
++
++  std::atomic<T> l(T{1, 2});
++  std::memcpy(&t, &zp, sizeof(T));
++  VERIFY( l.compare_exchange_strong(t, d) );
++
++  std::atomic<T>* h = new std::atomic<T>(T{1, 2});
++  std::memcpy(&t, &zp, sizeof(T));
++  VERIFY( h->compare_exchange_strong(t, d) );
++  delete h;
++
++  constexpr std::atomic<T> cl(T{1, 2});
++}
++
++int main()
++{
++  test_struct(gtail, ztail);
++  test_struct(gmid, zmid);
++  test_struct(gbit, zbit);
++  test_struct(gctor, zctor);
++}
 --- a/src/libstdc++-v3/testsuite/29_atomics/atomic/operators/pointer_partial_void.cc
 +++ b/src/libstdc++-v3/testsuite/29_atomics/atomic/operators/pointer_partial_void.cc
 @@ -1,6 +1,7 @@
@@ -744273,6 +745636,55 @@ new file mode 100644
  
  // Copyright (C) 2012-2025 Free Software Foundation, Inc.
  //
+new file mode 100644
+--- /dev/null
++++ b/src/libstdc++-v3/testsuite/29_atomics/atomic_float/zero_padding.cc
+@@ -0,0 +1,45 @@
++// { dg-do run { target c++20 } }
++// { dg-require-effective-target libatomic_available }
++// { dg-additional-options "[atomic_link_flags [get_multilibs]] -latomic" }
++
++#include <atomic>
++#include <cstring>
++#include <testsuite_hooks.h>
++
++long double zld(10.5);
++constexpr std::atomic<long double> cld(10.5);
++std::atomic<long double> gld(10.5);
++
++template<typename T>
++void test_floating(std::atomic<T>& g, const T& zp)
++{
++  T const d = T(7.5);
++  T t;
++
++  std::memcpy(&t, &zp, sizeof(T));
++  VERIFY( g.compare_exchange_strong(t, d) );
++
++  static std::atomic<T> st(T(10.5));
++  std::memcpy(&t, &zp, sizeof(T));
++  VERIFY( st.compare_exchange_strong(t, d) );
++
++  thread_local std::atomic<T> tl(T(10.5));
++  std::memcpy(&t, &zp, sizeof(T));
++  VERIFY( tl.compare_exchange_strong(t, d) );
++
++  std::atomic<T> l(T(10.5));
++  std::memcpy(&t, &zp, sizeof(T));
++  VERIFY( l.compare_exchange_strong(t, d) );
++
++  std::atomic<T>* h = new std::atomic<T>(T(10.5));
++  std::memcpy(&t, &zp, sizeof(T));
++  VERIFY( h->compare_exchange_strong(t, d) );
++  delete h;
++
++  constexpr std::atomic<T> cl(T(10.5));
++}
++
++int main()
++{
++  test_floating(gld, zld);
++}
 --- a/src/libstdc++-v3/testsuite/30_threads/packaged_task/cons/dangling_ref.cc
 +++ b/src/libstdc++-v3/testsuite/30_threads/packaged_task/cons/dangling_ref.cc
 @@ -1,4 +1,5 @@

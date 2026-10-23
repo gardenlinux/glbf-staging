@@ -1445,9 +1445,7 @@ ifeq ($(build_type),build-native)
 	  status=$$?; \
 	  echo $$status > status; \
 	  echo === TIME $@ ===; \
-	  if [ $$status -eq 0 ] || [ $$try -eq $(MAX_BUILD_TRIES) ]; then \
-	    exit $$status; \
-	  fi; \
+	  [ $$status -eq 0 ] && exit $$status; \
 	done
 else ifneq (,$(filter $(build_type),build-cross cross-build-native cross-build-cross))
 	: # build cross compiler for $(TARGET_ALIAS)

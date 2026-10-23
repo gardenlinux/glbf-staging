@@ -1,7 +1,7 @@
-# DP: updates from the 15 branch upto 20260223 (documentation).
+# DP: updates from the 15 branch upto 20260307 (documentation).
 
 LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
-	5115c7e447fc07457443df874bf57840e8316d5f 546758a8ac5412285ab6bee799fb3d882de77041 \
+	5115c7e447fc07457443df874bf57840e8316d5f 1a43136f0d2b5cb3472b106b4fa95c2ee5653f50 \
 	| awk '/^diff .*\.texi/ {skip=0; print; next} /^diff / {skip=1; next} skip==0' \
         | grep -v -E '^(diff|index)'
 
@@ -123,7 +123,17 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  @itemx atom
 --- a/src/gcc/doc/sourcebuild.texi
 +++ b/src/gcc/doc/sourcebuild.texi
-@@ -2379,6 +2379,9 @@ whether it does so by default).
+@@ -1975,6 +1975,9 @@ at plain @option{-O2}.
+ @item tls
+ Target supports thread-local storage.
+ 
++@item tls_link
++Target supports linking TLS executables.
++
+ @item tls_native
+ Target supports native (rather than emulated) thread-local storage.
+ 
+@@ -2379,6 +2382,9 @@ whether it does so by default).
  @item aarch64_sve2p1_hw
  AArch64 target that is able to generate and execute SVE2.1 code (regardless of
  whether it does so by default).
