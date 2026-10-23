@@ -2,6 +2,16 @@
 # PASS_VAR, we need to call all variables as $(call xx,VAR)
 # This little bit of magic makes it possible:
 xx=$(if $($(curpass)_$(1)),$($(curpass)_$(1)),$($(1)))
+
+# $(curpass) aware function to query dpkg build flags
+dpkg_host_buildflags = $(shell $(if $(filter libc,$(curpass)),,DEB_HOST_ARCH=$(curpass) )dpkg-buildflags --get $(1))
+
+# Get CFLAGS and remove flags incompatible with GNU libc
+# -Wformat -Werror=format-security	=> GNU libc testsuite generates such warnings on purpose
+# -fstack-protector%			=> Mapped to configure option --enable-stack-protector=yes|all|strong
+# -fcf-protection			=> It should be mapped to configure option --enable-cet, but currently not done due to issue in testsuite (see #1114518)
+dpkg_filtered_host_cflags = $(filter-out -Wformat -Werror=format-security -fstack-protector% -fcf-protection, $(call dpkg_host_buildflags, CFLAGS))
+
 define generic_multilib_extra_pkg_install
 set -e; \
 mkdir -p debian/$(1)/usr/include/sys; \
@@ -100,9 +110,9 @@ endif
 		CC="$(call xx,CC) -U_FILE_OFFSET_BITS -U_TIME_BITS" \
 		CXX=$(if $(filter nocheck,$(DEB_BUILD_OPTIONS)),:,"$(call xx,CXX) -U_FILE_OFFSET_BITS -U_TIME_BITS") \
 		MIG="$(call xx,MIG)" \
-		CFLAGS="$(HOST_CFLAGS)" \
-		ASFLAGS="$(HOST_CFLAGS)" \
-		BUILD_CFLAGS="$(BUILD_CFLAGS)" \
+		CFLAGS="$(call dpkg_filtered_host_cflags)" \
+		ASFLAGS="$(call dpkg_filtered_host_cflags)" \
+		BUILD_CFLAGS="$(shell dpkg-buildflags --get CFLAGS_FOR_BUILD)" \
 		AUTOCONF=false \
 		MAKEINFO=: \
 		$(CURDIR)/configure \
@@ -114,14 +124,16 @@ endif
 		--enable-bind-now \
 		--enable-fortify-source \
 		--enable-stackguard-randomization \
-		--enable-stack-protector=strong \
 		--with-pkgversion="Debian GLIBC $(DEB_VERSION)" \
 		--with-bugurl="http://www.debian.org/Bugs/" \
 		--with-timeoutfactor="$(TIMEOUTFACTOR)" \
 		$(if $(filter $(pt_chown),yes),--enable-pt_chown) \
 		$(if $(filter $(threads),no),--disable-nscd) \
 		$(if $(filter $(call xx,mvec),no),--disable-mathvec) \
-		$(if $(filter -Wno-error,$(shell dpkg-buildflags --get CFLAGS)),--disable-werror) \
+		$(if $(filter -Wno-error,$(call dpkg_host_buildflags, CFLAGS)),--disable-werror) \
+		$(if $(filter -fstack-protector,$(call dpkg_host_buildflags, CFLAGS)),--enable-stack-protector=yes) \
+		$(if $(filter -fstack-protector-all,$(call dpkg_host_buildflags, CFLAGS)),--enable-stack-protector=all) \
+		$(if $(filter -fstack-protector-strong,$(call dpkg_host_buildflags, CFLAGS)),--enable-stack-protector=strong) \
 		$(call xx,with_headers) $(call xx,extra_config_options)
 	touch $@
 
