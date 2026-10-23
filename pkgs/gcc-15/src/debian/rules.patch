@@ -72,6 +72,7 @@ debian_patches += \
 	sh-math-fixes \
 	gcc-riscv-extensions \
 	libphobos-ppc64el \
+	D-22464 \
 
 # see https://bugs.debian.org/1108322
 ifneq (,$(filter $(DEB_TARGET_ARCH),hppa m68k powerpc))

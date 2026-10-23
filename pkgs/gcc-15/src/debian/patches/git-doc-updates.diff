@@ -1,7 +1,7 @@
-# DP: updates from the 15 branch upto 20251217 (documentation).
+# DP: updates from the 15 branch upto 20260207 (documentation).
 
 LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
-	5115c7e447fc07457443df874bf57840e8316d5f f1d72baa71ffac0f94f1beddb44793ffb8fade37 \
+	5115c7e447fc07457443df874bf57840e8316d5f ababaaf45fa0dc369c07e19ca64862c4eefaadc1 \
 	| awk '/^diff .*\.texi/ {skip=0; print; next} /^diff / {skip=1; next} skip==0' \
         | grep -v -E '^(diff|index)'
 
@@ -28,9 +28,43 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
  /* Here the object p points to is var.  */
  assert (__builtin_object_size (p, 0) == sizeof (var) - 1);
+--- a/src/gcc/doc/install.texi
++++ b/src/gcc/doc/install.texi
+@@ -1244,7 +1244,7 @@ Same as @uref{#with-as,,@option{--with-as}}
+ but for the debug linker (only used on Darwin platforms so far).
+ 
+ @item --with-tls=@var{dialect}
+-Specify the default TLS dialect, for systems were there is a choice.
++Specify the default TLS dialect, for systems where there is a choice.
+ For ARM targets, possible values for @var{dialect} are @code{gnu} or
+ @code{gnu2}, which select between the original GNU dialect and the GNU TLS
+ descriptor-based dialect.
 --- a/src/gcc/doc/invoke.texi
 +++ b/src/gcc/doc/invoke.texi
-@@ -7189,7 +7189,7 @@ switch (cond)
+@@ -1705,14 +1705,18 @@ the next @option{-x} option.  Possible values for @var{language} are:
+ @smallexample
+ c  c-header  cpp-output
+ c++  c++-header  c++-system-header c++-user-header c++-cpp-output
+-objective-c  objective-c-header  objective-c-cpp-output
+-objective-c++ objective-c++-header objective-c++-cpp-output
++objective-c  objective-c-header  objective-c-cpp-output  objc-cpp-output
++objective-c++  objective-c++-header  objective-c++-cpp-output
++objc++-cpp-output
+ assembler  assembler-with-cpp
+-ada
++ada  adascil  adawhy
+ cobol
+ d
+-f77  f77-cpp-input f95  f95-cpp-input
++f77  f77-cpp-input  f95  f95-cpp-input
+ go
++modula-2  modula-2-cpp-output
++rust
++lto
+ @end smallexample
+ 
+ Note that @option{-x} does not imply a particular language standard.
+@@ -7189,7 +7193,7 @@ switch (cond)
  @end group
  @end smallexample
  
@@ -39,7 +73,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  warning using @code{[[fallthrough]];} instead of the GNU attribute.  In C++11
  or C++14 users can use @code{[[gnu::fallthrough]];}, which is a GNU extension.
  Instead of these attributes, it is also possible to add a fallthrough comment
-@@ -15743,7 +15743,7 @@ as a parameter of @code{free} call or compared with @code{NULL}.  If
+@@ -15743,7 +15747,7 @@ as a parameter of @code{free} call or compared with @code{NULL}.  If
  with @option{-fmalloc-dce=2} also comparisons with @code{NULL} pointer are
  considered safe to remove.
  
@@ -48,7 +82,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
  @opindex fmove-loop-invariants
  @item -fmove-loop-invariants
-@@ -21967,7 +21967,7 @@ and the features that they enable by default:
+@@ -21967,7 +21971,7 @@ and the features that they enable by default:
  @item @samp{armv9.2-a} @tab Armv9.2-A @tab @samp{armv9.1-a}, @samp{+wfxt}, @samp{+xs}
  @item @samp{armv9.3-a} @tab Armv9.3-A @tab @samp{armv9.2-a}, @samp{+mops}
  @item @samp{armv9.4-a} @tab Armv9.4-A @tab @samp{armv9.3-a}, @samp{+sve2p1}
@@ -57,7 +91,16 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  @item @samp{armv8-r} @tab Armv8-R @tab @samp{armv8-r}
  @end multitable
  
-@@ -35188,8 +35188,8 @@ SSSE3, SSE4.1, SSE4.2, POPCNT, AES, PREFETCHW, PCLMUL, RDRND, XSAVE, XSAVEC,
+@@ -22012,7 +22016,7 @@ performance of the code.  Permissible values for this option are:
+ @samp{octeontx2f95mm},
+ @samp{a64fx}, @samp{fujitsu-monaka},
+ @samp{thunderx}, @samp{thunderxt88},
+-@samp{thunderxt88p1}, @samp{thunderxt81}, @samp{tsv110},
++@samp{thunderxt88p1}, @samp{thunderxt81}, @samp{tsv110}, @samp{hip12},
+ @samp{thunderxt83}, @samp{thunderx2t99}, @samp{thunderx3t110}, @samp{zeus},
+ @samp{cortex-a57.cortex-a53}, @samp{cortex-a72.cortex-a53},
+ @samp{cortex-a73.cortex-a35}, @samp{cortex-a73.cortex-a53},
+@@ -35188,8 +35192,8 @@ SSSE3, SSE4.1, SSE4.2, POPCNT, AES, PREFETCHW, PCLMUL, RDRND, XSAVE, XSAVEC,
  XSAVES, XSAVEOPT, FSGSBASE, PTWRITE, RDPID, SGX, GFNI-SSE, CLWB, MOVDIRI,
  MOVDIR64B, WAITPKG, ADCX, AVX, AVX2, BMI, BMI2, F16C, FMA, LZCNT, PCONFIG, PKU,
  VAES, VPCLMULQDQ, SERIALIZE, HRESET, AVX-VNNI, UINTR, AVXIFMA, AVXVNNIINT8,
@@ -68,7 +111,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
  @item sapphirerapids
  @itemx emeraldrapids
-@@ -35236,8 +35236,7 @@ MOVDIRI, MOVDIR64B, ENQCMD, CLDEMOTE, PTWRITE, WAITPKG, SERIALIZE, TSXLDTRK,
+@@ -35236,8 +35240,7 @@ MOVDIRI, MOVDIR64B, ENQCMD, CLDEMOTE, PTWRITE, WAITPKG, SERIALIZE, TSXLDTRK,
  UINTR, AMX-BF16, AMX-TILE, AMX-INT8, AVX-VNNI, AVX512FP16, AVX512BF16, AMX-FP16,
  PREFETCHI, AMX-COMPLEX, AVX10.1-512, AVX-IFMA, AVX-NE-CONVERT, AVX-VNNI-INT16,
  AVX-VNNI-INT8, CMPccXADD, SHA512, SM3, SM4, AVX10.2-512, APX_F, AMX-AVX512,

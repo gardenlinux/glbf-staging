@@ -115,8 +115,10 @@ endif
 	  $(if $(unstripped_exe),-X/crab1)
 	dh_shlibdeps -p$(p_grs_n)
 
-	echo '$(p_grs_n) binary: hardening-no-pie' \
-	  > $(d_grs_n)/usr/share/lintian/overrides/$(p_grs_n)
+	( \
+	  echo '$(p_grs_n) binary: hardening-no-pie'; \
+	  echo '$(p_grs_n) binary: no-manual-page'; \
+	) > $(d_grs_n)/usr/share/lintian/overrides/$(p_grs_n)
 
 	echo $(p_grs_n) >> debian/arch_binaries
 

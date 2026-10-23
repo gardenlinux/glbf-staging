@@ -1,3 +1,47 @@
+gcc-15 (15.2.0-13) unstable; urgency=medium
+
+  * Update to git 20260207 from the gcc-15 branch.
+    - Fix PR tree-optimization/123513, PR target/123607 (x86), PR target/120250,
+      PR rtl-optimization/123523, PR tree-optimization/123431,
+      PR target/123489 (x86), PR middle-end/111817, PR rtl-optimization/119291,
+      PR rtl-optimization/121773, PR tree-optimization/123351,
+      PR tree-optimization/123372, PR target/123217 (x86),
+      PR target/123155 (x86), PR target/123460, PR rtl-optimization/123121,
+      PR middle-end/123392, PR target/123521 (loongarch), PR diagnostics/120063,
+      PR tree-optimization/123300, PR target/123484 (x86),
+      PR tree-optimization/123040, PR target/121192, PR target/121485 (RISCV),
+      PR tree-optimization/122868, PR debug/121964, PR ada/68179, PR ada/123589,
+      PR ada/123371, PR ada/123306, PR ada/123088, PR ada/123302, PR ada/123289,
+      PR ada/123185, PR ada/123060, PR analyzer/123085, PR analyzer/122975,
+      PR c/123156, PR c++/123331, PR c++/91388, PR c++/122772, PR c++/122834,
+      PR c++/121966, PR c++/116952, PR c++/122048, PR c++/121854, PR c++/122922,
+      PR libfortran/122936, PR libstdc++/122907, PR libstdc++/122812,
+      PR target/123092, PR target/117575 (loongarch), PR c++/122550,
+      PR c++/122070, PR target/123766 (loongarch), PR target/123807 (loongarch),
+      PR middle-end/123703, PR tree-optimization/123736, PR middle-end/123107,
+      PR tree-optimization/123741, PR tree-optimization/123602,
+      PR tree-optimization/122793, PR target/119130 (PPC),
+      PR target/123742 (ARM), PR ada/123902, PR ada/121316, PR ada/123867,
+      PR ada/123861, PR ada/123857, PR ada/123832, PR ada/123580,
+      PR c++/123676, PR c++/122494, PR c++/123814, PR c++/123597,
+      PR d/123264, PR d/123407, PR d/123046, PR d/123349, PR d/123419,
+      PR d/123798, PR d/121477, PR d/123422, PR d/120096, PR d/122817,
+      PR libstdc++/123147, PR target/123584 (AArch64), PR target/123779 (x86),
+      PR target/122051 (RISCV), PR target/120642 (RISCV),
+      PR target/123548 (AArch64), PR debug/123886, PR tree-optimization/123794,
+      PR middle-end/123775, PR tree-optimization/123729, PR middle-end/123575,
+      PR tree-optimization/123537, PR ipa/116296, PR tree-optimization/110043,
+      PR tree-optimization/109410, PR rtl-optimization/106859,
+      PR middle-end/123887, PR middle-end/123887, PR c++/122169, PR d/123633,
+      PR libstdc++/90192, PR libstdc++/114153.
+  * Don't complain about missing gccrs and gcobc man pages.
+  * Stop building multilibs for s390x. Closes: #1125358.
+  * Add again build dependency on python3-check-jsonschema, needed for tests.
+  * Fix D #22463: SOURCE_DATE_EPOCH parsing incorrectly affected by system
+    timezone. Closes: #1126512.
+
+ -- Matthias Klose <doko@debian.org>  Sat, 07 Feb 2026 15:26:50 +0100
+
 gcc-15 (15.2.0-12) unstable; urgency=medium
 
   * Update to git 20251217 from the gcc-15 branch.
