@@ -58,6 +58,13 @@ hurd-i386/git-cancel-stack.diff
 hurd-i386/git-fork-gdb.diff
 hurd-i386/git-sig-sig-mmx-fix.diff
 hurd-i386/git-cancel-sig.diff
+hurd-i386/git-mach_send_eintr.diff
+hurd-i386/git-itimer-lock.diff
+hurd-i386/git-posix-timers.diff
+hurd-i386/git-sig-alarm.diff
+hurd-i386/git-libio-mtsafe.diff
+hurd-i386/git-timedrwlock-unlock.diff
+hurd-i386/git-sigtimedwait-timeout.diff
 
 i386/local-biarch.diff
 i386/unsubmitted-quiet-ldconfig.diff

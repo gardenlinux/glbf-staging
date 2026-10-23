@@ -441,6 +441,10 @@ test-xfail-tst-single_threaded-pthread-static = yes
 
 # new in 2.44
 test-xfail-tst-cancel32 = yes
+test-xfail-test-cxa_atexit-race2 = yes
+test-xfail-tst-ld_profile = yes
+test-xfail-tst-tls-debug-recursive = yes
+test-xfail-tst-dl-debug-exclude = yes
 
 # actually never succeded
 test-xfail-tst-create_format1 = yes

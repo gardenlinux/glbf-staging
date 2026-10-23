@@ -35,7 +35,7 @@ Multi-Arch: same
 Depends: @libc@ (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${rpcsvc-proto:Depends}
 Suggests: glibc-doc, manpages-dev
 Provides: libc-dev (= ${binary:Version}), libc6-dev [alpha hurd-any]
-Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), libdpkg-perl (<< 1.23.0) [i386]
+Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), libdpkg-perl (<< 1.22.22) [amd64 i386 x32]
 Conflicts: @libc-dev-conflict@
 Description: GNU C Library: Development Libraries and Header Files
  Contains the symlinks, headers, and object files needed to compile

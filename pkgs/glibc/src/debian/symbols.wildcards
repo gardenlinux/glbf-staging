@@ -58,7 +58,7 @@
  (symver|optional)GLIBC_2.41 2.41
  (symver|optional)GLIBC_2.42 2.42
  (symver|optional)GLIBC_ABI_DT_RELR 2.36
- (symver|optional)GLIBC_ABI_DT_X86_64_PLT 2.36
+ (symver|optional)GLIBC_ABI_DT_X86_64_PLT 2.42
  (symver|optional)GLIBC_ABI_GNU_TLS 2.42
- (symver|optional)GLIBC_ABI_GNU2_TLS 2.40
+ (symver|optional)GLIBC_ABI_GNU2_TLS 2.42
  (symver|optional)GCC_3.0 2.3.6

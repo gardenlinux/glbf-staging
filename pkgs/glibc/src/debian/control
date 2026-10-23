@@ -204,7 +204,7 @@ Multi-Arch: same
 Depends: libc6 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${rpcsvc-proto:Depends}
 Suggests: glibc-doc, manpages-dev
 Provides: libc-dev (= ${binary:Version}), libc6-dev [alpha hurd-any]
-Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), libdpkg-perl (<< 1.23.0) [i386]
+Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), libdpkg-perl (<< 1.22.22) [amd64 i386 x32]
 Conflicts: libc6.1-dev, libc0.3-dev,
 Description: GNU C Library: Development Libraries and Header Files
  Contains the symlinks, headers, and object files needed to compile
@@ -274,7 +274,7 @@ Multi-Arch: same
 Depends: libc6.1 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${rpcsvc-proto:Depends}
 Suggests: glibc-doc, manpages-dev
 Provides: libc-dev (= ${binary:Version}), libc6-dev [alpha hurd-any]
-Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), libdpkg-perl (<< 1.23.0) [i386]
+Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), libdpkg-perl (<< 1.22.22) [amd64 i386 x32]
 Conflicts: libc6-dev, libc0.3-dev,
 Description: GNU C Library: Development Libraries and Header Files
  Contains the symlinks, headers, and object files needed to compile
@@ -344,7 +344,7 @@ Multi-Arch: same
 Depends: libc0.3 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${rpcsvc-proto:Depends}
 Suggests: glibc-doc, manpages-dev
 Provides: libc-dev (= ${binary:Version}), libc6-dev [alpha hurd-any]
-Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), libdpkg-perl (<< 1.23.0) [i386]
+Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), libdpkg-perl (<< 1.22.22) [amd64 i386 x32]
 Conflicts: libc6-dev, libc6.1-dev,
 Description: GNU C Library: Development Libraries and Header Files
  Contains the symlinks, headers, and object files needed to compile
@@ -397,7 +397,6 @@ Priority: optional
 Provides: lib32c-dev
 Depends: libc6-i386 (= ${binary:Version}) <!stage1>, libc6-dev (= ${binary:Version}), ${misc:Depends}
 Conflicts: libc6-dev-amd64 [amd64], libc6-dev-amd64:i386 [x32], libc6-dev-i386:amd64 [x32], libc6-dev-i386:x32 [amd64], libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32 [x32], libc6-dev-x32:i386 [amd64]
-Breaks: libdpkg-perl (<< 1.23.0)
 Recommends: gcc-multilib
 Build-Profiles: <!nobiarch>
 Description: GNU C Library: 32-bit development libraries for AMD64
