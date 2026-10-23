@@ -2009,6 +2009,10 @@ ifeq ($(derivative),Ubuntu)
   ifeq (,$(filter $(distrelease),trusty xenial bionic focal jammy mantic noble))
     biarch32archs := $(subst s390x/,,$(biarch32archs))
   endif
+else ifeq ($(derivative),Debian)
+  ifeq (,$(filter $(distrelease),stretch buster bullseye bookworm trixie))
+    biarch32archs := $(subst s390x/,,$(biarch32archs))
+  endif
 endif
 
 biarch64archs := /i386/powerpc/sparc/s390/mips/mipsel/mipsn32/mipsn32el/

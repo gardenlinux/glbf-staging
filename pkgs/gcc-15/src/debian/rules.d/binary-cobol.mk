@@ -121,8 +121,10 @@ endif
 	dh_shlibdeps -p$(p_gcobol_n)
 
 	mkdir -p $(d_gcobol_n)/usr/share/lintian/overrides
-	echo '$(p_gcobol_n) binary: hardening-no-pie' \
-	  > $(d_gcobol_n)/usr/share/lintian/overrides/$(p_gcobol_n)
+	( \
+	  echo '$(p_gcobol_n) binary: hardening-no-pie'; \
+	  echo '$(p_gcobol_n) binary: no-manual-page'; \
+	) > $(d_gcobol_n)/usr/share/lintian/overrides/$(p_gcobol_n)
 
 	debian/dh_doclink -p$(p_gcobol_n) $(p_xbase)
 
