@@ -1,0 +1,6 @@
+sources:
+    - file: gcc-16_16-20260308.orig.tar.gz
+      sha256: d2f27f5b30cfa5dea5a644debc38637d3e0d677aa902f969aa51207aa2a05d26
+      urls:
+        - https://snapshot.debian.org/archive/debian/20260326T000000Z/pool/main/g/gcc-16/gcc-16_16-20260308.orig.tar.gz
+        - https://snapshot.debian.org/file/611e17a2a422e9960508b40d9226db275d5c55ab/gcc-16_16-20260308.orig.tar.gz
