@@ -180,7 +180,7 @@ NOSTRIP_$(libc)-dbg = 1
 # Put the debug files from these packages in $(libc)-dbg
 DEBUG_$(libc) = 1
 
-ifeq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
+ifeq ($(filter stage1 stage2,$(DEB_BUILD_PROFILES)),)
   ifeq ($(threads),yes)
   DEB_ARCH_REGULAR_PACKAGES += nscd
   endif

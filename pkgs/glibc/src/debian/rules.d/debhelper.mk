@@ -66,9 +66,9 @@ $(patsubst %,$(stamp)binaryinst_%,$(DEB_ARCH_REGULAR_PACKAGES) $(DEB_INDEP_REGUL
 ifeq ($(filter nostrip,$(DEB_BUILD_OPTIONS)),)
 	if test "$(NOSTRIP_$(curpass))" != 1; then					\
 	  if test "$(DEBUG_$(curpass))" = 1; then					\
-	    dh_strip -p$(curpass) $(DH_STRIP_DEBUG_PACKAGE);				\
+	    dh_strip -p$(curpass) -Xld-linux-armhf.so.3 $(DH_STRIP_DEBUG_PACKAGE);	\
 	  else										\
-	    dh_strip -p$(curpass);							\
+	    dh_strip -p$(curpass) -Xld-linux-armhf.so.3;				\
 	  fi ;										\
 	  for f in $$(find debian/$(curpass) -name \*crt\*.o) ; do			\
 	    $(DEB_HOST_GNU_TYPE)-strip --strip-debug --remove-section=.comment		\

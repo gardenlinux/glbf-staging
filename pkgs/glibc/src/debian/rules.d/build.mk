@@ -22,6 +22,10 @@ ifneq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
                                --enable-hacker-mode
 endif
 
+ifneq ($(filter stage1 stage2,$(DEB_BUILD_PROFILES)),)
+    libc_extra_config_options += --disable-build-nscd
+endif
+
 ifdef WITH_SYSROOT
     libc_extra_config_options += --with-headers=$(WITH_SYSROOT)/$(includedir)
 endif
@@ -43,7 +47,6 @@ $(stamp)configure_%: $(stamp)config_sub_guess $(stamp)patch $(KERNEL_HEADER_DIR)
 	rm -f $(DEB_BUILDDIR)/configparms
 	echo "MIG = $(call xx,MIG)"               >> $(DEB_BUILDDIR)/configparms
 	echo "BUILD_CC = $(BUILD_CC)"             >> $(DEB_BUILDDIR)/configparms
-	echo "BUILD_CXX = $(BUILD_CXX)"           >> $(DEB_BUILDDIR)/configparms
 	echo "LDFLAGS = "                         >> $(DEB_BUILDDIR)/configparms
 	echo "BASH := /bin/bash"                  >> $(DEB_BUILDDIR)/configparms
 	echo "KSH := /bin/bash"                   >> $(DEB_BUILDDIR)/configparms
