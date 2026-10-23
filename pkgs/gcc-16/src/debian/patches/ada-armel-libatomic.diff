@@ -27,7 +27,7 @@ Author: Nicolas Boulenguez <nicolas@debian.org>
 
 --- a/src/gcc/ada/Makefile.rtl
 +++ b/src/gcc/ada/Makefile.rtl
-@@ -2505,6 +2505,7 @@ endif
+@@ -2506,6 +2506,7 @@ endif
  # ARM linux, GNU eabi
  ifeq ($(SELECTED_PAIRS),PAIRS_NONE)
  ifeq ($(strip $(filter-out arm% linux-gnueabi%,$(target_cpu) $(target_os))),)

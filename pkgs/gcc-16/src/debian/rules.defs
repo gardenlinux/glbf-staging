@@ -609,7 +609,7 @@ ppc64el_ibm128_distreleases = jessie stretch buster bullseye bookworm trixie \
 
 # allows to write backtraces for ICEs
 #unstripped_exe = yes
-ifneq (,$(filter $(DEB_TARGET_ARCH), amd64 armhf arm64 i386 ppc64el riscv64 s390x))
+ifneq (,$(filter $(DEB_TARGET_ARCH), alpha amd64 armhf arm64 i386 loong64 ppc64el riscv64 s390x sparc64))
   unstripped_exe = yes
 endif
 
@@ -914,6 +914,7 @@ endif
 ifneq (,$(filter $(distrelease), precise bionic focal))
   offload_targets := $(filter-out $(gcn_target_name), $(offload_targets))
   with_offload_gcn :=
+  AMDGCN_TOOLS_DEP =
 endif
 ifneq (,$(findstring build-cross, $(build_type)))
   offload_targets := $(filter-out $(gcn_target_name), $(offload_targets))
@@ -1650,6 +1651,9 @@ endif # ifeq (,$(filter $(DEB_STAGE),stage1 stage2))
 
 # Don't include docs with GFDL invariant sections
 GFDL_INVARIANT_FREE := yes
+ifneq (,$(findstring gcc-snapshot, $(PKGSOURCE)))
+  GFDL_INVARIANT_FREE := no
+endif
 ifeq ($(derivative),Ubuntu)
   GFDL_INVARIANT_FREE := no
 endif

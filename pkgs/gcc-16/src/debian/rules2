@@ -23,13 +23,14 @@ IP	= install -m 755	# Install program
 IS	= install -m 755	# Install script
 
 DWZ	= dwz
-ifneq (,$(filter $(distrelease),jessie stretch trusty xenial))
+ifneq (,$(filter $(distrelease),jessie stretch trusty xenial bionic))
   DWZ	= : dwz
 endif
 
 # dwz: debian/gccgo-11/usr/lib/gcc/mips64el-linux-gnuabi64/11/go1: Found two copies of .debug_line_str section
 # riscv64: https://sourceware.org/bugzilla/show_bug.cgi?id=33929
-ifneq (,$(filter $(DEB_HOST_ARCH), mips64el riscv64 hurd-amd64 hurd-i386))
+# alpha: https://sourceware.org/bugzilla/show_bug.cgi?id=33990
+ifneq (,$(filter $(DEB_HOST_ARCH), alpha mips64el riscv64 hurd-amd64 hurd-i386))
   DWZ	= : dwz
 endif
 
@@ -452,6 +453,15 @@ endif
 
 ifeq ($(with_objc)-$(with_objc_gc),yes-yes)
   CONFARGS += --enable-objc-gc=auto
+endif
+
+ifeq ($(with_cobol),yes)
+  ifneq (,$(filter $(build_type), build-cross cross-build-cross))
+    # LIBXML2_INCLUDEDIR and LIBXML2_LIBDIR are set by the cross build
+    CONFARGS += \
+	--with-target-libxml2-include=$(LIBXML2_INCLUDEDIR) \
+	--with-target-libxml2-lib=$(LIBXML2_LIBDIR)
+  endif
 endif
 
 ifneq (,$(filter $(DEB_TARGET_GNU_TYPE), i486-linux-gnu i586-linux-gnu i686-linux-gnu))
@@ -1464,7 +1474,8 @@ ifeq ($(build_type),build-native)
 	  echo $$status > status; \
 	  echo === TIME $@ ===; \
 	  [ $$status -eq 0 ] && exit $$status; \
-	done
+	done; \
+	exit 0
 else ifneq (,$(filter $(build_type),build-cross cross-build-native cross-build-cross))
 	: # build cross compiler for $(TARGET_ALIAS)
 	( \

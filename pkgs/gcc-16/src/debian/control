@@ -6356,7 +6356,8 @@ X-DH-Build-For-Type: target
 Architecture: any
 Multi-Arch: same
 Section: libdevel
-Depends: gcc-16-base (= ${gcc:Version}), libga68-2 (>= ${ga68:Version}),
+Depends: gcc-16-base (= ${gcc:Version}), libgc-dev,
+  libga68-2 (>= ${ga68:Version}),
   ${shlibs:Depends}, ${misc:Depends}
 Description: GNU Algol 68 standard library
  This is the Algol 68 standard library that comes with the ga68 compiler.
