@@ -36,22 +36,15 @@ endif
 
 ifeq (,$(filter nobiarch,$(DEB_BUILD_PROFILES)))
 
-32-ARCHS=amd64 ppc64 kfreebsd-amd64 s390x
+32-ARCHS=amd64 ppc64 kfreebsd-amd64
 64-ARCHS=s390 sparc i386 powerpc mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el x32
 
 ifneq (,$(filter $(DEB_HOST_ARCH), $(32-ARCHS)))
 EXTRA_INSTALL=install32
 EXTRA_BUILD=build32-stamp
-# s390x fails at compatibility.
-ifneq (,$(filter $(DEB_HOST_ARCH), s390x))
-m32=-m31
-else
 m32=-m32
 endif
-endif
 
-ifneq (,$(filter s390x, $(DEB_HOST_ARCH)))
-else
 ifneq (,$(filter $(DEB_HOST_ARCH), $(64-ARCHS)))
 EXTRA_INSTALL=install64
 EXTRA_BUILD=build64-stamp
@@ -60,7 +53,6 @@ ifneq (,$(filter $(DEB_HOST_ARCH), mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el
 m64=-mabi=64
 else
 m64=-m64
-endif
 endif
 endif
 

@@ -1,0 +1,3 @@
+Tests: example, infcover, minigzip
+Depends: @, gcc
+Restrictions: allow-stderr, build-needed

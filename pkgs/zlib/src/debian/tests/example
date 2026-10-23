@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+# Compile the file
+gcc -o example test/example.c -lz
+
+# Run the file
+./example
+
+# Cleanup
+rm foo.gz example
+
