@@ -1,3 +1,16 @@
+libcap2 (1:2.77-1) unstable; urgency=medium
+
+  * New upstream version 2.77
+    - Drop patches included upstream
+    - Refresh patches
+  * Bump Standards-Version to 4.7.3
+    - Drop Priority and R-R-R, default since trixie
+  * Install new section 7 man page
+  * Change section of Go package to golang
+  * autopkogtest: 'executables' test needs isolation-machine
+
+ -- Christian Kastner <ckk@debian.org>  Thu, 02 Apr 2026 13:16:21 +0200
+
 libcap2 (1:2.75-10) unstable; urgency=medium
 
   * d/rules: Fix typo in override_dh_auto_clean
