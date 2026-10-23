@@ -1,6 +1,5 @@
 Source: libcap2
 Section: libs
-Priority: optional
 Maintainer: Christian Kastner <ckk@debian.org>
 Build-Depends: patchelf,
                debhelper-compat (= 13),
@@ -9,8 +8,7 @@ Build-Depends: patchelf,
                libpam0g-dev,
 Build-Depends-Indep: dh-golang,
                      golang-any,
-Rules-Requires-Root: no
-Standards-Version: 4.7.0
+Standards-Version: 4.7.3
 Homepage: https://sites.google.com/site/fullycapable/
 Vcs-Git: https://salsa.debian.org/debian/libcap2.git
 Vcs-Browser: https://salsa.debian.org/debian/libcap2
@@ -88,6 +86,7 @@ Description: POSIX 1003.1e capabilities (library)
  This is a minimal version, only for use in the installation system.
 
 Package: golang-kernel-pub-linux-libs-security-libcap-dev
+Section: golang
 Architecture: all
 Multi-Arch: foreign
 Depends:
