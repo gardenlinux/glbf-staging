@@ -150,7 +150,7 @@ jobs:
       arch: amd64
 
   node-7:
-    name: "gcc-15"
+    name: "gcc-16"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -158,14 +158,14 @@ jobs:
     # success() gate — which treats a skipped need as reason to skip. The skip
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:gcc-15:amd64'] != true) }}"
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:gcc-16:amd64'] != true) }}"
     uses: ./.github/workflows/build-node.yml
     with:
-      node-key: "debian-pkg-build:gcc-15:amd64"
+      node-key: "debian-pkg-build:gcc-16:amd64"
       arch: amd64
 
   node-8:
-    name: "gcc-15-base"
+    name: "gcc-16-base"
     needs: [build-glbx, check-graph, restore-inputs, plan, node-7]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
@@ -173,10 +173,10 @@ jobs:
     # success() gate — which treats a skipped need as reason to skip. The skip
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:gcc-15:gcc-15-base:amd64'] != true) }}"
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:gcc-16:gcc-16-base:amd64'] != true) }}"
     uses: ./.github/workflows/build-node.yml
     with:
-      node-key: "debian-binary-pkg:gcc-15:gcc-15-base:amd64"
+      node-key: "debian-binary-pkg:gcc-16:gcc-16-base:amd64"
       arch: amd64
 
   node-9:
@@ -188,10 +188,10 @@ jobs:
     # success() gate — which treats a skipped need as reason to skip. The skip
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:gcc-15:libgcc-s1:amd64'] != true) }}"
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:gcc-16:libgcc-s1:amd64'] != true) }}"
     uses: ./.github/workflows/build-node.yml
     with:
-      node-key: "debian-binary-pkg:gcc-15:libgcc-s1:amd64"
+      node-key: "debian-binary-pkg:gcc-16:libgcc-s1:amd64"
       arch: amd64
 
   node-10:
