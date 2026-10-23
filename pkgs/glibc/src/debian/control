@@ -8,8 +8,8 @@ Build-Depends: gettext, xz-utils, file, quilt,
  mig-for-host (>= 1.8+git20200618-7~) [hurd-any], gnumach-dev (>= 2:1.8+git20200710-2~) [hurd-any],
  hurd-dev (>= 1:0.9.git20201127-4~) [hurd-any] | hurd-headers-dev [hurd-any],
  binutils-for-host,
- gcc-15-for-host, gcc-15-multilib [amd64 i386 mips mipsel mipsn32 mipsn32el mips64 mips64el mipsr6 mipsr6el mipsn32r6 mipsn32r6el mips64r6 mips64r6el powerpc ppc64 s390x sparc sparc64 x32] <!nobiarch>,
- g++-15-for-host <!nocheck>, g++-15-multilib [amd64 i386 mips mipsel mipsn32 mipsn32el mips64 mips64el mipsr6 mipsr6el mipsn32r6 mipsn32r6el mips64r6 mips64r6el powerpc ppc64 s390x sparc sparc64 x32] <!nobiarch !nocheck>,
+ gcc-15-for-host, gcc-15-multilib [amd64 i386 mips mipsel mipsn32 mipsn32el mips64 mips64el mipsr6 mipsr6el mipsn32r6 mipsn32r6el mips64r6 mips64r6el powerpc ppc64 sparc sparc64 x32] <!nobiarch>,
+ g++-15-for-host <!nocheck>, g++-15-multilib [amd64 i386 mips mipsel mipsn32 mipsn32el mips64 mips64el mipsr6 mipsr6el mipsn32r6 mipsn32r6el mips64r6 mips64r6el powerpc ppc64 sparc sparc64 x32] <!nobiarch !nocheck>,
  python3:native,
  libidn2-0 <!nocheck>,
  libc-bin (>= 2.42) <cross>,
@@ -185,7 +185,6 @@ Replaces: libc6-amd64 [amd64],
           libc6-x32 [x32],
           libc6-powerpc [powerpc],
           libc6-ppc64 [ppc64],
-          libc6-s390x [s390x],
           libc6-sparc64 [sparc64],
           libc6-mips64 [mips64 mips64el],
           libc6-mipsn32 [mipsn32 mipsn32el],
@@ -256,7 +255,6 @@ Replaces: libc6-amd64 [amd64],
           libc6-x32 [x32],
           libc6-powerpc [powerpc],
           libc6-ppc64 [ppc64],
-          libc6-s390x [s390x],
           libc6-sparc64 [sparc64],
           libc6-mips64 [mips64 mips64el],
           libc6-mipsn32 [mipsn32 mipsn32el],
@@ -327,7 +325,6 @@ Replaces: libc6-amd64 [amd64],
           libc6-x32 [x32],
           libc6-powerpc [powerpc],
           libc6-ppc64 [ppc64],
-          libc6-s390x [s390x],
           libc6-sparc64 [sparc64],
           libc6-mips64 [mips64 mips64el],
           libc6-mipsn32 [mipsn32 mipsn32el],
@@ -385,7 +382,7 @@ Architecture: amd64 x32
 Section: libs
 Priority: optional
 Depends: libc6 (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-amd64 [amd64], libc6-amd64:i386 [x32], libc6-i386:amd64 [x32], libc6-i386:x32 [amd64], libc6-mips32, libc6-mips64, libc6-mipsn32, libc6-powerpc, libc6-ppc64, libc6-s390, libc6-sparc, libc6-sparc64, libc6-x32 [x32], libc6-x32:i386 [amd64]
+Conflicts: libc6-amd64 [amd64], libc6-amd64:i386 [x32], libc6-i386:amd64 [x32], libc6-i386:x32 [amd64], libc6-mips32, libc6-mips64, libc6-mipsn32, libc6-powerpc, libc6-ppc64, libc6-sparc, libc6-sparc64, libc6-x32 [x32], libc6-x32:i386 [amd64]
 Replaces: libc6-dev-i386
 Build-Profiles: <!stage1 !nobiarch>
 Description: GNU C Library: 32-bit shared libraries for AMD64
@@ -399,7 +396,7 @@ Section: libdevel
 Priority: optional
 Provides: lib32c-dev
 Depends: libc6-i386 (= ${binary:Version}) <!stage1>, libc6-dev (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-dev-amd64 [amd64], libc6-dev-amd64:i386 [x32], libc6-dev-i386:amd64 [x32], libc6-dev-i386:x32 [amd64], libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-s390, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32 [x32], libc6-dev-x32:i386 [amd64]
+Conflicts: libc6-dev-amd64 [amd64], libc6-dev-amd64:i386 [x32], libc6-dev-i386:amd64 [x32], libc6-dev-i386:x32 [amd64], libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32 [x32], libc6-dev-x32:i386 [amd64]
 Breaks: libdpkg-perl (<< 1.23.0)
 Recommends: gcc-multilib
 Build-Profiles: <!nobiarch>
@@ -414,7 +411,7 @@ Section: libs
 Priority: optional
 Depends: libc6 (= ${binary:Version}), ${misc:Depends}
 Build-Profiles: <!stage1 !nobiarch>
-Conflicts: libc6-amd64, libc6-i386, libc6-mips32, libc6-mips64, libc6-mipsn32, libc6-powerpc, libc6-ppc64, libc6-s390, libc6-sparc64, libc6-x32
+Conflicts: libc6-amd64, libc6-i386, libc6-mips32, libc6-mips64, libc6-mipsn32, libc6-powerpc, libc6-ppc64, libc6-sparc64, libc6-x32
 Description: GNU C Library: 32bit Shared libraries for SPARC
  This package includes shared versions of the standard C library and the
  standard math library, as well as many others. This is the 32bit version
@@ -426,7 +423,7 @@ Section: libdevel
 Priority: optional
 Provides: lib32c-dev
 Depends: libc6-sparc (= ${binary:Version}) <!stage1>, libc6-dev (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-dev-amd64, libc6-dev-i386, libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-s390, libc6-dev-sparc64, libc6-dev-x32
+Conflicts: libc6-dev-amd64, libc6-dev-i386, libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-sparc64, libc6-dev-x32
 Recommends: gcc-multilib
 Build-Profiles: <!nobiarch>
 Description: GNU C Library: 32bit Development Libraries for SPARC
@@ -439,7 +436,7 @@ Architecture: sparc
 Section: libs
 Priority: optional
 Depends: libc6 (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-amd64, libc6-i386, libc6-mips32, libc6-mips64, libc6-mipsn32, libc6-powerpc, libc6-ppc64, libc6-s390, libc6-sparc, libc6-x32
+Conflicts: libc6-amd64, libc6-i386, libc6-mips32, libc6-mips64, libc6-mipsn32, libc6-powerpc, libc6-ppc64, libc6-sparc, libc6-x32
 Build-Profiles: <!stage1 !nobiarch>
 Description: GNU C Library: 64bit Shared libraries for UltraSPARC
  This package includes shared versions of the standard C library and the
@@ -452,7 +449,7 @@ Section: libdevel
 Priority: optional
 Provides: lib64c-dev
 Depends: libc6-sparc64 (= ${binary:Version}) <!stage1>, libc6-dev (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-dev-amd64, libc6-dev-i386, libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-s390, libc6-dev-sparc, libc6-dev-x32
+Conflicts: libc6-dev-amd64, libc6-dev-i386, libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-sparc, libc6-dev-x32
 Recommends: gcc-multilib
 Build-Profiles: <!nobiarch>
 Description: GNU C Library: 64bit Development Libraries for UltraSPARC
@@ -460,38 +457,12 @@ Description: GNU C Library: 64bit Development Libraries for UltraSPARC
  which use the standard C library. This is the 64bit version of the
  library, meant for UltraSPARC systems.
 
-Package: libc6-s390
-Architecture: s390x
-Section: libs
-Priority: optional
-Depends: libc6 (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-amd64, libc6-i386, libc6-mips32, libc6-mips64, libc6-mipsn32, libc6-powerpc, libc6-ppc64, libc6-sparc, libc6-sparc64, libc6-x32
-Build-Profiles: <!stage1 !nobiarch>
-Description: GNU C Library: 32bit Shared libraries for IBM zSeries
- This package includes shared versions of the standard C library and the
- standard math library, as well as many others. This is the 32bit version
- of the library.
-
-Package: libc6-dev-s390
-Architecture: s390x
-Section: libdevel
-Priority: optional
-Provides: lib32c-dev
-Depends: libc6-s390 (= ${binary:Version}) <!stage1>, libc6-dev (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-dev-amd64, libc6-dev-i386, libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32
-Recommends: gcc-multilib
-Build-Profiles: <!nobiarch>
-Description: GNU C Library: 32bit Development Libraries for IBM zSeries
- Contains the symlinks and object files needed to compile and link programs
- which use the standard C library. This is the 32bit version of the
- library.
-
 Package: libc6-amd64
 Architecture: i386 x32
 Section: libs
 Priority: optional
 Depends: libc6 (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-amd64:i386 [x32], libc6-amd64:x32 [i386], libc6-i386 [i386], libc6-i386:amd64 [x32], libc6-mips32, libc6-mips64, libc6-mipsn32, libc6-powerpc, libc6-ppc64, libc6-s390, libc6-sparc, libc6-sparc64, libc6-x32 [x32], libc6-x32:amd64 [i386]
+Conflicts: libc6-amd64:i386 [x32], libc6-amd64:x32 [i386], libc6-i386 [i386], libc6-i386:amd64 [x32], libc6-mips32, libc6-mips64, libc6-mipsn32, libc6-powerpc, libc6-ppc64, libc6-sparc, libc6-sparc64, libc6-x32 [x32], libc6-x32:amd64 [i386]
 Build-Profiles: <!stage1 !nobiarch>
 Description: GNU C Library: 64bit Shared libraries for AMD64
  This package includes shared versions of the standard C library and the
@@ -504,7 +475,7 @@ Section: libdevel
 Priority: optional
 Depends: libc6-amd64 (= ${binary:Version}) <!stage1>, libc6-dev (= ${binary:Version}), ${misc:Depends}
 Breaks: binutils (<< 2.45)
-Conflicts: libc6-dev-amd64:i386 [x32], libc6-dev-amd64:x32 [i386], libc6-dev-i386 [i386], libc6-dev-i386:amd64 [x32], libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-s390, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32 [x32], libc6-dev-x32:amd64 [i386]
+Conflicts: libc6-dev-amd64:i386 [x32], libc6-dev-amd64:x32 [i386], libc6-dev-i386 [i386], libc6-dev-i386:amd64 [x32], libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32 [x32], libc6-dev-x32:amd64 [i386]
 Recommends: gcc-multilib
 Provides: lib64c-dev
 Build-Profiles: <!nobiarch>
@@ -518,7 +489,7 @@ Architecture: ppc64
 Section: libs
 Priority: optional
 Depends: libc6 (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-amd64, libc6-i386, libc6-mips32, libc6-mips64, libc6-mipsn32, libc6-ppc64, libc6-s390, libc6-sparc, libc6-sparc64, libc6-x32
+Conflicts: libc6-amd64, libc6-i386, libc6-mips32, libc6-mips64, libc6-mipsn32, libc6-ppc64, libc6-sparc, libc6-sparc64, libc6-x32
 Build-Profiles: <!stage1 !nobiarch>
 Description: GNU C Library: 32bit powerpc shared libraries for ppc64
  This package includes shared versions of the standard C
@@ -531,7 +502,7 @@ Section: libdevel
 Priority: optional
 Provides: lib32c-dev
 Depends: libc6-powerpc (= ${binary:Version}) <!stage1>, libc6-dev (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-dev-amd64, libc6-dev-i386, libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-ppc64, libc6-dev-s390, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32
+Conflicts: libc6-dev-amd64, libc6-dev-i386, libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-ppc64, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32
 Recommends: gcc-multilib
 Build-Profiles: <!nobiarch>
 Description: GNU C Library: 32bit powerpc development libraries for ppc64
@@ -544,7 +515,7 @@ Architecture: powerpc
 Section: libs
 Priority: optional
 Depends: libc6 (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-amd64, libc6-i386, libc6-mips32, libc6-mips64, libc6-mipsn32, libc6-powerpc, libc6-s390, libc6-sparc, libc6-sparc64, libc6-x32
+Conflicts: libc6-amd64, libc6-i386, libc6-mips32, libc6-mips64, libc6-mipsn32, libc6-powerpc, libc6-sparc, libc6-sparc64, libc6-x32
 Build-Profiles: <!stage1 !nobiarch>
 Description: GNU C Library: 64bit Shared libraries for PowerPC64
  This package includes shared versions of the standard C library and the
@@ -557,7 +528,7 @@ Section: libdevel
 Priority: optional
 Provides: lib64c-dev
 Depends: libc6-ppc64 (= ${binary:Version}) <!stage1>, libc6-dev (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-dev-amd64, libc6-dev-i386, libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-powerpc, libc6-dev-s390, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32
+Conflicts: libc6-dev-amd64, libc6-dev-i386, libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-powerpc, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32
 Recommends: gcc-multilib
 Build-Profiles: <!nobiarch>
 Description: GNU C Library: 64bit Development Libraries for PowerPC64
@@ -570,7 +541,7 @@ Architecture: mipsn32 mipsn32el mips64 mips64el mipsn32r6 mipsn32r6el mips64r6 m
 Section: libs
 Priority: optional
 Depends: libc6 (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-amd64, libc6-i386, libc6-mips32:mips64 [mips64el mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mips64el [mips64 mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mips64r6 [mips64 mips64el mips64r6el mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mips64r6el [mips64 mips64el mips64r6 mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mipsn32 [mips64 mips64el mips64r6 mips64r6el mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mipsn32el [mips64 mips64el mips64r6 mips64r6el mipsn32 mipsn32r6 mipsn32r6el], libc6-mips32:mipsn32r6 [mips64 mips64el mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6el], libc6-mips32:mipsn32r6el [mips64 mips64el mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6], libc6-mips64 [mips64 mips64el mips64r6 mips64r6el], libc6-mips64:mips [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips64:mipsel [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips64:mipsn32 [mipsn32el mipsn32r6 mipsn32r6el], libc6-mips64:mipsn32el [mipsn32 mipsn32r6 mipsn32r6el], libc6-mips64:mipsn32r6 [mipsn32 mipsn32el mipsn32r6el], libc6-mips64:mipsn32r6el [mipsn32 mipsn32el mipsn32r6], libc6-mips64:mipsr6 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips64:mipsr6el [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mipsn32 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mipsn32:mips [mips64 mips64el mips64r6 mips64r6el], libc6-mipsn32:mips64 [mips64el mips64r6 mips64r6el], libc6-mipsn32:mips64el [mips64 mips64r6 mips64r6el], libc6-mipsn32:mips64r6 [mips64 mips64el mips64r6el], libc6-mipsn32:mips64r6el [mips64 mips64el mips64r6], libc6-mipsn32:mipsel [mips64 mips64el mips64r6 mips64r6el], libc6-mipsn32:mipsr6 [mips64 mips64el mips64r6 mips64r6el], libc6-mipsn32:mipsr6el [mips64 mips64el mips64r6 mips64r6el], libc6-powerpc, libc6-ppc64, libc6-s390, libc6-sparc, libc6-sparc64, libc6-x32
+Conflicts: libc6-amd64, libc6-i386, libc6-mips32:mips64 [mips64el mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mips64el [mips64 mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mips64r6 [mips64 mips64el mips64r6el mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mips64r6el [mips64 mips64el mips64r6 mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mipsn32 [mips64 mips64el mips64r6 mips64r6el mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mipsn32el [mips64 mips64el mips64r6 mips64r6el mipsn32 mipsn32r6 mipsn32r6el], libc6-mips32:mipsn32r6 [mips64 mips64el mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6el], libc6-mips32:mipsn32r6el [mips64 mips64el mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6], libc6-mips64 [mips64 mips64el mips64r6 mips64r6el], libc6-mips64:mips [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips64:mipsel [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips64:mipsn32 [mipsn32el mipsn32r6 mipsn32r6el], libc6-mips64:mipsn32el [mipsn32 mipsn32r6 mipsn32r6el], libc6-mips64:mipsn32r6 [mipsn32 mipsn32el mipsn32r6el], libc6-mips64:mipsn32r6el [mipsn32 mipsn32el mipsn32r6], libc6-mips64:mipsr6 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips64:mipsr6el [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mipsn32 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mipsn32:mips [mips64 mips64el mips64r6 mips64r6el], libc6-mipsn32:mips64 [mips64el mips64r6 mips64r6el], libc6-mipsn32:mips64el [mips64 mips64r6 mips64r6el], libc6-mipsn32:mips64r6 [mips64 mips64el mips64r6el], libc6-mipsn32:mips64r6el [mips64 mips64el mips64r6], libc6-mipsn32:mipsel [mips64 mips64el mips64r6 mips64r6el], libc6-mipsn32:mipsr6 [mips64 mips64el mips64r6 mips64r6el], libc6-mipsn32:mipsr6el [mips64 mips64el mips64r6 mips64r6el], libc6-powerpc, libc6-ppc64, libc6-sparc, libc6-sparc64, libc6-x32
 Build-Profiles: <!stage1 !nobiarch>
 Description: GNU C Library: o32 Shared libraries for MIPS
  This package includes shared versions of the standard C library and the
@@ -586,7 +557,7 @@ Depends: libc6-mips32 (= ${binary:Version}) <!stage1>, libc6-dev (= ${binary:Ver
    libc6-dev-mipsn32 (= ${binary:Version}) [mips64 mips64el mips64r6 mips64r6el],
    libc6-dev-mips64 (= ${binary:Version}) [mipsn32 mipsn32el mipsn32r6 mipsn32r6el],
    ${misc:Depends}
-Conflicts: libc6-dev-amd64, libc6-dev-i386, libc6-dev-mips32:mips64 [mips64el mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mips64el [mips64 mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mips64r6 [mips64 mips64el mips64r6el mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mips64r6el [mips64 mips64el mips64r6 mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mipsn32 [mips64 mips64el mips64r6 mips64r6el mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mipsn32el [mips64 mips64el mips64r6 mips64r6el mipsn32 mipsn32r6 mipsn32r6el], libc6-dev-mips32:mipsn32r6 [mips64 mips64el mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6el], libc6-dev-mips32:mipsn32r6el [mips64 mips64el mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6], libc6-dev-mips64 [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mips64:mips [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips64:mipsel [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips64:mipsn32 [mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips64:mipsn32el [mipsn32 mipsn32r6 mipsn32r6el], libc6-dev-mips64:mipsn32r6 [mipsn32 mipsn32el mipsn32r6el], libc6-dev-mips64:mipsn32r6el [mipsn32 mipsn32el mipsn32r6], libc6-dev-mips64:mipsr6 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips64:mipsr6el [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mipsn32 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mipsn32:mips [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mipsn32:mips64 [mips64el mips64r6 mips64r6el], libc6-dev-mipsn32:mips64el [mips64 mips64r6 mips64r6el], libc6-dev-mipsn32:mips64r6 [mips64 mips64el mips64r6el], libc6-dev-mipsn32:mips64r6el [mips64 mips64el mips64r6], libc6-dev-mipsn32:mipsel [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mipsn32:mipsr6 [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mipsn32:mipsr6el [mips64 mips64el mips64r6 mips64r6el], libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-s390, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32
+Conflicts: libc6-dev-amd64, libc6-dev-i386, libc6-dev-mips32:mips64 [mips64el mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mips64el [mips64 mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mips64r6 [mips64 mips64el mips64r6el mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mips64r6el [mips64 mips64el mips64r6 mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mipsn32 [mips64 mips64el mips64r6 mips64r6el mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mipsn32el [mips64 mips64el mips64r6 mips64r6el mipsn32 mipsn32r6 mipsn32r6el], libc6-dev-mips32:mipsn32r6 [mips64 mips64el mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6el], libc6-dev-mips32:mipsn32r6el [mips64 mips64el mips64r6 mips64r6el mipsn32 mipsn32el mipsn32r6], libc6-dev-mips64 [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mips64:mips [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips64:mipsel [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips64:mipsn32 [mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips64:mipsn32el [mipsn32 mipsn32r6 mipsn32r6el], libc6-dev-mips64:mipsn32r6 [mipsn32 mipsn32el mipsn32r6el], libc6-dev-mips64:mipsn32r6el [mipsn32 mipsn32el mipsn32r6], libc6-dev-mips64:mipsr6 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips64:mipsr6el [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mipsn32 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mipsn32:mips [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mipsn32:mips64 [mips64el mips64r6 mips64r6el], libc6-dev-mipsn32:mips64el [mips64 mips64r6 mips64r6el], libc6-dev-mipsn32:mips64r6 [mips64 mips64el mips64r6el], libc6-dev-mipsn32:mips64r6el [mips64 mips64el mips64r6], libc6-dev-mipsn32:mipsel [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mipsn32:mipsr6 [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mipsn32:mipsr6el [mips64 mips64el mips64r6 mips64r6el], libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32
 Recommends: gcc-multilib
 Build-Profiles: <!nobiarch>
 Description: GNU C Library: o32 Development Libraries for MIPS
@@ -599,7 +570,7 @@ Architecture: mips mipsel mips64 mips64el mipsr6 mipsr6el mips64r6 mips64r6el
 Section: libs
 Priority: optional
 Depends: libc6 (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-amd64, libc6-i386, libc6-mips32 [mips mipsel mipsr6 mipsr6el], libc6-mips32:mips64 [mips64el mips64r6 mips64r6el], libc6-mips32:mips64el [mips64 mips64r6 mips64r6el], libc6-mips32:mips64r6 [mips64 mips64el mips64r6el], libc6-mips32:mips64r6el [mips64 mips64el mips64r6], libc6-mips32:mipsn32 [mips64 mips64el mips64r6 mips64r6el], libc6-mips32:mipsn32el [mips64 mips64el mips64r6 mips64r6el], libc6-mips32:mipsn32r6 [mips64 mips64el mips64r6 mips64r6el], libc6-mips32:mipsn32r6el [mips64 mips64el mips64r6 mips64r6el], libc6-mips64 [mips64 mips64el mips64r6 mips64r6el], libc6-mips64:mips [mipsel mipsr6 mipsr6el], libc6-mips64:mipsel [mips mipsr6 mipsr6el], libc6-mips64:mipsn32 [mips mipsel mipsr6 mipsr6el], libc6-mips64:mipsn32el [mips mipsel mipsr6 mipsr6el], libc6-mips64:mipsn32r6 [mips mipsel mipsr6 mipsr6el], libc6-mips64:mipsn32r6el [mips mipsel mipsr6 mipsr6el], libc6-mips64:mipsr6 [mips mipsel mipsr6el], libc6-mips64:mipsr6el [mips mipsel mipsr6], libc6-mipsn32:mips [mips64 mips64el mips64r6 mips64r6el mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64 [mips mips64el mips64r6 mips64r6el mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64el [mips mips64 mips64r6 mips64r6el mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64r6 [mips mips64 mips64el mips64r6el mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64r6el [mips mips64 mips64el mips64r6 mipsel mipsr6 mipsr6el], libc6-mipsn32:mipsel [mips mips64 mips64el mips64r6 mips64r6el mipsr6 mipsr6el], libc6-mipsn32:mipsr6 [mips mips64 mips64el mips64r6 mips64r6el mipsel mipsr6el], libc6-mipsn32:mipsr6el [mips mips64 mips64el mips64r6 mips64r6el mipsel mipsr6], libc6-powerpc, libc6-ppc64, libc6-s390, libc6-sparc, libc6-sparc64, libc6-x32
+Conflicts: libc6-amd64, libc6-i386, libc6-mips32 [mips mipsel mipsr6 mipsr6el], libc6-mips32:mips64 [mips64el mips64r6 mips64r6el], libc6-mips32:mips64el [mips64 mips64r6 mips64r6el], libc6-mips32:mips64r6 [mips64 mips64el mips64r6el], libc6-mips32:mips64r6el [mips64 mips64el mips64r6], libc6-mips32:mipsn32 [mips64 mips64el mips64r6 mips64r6el], libc6-mips32:mipsn32el [mips64 mips64el mips64r6 mips64r6el], libc6-mips32:mipsn32r6 [mips64 mips64el mips64r6 mips64r6el], libc6-mips32:mipsn32r6el [mips64 mips64el mips64r6 mips64r6el], libc6-mips64 [mips64 mips64el mips64r6 mips64r6el], libc6-mips64:mips [mipsel mipsr6 mipsr6el], libc6-mips64:mipsel [mips mipsr6 mipsr6el], libc6-mips64:mipsn32 [mips mipsel mipsr6 mipsr6el], libc6-mips64:mipsn32el [mips mipsel mipsr6 mipsr6el], libc6-mips64:mipsn32r6 [mips mipsel mipsr6 mipsr6el], libc6-mips64:mipsn32r6el [mips mipsel mipsr6 mipsr6el], libc6-mips64:mipsr6 [mips mipsel mipsr6el], libc6-mips64:mipsr6el [mips mipsel mipsr6], libc6-mipsn32:mips [mips64 mips64el mips64r6 mips64r6el mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64 [mips mips64el mips64r6 mips64r6el mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64el [mips mips64 mips64r6 mips64r6el mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64r6 [mips mips64 mips64el mips64r6el mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64r6el [mips mips64 mips64el mips64r6 mipsel mipsr6 mipsr6el], libc6-mipsn32:mipsel [mips mips64 mips64el mips64r6 mips64r6el mipsr6 mipsr6el], libc6-mipsn32:mipsr6 [mips mips64 mips64el mips64r6 mips64r6el mipsel mipsr6el], libc6-mipsn32:mipsr6el [mips mips64 mips64el mips64r6 mips64r6el mipsel mipsr6], libc6-powerpc, libc6-ppc64, libc6-sparc, libc6-sparc64, libc6-x32
 Build-Profiles: <!stage1 !nobiarch>
 Description: GNU C Library: n32 Shared libraries for MIPS64
  This package includes shared versions of the standard C library and the
@@ -612,7 +583,7 @@ Section: libdevel
 Priority: optional
 Provides: libn32c-dev
 Depends: libc6-mipsn32 (= ${binary:Version}) <!stage1>, libc6-dev-mips64 (= ${binary:Version}) [mips mipsel mipsr6 mipsr6el], libc6-dev (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-dev-amd64, libc6-dev-i386, libc6-dev-mips32 [mips mipsel mipsr6 mipsr6el], libc6-dev-mips32:mips64 [mips64el mips64r6 mips64r6el], libc6-dev-mips32:mips64el [mips64 mips64r6 mips64r6el], libc6-dev-mips32:mips64r6 [mips64 mips64el mips64r6el], libc6-dev-mips32:mips64r6el [mips64 mips64el mips64r6], libc6-dev-mips32:mipsn32 [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mips32:mipsn32el [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mips32:mipsn32r6 [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mips32:mipsn32r6el [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mips64 [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mips64:mips [mipsel mipsr6 mipsr6el], libc6-dev-mips64:mipsel [mips mipsr6 mipsr6el], libc6-dev-mips64:mipsn32 [mips mipsel mipsr6 mipsr6el], libc6-dev-mips64:mipsn32el [mips mipsel mipsr6 mipsr6el], libc6-dev-mips64:mipsn32r6 [mips mipsel mipsr6 mipsr6el], libc6-dev-mips64:mipsn32r6el [mips mipsel mipsr6 mipsr6el], libc6-dev-mips64:mipsr6 [mips mipsel mipsr6el], libc6-dev-mips64:mipsr6el [mips mipsel mipsr6], libc6-dev-mipsn32:mips [mips64 mips64el mips64r6 mips64r6el mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64 [mips mips64el mips64r6 mips64r6el mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64el [mips mips64 mips64r6 mips64r6el mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64r6 [mips mips64 mips64el mips64r6el mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64r6el [mips mips64 mips64el mips64r6 mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mipsel [mips mips64 mips64el mips64r6 mips64r6el mipsr6 mipsr6el], libc6-dev-mipsn32:mipsr6 [mips mips64 mips64el mips64r6 mips64r6el mipsel mipsr6el], libc6-dev-mipsn32:mipsr6el [mips mips64 mips64el mips64r6 mips64r6el mipsel mipsr6], libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-s390, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32
+Conflicts: libc6-dev-amd64, libc6-dev-i386, libc6-dev-mips32 [mips mipsel mipsr6 mipsr6el], libc6-dev-mips32:mips64 [mips64el mips64r6 mips64r6el], libc6-dev-mips32:mips64el [mips64 mips64r6 mips64r6el], libc6-dev-mips32:mips64r6 [mips64 mips64el mips64r6el], libc6-dev-mips32:mips64r6el [mips64 mips64el mips64r6], libc6-dev-mips32:mipsn32 [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mips32:mipsn32el [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mips32:mipsn32r6 [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mips32:mipsn32r6el [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mips64 [mips64 mips64el mips64r6 mips64r6el], libc6-dev-mips64:mips [mipsel mipsr6 mipsr6el], libc6-dev-mips64:mipsel [mips mipsr6 mipsr6el], libc6-dev-mips64:mipsn32 [mips mipsel mipsr6 mipsr6el], libc6-dev-mips64:mipsn32el [mips mipsel mipsr6 mipsr6el], libc6-dev-mips64:mipsn32r6 [mips mipsel mipsr6 mipsr6el], libc6-dev-mips64:mipsn32r6el [mips mipsel mipsr6 mipsr6el], libc6-dev-mips64:mipsr6 [mips mipsel mipsr6el], libc6-dev-mips64:mipsr6el [mips mipsel mipsr6], libc6-dev-mipsn32:mips [mips64 mips64el mips64r6 mips64r6el mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64 [mips mips64el mips64r6 mips64r6el mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64el [mips mips64 mips64r6 mips64r6el mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64r6 [mips mips64 mips64el mips64r6el mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64r6el [mips mips64 mips64el mips64r6 mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mipsel [mips mips64 mips64el mips64r6 mips64r6el mipsr6 mipsr6el], libc6-dev-mipsn32:mipsr6 [mips mips64 mips64el mips64r6 mips64r6el mipsel mipsr6el], libc6-dev-mipsn32:mipsr6el [mips mips64 mips64el mips64r6 mips64r6el mipsel mipsr6], libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32
 Recommends: gcc-multilib
 Build-Profiles: <!nobiarch>
 Description: GNU C Library: n32 Development Libraries for MIPS64
@@ -625,7 +596,7 @@ Architecture: mips mipsel mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6e
 Section: libs
 Priority: optional
 Depends: libc6 (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-amd64, libc6-i386, libc6-mips32 [mips mipsel mipsr6 mipsr6el], libc6-mips32:mips64 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mips64el [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mips64r6 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mips64r6el [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mipsn32 [mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mipsn32el [mipsn32 mipsn32r6 mipsn32r6el], libc6-mips32:mipsn32r6 [mipsn32 mipsn32el mipsn32r6el], libc6-mips32:mipsn32r6el [mipsn32 mipsn32el mipsn32r6], libc6-mips64:mips [mipsel mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-mips64:mipsel [mips mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-mips64:mipsn32 [mips mipsel mipsn32el mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-mips64:mipsn32el [mips mipsel mipsn32 mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-mips64:mipsn32r6 [mips mipsel mipsn32 mipsn32el mipsn32r6el mipsr6 mipsr6el], libc6-mips64:mipsn32r6el [mips mipsel mipsn32 mipsn32el mipsn32r6 mipsr6 mipsr6el], libc6-mips64:mipsr6 [mips mipsel mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6el], libc6-mips64:mipsr6el [mips mipsel mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6], libc6-mipsn32 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mipsn32:mips [mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64 [mips mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64el [mips mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64r6 [mips mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64r6el [mips mipsel mipsr6 mipsr6el], libc6-mipsn32:mipsel [mips mipsr6 mipsr6el], libc6-mipsn32:mipsr6 [mips mipsel mipsr6el], libc6-mipsn32:mipsr6el [mips mipsel mipsr6], libc6-powerpc, libc6-ppc64, libc6-s390, libc6-sparc, libc6-sparc64, libc6-x32
+Conflicts: libc6-amd64, libc6-i386, libc6-mips32 [mips mipsel mipsr6 mipsr6el], libc6-mips32:mips64 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mips64el [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mips64r6 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mips64r6el [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mipsn32 [mipsn32el mipsn32r6 mipsn32r6el], libc6-mips32:mipsn32el [mipsn32 mipsn32r6 mipsn32r6el], libc6-mips32:mipsn32r6 [mipsn32 mipsn32el mipsn32r6el], libc6-mips32:mipsn32r6el [mipsn32 mipsn32el mipsn32r6], libc6-mips64:mips [mipsel mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-mips64:mipsel [mips mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-mips64:mipsn32 [mips mipsel mipsn32el mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-mips64:mipsn32el [mips mipsel mipsn32 mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-mips64:mipsn32r6 [mips mipsel mipsn32 mipsn32el mipsn32r6el mipsr6 mipsr6el], libc6-mips64:mipsn32r6el [mips mipsel mipsn32 mipsn32el mipsn32r6 mipsr6 mipsr6el], libc6-mips64:mipsr6 [mips mipsel mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6el], libc6-mips64:mipsr6el [mips mipsel mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6], libc6-mipsn32 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-mipsn32:mips [mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64 [mips mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64el [mips mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64r6 [mips mipsel mipsr6 mipsr6el], libc6-mipsn32:mips64r6el [mips mipsel mipsr6 mipsr6el], libc6-mipsn32:mipsel [mips mipsr6 mipsr6el], libc6-mipsn32:mipsr6 [mips mipsel mipsr6el], libc6-mipsn32:mipsr6el [mips mipsel mipsr6], libc6-powerpc, libc6-ppc64, libc6-sparc, libc6-sparc64, libc6-x32
 Build-Profiles: <!stage1 !nobiarch>
 Description: GNU C Library: 64bit Shared libraries for MIPS64
  This package includes shared versions of the standard C library and the
@@ -638,7 +609,7 @@ Section: libdevel
 Priority: optional
 Provides: lib64c-dev
 Depends: libc6-mips64 (= ${binary:Version}) <!stage1>, libc6-dev (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-dev-amd64, libc6-dev-i386, libc6-dev-mips32 [mips mipsel mipsr6 mipsr6el], libc6-dev-mips32:mips64 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mips64el [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mips64r6 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mips64r6el [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mipsn32 [mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mipsn32el [mipsn32 mipsn32r6 mipsn32r6el], libc6-dev-mips32:mipsn32r6 [mipsn32 mipsn32el mipsn32r6el], libc6-dev-mips32:mipsn32r6el [mipsn32 mipsn32el mipsn32r6], libc6-dev-mips64:mips [mipsel mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-dev-mips64:mipsel [mips mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-dev-mips64:mipsn32 [mips mipsel mipsn32el mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-dev-mips64:mipsn32el [mips mipsel mipsn32 mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-dev-mips64:mipsn32r6 [mips mipsel mipsn32 mipsn32el mipsn32r6el mipsr6 mipsr6el], libc6-dev-mips64:mipsn32r6el [mips mipsel mipsn32 mipsn32el mipsn32r6 mipsr6 mipsr6el], libc6-dev-mips64:mipsr6 [mips mipsel mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6el], libc6-dev-mips64:mipsr6el [mips mipsel mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6], libc6-dev-mipsn32 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mipsn32:mips [mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64 [mips mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64el [mips mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64r6 [mips mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64r6el [mips mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mipsel [mips mipsr6 mipsr6el], libc6-dev-mipsn32:mipsr6 [mips mipsel mipsr6el], libc6-dev-mipsn32:mipsr6el [mips mipsel mipsr6], libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-s390, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32
+Conflicts: libc6-dev-amd64, libc6-dev-i386, libc6-dev-mips32 [mips mipsel mipsr6 mipsr6el], libc6-dev-mips32:mips64 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mips64el [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mips64r6 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mips64r6el [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mipsn32 [mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mips32:mipsn32el [mipsn32 mipsn32r6 mipsn32r6el], libc6-dev-mips32:mipsn32r6 [mipsn32 mipsn32el mipsn32r6el], libc6-dev-mips32:mipsn32r6el [mipsn32 mipsn32el mipsn32r6], libc6-dev-mips64:mips [mipsel mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-dev-mips64:mipsel [mips mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-dev-mips64:mipsn32 [mips mipsel mipsn32el mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-dev-mips64:mipsn32el [mips mipsel mipsn32 mipsn32r6 mipsn32r6el mipsr6 mipsr6el], libc6-dev-mips64:mipsn32r6 [mips mipsel mipsn32 mipsn32el mipsn32r6el mipsr6 mipsr6el], libc6-dev-mips64:mipsn32r6el [mips mipsel mipsn32 mipsn32el mipsn32r6 mipsr6 mipsr6el], libc6-dev-mips64:mipsr6 [mips mipsel mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6el], libc6-dev-mips64:mipsr6el [mips mipsel mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6], libc6-dev-mipsn32 [mipsn32 mipsn32el mipsn32r6 mipsn32r6el], libc6-dev-mipsn32:mips [mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64 [mips mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64el [mips mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64r6 [mips mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mips64r6el [mips mipsel mipsr6 mipsr6el], libc6-dev-mipsn32:mipsel [mips mipsr6 mipsr6el], libc6-dev-mipsn32:mipsr6 [mips mipsel mipsr6el], libc6-dev-mipsn32:mipsr6el [mips mipsel mipsr6], libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32
 Recommends: gcc-multilib
 Build-Profiles: <!nobiarch>
 Description: GNU C Library: 64bit Development Libraries for MIPS64
@@ -651,7 +622,7 @@ Architecture: amd64 i386
 Section: libs
 Priority: optional
 Depends: libc6 (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-amd64 [amd64], libc6-amd64:x32 [i386], libc6-i386 [i386], libc6-i386:x32 [amd64], libc6-mips32, libc6-mips64, libc6-mipsn32, libc6-powerpc, libc6-ppc64, libc6-s390, libc6-sparc, libc6-sparc64, libc6-x32:amd64 [i386], libc6-x32:i386 [amd64]
+Conflicts: libc6-amd64 [amd64], libc6-amd64:x32 [i386], libc6-i386 [i386], libc6-i386:x32 [amd64], libc6-mips32, libc6-mips64, libc6-mipsn32, libc6-powerpc, libc6-ppc64, libc6-sparc, libc6-sparc64, libc6-x32:amd64 [i386], libc6-x32:i386 [amd64]
 Build-Profiles: <!stage1 !nobiarch>
 Description: GNU C Library: X32 ABI Shared libraries for AMD64
  This package includes shared versions of the standard C library and the
@@ -663,7 +634,7 @@ Architecture: amd64 i386
 Section: libdevel
 Priority: optional
 Depends: libc6-x32 (= ${binary:Version}) <!stage1>, libc6-dev-i386 (= ${binary:Version}) [amd64], libc6-dev-amd64 (= ${binary:Version}) [i386], libc6-dev (= ${binary:Version}), ${misc:Depends}
-Conflicts: libc6-dev-amd64 [amd64], libc6-dev-amd64:x32 [i386], libc6-dev-i386 [i386], libc6-dev-i386:x32 [amd64], libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-s390, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32:amd64 [i386], libc6-dev-x32:i386 [amd64]
+Conflicts: libc6-dev-amd64 [amd64], libc6-dev-amd64:x32 [i386], libc6-dev-i386 [i386], libc6-dev-i386:x32 [amd64], libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32:amd64 [i386], libc6-dev-x32:i386 [amd64]
 Recommends: gcc-multilib
 Build-Profiles: <!nobiarch>
 Description: GNU C Library: X32 ABI Development Libraries for AMD64

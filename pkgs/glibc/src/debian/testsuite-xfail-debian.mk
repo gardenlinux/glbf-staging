@@ -429,6 +429,7 @@ test-xfail-tst-malloc-too-large-malloc-largetcache = yes
 test-xfail-tst-mallocfork2-malloc-largetcache = yes
 test-xfail-tst-malloc-alternate-path-malloc-largetcache = yes
 test-xfail-tst-sprintf-fortify-rdonly-static = yes
+test-xfail-tst-pie-bss-static = yes
 
 # new in 2.43
 test-xfail-tst-pthread-exited = yes
@@ -437,6 +438,9 @@ test-xfail-tst-malloc-alternate-path-threaded-main = yes
 # Fixed in 2.43
 test-xfail-tst-single_threaded-pthread = yes
 test-xfail-tst-single_threaded-pthread-static = yes
+
+# new in 2.44
+test-xfail-tst-cancel32 = yes
 
 # actually never succeded
 test-xfail-tst-create_format1 = yes
