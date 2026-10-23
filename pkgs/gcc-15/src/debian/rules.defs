@@ -604,9 +604,9 @@ ppc64el_ibm128_distreleases = jessie stretch buster bullseye bookworm trixie \
 # common things ---------------
 # build common packages, where package names don't differ in different
 # gcc versions (fixincludes, ...)
-with_common_pkgs := yes
+#with_common_pkgs := yes
 # ... and some libraries, which do not change (libgcc1, libssp0).
-with_common_libs := yes
+#with_common_libs := yes
 # XXX: should with_common_libs be "yes" only if this is the default compiler
 # version on the targeted arch?
 
@@ -885,7 +885,7 @@ else
   gcn_tools_llvm_version = tools
 endif
 ifeq ($(gcn_tools_llvm_version),tools)
-  ifneq (,$(filter $(distrelease), bookworm trixie xenial bionic focal jammy noble oracular plucky questing))
+  ifneq (,$(filter $(distrelease), bookworm trixie xenial bionic focal))
     AMDGCN_TOOLS_DEP = amdgcn-tools-19 [$(gcn_archs)],
   else
     AMDGCN_TOOLS_DEP = amdgcn-tools-21 [$(gcn_archs)],

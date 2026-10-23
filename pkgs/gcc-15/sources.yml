@@ -2,5 +2,5 @@ sources:
     - file: gcc-15_15.2.0.orig.tar.gz
       sha256: 3121d3e2821fe21088deb77f11ee786d80969a1c55255386a43ecca1e06b47c0
       urls:
-        - https://snapshot.debian.org/archive/debian/20260312T000000Z/pool/main/g/gcc-15/gcc-15_15.2.0.orig.tar.gz
+        - https://snapshot.debian.org/archive/debian/20260326T000000Z/pool/main/g/gcc-15/gcc-15_15.2.0.orig.tar.gz
         - https://snapshot.debian.org/file/2b7d19f9bc8be43f4e1496eb1d3bb413493fd3a9/gcc-15_15.2.0.orig.tar.gz

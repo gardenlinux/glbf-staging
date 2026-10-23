@@ -1,0 +1,52 @@
+# DP: Fix PR demangler/106641, taken from the trunk.
+
+libiberty: fix resource exhaustion in rust demangler (PR demangler/106641)
+
+demangle_binder() parses the bound_lifetimes count as a base-62
+integer with no upper bound.  A crafted symbol can encode a huge
+lifetime count in very few bytes, causing OOM or CPU hang.
+
+Cap bound_lifetimes at 1024 and check rdm->errored in the loop
+so it bails out early on errors during iteration.
+
+libiberty/ChangeLog:
+
+        PR demangler/106641
+        * rust-demangle.c (demangle_binder): Reject bound_lifetimes
+        above 1024 to prevent resource exhaustion from crafted symbols.
+        Add rdm->errored check in the loop condition.
+        * testsuite/rust-demangle-expected: Add regression test.
+
+--- a/src/libiberty/rust-demangle.c
++++ b/src/libiberty/rust-demangle.c
+@@ -651,10 +651,17 @@ demangle_binder (struct rust_demangler *rdm)
+     return;
+ 
+   bound_lifetimes = parse_opt_integer_62 (rdm, 'G');
++  /* Reject implausibly large lifetime counts to prevent
++     resource exhaustion from crafted symbols (PR demangler/106641).  */
++  if (bound_lifetimes > 1024)
++    {
++      rdm->errored = 1;
++      return;
++    }
+   if (bound_lifetimes > 0)
+     {
+       PRINT ("for<");
+-      for (i = 0; i < bound_lifetimes; i++)
++      for (i = 0; i < bound_lifetimes && !rdm->errored; i++)
+         {
+           if (i > 0)
+             PRINT (", ");
+--- a/src/libiberty/testsuite/rust-demangle-expected
++++ b/src/libiberty/testsuite/rust-demangle-expected
+@@ -321,3 +321,9 @@ foo
+ --format=rust
+ _RNvC9backtrace3foo.llvm.A5310EB9
+ backtrace::foo
++#
++# PR demangler/106641: crafted symbol with huge lifetime count
++# should not cause resource exhaustion.
++--format=rust
++_RINvC4te_C4tokpppppppppppFFFFFFGFpppppppppKj2_FFFFFFFFFFFFFE
++_RINvC4te_C4tokpppppppppppFFFFFFGFpppppppppKj2_FFFFFFFFFFFFFE
