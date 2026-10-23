@@ -1,7 +1,7 @@
-# DP: updates from the 15 branch upto 20260207 (ababaaf45fa).
+# DP: updates from the 15 branch upto 20260223 (ababaaf45fa).
 
 LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
-	5115c7e447fc07457443df874bf57840e8316d5f ababaaf45fa0dc369c07e19ca64862c4eefaadc1 \
+	5115c7e447fc07457443df874bf57840e8316d5f 546758a8ac5412285ab6bee799fb3d882de77041 \
 	| awk '/^diff .*\.texi/ {skip=1; next} /^diff / { skip=0 } skip==0' \
 	| grep -v -E '^(diff|index)'
 
@@ -111,7 +111,203 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
      c_fix_arg = "^(extern int __sigsetjmp \\(struct __jmp_buf_tag) "
 --- a/src/gcc/ChangeLog
 +++ b/src/gcc/ChangeLog
-@@ -1,3 +1,1890 @@
+@@ -1,3 +1,2086 @@
++2026-02-22  Nathaniel Shead  <nathanieloshead@gmail.com>
++
++	Backported from master:
++	2026-02-22  Nathaniel Shead  <nathanieloshead@gmail.com>
++
++	PR c++/120974
++	* gcc.cc (join_spec_func): Escape special characters.
++
++2026-02-19  Vladimir N. Makarov  <vmakarov@redhat.com>
++
++	PR target/121571
++	* lra-constraints.cc (process_alt_operands): Reprocess asm insn
++	when there are no enough regs for the asm-insn.
++
++2026-02-18  Richard Earnshaw  <rearnsha@arm.com>
++
++	Backported from master:
++	2026-02-17  Richard Earnshaw  <rearnsha@arm.com>
++
++	PR target/124134
++	* config/arm/arm.md (movsfcc): FAIL if using restricted IT
++	blocks and we lack VSEL.
++	(movdfcc): Likewise.
++
++2026-02-17  Alex Coplan  <alex.coplan@arm.com>
++
++	Backported from master:
++	2026-01-30  Alex Coplan  <alex.coplan@arm.com>
++
++	PR target/123206
++	* config/aarch64/aarch64-builtins.cc (struct aarch64_pragma_builtins_data):
++	Declare array as CONSTEXPR.
++	* config/aarch64/aarch64-simd-pragma-builtins.def: Update
++	incorrect uses of TARGET_SIMD to use AARCH64_FL_SIMD instead.
++
++2026-02-16  Martin Jambor  <mjambor@suse.cz>
++
++	Backported from master:
++	2026-02-09  Martin Jambor  <mjambor@suse.cz>
++
++	PR tree-optimization/117217
++	* tree-sra.cc (propagate_subaccesses_from_rhs): Do not propagate
++	bit-field children.
++	(propagate_subaccesses_from_lhs): Likewise.
++
++2026-02-16  Martin Jambor  <mjambor@suse.cz>
++
++	Backported from master:
++	2026-02-06  Martin Jambor  <mjambor@suse.cz>
++
++	PR ipa/106260
++	* ipa-cp.cc (initialize_node_lattices): Replace assert that there are
++	callers with handling that situation when -fno-toplevel_reorder.
++
++2026-02-16  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	Backported from master:
++	2026-02-05  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	PR target/123910
++	* config/riscv/riscv-string.cc (riscv_expand_block_move):
++	Remove !xtheadvector guard.
++	(use_vector_stringop_p): Guard small LMULs.
++	(check_vectorise_memory_operation): Ditto.
++
++2026-02-12  Pengfei Li  <Pengfei.Li2@arm.com>
++
++	PR middle-end/123447
++	* expr.cc (expand_expr_real_1): Increase stack slot alignment
++	for STRICT_ALIGNMENT targets.
++
++2026-02-11  Alice Carlotti  <alice.carlotti@arm.com>
++
++	PR target/123624
++	* config/aarch64/aarch64-protos.h
++	(aarch64_use_simple_return_insn_p): New.
++	* config/aarch64/aarch64.cc
++	(aarch64_use_simple_return_insn_p): New, used...
++	* config/aarch64/aarch64.md (simple_return): ...here.
++
++2026-02-11  Andre Vieira  <andre.simoesdiasvieira@arm.com>
++
++	Backported from master:
++	2025-04-25  Andre Vieira  <andre.simoesdiasvieira@arm.com>
++
++	PR rtl-optimization/116479
++	* modulo-sched.cc (doloop_register_get): Reject conditions with
++	decrements that are not 1.
++
++2026-02-10  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	Backported from master:
++	2026-02-06  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	PR tree-optimization/123940
++	* tree-ssa-math-opts.cc (convert_mult_to_fma): Check
++	multiplication result is an addend.
++
++2026-02-10  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	Backported from master:
++	2026-02-05  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	PR target/123870
++	PR target/123969
++	* config/riscv/vector.md: Add vlds to "no ratio" for
++	theadvector.
++
++2026-02-10  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	Backported from master:
++	2026-02-05  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	PR target/123971
++	* config/riscv/riscv.cc (riscv_vector_mode_supported_any_target_p):
++	Remove TARGET_XTHEADVECTOR.
++
++2026-02-10  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	Backported from master:
++	2026-01-29  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	PR target/123806
++	* config/riscv/riscv-string.cc (expand_rawmemchr): Use unified
++	vl_read.
++	(expand_strcmp): Ditto.
++	* config/riscv/riscv-vector-builtins-bases.cc:
++	* config/riscv/riscv-vector-builtins.cc (function_expander::use_fof_load_insn):
++	Only emit the store and not the VL read.
++	* config/riscv/riscv-vsetvl.cc (get_fof_set_vl_reg): New
++	function.
++	(init_rtl_ssa): New wrapper.
++	(finish_rtl_ssa): Ditto.
++	(emit_fof_read_vls): Emit read_vl after each fault-only-first
++	load.
++	(pass_vsetvl::simple_vsetvl): Call emit_fof_read_vls ().
++	(pass_vsetvl::lazy_vsetvl): Ditto.
++	* config/riscv/vector-iterators.md: Add read_vl unspec.
++	* config/riscv/vector.md (read_vlsi): Unify.
++	(@read_vl<mode>): Ditto.
++	(read_vldi_zero_extend): Ditto.
++	(@pred_fault_load_set_vl<V_VLS:mode><P:mode>): New FoF variant
++	that saves VL in a register.
++	(@pred_fault_load_set_vl<VT:mode><P:mode>): Ditto.
++
++2026-02-10  Jeff Law  <jeffrey.law@oss.qualcomm.com>
++
++	Backported from master:
++	2026-01-19  Jeff Law  <jeffrey.law@oss.qualcomm.com>
++
++	PR rtl-optimization/121787
++	* config/riscv/riscv-vsetvl.cc (pre_vsetvl): Adjust call to
++	loop_optimizer_init to avoid making CFG changes.
++
++2026-02-10  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	Backported from master:
++	2026-01-22  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	PR target/122869
++	* config/riscv/riscv-vector-builtins-bases.cc (fold_fault_load):
++	Remove
++	* config/riscv/riscv-vector-builtins.cc (function_expander::use_contiguous_load_insn):
++	Use new helper.
++	(function_expander::prepare_contiguous_load_insn): New helper.
++	(function_expander::use_fof_load_insn): New function to emit FoF
++	loads.
++	* config/riscv/riscv-vector-builtins.h: Declare new functions.
++
++2026-02-10  Kyrylo Tkachov  <ktkachov@nvidia.com>
++
++	Backported from master:
++	2026-02-10  Kyrylo Tkachov  <ktkachov@nvidia.com>
++
++	* config/aarch64/tuning_models/olympus.h (olympus_sve_vector_cost):
++	Set align_load_cost to 6.
++
++2026-02-09  LIU Hao  <lh_mouse@126.com>
++
++	Backported from master:
++	2025-05-06  LIU Hao  <lh_mouse@126.com>
++
++	PR pch/14940
++	* config/i386/host-mingw32.cc (mingw32_gt_pch_use_address):
++	Replace the loop that attempted to map the PCH only to its
++	original address with more adaptive operations
++
++2026-02-09  Stefan Schulze Frielinghaus  <stefansf@gcc.gnu.org>
++
++	Backported from master:
++	2026-01-21  Stefan Schulze Frielinghaus  <stefansf@gcc.gnu.org>
++
++	PR target/122781
++	* config/s390/vector.md: Don't emulate vec_cmpgtu for 128-bit
++	integers for VXE3.
++
 +2026-02-06  xiezhiheng  <xiezhiheng@huawei.com>
 +
 +	Backported from master:
@@ -2006,10 +2202,39 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
 +++ b/src/gcc/DATESTAMP
 @@ -1 +1 @@
 -20250808
-+20260207
++20260223
 --- a/src/gcc/ada/ChangeLog
 +++ b/src/gcc/ada/ChangeLog
-@@ -1,3 +1,316 @@
+@@ -1,3 +1,345 @@
++2026-02-20  Eric Botcazou  <ebotcazou@adacore.com>
++
++	* libgnat/s-stposu.adb (Finalize_Pool): Pass a local copy of the
++	handle in the call to Finalize_And_Deallocate.
++
++2026-02-16  Eric Botcazou  <ebotcazou@adacore.com>
++
++	PR ada/124106
++	* exp_ch4.adb (Expand_N_Allocator): Minor fix in commentary.
++	(Expand_Allocator_Expression): Propagate the Subpool_Handle_Name
++	of the original allocator onto the newly built allocators.
++	* exp_ch6.adb (Make_Build_In_Place_Call_In_Allocator): Likewise.
++	Use Preserve_Comes_From_Source to propagate Comes_From_Source.
++	(Make_CPP_Constructor_Call_In_Allocator): Likewise.
++
++2026-02-11  Eric Botcazou  <ebotcazou@adacore.com>
++	    Liam Powell  <liam@liampwll.com>
++
++	PR ada/124054
++	* exp_util.adb (Build_Allocate_Deallocate_Proc): Tidy up and pass
++	Proc_Id as the new scope in the call to the New_Copy_Tree function.
++
++2026-02-09  Eric Botcazou  <ebotcazou@adacore.com>
++	    Liam Powell  <liam@liampwll.com>
++
++	PR ada/124025
++	* exp_ch9.adb (Expand_Entry_Barrier.Is_Global_Entity): Use
++	Scope_Within_Or_Same to test whether the object is local.
++
 +2026-02-01  Eric Botcazou  <ebotcazou@adacore.com>
 +	    Liam Powell  <liam@liampwll.com>
 +
@@ -2553,6 +2778,40 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
        Formals : List_Id;
  
     begin
+--- a/src/gcc/ada/exp_ch4.adb
++++ b/src/gcc/ada/exp_ch4.adb
+@@ -659,7 +659,9 @@ package body Exp_Ch4 is
+              Object_Definition   => New_Occurrence_Of (Typ, Loc),
+              Expression          =>
+                Make_Allocator (Loc,
+-                 Expression => New_Occurrence_Of (Etype (Exp), Loc)));
++                 Subpool_Handle_Name =>
++                   Relocate_Node (Subpool_Handle_Name (N)),
++                 Expression          => New_Occurrence_Of (Etype (Exp), Loc)));
+ 
+       begin
+          --  Prevent default initialization of the allocator
+@@ -698,7 +700,9 @@ package body Exp_Ch4 is
+              Object_Definition   => New_Occurrence_Of (Typ, Loc),
+              Expression          =>
+                Make_Allocator (Loc,
+-                 Expression => New_Occurrence_Of (Etype (Exp), Loc)));
++                 Subpool_Handle_Name =>
++                   Relocate_Node (Subpool_Handle_Name (N)),
++                 Expression          => New_Occurrence_Of (Etype (Exp), Loc)));
+ 
+       begin
+          --  Prevent default initialization of the allocator
+@@ -4559,8 +4563,7 @@ package body Exp_Ch4 is
+ 
+       --  Set the storage pool and find the appropriate version of Allocate to
+       --  call. Do not overwrite the storage pool if it is already set, which
+-      --  can happen for build-in-place function returns (see
+-      --  Exp_Ch4.Expand_N_Extended_Return_Statement).
++      --  can occur for BIP function returns (see Expand_N_Object_Declaration).
+ 
+       if No (Storage_Pool (N)) then
+          Pool := Associated_Storage_Pool (Root_Type (PtrT));
 --- a/src/gcc/ada/exp_ch5.adb
 +++ b/src/gcc/ada/exp_ch5.adb
 @@ -2254,7 +2254,8 @@ package body Exp_Ch5 is
@@ -2634,6 +2893,81 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
                     End_Label => End_Label (N)));
  
+--- a/src/gcc/ada/exp_ch6.adb
++++ b/src/gcc/ada/exp_ch6.adb
+@@ -8404,17 +8404,24 @@ package body Exp_Ch6 is
+ 
+          New_Allocator :=
+            Make_Allocator (Loc,
+-             Expression => New_Occurrence_Of (Result_Subt, Loc));
++             Subpool_Handle_Name =>
++               Relocate_Node (Subpool_Handle_Name (Allocator)),
++             Expression          => New_Occurrence_Of (Result_Subt, Loc));
++
++         --  Prevent default initialization of the allocator
++
+          Set_No_Initialization (New_Allocator);
+ 
+-         --  Copy attributes to new allocator. Note that the new allocator
+-         --  logically comes from source if the original one did, so copy the
+-         --  relevant flag. This ensures proper treatment of the restriction
+-         --  No_Implicit_Heap_Allocations in this case.
++         --  Copy the Comes_From_Source flag onto the allocator since logically
++         --  this allocator is a replacement of the original allocator. This is
++         --  for proper handling of restriction No_Implicit_Heap_Allocations.
++
++         Preserve_Comes_From_Source (New_Allocator, Allocator);
++
++         --  Copy the attributes set by Expand_N_Allocator
+ 
+          Set_Storage_Pool      (New_Allocator, Storage_Pool      (Allocator));
+          Set_Procedure_To_Call (New_Allocator, Procedure_To_Call (Allocator));
+-         Set_Comes_From_Source (New_Allocator, Comes_From_Source (Allocator));
+ 
+          Rewrite (Allocator, New_Allocator);
+ 
+@@ -9393,17 +9400,24 @@ package body Exp_Ch6 is
+ 
+       New_Allocator :=
+         Make_Allocator (Loc,
+-          Expression => New_Occurrence_Of (Result_Subt, Loc));
++          Subpool_Handle_Name =>
++            Relocate_Node (Subpool_Handle_Name (Allocator)),
++          Expression          => New_Occurrence_Of (Result_Subt, Loc));
++
++      --  Prevent default initialization of the allocator
++
+       Set_No_Initialization (New_Allocator);
+ 
+-      --  Copy attributes to new allocator. Note that the new allocator
+-      --  logically comes from source if the original one did, so copy the
+-      --  relevant flag. This ensures proper treatment of the restriction
+-      --  No_Implicit_Heap_Allocations in this case.
++      --  Copy the Comes_From_Source flag onto the allocator since logically
++      --  this allocator is a replacement of the original allocator. This is
++      --  for proper handling of restriction No_Implicit_Heap_Allocations.
++
++      Preserve_Comes_From_Source (New_Allocator, Allocator);
++
++      --  Copy the attributes set by Expand_N_Allocator
+ 
+       Set_Storage_Pool      (New_Allocator, Storage_Pool      (Allocator));
+       Set_Procedure_To_Call (New_Allocator, Procedure_To_Call (Allocator));
+-      Set_Comes_From_Source (New_Allocator, Comes_From_Source (Allocator));
+ 
+       Rewrite (Allocator, New_Allocator);
+ 
+--- a/src/gcc/ada/exp_ch9.adb
++++ b/src/gcc/ada/exp_ch9.adb
+@@ -5824,7 +5824,7 @@ package body Exp_Ch9 is
+                --  during expansion, it is ok. If expansion is not performed,
+                --  then Func is Empty so this test cannot succeed.
+ 
+-               if Scope (E) = Func_Id then
++               if Scope_Within_Or_Same (S, Func_Id) then
+                   null;
+ 
+                --  A protected call from a barrier to another object is ok
 --- a/src/gcc/ada/exp_imgv.adb
 +++ b/src/gcc/ada/exp_imgv.adb
 @@ -30,6 +30,7 @@ with Einfo;          use Einfo;
@@ -2841,7 +3175,60 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
     --  Call RTE (RE_Root_Buffer_Type) if necessary, to load the packages
 --- a/src/gcc/ada/exp_util.adb
 +++ b/src/gcc/ada/exp_util.adb
-@@ -6080,7 +6080,11 @@ package body Exp_Util is
+@@ -971,23 +971,22 @@ package body Exp_Util is
+          Size_Id : constant Entity_Id := Make_Temporary (Loc, 'S');
+ 
+          Actuals      : List_Id;
+-         Alloc_Expr   : Node_Id := Empty;
++         Alloc_Expr   : Node_Id;
+          Fin_Coll_Id  : Entity_Id;
+          Proc_To_Call : Entity_Id;
+          Ptr_Coll_Id  : Entity_Id;
+-         Subpool      : Node_Id := Empty;
++         Subpool      : Node_Id;
+ 
+       begin
+-         --  When we are building an allocator procedure, extract the allocator
+-         --  node for later processing and calculation of alignment.
++         --  When we are building an allocator procedure, extract the qualified
++         --  expression from the allocator if there is one.
+ 
+-         if Is_Allocate then
+-            --  Extract the qualified expression if there is one from the
+-            --  allocator.
+-
+-            if Nkind (Expression (Expr)) = N_Qualified_Expression then
+-               Alloc_Expr := Expression (Expr);
+-            end if;
++         if Is_Allocate
++           and then Nkind (Expression (Expr)) = N_Qualified_Expression
++         then
++            Alloc_Expr := Expression (Expr);
++         else
++            Alloc_Expr := Empty;
+          end if;
+ 
+          --  Step 1: Construct all the actuals for the call to library routine
+@@ -1001,15 +1000,14 @@ package body Exp_Util is
+ 
+             --  b) Subpool
+ 
+-            if Nkind (Expr) = N_Allocator then
+-               Subpool := Subpool_Handle_Name (Expr);
+-            end if;
++            Subpool := Subpool_Handle_Name (Expr);
+ 
+             --  If a subpool is present it can be an arbitrary name, so make
+             --  the actual by copying the tree.
+ 
+             if Present (Subpool) then
+-               Append_To (Actuals, New_Copy_Tree (Subpool, New_Sloc => Loc));
++               Append_To
++                 (Actuals, New_Copy_Tree (Subpool, New_Scope => Proc_Id));
+             else
+                Append_To (Actuals, Make_Null (Loc));
+             end if;
+@@ -6080,7 +6078,11 @@ package body Exp_Util is
              Utyp := Corresponding_Record_Type (Root_Type (Btyp));
  
           elsif Is_Implicit_Full_View (Utyp) then
@@ -2854,7 +3241,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
              if Is_Protected_Type (Utyp) then
                 Utyp := Corresponding_Record_Type (Utyp);
-@@ -9907,7 +9911,8 @@ package body Exp_Util is
+@@ -9907,7 +9909,8 @@ package body Exp_Util is
     begin
        return (not Is_Tagged_Type (T) and then Is_Derived_Type (T))
                 or else
@@ -3155,6 +3542,38 @@ new file mode 100644
 +   pragma Convention (C, pthread_mutex_t);
 +
 +end System.OS_Locks;
+--- a/src/gcc/ada/libgnat/s-stposu.adb
++++ b/src/gcc/ada/libgnat/s-stposu.adb
+@@ -398,6 +398,7 @@ package body System.Storage_Pools.Subpools is
+    procedure Finalize_Pool (Pool : in out Root_Storage_Pool_With_Subpools) is
+       Curr_Ptr : SP_Node_Ptr;
+       Ex_Occur : Exception_Occurrence;
++      Handle   : Subpool_Handle;
+       Raised   : Boolean := False;
+ 
+       function Is_Empty_List (L : not null SP_Node_Ptr) return Boolean;
+@@ -432,16 +433,13 @@ package body System.Storage_Pools.Subpools is
+       while not Is_Empty_List (Pool.Subpools'Unchecked_Access) loop
+          Curr_Ptr := Pool.Subpools.Next;
+ 
+-         --  Perform the following actions:
+-
+-         --    1) Finalize all objects chained on the subpool's collection
+-         --    2) Remove the subpool from the owner's list of subpools
+-         --    3) Deallocate the doubly linked list node associated with the
+-         --       subpool.
+-         --    4) Call Deallocate_Subpool
++         --  Finalize and deallocate the subpool. Beware that the node pointed
++         --  to by Curr_Ptr will be deallocated so may not be passed as actual
++         --  in the call, since the formal parameter is In Out.
+ 
+          begin
+-            Finalize_And_Deallocate (Curr_Ptr.Subpool);
++            Handle := Curr_Ptr.Subpool;
++            Finalize_And_Deallocate (Handle);
+ 
+          exception
+             when Fin_Occur : others =>
 --- a/src/gcc/ada/repinfo.adb
 +++ b/src/gcc/ada/repinfo.adb
 @@ -375,9 +375,9 @@ package body Repinfo is
@@ -4626,6 +5045,17 @@ new file mode 100644
  			  done
  
  			  true
+--- a/src/gcc/config/aarch64/aarch64-builtins.cc
++++ b/src/gcc/config/aarch64/aarch64-builtins.cc
+@@ -1719,7 +1719,7 @@ struct aarch64_pragma_builtins_data
+   unsigned int flags;
+ };
+ 
+-static aarch64_pragma_builtins_data aarch64_pragma_builtins[] = {
++static CONSTEXPR aarch64_pragma_builtins_data aarch64_pragma_builtins[] = {
+ #include "aarch64-simd-pragma-builtins.def"
+ };
+ 
 --- a/src/gcc/config/aarch64/aarch64-cores.def
 +++ b/src/gcc/config/aarch64/aarch64-cores.def
 @@ -135,6 +135,7 @@ AARCH64_CORE("a64fx", a64fx, a64fx, V8_2A,  (F16, SVE), a64fx, 0x46, 0x001, -1)
@@ -4752,6 +5182,169 @@ new file mode 100644
  const struct cpu_cost_table a64fx_extra_costs =
  {
    /* ALU */
+--- a/src/gcc/config/aarch64/aarch64-protos.h
++++ b/src/gcc/config/aarch64/aarch64-protos.h
+@@ -970,6 +970,7 @@ bool aarch64_uimm12_shift (unsigned HOST_WIDE_INT);
+ int aarch64_movk_shift (const wide_int_ref &, const wide_int_ref &);
+ bool aarch64_is_mov_xn_imm (unsigned HOST_WIDE_INT);
+ bool aarch64_use_return_insn_p (void);
++bool aarch64_use_simple_return_insn_p (void);
+ const char *aarch64_output_casesi (rtx *);
+ const char *aarch64_output_load_tp (rtx);
+ const char *aarch64_output_sme_zero_za (rtx);
+--- a/src/gcc/config/aarch64/aarch64-simd-pragma-builtins.def
++++ b/src/gcc/config/aarch64/aarch64-simd-pragma-builtins.def
+@@ -197,7 +197,7 @@ ENTRY_FMA_FPM (vmlalltt, f32, UNSPEC_FMLALLTT_FP8)
+ #undef REQUIRED_EXTENSIONS
+ 
+ // bsl
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_TERNARY (vbsl_mf8, mf8, u8, mf8, mf8, UNSPEC_BSL, QUIET)
+ ENTRY_TERNARY (vbslq_mf8, mf8q, u8q, mf8q, mf8q, UNSPEC_BSL, QUIET)
+ #undef REQUIRED_EXTENSIONS
+@@ -208,7 +208,7 @@ ENTRY_BINARY (vcombine_mf8, mf8q, mf8, mf8, UNSPEC_COMBINE, QUIET)
+ #undef REQUIRED_EXTENSIONS
+ 
+ // copy_lane
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_BINARY_TWO_LANES (vcopy_lane_mf8, mf8, mf8, mf8,
+ 			UNSPEC_VEC_COPY, QUIET)
+ ENTRY_BINARY_TWO_LANES (vcopyq_lane_mf8, mf8q, mf8q, mf8,
+@@ -220,12 +220,12 @@ ENTRY_BINARY_TWO_LANES (vcopyq_laneq_mf8, mf8q, mf8q, mf8q,
+ #undef REQUIRED_EXTENSIONS
+ 
+ // create
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_UNARY (vcreate_mf8, mf8, u64_scalar, UNSPEC_VCREATE, QUIET)
+ #undef REQUIRED_EXTENSIONS
+ 
+ // dup
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_UNARY (vdup_n_mf8, mf8, mf8_scalar, UNSPEC_DUP, QUIET)
+ ENTRY_UNARY (vdupq_n_mf8, mf8q, mf8_scalar, UNSPEC_DUP, QUIET)
+ 
+@@ -236,19 +236,19 @@ ENTRY_UNARY_LANE (vdupq_laneq_mf8, mf8q, mf8q, UNSPEC_DUP_LANE, QUIET)
+ #undef REQUIRED_EXTENSIONS
+ 
+ // dupb_lane
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_UNARY_LANE (vdupb_lane_mf8, mf8_scalar, mf8, UNSPEC_GET_LANE, QUIET)
+ ENTRY_UNARY_LANE (vdupb_laneq_mf8, mf8_scalar, mf8q, UNSPEC_GET_LANE, QUIET)
+ #undef REQUIRED_EXTENSIONS
+ 
+ // ext
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_BINARY_LANE (vext_mf8, mf8, mf8, mf8, UNSPEC_EXT, QUIET)
+ ENTRY_BINARY_LANE (vextq_mf8, mf8q, mf8q, mf8q, UNSPEC_EXT, QUIET)
+ #undef REQUIRED_EXTENSIONS
+ 
+ // ld1
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_LOAD (vld1_mf8, mf8, mf8_scalar_const_ptr, UNSPEC_LD1)
+ ENTRY_LOAD (vld1q_mf8, mf8q, mf8_scalar_const_ptr, UNSPEC_LD1)
+ ENTRY_LOAD (vld1_dup_mf8, mf8, mf8_scalar_const_ptr, UNSPEC_DUP)
+@@ -261,7 +261,7 @@ ENTRY_LOAD_LANE (vld1q_lane_mf8, mf8q, mf8_scalar_const_ptr, mf8q,
+ #undef REQUIRED_EXTENSIONS
+ 
+ // ld<n>
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_LOAD (vld1_mf8_x2, mf8x2, mf8_scalar_const_ptr, UNSPEC_LD1x2)
+ ENTRY_LOAD (vld1q_mf8_x2, mf8qx2, mf8_scalar_const_ptr, UNSPEC_LD1x2)
+ ENTRY_LOAD (vld2_mf8, mf8x2, mf8_scalar_const_ptr, UNSPEC_LD2)
+@@ -297,13 +297,13 @@ ENTRY_LOAD_LANE (vld4q_lane_mf8, mf8qx4, mf8_scalar_const_ptr, mf8qx4,
+ #undef REQUIRED_EXTENSIONS
+ 
+ // mov
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_UNARY (vmov_n_mf8, mf8, mf8_scalar, UNSPEC_DUP, QUIET)
+ ENTRY_UNARY (vmovq_n_mf8, mf8q, mf8_scalar, UNSPEC_DUP, QUIET)
+ #undef REQUIRED_EXTENSIONS
+ 
+ // rev
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_UNARY (vrev64_mf8, mf8, mf8, UNSPEC_REV64, QUIET)
+ ENTRY_UNARY (vrev64q_mf8, mf8q, mf8q, UNSPEC_REV64, QUIET)
+ 
+@@ -315,13 +315,13 @@ ENTRY_UNARY (vrev16q_mf8, mf8q, mf8q, UNSPEC_REV16, QUIET)
+ #undef REQUIRED_EXTENSIONS
+ 
+ // set_lane
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_BINARY_LANE (vset_lane_mf8, mf8, mf8_scalar, mf8, UNSPEC_SET_LANE, QUIET)
+ ENTRY_BINARY_LANE (vsetq_lane_mf8, mf8q, mf8_scalar, mf8q, UNSPEC_SET_LANE, QUIET)
+ #undef REQUIRED_EXTENSIONS
+ 
+ // st1
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_STORE (vst1_mf8, mf8_scalar_ptr, mf8, UNSPEC_ST1)
+ ENTRY_STORE (vst1q_mf8, mf8_scalar_ptr, mf8q, UNSPEC_ST1)
+ 
+@@ -330,7 +330,7 @@ ENTRY_STORE_LANE (vst1q_lane_mf8, mf8_scalar_ptr, mf8q, UNSPEC_ST1_LANE)
+ #undef REQUIRED_EXTENSIONS
+ 
+ // st<n>
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_STORE (vst2_mf8, mf8_scalar_ptr, mf8x2, UNSPEC_ST2)
+ ENTRY_STORE (vst2q_mf8, mf8_scalar_ptr, mf8qx2, UNSPEC_ST2)
+ ENTRY_STORE (vst1_mf8_x2, mf8_scalar_ptr, mf8x2, UNSPEC_ST1x2)
+@@ -354,7 +354,7 @@ ENTRY_STORE_LANE (vst4q_lane_mf8, mf8_scalar_ptr, mf8qx4, UNSPEC_ST4_LANE)
+ #undef REQUIRED_EXTENSIONS
+ 
+ // tbl<n>
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_BINARY (vtbl1_mf8, mf8, mf8, u8, UNSPEC_TBL, QUIET)
+ ENTRY_BINARY (vtbl2_mf8, mf8, mf8x2, u8, UNSPEC_TBL, QUIET)
+ ENTRY_BINARY (vtbl3_mf8, mf8, mf8x3, u8, UNSPEC_TBL, QUIET)
+@@ -371,7 +371,7 @@ ENTRY_BINARY (vqtbl4q_mf8, mf8q, mf8qx4, u8q, UNSPEC_TBL, QUIET)
+ #undef REQUIRED_EXTENSIONS
+ 
+ // tbx<n>
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_TERNARY (vtbx1_mf8, mf8, mf8, mf8, u8, UNSPEC_TBX, QUIET)
+ ENTRY_TERNARY (vtbx2_mf8, mf8, mf8, mf8x2, u8, UNSPEC_TBX, QUIET)
+ ENTRY_TERNARY (vtbx3_mf8, mf8, mf8, mf8x3, u8, UNSPEC_TBX, QUIET)
+@@ -388,7 +388,7 @@ ENTRY_TERNARY (vqtbx4q_mf8, mf8q, mf8q, mf8qx4, u8q, UNSPEC_TBX, QUIET)
+ #undef REQUIRED_EXTENSIONS
+ 
+ // trn<n>
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_BINARY (vtrn1_mf8, mf8, mf8, mf8, UNSPEC_TRN1, QUIET)
+ ENTRY_BINARY (vtrn1q_mf8, mf8q, mf8q, mf8q, UNSPEC_TRN1, QUIET)
+ ENTRY_BINARY (vtrn2_mf8, mf8, mf8, mf8, UNSPEC_TRN2, QUIET)
+@@ -398,7 +398,7 @@ ENTRY_BINARY (vtrnq_mf8, mf8qx2, mf8q, mf8q, UNSPEC_TRN, QUIET)
+ #undef REQUIRED_EXTENSIONS
+ 
+ // uzp<n>
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_BINARY (vuzp1_mf8, mf8, mf8, mf8, UNSPEC_UZP1, QUIET)
+ ENTRY_BINARY (vuzp1q_mf8, mf8q, mf8q, mf8q, UNSPEC_UZP1, QUIET)
+ ENTRY_BINARY (vuzp2_mf8, mf8, mf8, mf8, UNSPEC_UZP2, QUIET)
+@@ -408,7 +408,7 @@ ENTRY_BINARY (vuzpq_mf8, mf8qx2, mf8q, mf8q, UNSPEC_UZP, QUIET)
+ #undef REQUIRED_EXTENSIONS
+ 
+ // zip<n>
+-#define REQUIRED_EXTENSIONS nonstreaming_only (TARGET_SIMD)
++#define REQUIRED_EXTENSIONS nonstreaming_only (AARCH64_FL_SIMD)
+ ENTRY_BINARY (vzip1_mf8, mf8, mf8, mf8, UNSPEC_ZIP1, QUIET)
+ ENTRY_BINARY (vzip1q_mf8, mf8q, mf8q, mf8q, UNSPEC_ZIP1, QUIET)
+ ENTRY_BINARY (vzip2_mf8, mf8, mf8, mf8, UNSPEC_ZIP2, QUIET)
 --- a/src/gcc/config/aarch64/aarch64-simd.md
 +++ b/src/gcc/config/aarch64/aarch64-simd.md
 @@ -3181,6 +3181,7 @@ (define_expand "vec_unpacks_hi_<mode>"
@@ -5429,7 +6022,28 @@ new file mode 100644
    return target;
  }
  
-@@ -25085,20 +25085,41 @@ aarch64_asm_preferred_eh_data_format (int code ATTRIBUTE_UNUSED, int global)
+@@ -10110,6 +10110,20 @@ aarch64_use_return_insn_p (void)
+   return known_eq (cfun->machine->frame.frame_size, 0);
+ }
+ 
++/* Return false for locally streaming functions in order to avoid
++   shrink-wrapping them.  Shrink-wrapping is unsafe when the function prologue
++   and epilogue contain streaming state change, because these implicitly change
++   the meaning of poly_int values.  */
++
++bool
++aarch64_use_simple_return_insn_p (void)
++{
++  if (aarch64_cfun_enables_pstate_sm ())
++    return false;
++
++  return true;
++}
++
+ /* Generate the epilogue instructions for returning from a function.
+    This is almost exactly the reverse of the prolog sequence, except
+    that we need to insert barriers to avoid scheduling loads that read
+@@ -25085,20 +25099,41 @@ aarch64_asm_preferred_eh_data_format (int code ATTRIBUTE_UNUSED, int global)
     return (global ? DW_EH_PE_indirect : 0) | DW_EH_PE_pcrel | type;
  }
  
@@ -5489,6 +6103,15 @@ new file mode 100644
      UNSPEC_SADALP
      UNSPEC_SCVTF
      UNSPEC_SET_LANE
+@@ -1115,7 +1116,7 @@ (define_expand "return"
+ 
+ (define_insn "simple_return"
+   [(simple_return)]
+-  ""
++  "aarch64_use_simple_return_insn_p ()"
+   {
+     output_asm_insn ("ret", operands);
+     return aarch64_sls_barrier (aarch64_harden_sls_retbr_p ());
 @@ -4739,7 +4740,7 @@ (define_expand "crc_rev<ALLI:mode><ALLX:mode>4"
     ;; data
     (match_operand:ALLI 2 "register_operand" "r")
@@ -5803,6 +6426,17 @@ new file mode 100644
 +};
 +
 +#endif /* GCC_AARCH64_H_HIP12.  */
+--- a/src/gcc/config/aarch64/tuning_models/olympus.h
++++ b/src/gcc/config/aarch64/tuning_models/olympus.h
+@@ -75,7 +75,7 @@ static sve_vec_cost olympus_sve_vector_cost =
+     2, /* store_elt_extra_cost  */
+     8, /* vec_to_scalar_cost  */
+     4, /* scalar_to_vec_cost  */
+-    4, /* align_load_cost  */
++    6, /* align_load_cost  */
+     6, /* unalign_load_cost  */
+     1, /* unalign_store_cost  */
+     1  /* store_cost  */
 --- a/src/gcc/config/arm/arm-mve-builtins-base.cc
 +++ b/src/gcc/config/arm/arm-mve-builtins-base.cc
 @@ -1167,6 +1167,48 @@ public:
@@ -6181,7 +6815,22 @@ new file mode 100644
  			 (match_operand:SF 2 "s_register_operand")
  			 (match_operand:SF 3 "s_register_operand")))]
    "TARGET_32BIT && TARGET_HARD_FLOAT"
-@@ -8413,7 +8406,7 @@ (define_expand "movsfcc"
+@@ -8400,9 +8393,13 @@ (define_expand "movsfcc"
+     enum rtx_code code = GET_CODE (operands[1]);
+     rtx ccreg;
+ 
++    /* Perverse combinations of architecture options can't be supported
++       as they need conditional instructions.  */
++    if (TARGET_THUMB2 && arm_restrict_it && !TARGET_VFP5)
++      FAIL;
+     if (!arm_validize_comparison (&operands[1], &XEXP (operands[1], 0),
+        				  &XEXP (operands[1], 1)))
+-       FAIL;
++      FAIL;
+ 
+     code = GET_CODE (operands[1]);
+     ccreg = arm_gen_compare_reg (code, XEXP (operands[1], 0),
+@@ -8413,7 +8410,7 @@ (define_expand "movsfcc"
  
  (define_expand "movdfcc"
    [(set (match_operand:DF 0 "s_register_operand")
@@ -6190,7 +6839,22 @@ new file mode 100644
  			 (match_operand:DF 2 "s_register_operand")
  			 (match_operand:DF 3 "s_register_operand")))]
    "TARGET_32BIT && TARGET_HARD_FLOAT && TARGET_VFP_DOUBLE"
-@@ -13044,7 +13037,7 @@ (define_insn "arm_<mcrr>"
+@@ -8422,9 +8419,13 @@ (define_expand "movdfcc"
+     enum rtx_code code = GET_CODE (operands[1]);
+     rtx ccreg;
+ 
++    /* Perverse combinations of architecture options can't be supported
++       as they need conditional instructions.  */
++    if (TARGET_THUMB2 && arm_restrict_it && !TARGET_VFP5)
++      FAIL;
+     if (!arm_validize_comparison (&operands[1], &XEXP (operands[1], 0), 
+        				  &XEXP (operands[1], 1)))
+-       FAIL;
++      FAIL;
+     code = GET_CODE (operands[1]);
+     ccreg = arm_gen_compare_reg (code, XEXP (operands[1], 0),
+ 				 XEXP (operands[1], 1), NULL_RTX);
+@@ -13044,7 +13045,7 @@ (define_insn "arm_<mcrr>"
    "arm_coproc_builtin_available (VUNSPEC_<MCRR>)"
  {
    arm_const_bounds (operands[0], 0, 16);
@@ -6199,7 +6863,7 @@ new file mode 100644
    arm_const_bounds (operands[3], 0, (1 << 5));
    return "<mcrr>\\tp%c0, %1, %Q2, %R2, CR%c3";
  }
-@@ -13059,7 +13052,7 @@ (define_insn "arm_<mrrc>"
+@@ -13059,7 +13060,7 @@ (define_insn "arm_<mrrc>"
    "arm_coproc_builtin_available (VUNSPEC_<MRRC>)"
  {
    arm_const_bounds (operands[1], 0, 16);
@@ -7936,6 +8600,57 @@ new file mode 100644
  		  /* Assume Alder Lake.  */
  		  else if (has_feature (FEATURE_SERIALIZE))
  		    cpu = "alderlake";
+--- a/src/gcc/config/i386/host-mingw32.cc
++++ b/src/gcc/config/i386/host-mingw32.cc
+@@ -135,7 +135,6 @@ mingw32_gt_pch_use_address (void *&addr, size_t size, int fd,
+      and earlier, backslashes are invalid in object name.  So, we need
+      to check if we are on Windows2000 or higher.  */
+   OSVERSIONINFO version_info;
+-  int r;
+ 
+   version_info.dwOSVersionInfoSize = sizeof (version_info);
+ 
+@@ -169,25 +168,24 @@ mingw32_gt_pch_use_address (void *&addr, size_t size, int fd,
+       return -1;
+     }
+ 
+-  /* Retry five times, as here might occure a race with multiple gcc's
+-     instances at same time.  */
+-  for (r = 0; r < 5; r++)
+-   {
+-      mmap_addr = MapViewOfFileEx (mmap_handle, FILE_MAP_COPY, 0, offset,
+-				   size, addr);
+-      if (mmap_addr == addr)
+-	break;
+-      if (r != 4)
+-        Sleep (500);
+-   }
+-
+-  if (mmap_addr != addr)
++  /* Try mapping the file at `addr`.  */
++  mmap_addr = MapViewOfFileEx (mmap_handle, FILE_MAP_COPY, 0, offset,
++			       size, addr);
++  if (mmap_addr == NULL)
+     {
+-      w32_error (__FUNCTION__, __FILE__, __LINE__, "MapViewOfFileEx");
+-      CloseHandle(mmap_handle);
+-      return  -1;
++      /* We could not map the file at its original address, so let the
++	 system choose a different one. The PCH can be relocated later.  */
++      mmap_addr = MapViewOfFileEx (mmap_handle, FILE_MAP_COPY, 0, offset,
++				   size, NULL);
++      if (mmap_addr == NULL)
++	{
++	  w32_error (__FUNCTION__, __FILE__, __LINE__, "MapViewOfFileEx");
++	  CloseHandle(mmap_handle);
++	  return  -1;
++	}
+     }
+ 
++  addr = mmap_addr;
+   return 1;
+ }
+ 
 --- a/src/gcc/config/i386/i386-builtin.def
 +++ b/src/gcc/config/i386/i386-builtin.def
 @@ -3678,13 +3678,13 @@ BDESC (0, OPTION_MASK_ISA2_AVX10_2, CODE_FOR_avx10_2_vcvttps2qqsv8di_mask_round,
@@ -10000,6 +10715,69 @@ new file mode 100644
      }
    else
      error ("unknown %<#pragma riscv intrinsic%> option %qs", name);
+--- a/src/gcc/config/riscv/riscv-string.cc
++++ b/src/gcc/config/riscv/riscv-string.cc
+@@ -976,7 +976,7 @@ riscv_expand_block_move_scalar (rtx dest, rtx src, rtx length)
+ bool
+ riscv_expand_block_move (rtx dest, rtx src, rtx length)
+ {
+-  if ((TARGET_VECTOR && !TARGET_XTHEADVECTOR)
++  if (TARGET_VECTOR
+       && stringop_strategy & STRATEGY_VECTOR)
+     {
+       bool ok = riscv_vector::expand_block_move (dest, src, length, false);
+@@ -1082,9 +1082,15 @@ use_vector_stringop_p (struct stringop_info &info, HOST_WIDE_INT max_ew,
+   rtx avl = length_in;
+   HOST_WIDE_INT potential_ew = max_ew;
+ 
+-  if (!TARGET_VECTOR || !(stringop_strategy & STRATEGY_VECTOR))
++  if (!TARGET_VECTOR
++      || !(stringop_strategy & STRATEGY_VECTOR))
+     return false;
+ 
++  if (TARGET_XTHEADVECTOR
++      && (!CONST_INT_P (length_in)
++	  || known_lt (INTVAL (length_in), BYTES_PER_RISCV_VECTOR)))
++      return false;
++
+   if (CONST_INT_P (length_in))
+     {
+       HOST_WIDE_INT length = INTVAL (length_in);
+@@ -1377,10 +1383,7 @@ expand_rawmemchr (machine_mode mode, rtx dst, rtx haystack, rtx needle,
+ 		   riscv_vector::UNARY_OP, vlops);
+ 
+   /* Read how far we read.  */
+-  if (Pmode == SImode)
+-    emit_insn (gen_read_vlsi (cnt));
+-  else
+-    emit_insn (gen_read_vldi_zero_extend (cnt));
++  emit_insn (gen_read_vl (Pmode, cnt));
+ 
+   /* Compare needle with haystack and store in a mask.  */
+   rtx eq = gen_rtx_EQ (mask_mode, gen_const_vec_duplicate (vmode, needle), vec);
+@@ -1493,10 +1496,7 @@ expand_strcmp (rtx result, rtx src1, rtx src2, rtx nbytes,
+     }
+ 
+   /* Read the vl for the next pointer bump.  */
+-  if (Pmode == SImode)
+-    emit_insn (gen_read_vlsi (cnt));
+-  else
+-    emit_insn (gen_read_vldi_zero_extend (cnt));
++  emit_insn (gen_read_vl (Pmode, cnt));
+ 
+   if (with_length)
+     {
+@@ -1577,6 +1577,10 @@ check_vectorise_memory_operation (rtx length_in, HOST_WIDE_INT &lmul_out)
+ 
+   HOST_WIDE_INT length = INTVAL (length_in);
+ 
++  if (TARGET_XTHEADVECTOR
++      && known_lt (length, BYTES_PER_RISCV_VECTOR))
++    return false;
++
+   /* If it's tiny, default operation is likely better; maybe worth
+      considering fractional lmul in the future as well.  */
+   if (length < (TARGET_MIN_VLEN / 8))
 --- a/src/gcc/config/riscv/riscv-v.cc
 +++ b/src/gcc/config/riscv/riscv-v.cc
 @@ -3053,15 +3053,17 @@ expand_vec_perm (rtx target, rtx op0, rtx op1, rtx sel)
@@ -10095,7 +10873,62 @@ new file mode 100644
      {
 --- a/src/gcc/config/riscv/riscv-vector-builtins-bases.cc
 +++ b/src/gcc/config/riscv/riscv-vector-builtins-bases.cc
-@@ -1792,12 +1792,13 @@ public:
+@@ -58,54 +58,6 @@ enum lst_type
+   LST_INDEXED,
+ };
+ 
+-/* Helper function to fold vleff and vlsegff.  */
+-static gimple *
+-fold_fault_load (gimple_folder &f)
+-{
+-  /* fold fault_load (const *base, size_t *new_vl, size_t vl)
+-
+-     ====> fault_load (const *base, size_t vl)
+-	   new_vl = MEM_REF[read_vl ()].  */
+-
+-  auto_vec<tree> vargs (gimple_call_num_args (f.call) - 1);
+-
+-  for (unsigned i = 0; i < gimple_call_num_args (f.call); i++)
+-    {
+-      /* Exclude size_t *new_vl argument.  */
+-      if (i == gimple_call_num_args (f.call) - 2)
+-	continue;
+-
+-      vargs.quick_push (gimple_call_arg (f.call, i));
+-    }
+-
+-  gimple *repl = gimple_build_call_vec (gimple_call_fn (f.call), vargs);
+-  gimple_call_set_lhs (repl, f.lhs);
+-
+-  /* Handle size_t *new_vl by read_vl.  */
+-  tree new_vl = gimple_call_arg (f.call, gimple_call_num_args (f.call) - 2);
+-  if (integer_zerop (new_vl))
+-    {
+-      /* This case happens when user passes the nullptr to new_vl argument.
+-	 In this case, we just need to ignore the new_vl argument and return
+-	 fault_load instruction directly. */
+-      return repl;
+-    }
+-
+-  tree tmp_var = create_tmp_var (size_type_node, "new_vl");
+-  tree decl = get_read_vl_decl ();
+-  gimple *g = gimple_build_call (decl, 0);
+-  gimple_call_set_lhs (g, tmp_var);
+-  tree indirect
+-    = fold_build2 (MEM_REF, size_type_node,
+-		   gimple_call_arg (f.call, gimple_call_num_args (f.call) - 2),
+-		   build_int_cst (build_pointer_type (size_type_node), 0));
+-  gassign *assign = gimple_build_assign (indirect, tmp_var);
+-
+-  gsi_insert_after (f.gsi, assign, GSI_SAME_STMT);
+-  gsi_insert_after (f.gsi, g, GSI_SAME_STMT);
+-  return repl;
+-}
+-
+ /* Implements vsetvl<mode> && vsetvlmax<mode>.  */
+ template<bool VLMAX_P>
+ class vsetvl : public function_base
+@@ -1792,12 +1744,13 @@ public:
         The fold routines expect the replacement statement to have the
         same lhs as the original call, so return the copy statement
         rather than the field update.  */
@@ -10111,13 +10944,48 @@ new file mode 100644
      tree lhs_vector = build4 (ARRAY_REF, TREE_TYPE (rhs_vector), lhs_array,
  			      index, NULL_TREE, NULL_TREE);
      gassign *update = gimple_build_assign (lhs_vector, rhs_vector);
-@@ -2128,7 +2129,8 @@ public:
+@@ -1924,10 +1877,7 @@ public:
  
    rtx expand (function_expander &e) const override
    {
+-    if (Pmode == SImode)
+-      emit_insn (gen_read_vlsi (e.target));
+-    else
+-      emit_insn (gen_read_vldi_zero_extend (e.target));
++    emit_insn (gen_read_vl (Pmode, e.target));
+     return e.target;
+   }
+ };
+@@ -1945,15 +1895,9 @@ public:
+     return pred != PRED_TYPE_none;
+   }
+ 
+-  gimple *fold (gimple_folder &f) const override
+-  {
+-    return fold_fault_load (f);
+-  }
+-
+   rtx expand (function_expander &e) const override
+   {
+-    return e.use_contiguous_load_insn (
+-      code_for_pred_fault_load (e.vector_mode ()));
++    return e.use_fof_load_insn ();
+   }
+ };
+ 
+@@ -2121,14 +2065,9 @@ public:
+     return pred != PRED_TYPE_none;
+   }
+ 
+-  gimple *fold (gimple_folder &f) const override
+-  {
+-    return fold_fault_load (f);
+-  }
+-
+   rtx expand (function_expander &e) const override
+   {
 -    return e.use_exact_insn (code_for_pred_fault_load (e.vector_mode ()));
-+    return e.use_contiguous_load_insn
-+      (code_for_pred_fault_load (e.vector_mode ()));
++    return e.use_fof_load_insn ();
    }
  };
  
@@ -10375,7 +11243,7 @@ new file mode 100644
  		? integer_zero_node
  		: simulate_builtin_function_decl (input_location, name, fntype,
  						  code, NULL, attrs);
-@@ -4205,7 +4237,8 @@ function_expander::use_exact_insn (insn_code icode)
+@@ -4205,15 +4237,15 @@ function_expander::use_exact_insn (insn_code icode)
  
    /* The RVV floating-point only support dynamic rounding mode in the
       FRM register.  */
@@ -10385,7 +11253,97 @@ new file mode 100644
      add_input_operand (Pmode, gen_int_mode (riscv_vector::FRM_DYN, Pmode));
  
    return generate_insn (icode);
-@@ -4390,7 +4423,8 @@ function_expander::use_ternop_insn (bool vd_accum_p, insn_code icode)
+ }
+ 
+-/* Use contiguous load INSN.  */
+-rtx
+-function_expander::use_contiguous_load_insn (insn_code icode)
++int
++function_expander::prepare_contiguous_load_insn ()
+ {
+   gcc_assert (call_expr_nargs (exp) > 0);
+   machine_mode mode = TYPE_MODE (TREE_TYPE (exp));
+@@ -4232,10 +4264,19 @@ function_expander::use_contiguous_load_insn (insn_code icode)
+     add_vundef_operand (mode);
+ 
+   add_mem_operand (mode, arg_offset++);
++  return arg_offset;
++}
++
++/* Use contiguous load INSN.  */
++rtx
++function_expander::use_contiguous_load_insn (insn_code icode)
++{
++  int arg_offset = prepare_contiguous_load_insn ();
+ 
+   for (int argno = arg_offset; argno < call_expr_nargs (exp); argno++)
+     add_input_operand (argno);
+ 
++  machine_mode mode = TYPE_MODE (TREE_TYPE (exp));
+   if (GET_MODE_CLASS (mode) != MODE_VECTOR_BOOL)
+     {
+       add_input_operand (Pmode, get_tail_policy_for_pred (pred));
+@@ -4244,10 +4285,58 @@ function_expander::use_contiguous_load_insn (insn_code icode)
+ 
+   if (opno != insn_data[icode].n_generator_args)
+     add_input_operand (Pmode, get_avl_type_rtx (avl_type::NONVLMAX));
+-
+   return generate_insn (icode);
+ }
+ 
++/* Similar to use_contiguous_load_insn but skips the vector-length destination
++   operand that a fault-only-first load intrinsic has.  Then we add tail and
++   mask policy as well as AVL operand.  Last, add the vector-length destination
++   operand that we skipped initially.  */
++rtx
++function_expander::use_fof_load_insn ()
++{
++  int arg_offset = prepare_contiguous_load_insn ();
++
++  int vl_dest_arg = call_expr_nargs (exp) - 2;
++  for (int argno = arg_offset; argno < call_expr_nargs (exp); argno++)
++    {
++      /* Skip argument for VL destination in memory but add the others.  */
++      if (argno != vl_dest_arg)
++	add_input_operand (argno);
++    }
++
++  machine_mode mode = TYPE_MODE (TREE_TYPE (exp));
++  if (GET_MODE_CLASS (mode) != MODE_VECTOR_BOOL)
++    {
++      add_input_operand (Pmode, get_tail_policy_for_pred (pred));
++      add_input_operand (Pmode, get_mask_policy_for_pred (pred));
++    }
++
++  add_input_operand (Pmode, get_avl_type_rtx (avl_type::NONVLMAX));
++
++  tree arg = CALL_EXPR_ARG (exp, vl_dest_arg);
++
++  /* Use a regular FoF load if the user does not want to store VL.  */
++  if (integer_zerop (arg))
++    {
++      insn_code icode = code_for_pred_fault_load (mode);
++      return generate_insn (icode);
++    }
++
++  /* The VL-setting FoF load writes the new VL to VL_REG.
++     Store it to memory.  */
++  rtx vl_reg = gen_reg_rtx (Pmode);
++  add_output_operand (Pmode, vl_reg);
++  insn_code icode = code_for_pred_fault_load_set_vl (mode, Pmode);
++  rtx res = generate_insn (icode);
++
++  rtx addr = expand_normal (arg);
++  rtx mem = gen_rtx_MEM (Pmode, memory_address (Pmode, addr));
++  emit_move_insn (mem, vl_reg);
++
++  return res;
++}
++
+ /* Use contiguous store INSN.  */
+ rtx
+ function_expander::use_contiguous_store_insn (insn_code icode)
+@@ -4390,7 +4479,8 @@ function_expander::use_ternop_insn (bool vd_accum_p, insn_code icode)
  
    /* The RVV floating-point only support dynamic rounding mode in the
       FRM register.  */
@@ -10395,7 +11353,7 @@ new file mode 100644
      add_input_operand (Pmode, gen_int_mode (riscv_vector::FRM_DYN, Pmode));
  
    return generate_insn (icode);
-@@ -4431,7 +4465,8 @@ function_expander::use_widen_ternop_insn (insn_code icode)
+@@ -4431,7 +4521,8 @@ function_expander::use_widen_ternop_insn (insn_code icode)
  
    /* The RVV floating-point only support dynamic rounding mode in the
       FRM register.  */
@@ -10405,7 +11363,7 @@ new file mode 100644
      add_input_operand (Pmode, gen_int_mode (riscv_vector::FRM_DYN, Pmode));
  
    return generate_insn (icode);
-@@ -4695,28 +4730,15 @@ builtin_type_p (const_tree type)
+@@ -4695,28 +4786,15 @@ builtin_type_p (const_tree type)
  void
  init_builtins ()
  {
@@ -10441,7 +11399,7 @@ new file mode 100644
  }
  
  /* Implement TARGET_VERIFY_TYPE_CONTEXT for RVV types.  */
-@@ -4882,10 +4904,7 @@ handle_pragma_vector ()
+@@ -4882,10 +4960,7 @@ handle_pragma_vector ()
    function_table = new hash_table<registered_function_hasher> (1023);
    function_builder builder;
    for (unsigned int i = 0; i < ARRAY_SIZE (function_groups); ++i)
@@ -10486,9 +11444,107 @@ new file mode 100644
  /* A class for folding a gimple function call.  */
  class gimple_folder : public function_call_info
  {
+@@ -521,7 +513,9 @@ public:
+   machine_mode ret_mode (void) const;
+ 
+   rtx use_exact_insn (insn_code);
++  int prepare_contiguous_load_insn ();
+   rtx use_contiguous_load_insn (insn_code);
++  rtx use_fof_load_insn ();
+   rtx use_contiguous_store_insn (insn_code);
+   rtx use_compare_insn (rtx_code, insn_code);
+   rtx use_ternop_insn (bool, insn_code);
 --- a/src/gcc/config/riscv/riscv-vsetvl.cc
 +++ b/src/gcc/config/riscv/riscv-vsetvl.cc
-@@ -1178,7 +1178,7 @@ public:
+@@ -294,6 +294,87 @@ fault_first_load_p (rtx_insn *rinsn)
+ 	     || get_attr_type (rinsn) == TYPE_VLSEGDFF);
+ }
+ 
++/* Return the VL output register from a fault-only-first load with VL
++   output (pred_fault_load_set_vl pattern) if RINSN is such an insn
++   or NULL_RTX otherwise.
++   The pattern has: (set vl_output (unspec:P [(reg:SI VL_REGNUM)]
++					     UNSPEC_READ_VL))  */
++static rtx
++get_fof_set_vl_reg (rtx_insn *rinsn)
++{
++  if (!fault_first_load_p (rinsn))
++    return NULL_RTX;
++
++  rtx pat = PATTERN (rinsn);
++  if (GET_CODE (pat) != PARALLEL)
++    return NULL_RTX;
++
++  if (XVECLEN (pat, 0) != 3)
++    return NULL_RTX;
++
++  rtx sub = XVECEXP (pat, 0, 2);
++  if (GET_CODE (sub) == SET
++      && GET_CODE (SET_SRC (sub)) == UNSPEC
++      && XINT (SET_SRC (sub), 1) == UNSPEC_READ_VL)
++    return SET_DEST (sub);
++
++  return NULL_RTX;
++}
++
++/* Initialize RTL SSA and related infrastructure for vsetvl analysis.  */
++static void
++init_rtl_ssa ()
++{
++  calculate_dominance_info (CDI_DOMINATORS);
++  loop_optimizer_init (AVOID_CFG_MODIFICATIONS);
++  connect_infinite_loops_to_exit ();
++  df_analyze ();
++  crtl->ssa = new function_info (cfun);
++}
++
++/* Finalize RTL SSA and cleanup.  */
++static void
++finish_rtl_ssa ()
++{
++  free_dominance_info (CDI_DOMINATORS);
++  loop_optimizer_finalize ();
++  if (crtl->ssa->perform_pending_updates ())
++    cleanup_cfg (0);
++  delete crtl->ssa;
++  crtl->ssa = nullptr;
++}
++
++/* Emit read_vl instructions after fault-only-first loads that have
++   a VL output register.
++   This needs to happen last, i.e. when we made the VL dataflow
++   explicit by inserting vsetvls.  */
++
++static void
++emit_fof_read_vls ()
++{
++  basic_block bb;
++  rtx_insn *rinsn;
++
++  FOR_EACH_BB_FN (bb, cfun)
++    FOR_BB_INSNS (bb, rinsn)
++      {
++	if (!NONDEBUG_INSN_P (rinsn))
++	  continue;
++
++	rtx vl_dest = get_fof_set_vl_reg (rinsn);
++	if (!vl_dest)
++	  continue;
++
++	if (dump_file)
++	  fprintf (dump_file,
++		   "  Inserting read_vl after FoF insn %d into r%d\n",
++		   INSN_UID (rinsn), REGNO (vl_dest));
++
++	rtx read_vl_pat = gen_read_vl (Pmode, vl_dest);
++	emit_insn_after (read_vl_pat, rinsn);
++      }
++}
++
+ /* Return true if the instruction is read vl instruction.  */
+ static bool
+ read_vl_insn_p (rtx_insn *rinsn)
+@@ -1178,7 +1259,7 @@ public:
      if (fault_first_load_p (insn->rtl ()))
        {
  	for (insn_info *i = insn->next_nondebug_insn ();
@@ -10497,6 +11553,75 @@ new file mode 100644
  	  {
  	    if (find_access (i->defs (), VL_REGNUM))
  	      break;
+@@ -1188,6 +1269,13 @@ public:
+ 		break;
+ 	      }
+ 	  }
++	/* If no csrr found but this is a _set_vl style fault-only-first
++	   load, use the insn itself as the VL source.
++	   If we have two identical vector configs that just differ in
++	   AVL and the AVL is just "modified" by a read_vl we
++	   can consider them equal and elide the second one.  */
++	if (!m_read_vl_insn && get_fof_set_vl_reg (insn->rtl ()))
++	  m_read_vl_insn = insn;
+       }
+   }
+ 
+@@ -2422,13 +2510,7 @@ public:
+       m_avin (nullptr), m_avout (nullptr), m_kill (nullptr), m_antloc (nullptr),
+       m_transp (nullptr), m_insert (nullptr), m_del (nullptr), m_edges (nullptr)
+   {
+-    /* Initialization of RTL_SSA.  */
+-    calculate_dominance_info (CDI_DOMINATORS);
+-    loop_optimizer_init (LOOPS_NORMAL);
+-    /* Create FAKE edges for infinite loops.  */
+-    connect_infinite_loops_to_exit ();
+-    df_analyze ();
+-    crtl->ssa = new function_info (cfun);
++    init_rtl_ssa ();
+     m_vector_block_infos.safe_grow_cleared (last_basic_block_for_fn (cfun));
+     compute_probabilities ();
+     m_unknown_info.set_unknown ();
+@@ -2436,12 +2518,7 @@ public:
+ 
+   void finish ()
+   {
+-    free_dominance_info (CDI_DOMINATORS);
+-    loop_optimizer_finalize ();
+-    if (crtl->ssa->perform_pending_updates ())
+-      cleanup_cfg (0);
+-    delete crtl->ssa;
+-    crtl->ssa = nullptr;
++    finish_rtl_ssa ();
+ 
+     if (m_reg_def_loc)
+       sbitmap_vector_free (m_reg_def_loc);
+@@ -3612,6 +3689,11 @@ pass_vsetvl::simple_vsetvl ()
+ 	    }
+ 	}
+     }
++
++  if (dump_file)
++    fprintf (dump_file, "\nEmit missing read_vl()s for fault-only-first "
++	     "loads\n");
++  emit_fof_read_vls ();
+ }
+ 
+ /* Lazy vsetvl insertion for optimize > 0. */
+@@ -3660,6 +3742,13 @@ pass_vsetvl::lazy_vsetvl ()
+ 	     "\nPhase 4: Insert, modify and remove vsetvl insns.\n\n");
+   pre.emit_vsetvl ();
+ 
++  /* Phase 4b: Emit read_vl for fault-only-first loads with VL output
++     register.  */
++  if (dump_file)
++    fprintf (dump_file, "\nPhase 4b: Emit missing read_vl()s for "
++	     "fault-only-first loads\n");
++  emit_fof_read_vls ();
++
+   /* Phase 5: Cleanup */
+   if (dump_file)
+     fprintf (dump_file, "\nPhase 5: Cleanup\n\n");
 --- a/src/gcc/config/riscv/riscv.cc
 +++ b/src/gcc/config/riscv/riscv.cc
 @@ -1007,16 +1007,16 @@ riscv_build_integer_1 (struct riscv_integer_op codes[RISCV_MAX_INTEGER_OPS],
@@ -10544,7 +11669,16 @@ new file mode 100644
    *offset = 1;
    return RISCV_DWARF_VLENB;
  }
-@@ -13008,7 +13017,7 @@ riscv_expand_ustrunc (rtx dest, rtx src)
+@@ -12633,8 +12642,6 @@ extract_base_offset_in_addr (rtx mem, rtx *base, rtx *offset)
+ static bool
+ riscv_vector_mode_supported_any_target_p (machine_mode)
+ {
+-  if (TARGET_XTHEADVECTOR)
+-    return false;
+   return true;
+ }
+ 
+@@ -13008,7 +13015,7 @@ riscv_expand_ustrunc (rtx dest, rtx src)
    gcc_assert (precision < 64);
  
    uint64_t max = ((uint64_t)1u << precision) - 1u;
@@ -10681,8 +11815,29 @@ new file mode 100644
  
  ;; vaeskf1.vi vsm4k.vi
  (define_insn "@pred_crypto_vi<vi_ins_name><mode>_scalar"
+--- a/src/gcc/config/riscv/vector-iterators.md
++++ b/src/gcc/config/riscv/vector-iterators.md
+@@ -79,6 +79,7 @@ (define_c_enum "unspec" [
+   UNSPEC_VCOMPRESS
+   UNSPEC_VLEFF
+   UNSPEC_MODIFY_VL
++  UNSPEC_READ_VL
+ 
+   UNSPEC_VFFMA
+ 
 --- a/src/gcc/config/riscv/vector.md
 +++ b/src/gcc/config/riscv/vector.md
+@@ -491,8 +491,8 @@ (define_attr "ratio" ""
+ 			  vaeskf1,vaeskf2,vaesz,vsha2ms,vsha2ch,vsha2cl,vsm4k,vsm4r,\
+ 			  vsm3me,vsm3c,vfncvtbf16,vfwcvtbf16,vfwmaccbf16")
+ 	   (const_int INVALID_ATTRIBUTE)
+-	(and (eq_attr "type" "vlde,vste,vlsegde,vssegte,vlsegds,vssegts,\
+-			       vlsegdff,vssegtux,vlsegdox,vlsegdux")
++	(and (eq_attr "type" "vlde,vste,vlds,vsts,vlsegde,vssegte,vlsegds,\
++			      vssegts,vlsegdff,vssegtux,vlsegdox,vlsegdux")
+ 	      (match_test "TARGET_XTHEADVECTOR"))
+ 	   (const_int INVALID_ATTRIBUTE)
+ 	 (eq_attr "mode" "RVVM8QI,RVVM1BI") (const_int 1)
 @@ -1412,6 +1412,7 @@ (define_insn_and_split "*mov<VT:mode>_<P:mode>"
    }
    [(set_attr "type" "vmov,vlde,vste")
@@ -10771,7 +11926,70 @@ new file mode 100644
     (set_attr "mode" "<MODE>")])
  
  (define_insn "@pred_<sat_op><mode>_scalar"
-@@ -8449,7 +8460,7 @@ (define_insn "@pred_fault_load<mode>"
+@@ -8307,21 +8318,13 @@ (define_insn "@pred_compress<mode>"
+ ;; - 7.7. Unit-stride Fault-Only-First Loads
+ ;; -------------------------------------------------------------------------------
+ 
+-(define_insn "read_vlsi"
+-  [(set (match_operand:SI 0 "register_operand" "=r")
+-	(reg:SI VL_REGNUM))]
++(define_insn "@read_vl<mode>"
++  [(set (match_operand:P 0 "register_operand" "=r")
++	(unspec:P [(reg:SI VL_REGNUM)] UNSPEC_READ_VL))]
+   "TARGET_VECTOR"
+   "csrr\t%0,vl"
+   [(set_attr "type" "rdvl")
+-   (set_attr "mode" "SI")])
+-
+-(define_insn "read_vldi_zero_extend"
+-  [(set (match_operand:DI 0 "register_operand" "=r")
+-	(zero_extend:DI (reg:SI VL_REGNUM)))]
+-  "TARGET_VECTOR && TARGET_64BIT"
+-  "csrr\t%0,vl"
+-  [(set_attr "type" "rdvl")
+-   (set_attr "mode" "DI")])
++   (set_attr "mode" "<MODE>")])
+ 
+ (define_insn "@pred_fault_load<mode>"
+   [(set (match_operand:V 0 "register_operand"              "=vd,    vd,    vr,    vr")
+@@ -8351,6 +8354,36 @@ (define_insn "@pred_fault_load<mode>"
+   [(set_attr "type" "vldff")
+    (set_attr "mode" "<MODE>")])
+ 
++(define_insn "@pred_fault_load_set_vl<V_VLS:mode><P:mode>"
++  [(set (match_operand:V_VLS 0 "register_operand"	       "=  vd,    vd,    vr,    vr")
++	(if_then_else:V_VLS
++	  (unspec:<V_VLS:VM>
++	    [(match_operand:<V_VLS:VM> 1 "vector_mask_operand" "   vm,    vm,   Wc1,   Wc1")
++	     (match_operand 4 "vector_length_operand"          "  rvl,   rvl,   rvl,   rvl")
++	     (match_operand 5 "const_int_operand"              "    i,     i,     i,     i")
++	     (match_operand 6 "const_int_operand"              "    i,     i,     i,     i")
++	     (match_operand 7 "const_int_operand"              "    i,     i,     i,     i")
++	     (reg:SI VL_REGNUM)
++	     (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
++	  (unspec:V_VLS
++	    [(match_operand:V_VLS 3 "memory_operand"           "    m,     m,     m,     m")] UNSPEC_VLEFF)
++	  (match_operand:V_VLS 2 "vector_merge_operand"        "   vu,     0,    vu,     0")))
++   (set (reg:SI VL_REGNUM)
++	  (unspec:SI
++	    [(if_then_else:V_VLS
++	       (unspec:<V_VLS:VM>
++		[(match_dup 1) (match_dup 4) (match_dup 5)
++		 (match_dup 6) (match_dup 7)
++		 (reg:SI VL_REGNUM) (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
++	       (unspec:V_VLS [(match_dup 3)] UNSPEC_VLEFF)
++	       (match_dup 2))] UNSPEC_MODIFY_VL))
++   (set (match_operand:P 8 "register_operand"		       "=   r,     r,     r,     r")
++	(unspec:P [(reg:SI VL_REGNUM)] UNSPEC_READ_VL))]
++  "TARGET_VECTOR"
++  "vle<sew>ff.v\t%0,%3%p1"
++  [(set_attr "type" "vldff")
++   (set_attr "mode" "<V_VLS:MODE>")])
++
+ 
+ ;; -------------------------------------------------------------------------------
+ ;; ---- Predicated Segment loads/stores
+@@ -8449,7 +8482,7 @@ (define_insn "@pred_fault_load<mode>"
  	     (reg:SI VL_REGNUM)
  	     (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
  	  (unspec:VT
@@ -10780,7 +11998,7 @@ new file mode 100644
  	     (mem:BLK (scratch))] UNSPEC_VLEFF)
  	  (match_operand:VT 2 "vector_merge_operand"     "    0,    vu,    vu")))
     (set (reg:SI VL_REGNUM)
-@@ -8464,7 +8475,7 @@ (define_insn "@pred_fault_load<mode>"
+@@ -8464,10 +8497,43 @@ (define_insn "@pred_fault_load<mode>"
  	        [(match_dup 3) (mem:BLK (scratch))] UNSPEC_VLEFF)
  	     (match_dup 2))] UNSPEC_MODIFY_VL))]
    "TARGET_VECTOR"
@@ -10789,6 +12007,42 @@ new file mode 100644
    [(set_attr "type" "vlsegdff")
     (set_attr "mode" "<MODE>")])
  
++(define_insn "@pred_fault_load_set_vl<VT:mode><P:mode>"
++  [(set (match_operand:VT 0 "register_operand"              "=  vr,    vr,    vd")
++	(if_then_else:VT
++	  (unspec:<VT:VM>
++	    [(match_operand:<VT:VM> 1 "vector_mask_operand" "vmWc1,   Wc1,    vm")
++	     (match_operand 4 "vector_length_operand"       "  rvl,   rvl,   rvl")
++	     (match_operand 5 "const_int_operand"           "    i,     i,     i")
++	     (match_operand 6 "const_int_operand"           "    i,     i,     i")
++	     (match_operand 7 "const_int_operand"           "    i,     i,     i")
++	     (reg:SI VL_REGNUM)
++	     (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
++	  (unspec:VT
++	    [(match_operand:VT 3 "memory_operand"	    "    m,     m,     m")
++	     (mem:BLK (scratch))] UNSPEC_VLEFF)
++	  (match_operand:VT 2 "vector_merge_operand"        "    0,    vu,    vu")))
++   (set (reg:SI VL_REGNUM)
++        (unspec:SI
++          [(if_then_else:VT
++	     (unspec:<VT:VM>
++	       [(match_dup 1) (match_dup 4) (match_dup 5)
++	        (match_dup 6) (match_dup 7)
++	        (reg:SI VL_REGNUM)
++	        (reg:SI VTYPE_REGNUM)] UNSPEC_VPREDICATE)
++	     (unspec:VT
++	        [(match_dup 3) (mem:BLK (scratch))] UNSPEC_VLEFF)
++	     (match_dup 2))] UNSPEC_MODIFY_VL))
++   (set (match_operand:P 8 "register_operand"		    "=   r,     r,     r")
++	(unspec:P [(reg:SI VL_REGNUM)] UNSPEC_READ_VL))]
++  "TARGET_VECTOR"
++  "vlseg<nf>e<sew>ff.v\t%0,%3%p1"
++  [(set_attr "type" "vlsegdff")
++   (set_attr "mode" "<VT:MODE>")])
++
+ (define_insn "@pred_indexed_<order>load<V1T:mode><RATIO64I:mode>"
+   [(set (match_operand:V1T 0 "register_operand"           "=&vr,  &vr")
+ 	(if_then_else:V1T
 --- a/src/gcc/config/rs6000/aix.h
 +++ b/src/gcc/config/rs6000/aix.h
 @@ -281,4 +281,6 @@
@@ -10813,9 +12067,47 @@ new file mode 100644
    DONE;
  })
  
+--- a/src/gcc/config/s390/vector.md
++++ b/src/gcc/config/s390/vector.md
+@@ -2181,7 +2181,7 @@ (define_insn_and_split "*vec_cmpgtu<mode><mode>_nocc_emu"
+   [(set (match_operand:VI_HW_T              0 "register_operand" "=v")
+ 	(gtu:VI_HW_T (match_operand:VI_HW_T 1 "register_operand"  "v")
+ 		     (match_operand:VI_HW_T 2 "register_operand"  "v")))]
+-  "TARGET_VX"
++  "TARGET_VX && !TARGET_VXE3"
+   "#"
+   "&& can_create_pseudo_p ()"
+   [(set (match_dup 3)
 --- a/src/gcc/cp/ChangeLog
 +++ b/src/gcc/cp/ChangeLog
-@@ -1,3 +1,451 @@
+@@ -1,3 +1,478 @@
++2026-02-19  Patrick Palka  <ppalka@redhat.com>
++
++	Backported from master:
++	2026-02-12  Patrick Palka  <ppalka@redhat.com>
++
++	PR c++/123989
++	* cp-gimplify.cc (cp_gimplify_expr) <case CALL_EXPR>: Evaluate
++	the object argument of an xobj memfn call first too.
++
++2026-02-17  Patrick Palka  <ppalka@redhat.com>
++
++	Backported from master:
++	2026-02-17  Patrick Palka  <ppalka@redhat.com>
++
++	PR c++/121822
++	* cvt.cc (convert_to_void): Don't evaluate a concept-id
++	in an unevaluated context.
++
++2026-02-17  Patrick Palka  <ppalka@redhat.com>
++
++	Backported from master:
++	2026-02-17  Patrick Palka  <ppalka@redhat.com>
++
++	PR c++/122318
++	PR c++/101670
++	* pt.cc (unify) <default>: Accept LAMBDA_EXPR.
++
 +2026-02-05  Patrick Palka  <ppalka@redhat.com>
 +
 +	Backported from master:
@@ -11424,6 +12716,25 @@ new file mode 100644
    auto_vec<tree, 16> cleanups;
    global_ctx.cleanups = &cleanups;
  
+--- a/src/gcc/cp/cp-gimplify.cc
++++ b/src/gcc/cp/cp-gimplify.cc
+@@ -845,7 +845,15 @@ cp_gimplify_expr (tree *expr_p, gimple_seq *pre_p, gimple_seq *post_p)
+ 	  tree fntype = TREE_TYPE (CALL_EXPR_FN (*expr_p));
+ 	  if (INDIRECT_TYPE_P (fntype))
+ 	    fntype = TREE_TYPE (fntype);
+-	  if (TREE_CODE (fntype) == METHOD_TYPE)
++	  tree decl = cp_get_callee_fndecl_nofold (*expr_p);
++	  /* We can't just rely on 'decl' because virtual function callees
++	     are expressed as OBJ_TYPE_REF.  Note that the xobj memfn check
++	     will also hold for calls of the form (&A::f)(a, ...) which does
++	     not require such sequencing, though it's allowed under
++	     "indeterminately sequenced".  */
++	  if (TREE_CODE (fntype) == METHOD_TYPE
++	      || (decl && DECL_LANG_SPECIFIC (decl)
++		  && DECL_XOBJ_MEMBER_FUNCTION_P (decl)))
+ 	    {
+ 	      int nargs = call_expr_nargs (*expr_p);
+ 	      bool side_effects = false;
 --- a/src/gcc/cp/cp-tree.h
 +++ b/src/gcc/cp/cp-tree.h
 @@ -7663,6 +7663,7 @@ extern tree make_constrained_auto		(tree, tree);
@@ -11434,6 +12745,17 @@ new file mode 100644
  extern bool template_placeholder_p		(tree);
  extern bool ctad_template_p			(tree);
  extern bool unparenthesized_id_or_class_member_access_p (tree);
+--- a/src/gcc/cp/cvt.cc
++++ b/src/gcc/cp/cvt.cc
+@@ -1204,7 +1204,7 @@ convert_to_void (tree expr, impl_conv_void implicit, tsubst_flags_t complain)
+ 
+   /* Explicitly evaluate void-converted concept checks since their
+      satisfaction may produce ill-formed programs.  */
+-   if (concept_check_p (expr))
++   if (concept_check_p (expr) && !cp_unevaluated_operand)
+      expr = evaluate_concept_check (expr);
+ 
+   if (VOID_TYPE_P (TREE_TYPE (expr)))
 --- a/src/gcc/cp/decl.cc
 +++ b/src/gcc/cp/decl.cc
 @@ -1012,6 +1012,7 @@ member_like_constrained_friend_p (tree decl)
@@ -12236,7 +13558,15 @@ new file mode 100644
        return unify_success (explain_p);
  
      case ERROR_MARK:
-@@ -28721,7 +28762,16 @@ dependent_scope_p (tree scope)
+@@ -25998,6 +26039,7 @@ unify (tree tparms, tree targs, tree parm, tree arg, int strict,
+ 	return unify_success (explain_p);
+       gcc_assert (EXPR_P (parm)
+ 		  || TREE_CODE (parm) == CONSTRUCTOR
++		  || TREE_CODE (parm) == LAMBDA_EXPR
+ 		  || TREE_CODE (parm) == TRAIT_EXPR);
+     expr:
+       /* We must be looking at an expression.  This can happen with
+@@ -28721,7 +28763,16 @@ dependent_scope_p (tree scope)
  bool
  dependentish_scope_p (tree scope)
  {
@@ -12254,7 +13584,7 @@ new file mode 100644
  }
  
  /* T is a SCOPE_REF.  Return whether it represents a non-static member of
-@@ -30120,6 +30170,18 @@ make_constrained_decltype_auto (tree con, tree args)
+@@ -30120,6 +30171,18 @@ make_constrained_decltype_auto (tree con, tree args)
    return make_constrained_placeholder_type (type, con, args);
  }
  
@@ -12273,7 +13603,7 @@ new file mode 100644
  /* Returns true if the placeholder type constraint T has any dependent
     (explicit) template arguments.  */
  
-@@ -31240,7 +31302,11 @@ type_targs_deducible_from (tree tmpl, tree type)
+@@ -31240,7 +31303,11 @@ type_targs_deducible_from (tree tmpl, tree type)
  	 per alias_ctad_tweaks.  */
        tparms = INNERMOST_TEMPLATE_PARMS (TREE_PURPOSE (tmpl));
        ttype = TREE_VALUE (tmpl);
@@ -12450,7 +13780,16 @@ new file mode 100644
       representable double and second double is subnormal minimum.
 --- a/src/gcc/d/ChangeLog
 +++ b/src/gcc/d/ChangeLog
-@@ -1,3 +1,99 @@
+@@ -1,3 +1,108 @@
++2026-02-08  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	Backported from master:
++	2026-02-08  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	PR d/124026
++	* expr.cc (ExprVisitor::visit (FuncExp *)): Always convert function
++	literal to a delegate if the expression expects one.
++
 +2026-01-30  Iain Buclaw  <ibuclaw@gdcproject.org>
 +
 +	Backported from master:
@@ -12770,7 +14109,49 @@ new file mode 100644
  
 --- a/src/gcc/d/expr.cc
 +++ b/src/gcc/d/expr.cc
-@@ -2174,7 +2174,7 @@ public:
+@@ -2034,27 +2034,31 @@ public:
+     /* Compile the declaration.  */
+     build_lambda_tree (e->fd, e->type->toBasetype ());
+ 
+-    /* If nested, this will be a trampoline.  */
+-    if (e->fd->isNested ())
+-      {
+-	tree func = build_address (get_symbol_decl (e->fd));
+-	tree object;
++    tree func = build_address (get_symbol_decl (e->fd));
++    Type *tb = e->type->toBasetype ();
+ 
+-	if (this->constp_)
++    /* If a delegate is expected, the literal will be inferred as a delegate
++       even if it accesses no variables from an enclosing function.  */
++    if (tb->ty == TY::Tdelegate)
++      {
++	/* Static delegate variables have no context pointer.  */
++	if (this->constp_ || !e->fd->isNested ())
+ 	  {
+-	    /* Static delegate variables have no context pointer.  */
+-	    object = null_pointer_node;
+-	    this->result_ = build_method_call (func, object, e->fd->type);
++	    this->result_ = build_method_call (func, null_pointer_node,
++					       e->fd->type);
+ 	    TREE_CONSTANT (this->result_) = 1;
+ 	  }
+ 	else
+ 	  {
+-	    object = get_frame_for_symbol (e->fd);
++	    gcc_assert (e->fd->isNested ());
++	    tree object = get_frame_for_symbol (e->fd);
+ 	    this->result_ = build_method_call (func, object, e->fd->type);
+ 	  }
+       }
+     else
+       {
++	/* The function literal is a function pointer.  */
++	gcc_assert (tb->ty == TY::Tpointer);
+ 	this->result_ = build_nop (build_ctype (e->type),
+ 				   build_address (get_symbol_decl (e->fd)));
+       }
+@@ -2174,7 +2178,7 @@ public:
  	      {
  		/* Generate a slice for non-zero initialized aggregates,
  		   otherwise create an empty array.  */
@@ -12779,7 +14160,7 @@ new file mode 100644
  			    && e->type->nextOf ()->ty == TY::Tvoid);
  
  		tree type = build_ctype (e->type);
-@@ -2708,8 +2708,9 @@ public:
+@@ -2708,8 +2712,9 @@ public:
  	/* Array literal for a `scope' dynamic array.  */
  	gcc_assert (tb->ty == TY::Tarray);
  	ctor = force_target_expr (ctor);
@@ -13212,6 +14593,37 @@ new file mode 100644
  	    if (maybe_ne (GET_MODE_PRECISION (mode), nunits))
  	      tmp = expand_binop (mode, and_optab, tmp,
  				  GEN_INT ((HOST_WIDE_INT_1U << nunits) - 1),
+@@ -12185,13 +12260,26 @@ expand_expr_real_1 (tree exp, rtx target, machine_mode tmode,
+ 	   and need be, put it there.  */
+ 	else if (CONSTANT_P (op0) || (!MEM_P (op0) && must_force_mem))
+ 	  {
++	    machine_mode tem_mode = TYPE_MODE (TREE_TYPE (tem));
+ 	    poly_int64 size;
+ 	    if (!poly_int_tree_p (TYPE_SIZE_UNIT (TREE_TYPE (tem)), &size))
+ 	      size = max_int_size_in_bytes (TREE_TYPE (tem));
+-	    memloc = assign_stack_local (TYPE_MODE (TREE_TYPE (tem)), size,
+-					 TREE_CODE (tem) == SSA_NAME
+-					 ? TYPE_ALIGN (TREE_TYPE (tem))
+-					 : get_object_alignment (tem));
++	    unsigned int align = TREE_CODE (tem) == SSA_NAME
++				 ? TYPE_ALIGN (TREE_TYPE (tem))
++				 : get_object_alignment (tem);
++	    if (STRICT_ALIGNMENT)
++	      {
++		/* For STRICT_ALIGNMENT targets, when we force the operand to
++		   memory, we may need to increase the alignment to meet the
++		   expectation in later RTL lowering passes.  The increased
++		   alignment is capped by MAX_SUPPORTED_STACK_ALIGNMENT.  */
++		if (tem_mode != BLKmode)
++		  align = MAX (align, GET_MODE_ALIGNMENT (tem_mode));
++		else
++		  align = MAX (align, TYPE_ALIGN (TREE_TYPE (tem)));
++		align = MIN (align, (unsigned) MAX_SUPPORTED_STACK_ALIGNMENT);
++	      }
++	    memloc = assign_stack_local (tem_mode, size, align);
+ 	    emit_move_insn (memloc, op0);
+ 	    op0 = memloc;
+ 	    clear_mem_expr = true;
 --- a/src/gcc/fold-const.cc
 +++ b/src/gcc/fold-const.cc
 @@ -86,6 +86,7 @@ along with GCC; see the file COPYING3.  If not see
@@ -13247,7 +14659,16 @@ new file mode 100644
  
 --- a/src/gcc/fortran/ChangeLog
 +++ b/src/gcc/fortran/ChangeLog
-@@ -1,3 +1,120 @@
+@@ -1,3 +1,129 @@
++2026-02-14  Harald Anlauf  <anlauf@gmx.de>
++
++	Backported from master:
++	2026-02-08  Harald Anlauf  <anlauf@gmx.de>
++
++	PR fortran/123961
++	* check.cc (array_check): Extend check to class array functions.
++	* class.cc (gfc_add_class_array_ref): Fix NULL pointer dereference.
++
 +2025-12-16  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
 +
 +	Backported from master:
@@ -13368,6 +14789,29 @@ new file mode 100644
  2025-08-08  Release Manager
  
  	* GCC 15.2.0 released.
+--- a/src/gcc/fortran/check.cc
++++ b/src/gcc/fortran/check.cc
+@@ -832,6 +832,9 @@ array_check (gfc_expr *e, int n)
+   if (e->rank != 0 && e->ts.type != BT_PROCEDURE)
+     return true;
+ 
++  if (gfc_is_class_array_function (e))
++    return true;
++
+   gfc_error ("%qs argument of %qs intrinsic at %L must be an array",
+ 	     gfc_current_intrinsic_arg[n]->name, gfc_current_intrinsic,
+ 	     &e->where);
+--- a/src/gcc/fortran/class.cc
++++ b/src/gcc/fortran/class.cc
+@@ -273,7 +273,7 @@ gfc_add_class_array_ref (gfc_expr *e)
+   for (ref = e->ref; ref; ref = ref->next)
+     if (!ref->next)
+       break;
+-  if (ref->type != REF_ARRAY)
++  if (ref && ref->type != REF_ARRAY)
+     {
+       ref->next = gfc_get_ref ();
+       ref = ref->next;
 --- a/src/gcc/fortran/dependency.cc
 +++ b/src/gcc/fortran/dependency.cc
 @@ -944,12 +944,8 @@ gfc_ref_needs_temporary_p (gfc_ref *ref)
@@ -13665,6 +15109,40 @@ new file mode 100644
    rtx_insn *def_rtl = def_insn->rtl ();
    if (!NONJUMP_INSN_P (def_rtl))
      return false;
+--- a/src/gcc/gcc.cc
++++ b/src/gcc/gcc.cc
+@@ -11092,7 +11092,8 @@ find_fortran_preinclude_file (int argc, const char **argv)
+   return result;
+ }
+ 
+-/* The function takes any number of arguments and joins them together.
++/* The function takes any number of arguments and joins them together,
++   escaping any special characters.
+ 
+    This seems to be necessary to build "-fjoined=foo.b" from "-fseparate foo.a"
+    with a %{fseparate*:-fjoined=%.b$*} rule without adding undesired spaces:
+@@ -11105,12 +11106,15 @@ find_fortran_preinclude_file (int argc, const char **argv)
+ static const char *
+ join_spec_func (int argc, const char **argv)
+ {
+-  if (argc == 1)
+-    return argv[0];
+-  for (int i = 0; i < argc; ++i)
+-    obstack_grow (&obstack, argv[i], strlen (argv[i]));
+-  obstack_1grow (&obstack, '\0');
+-  return XOBFINISH (&obstack, const char *);
++  const char *result = argv[0];
++  if (argc != 1)
++    {
++      for (int i = 0; i < argc; ++i)
++	obstack_grow (&obstack, argv[i], strlen (argv[i]));
++      obstack_1grow (&obstack, '\0');
++      result = XOBFINISH (&obstack, const char *);
++    }
++  return quote_spec (xstrdup (result));
+ }
+ 
+ /* If any character in ORIG fits QUOTE_P (_, P), reallocate the string
 --- a/src/gcc/gimple-isel.cc
 +++ b/src/gcc/gimple-isel.cc
 @@ -101,6 +101,16 @@ gimple_expand_vec_set_extract_expr (struct function *fun,
@@ -14053,6 +15531,24 @@ new file mode 100644
      }
    fprintf (stream, "\n");
  }
+--- a/src/gcc/ipa-cp.cc
++++ b/src/gcc/ipa-cp.cc
+@@ -1368,10 +1368,14 @@ initialize_node_lattices (struct cgraph_node *node)
+       int caller_count = 0;
+       node->call_for_symbol_thunks_and_aliases (count_callers, &caller_count,
+ 						true);
+-      gcc_checking_assert (caller_count > 0);
+       if (caller_count == 1)
+ 	node->call_for_symbol_thunks_and_aliases (set_single_call_flag,
+ 						  NULL, true);
++      else if (caller_count == 0)
++	{
++	  gcc_checking_assert (!opt_for_fn (node->decl, flag_toplevel_reorder));
++	  variable = true;
++	}
+     }
+   else
+     {
 --- a/src/gcc/ipa-modref-tree.cc
 +++ b/src/gcc/ipa-modref-tree.cc
 @@ -59,7 +59,7 @@ modref_access_node::operator == (modref_access_node &a) const
@@ -14114,7 +15610,16 @@ new file mode 100644
        || ! ira_reg_equiv[regno].defined_p
        || ! ira_reg_equiv[regno].profitable_p
        || lra_get_regno_hard_regno (regno) >= 0)
-@@ -2423,14 +2424,15 @@ process_alt_operands (int only_alternative)
+@@ -2216,6 +2217,8 @@ process_alt_operands (int only_alternative)
+   if (only_alternative >= 0)
+     preferred &= ALTERNATIVE_BIT (only_alternative);
+ 
++  bool prefer_memory_p = false;
++ repeat:
+   for (nalt = 0; nalt < n_alternatives; nalt++)
+     {
+       /* Loop over operands for one constraint alternative.  */
+@@ -2423,14 +2426,15 @@ process_alt_operands (int only_alternative)
  			if (curr_static_id->operand[nop].type == OP_INOUT
  			    || curr_static_id->operand[m].type == OP_INOUT)
  			  break;
@@ -14133,7 +15638,59 @@ new file mode 100644
  			  {
  			    rtx nop_reg = *curr_id->operand_loc[nop];
  			    if (SUBREG_P (nop_reg))
-@@ -3335,19 +3337,15 @@ process_alt_operands (int only_alternative)
+@@ -2547,6 +2551,11 @@ process_alt_operands (int only_alternative)
+ 		      || general_constant_p (op)
+ 		      || spilled_pseudo_p (op))
+ 		    win = true;
++		  if (REG_P (op) && prefer_memory_p)
++		    {
++		      badop = false;
++		      offmemok = true;
++		    }
+ 		  cl = GENERAL_REGS;
+ 		  cl_filter = nullptr;
+ 		  goto reg;
+@@ -2663,7 +2672,7 @@ process_alt_operands (int only_alternative)
+ 				   (this_alternative_exclude_start_hard_regs,
+ 				    hard_regno[nop]))))
+ 			win = true;
+-		      else if (hard_regno[nop] < 0)
++		      else if (hard_regno[nop] < 0 && !prefer_memory_p)
+ 			{
+ 			  if (in_class_p (op, this_alternative, NULL))
+ 			    win = true;
+@@ -2765,6 +2774,12 @@ process_alt_operands (int only_alternative)
+ 	    this_alternative_match_win = true;
+ 	  else
+ 	    {
++	      if (prefer_memory_p && offmemok)
++		{
++		  winreg = false;
++		  this_alternative = NO_REGS;
++		}
++
+ 	      int const_to_mem = 0;
+ 	      bool no_regs_p;
+ 
+@@ -3298,6 +3313,17 @@ process_alt_operands (int only_alternative)
+ 	       ira_class_hard_regs_num[all_this_alternative],
+ 	       all_used_nregs, all_reload_nregs);
+ 	  overall += LRA_MAX_REJECT;
++	  if (!prefer_memory_p && INSN_CODE (curr_insn) < 0)
++	    {
++	      /* asm can permit memory and reg and can be not enough regs for
++		 asm -- try now memory: */
++	      prefer_memory_p = true;
++	      if (lra_dump_file != NULL)
++		fprintf
++		  (lra_dump_file,
++		   "            Trying now memory for operands\n");
++	      goto repeat;
++	    }
+ 	}
+       ok_p = true;
+       curr_alt_dont_inherit_ops_num = 0;
+@@ -3335,19 +3361,15 @@ process_alt_operands (int only_alternative)
  		  first_conflict_j = j;
  		last_conflict_j = j;
  		/* Both the earlyclobber operand and conflicting operand
@@ -14157,7 +15714,7 @@ new file mode 100644
  	      }
  	  if (last_conflict_j < 0)
  	    continue;
-@@ -3937,6 +3935,16 @@ process_address_1 (int nop, bool check_only_p,
+@@ -3937,6 +3959,16 @@ process_address_1 (int nop, bool check_only_p,
        enum reg_class cl;
        rtx set;
        rtx_insn *insns, *last_insn;
@@ -14174,7 +15731,7 @@ new file mode 100644
        /* Try to reload base into register only if the base is invalid
           for the address but with valid offset, case (4) above.  */
        start_sequence ();
-@@ -3982,8 +3990,6 @@ process_address_1 (int nop, bool check_only_p,
+@@ -3982,8 +4014,6 @@ process_address_1 (int nop, bool check_only_p,
  	    {
  	      *ad.base_term = XEXP (SET_SRC (set), 0);
  	      *ad.disp_term = XEXP (SET_SRC (set), 1);
@@ -14183,7 +15740,7 @@ new file mode 100644
  	      regno = REGNO (*ad.base_term);
  	      if (regno >= FIRST_PSEUDO_REGISTER
  		  && cl != lra_get_allocno_class (regno))
-@@ -4026,11 +4032,11 @@ process_address_1 (int nop, bool check_only_p,
+@@ -4026,11 +4056,11 @@ process_address_1 (int nop, bool check_only_p,
      }
    else
      {
@@ -14200,7 +15757,7 @@ new file mode 100644
        new_reg = lra_create_new_reg (Pmode, NULL_RTX, cl, NULL, "addr");
        /* addr => new_base.  */
        lra_emit_move (new_reg, addr);
-@@ -4052,14 +4058,21 @@ process_address (int nop, bool check_only_p,
+@@ -4052,14 +4082,21 @@ process_address (int nop, bool check_only_p,
  		 rtx_insn **before, rtx_insn **after)
  {
    bool res = false;
@@ -14228,7 +15785,7 @@ new file mode 100644
  }
  
  /* Override the generic address_reload_context in order to
-@@ -5380,6 +5393,10 @@ lra_constraints (bool first_p)
+@@ -5380,6 +5417,10 @@ lra_constraints (bool first_p)
       some pseudos during elimination.  */
    lra_eliminate (false, first_p);
    auto_bitmap equiv_insn_bitmap (&reg_obstack);
@@ -14239,7 +15796,7 @@ new file mode 100644
    for (i = FIRST_PSEUDO_REGISTER; i < new_regno_start; i++)
      if (lra_reg_info[i].nrefs != 0)
        {
-@@ -5578,6 +5595,7 @@ lra_constraints (bool first_p)
+@@ -5578,6 +5619,7 @@ lra_constraints (bool first_p)
  		   && loc_equivalence_change_p (&PATTERN (curr_insn)))
  	    {
  	      lra_update_insn_regno_info (curr_insn);
@@ -14612,6 +16169,23 @@ new file mode 100644
  	   && !HONOR_SNANS (type)
  	   && !HONOR_SIGNED_ZEROS (type))
  	{ elt; }))))
+--- a/src/gcc/modulo-sched.cc
++++ b/src/gcc/modulo-sched.cc
+@@ -356,7 +356,13 @@ doloop_register_get (rtx_insn *head, rtx_insn *tail)
+     reg = XEXP (condition, 0);
+   else if (GET_CODE (XEXP (condition, 0)) == PLUS
+ 	   && REG_P (XEXP (XEXP (condition, 0), 0)))
+-    reg = XEXP (XEXP (condition, 0), 0);
++    {
++      if (CONST_INT_P (XEXP (condition, 1))
++	  && INTVAL (XEXP (condition, 1)) == -1)
++	reg = XEXP (XEXP (condition, 0), 0);
++      else
++	return NULL_RTX;
++    }
+   else
+     gcc_unreachable ();
+ 
 --- a/src/gcc/omp-expand.cc
 +++ b/src/gcc/omp-expand.cc
 @@ -1895,6 +1895,7 @@ expand_omp_for_init_counts (struct omp_for_data *fd, gimple_stmt_iterator *gsi,
@@ -715813,7 +717387,223 @@ new file mode 100644
  # include <new>
 --- a/src/gcc/testsuite/ChangeLog
 +++ b/src/gcc/testsuite/ChangeLog
-@@ -1,3 +1,2198 @@
+@@ -1,3 +1,2414 @@
++2026-02-22  Nathaniel Shead  <nathanieloshead@gmail.com>
++
++	Backported from master:
++	2026-02-22  Nathaniel Shead  <nathanieloshead@gmail.com>
++
++	PR c++/124153
++	* g++.dg/modules/cpp-22.C: New test.
++
++2026-02-19  Patrick Palka  <ppalka@redhat.com>
++
++	Backported from master:
++	2026-02-12  Patrick Palka  <ppalka@redhat.com>
++
++	PR c++/123989
++	* g++.dg/cpp23/explicit-obj-eval-order.C: New test.
++
++2026-02-19  Vladimir N. Makarov  <vmakarov@redhat.com>
++
++	PR target/121571
++	* gcc.target/i386/pr121571.c: New.
++
++2026-02-18  Alexandre Oliva  <oliva@adacore.com>
++
++	Backported from master:
++	2026-01-21  Alexandre Oliva  <oliva@adacore.com>
++
++	* gcc.target/arm/simd/bf16_vstn_1.c: Adjust expectations for
++	code improved by late-combine.
++
++2026-02-18  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
++
++	Backported from master:
++	2026-02-18  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
++
++	* gcc.target/arm/aes-fuse-1.c: Use effective-target
++	arm_cpu_cortex_a53.
++	* gcc.target/arm/aes-fuse-2.c: Likewise.
++	* lib/target-supports.exp: Define effective-target
++	arm_cpu_cortex_a53.
++
++2026-02-18  Richard Earnshaw  <rearnsha@arm.com>
++
++	Backported from master:
++	2026-02-17  Richard Earnshaw  <rearnsha@arm.com>
++
++	PR target/124134
++	* gcc.target/arm/pr124134.c: New test.
++
++2026-02-17  Patrick Palka  <ppalka@redhat.com>
++
++	Backported from master:
++	2026-02-17  Patrick Palka  <ppalka@redhat.com>
++
++	PR c++/121822
++	* g++.dg/cpp2a/concepts-decltype6.C: New test.
++
++2026-02-17  Patrick Palka  <ppalka@redhat.com>
++
++	Backported from master:
++	2026-02-17  Patrick Palka  <ppalka@redhat.com>
++
++	PR c++/122318
++	PR c++/101670
++	* g++.dg/cpp2a/lambda-targ20.C: New test.
++	* g++.dg/cpp2a/lambda-targ21.C: New test.
++
++2026-02-17  Alexandre Oliva  <oliva@adacore.com>
++
++	* gcc.target/arm/bfloat16_simd_1_2.c: Add -mcpu=unset.
++	* gcc.target/arm/bfloat16_simd_2_2.c: Likewise.
++	* gcc.target/arm/bfloat16_simd_3_2.c: Likewise.
++	* gcc.dg/torture/pr120347.c: Likewise.  Add +fp to -march.
++
++2026-02-17  Alex Coplan  <alex.coplan@arm.com>
++
++	Backported from master:
++	2026-01-30  Alex Coplan  <alex.coplan@arm.com>
++
++	PR target/123206
++	* gcc.target/aarch64/pr123206.c: New test.
++
++2026-02-16  Martin Jambor  <mjambor@suse.cz>
++
++	Backported from master:
++	2026-02-09  Martin Jambor  <mjambor@suse.cz>
++
++	PR tree-optimization/117217
++	* g++.dg/torture/pr117217-1.C: New test.
++	* g++.dg/torture/pr117217-2.C: Likewise.
++
++2026-02-16  Martin Jambor  <mjambor@suse.cz>
++
++	Backported from master:
++	2026-02-06  Martin Jambor  <mjambor@suse.cz>
++
++	PR ipa/106260
++	* g++.dg/ipa/pr106260.C: New test.
++
++2026-02-16  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	Backported from master:
++	2026-02-05  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	PR target/123910
++	* gcc.target/riscv/rvv/autovec/pr123910.c: New test.
++	* gcc.target/riscv/rvv/xtheadvector/pr114194-rv32.c: xfail.
++
++2026-02-16  Eric Botcazou  <ebotcazou@adacore.com>
++
++	* gnat.dg/subpools2.adb: New test.
++
++2026-02-14  Harald Anlauf  <anlauf@gmx.de>
++
++	Backported from master:
++	2026-02-08  Harald Anlauf  <anlauf@gmx.de>
++
++	PR fortran/123961
++	* gfortran.dg/class_array_24.f90: New test.
++
++2026-02-12  Pengfei Li  <Pengfei.Li2@arm.com>
++
++	PR middle-end/123447
++	* gcc.dg/pr123447.c: New test.
++
++2026-02-11  Alice Carlotti  <alice.carlotti@arm.com>
++
++	PR target/123624
++	* gcc.target/aarch64/sme/sme-shrinkwrap.c: New test.
++
++2026-02-11  Eric Botcazou  <ebotcazou@adacore.com>
++	    Liam Powell  <liam@liampwll.com>
++
++	* gnat.dg/allocator4.adb: New test.
++
++2026-02-11  Andre Vieira  <andre.simoesdiasvieira@arm.com>
++
++	Backported from master:
++	2025-04-25  Andre Vieira  <andre.simoesdiasvieira@arm.com>
++
++	* gcc.dg/pr116479.c: New test.
++
++2026-02-10  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	Backported from master:
++	2026-02-06  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	PR tree-optimization/123940
++	* gcc.target/riscv/rvv/autovec/pr123940.c: New test.
++
++2026-02-10  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	Backported from master:
++	2026-02-05  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	PR target/123870
++	PR target/123969
++	* gcc.target/riscv/rvv/xtheadvector/pr123969.c: New test.
++
++2026-02-10  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	Backported from master:
++	2026-02-05  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	PR target/123971
++	* gcc.target/riscv/rvv/xtheadvector/pr123971.c: New test.
++
++2026-02-10  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	Backported from master:
++	2026-01-29  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	PR target/123806
++	* g++.target/riscv/rvv/base/pr123806.C: New test.
++	* g++.target/riscv/rvv/base/pr123808.C: New test.
++	* g++.target/riscv/rvv/base/pr123808-2.C: New test.
++
++2026-02-10  Jeff Law  <jeffrey.law@oss.qualcomm.com>
++
++	Backported from master:
++	2026-01-19  Jeff Law  <jeffrey.law@oss.qualcomm.com>
++
++	PR rtl-optimization/121787
++	* gcc.target/riscv/pr121787-1.c: New test.
++	* gcc.target/riscv/pr121787-2.c: New test.
++
++2026-02-10  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	Backported from master:
++	2026-01-22  Robin Dapp  <rdapp@oss.qualcomm.com>
++
++	PR target/122869
++	* gcc.target/riscv/rvv/base/pr122656-1.c: Remove dg-error.
++	* gcc.target/riscv/rvv/vsetvl/ffload-3.c: XFAIL for -O2 and -O3.
++	* gcc.target/riscv/rvv/base/pr122869.c: New test.
++
++2026-02-09  Stefan Schulze Frielinghaus  <stefansf@gcc.gnu.org>
++
++	Backported from master:
++	2026-01-21  Stefan Schulze Frielinghaus  <stefansf@gcc.gnu.org>
++
++	PR target/122781
++	* gcc.target/s390/vxe3/vcmp-1.c: New test.
++
++2026-02-09  Eric Botcazou  <ebotcazou@adacore.com>
++	    Liam Powell  <liam@liampwll.com>
++
++	* gnat.dg/protected_type1.adb: New test.
++
++2026-02-08  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	Backported from master:
++	2026-02-08  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	PR d/124026
++	* gdc.dg/pr124026.d: New test.
++
 +2026-02-06  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
 +
 +	Backported from master:
@@ -718815,6 +720605,26 @@ new file mode 100644
 +constexpr auto copyright = string_builder(sized_string_view("a"), sized_string_view("b"), sized_string_view("c"));
 new file mode 100644
 --- /dev/null
++++ b/src/gcc/testsuite/g++.dg/cpp23/explicit-obj-eval-order.C
+@@ -0,0 +1,16 @@
++// PR c++/123989
++// { dg-do run { target c++23 } }
++
++struct A {
++  int m = 42;
++
++  void f(this A self, int n) {
++    if (self.m != 42 || n != 43)
++      __builtin_abort();
++  }
++};
++
++int main() {
++  A a;
++  a.f(++a.m);
++}
+new file mode 100644
+--- /dev/null
 +++ b/src/gcc/testsuite/g++.dg/cpp23/explicit-obj-lambda19.C
 @@ -0,0 +1,15 @@
 +// PR c++/121854
@@ -718949,6 +720759,26 @@ new file mode 100644
 +auto f() -> decltype(C<Ts...>) {
 +  return true;
 +}
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/g++.dg/cpp2a/concepts-decltype6.C
+@@ -0,0 +1,16 @@
++// PR c++/121822
++// { dg-do compile { target c++20 } }
++
++template<class...>
++using void_t = void;
++
++template<class T>
++concept Derived = requires { typename T::derived_type; };
++
++template<class T, class = void>
++struct Wrapper;
++
++template<class T>
++struct Wrapper<T, void_t<decltype(void(Derived<T>))>> { };
++
++Wrapper<int> x;
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/g++.dg/cpp2a/concepts-friend18.C
@@ -719208,6 +721038,38 @@ new file mode 100644
 +
 +#include <cxxabi.h>
 +#include "constexpr-dynamic1.C"
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/g++.dg/cpp2a/lambda-targ20.C
+@@ -0,0 +1,14 @@
++// PR c++/122318
++// { dg-do compile { target c++20 } }
++
++template<class T, auto V>
++struct A {
++  A() { }
++  A(T) { }
++};
++
++template<class T>
++using AT = A<T, []{}>;
++
++AT<int> a;
++AT b = a;
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/g++.dg/cpp2a/lambda-targ21.C
+@@ -0,0 +1,10 @@
++// PR c++/101670
++// { dg-do compile { target c++20 } }
++
++template<int N, auto = []{}>
++struct A;
++
++template<int N>
++struct A<N> { }; // Partial specialization unusable due to lambda uniqueness
++
++A<0> a; // { dg-error "incomplete" }
 --- a/src/gcc/testsuite/g++.dg/cpp2a/lambda-uneval14.C
 +++ b/src/gcc/testsuite/g++.dg/cpp2a/lambda-uneval14.C
 @@ -1,6 +1,6 @@
@@ -719356,6 +721218,74 @@ new file mode 100644
 +}
 new file mode 100644
 --- /dev/null
++++ b/src/gcc/testsuite/g++.dg/ipa/pr106260.C
+@@ -0,0 +1,64 @@
++// { dg-do compile }
++// { dg-options "-O2 -std=gnu++14 -fwhole-program -fno-unit-at-a-time" }
++
++struct A;
++template <class T>
++struct Q { Q (T); };
++template<typename T, class D>
++struct U {
++  ~U () { m1 (nullptr); }
++  D m2 ();
++  T *u;
++  void m1 (T *) { m2 () (u); }
++};
++struct F { F (int *); };
++template <class, class T = F>
++using W = Q<T>;
++int a, b;
++void fn1 (void *);
++template <class T>
++void
++fn2 (T *x)
++{
++  if (x)
++    x->~T();
++  fn1 (x);
++}
++template <typename T>
++struct C {
++  void operator() (T *x) { fn2 (x); }
++};
++struct D;
++template <typename T, typename D = C<T> >
++using V = U<T, D>;
++struct A {
++  A (int *);
++};
++struct S;
++struct G {
++  V<S> m3 ();
++};
++struct S {
++  int e;
++  virtual ~S () {}
++};
++template<typename T>
++struct H {
++  H (int, T x, int) : h(x) {}
++  G g;
++  void m4 () { g.m3 (); }
++  T h;
++};
++struct I {
++  I(A, W<D>);
++};
++void
++test ()
++{
++  A c (&b);
++  W<D> d (&b);
++  I e (c, d);
++  H<I> f (0, e, a);
++  f.m4 ();
++}
++
+new file mode 100644
+--- /dev/null
 +++ b/src/gcc/testsuite/g++.dg/lto/pr121831_0.C
 @@ -0,0 +1,17 @@
 +/* PR middle-end/121831 */
@@ -719497,6 +721427,16 @@ new file mode 100644
 +    [[foobarbaz]];
 +// { dg-error "expected ';' before end of line" "" { target *-*-* } .-2 }
 +// { dg-warning "attribute ignored" "" { target *-*-* } .-2 }
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/g++.dg/modules/cpp-22.C
+@@ -0,0 +1,6 @@
++// PR c++/124153
++// { dg-additional-options "-fmodules -fdirectives-only -E" }
++
++// directives-only mode currently does not do error checking.
++export module hello  // { dg-error "expected ';'" "" { xfail *-*-* } }
++import world;
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/g++.dg/modules/imp-member-4_a.C
@@ -720080,6 +722020,62 @@ new file mode 100644
 +int main() {
 +  A<set> a;
 +  a.size();
++}
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/g++.dg/torture/pr117217-1.C
+@@ -0,0 +1,24 @@
++struct [[gnu::packed]] A {
++  int i;
++  bool b;
++};
++
++struct [[gnu::packed]] B {
++  int i;
++  bool b : 1;
++};
++
++struct E {
++  union Data {
++    A a;
++    B b;
++    Data(const B &b) : b(b) {}
++  } data;
++};
++
++extern B copy;
++
++int main() {
++  E e{{B()}};
++  copy = e.data.b; // NEEDED FOR ICE
++}
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/g++.dg/torture/pr117217-2.C
+@@ -0,0 +1,24 @@
++struct a {
++  int b;
++  long c;
++  long d;
++  bool f;
++};
++struct g {
++  int b;
++  long c;
++  long d;
++  bool : 1;
++} h;
++struct l {
++  union i {
++    a j;
++    g k;
++    i(g m) : k(m) {}
++  } data;
++};
++int main() {
++  l e{g()};
++  h = e.data.k;
++  return 0;
 +}
 new file mode 100644
 --- /dev/null
@@ -721391,6 +723387,144 @@ new file mode 100644
 +}
 new file mode 100644
 --- /dev/null
++++ b/src/gcc/testsuite/g++.target/riscv/rvv/base/pr123806.C
+@@ -0,0 +1,25 @@
++/* { dg-do run */
++/* { dg-require-effective-target riscv_v_ok } */
++/* { dg-add-options riscv_v } */
++
++#include <riscv_vector.h>
++#include <vector>
++
++int8_t a[5], d[5], c[5], b[5];
++int main() {
++  for (size_t e = 0, avl = 1; avl > 0;) {
++    size_t f = __riscv_vsetvl_e8m1(avl);
++    vint8m1_t g = __riscv_vle8_v_i8m1(&a[e], f);
++    vint8mf2_t i = __riscv_vle8ff(
++        __riscv_vlm_v_b16(std::vector<uint8_t>((f + 7) / 8, 5).data(), f),
++        &b[e], &f, f);
++    vint8m1_t j = __riscv_vle8_v_i8m1(&c[e], f);
++    vint8m1_t k = __riscv_vredxor_tu(g, i, j, f);
++    __riscv_vse8_v_i8m1(&d[e], k, f);
++    avl -= f;
++
++    if (f != 1 && avl != 0)
++      __builtin_abort ();
++    break;
++  }
++}
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/g++.target/riscv/rvv/base/pr123808-2.C
+@@ -0,0 +1,51 @@
++/* { dg-do run } */
++/* { dg-require-effective-target riscv_v_ok } */
++/* { dg-add-options riscv_v } */
++/* { dg-additional-options "-O0" } */
++
++#include <riscv_vector.h>
++#include <vector>
++#define a 36
++
++uint8_t e[a], x[a];
++int64_t f[a], g[a], l[a];
++float j[a], k[a], m[a];
++
++int main() {
++  for (int i = 0; i < a; ++i) { e[i]=1; g[i] = 86; x[i] = 86; }
++  for (size_t n = 0, avl = a; avl;) {
++    size_t o = __riscv_vsetvl_e64m8(avl);
++    vuint8m1_t p = __riscv_vle8_v_u8m1(&e[n], o);
++    vbool8_t q = __riscv_vmseq_vx_u8m1_b8(p, 1, o);
++    vuint64m8_t r = __riscv_vsll_vx_u64m8(__riscv_vid_v_u64m8(o), 3, o);
++    vint64m8_t s = __riscv_vluxei64_v_i64m8_tum(
++        __riscv_vlm_v_b8(std::vector<uint8_t>(o + 7).data(), o),
++        __riscv_vmv_v_x_i64m8(0, __riscv_vsetvlmax_e16m2()), &f[n], r, o);
++    vuint32m4_t t = __riscv_vsll_vx_u32m4(__riscv_vid_v_u32m4(o), 3, o);
++    vint64m8_t u = __riscv_vluxei32(&g[n], t, o);
++    vbool8_t v = __riscv_vlm_v_b8(&x[n], o);
++    __riscv_vle32ff_v_f32m4_mu(q, __riscv_vfmv_v_f_f32m4(0, __riscv_vsetvlmax_e8m1()), &j[n], &o, o);
++    vfloat32m1_t w = __riscv_vfmv_v_f_f32m1(0, __riscv_vsetvlmax_e32m1());
++    vfloat32m1_t aa = __riscv_vle32_v_f32m1_tu(w, &k[n], o);
++    s = __riscv_vcompress_vm_i64m8_tu(s, u, v, o);
++    vfloat32mf2_t ab = __riscv_vlmul_trunc_v_f32m1_f32mf2(aa);
++    vuint64m8_t ac = __riscv_vsll_vx_u64m8(__riscv_vid_v_u64m8(o), 3, o);
++    __riscv_vsuxei64_v_i64m8(&l[n], ac, s, o);
++    __riscv_vse32_v_f32mf2(&m[n], ab, o);
++    avl -= o;
++  }
++
++  /* Results are inconsistent between different VLENs.
++     "n" never changes so we will always store into l[0...] with a length of
++     "o".  What differs is "s".
++     At zvl128b and zvl256b we have more than one loop iteration and
++     "s" will be {86, 86, -1, -1} or {86, 86, 0, 0} depending on the
++     tail/mask policy.
++     At zvl512b there is only one iteration and s = {86, 86, 86, ...}.
++     I cross checked with clang and this seems correct.
++     Therefore only check l's fifth element.
++     The actual PR is about fault-only-first loads and the wrong code
++     caused element 5 to be incorrect as well.  */
++  if (l[5] != 86)
++    __builtin_abort ();
++}
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/g++.target/riscv/rvv/base/pr123808.C
+@@ -0,0 +1,50 @@
++/* { dg-do run } */
++/* { dg-require-effective-target riscv_v_ok } */
++/* { dg-add-options riscv_v } */
++
++#include <riscv_vector.h>
++#include <vector>
++#define a 36
++
++uint8_t e[a], x[a];
++int64_t f[a], g[a], l[a];
++float j[a], k[a], m[a];
++
++int main() {
++  for (int i = 0; i < a; ++i) { e[i]=1; g[i] = 86; x[i] = 86; }
++  for (size_t n = 0, avl = a; avl;) {
++    size_t o = __riscv_vsetvl_e64m8(avl);
++    vuint8m1_t p = __riscv_vle8_v_u8m1(&e[n], o);
++    vbool8_t q = __riscv_vmseq_vx_u8m1_b8(p, 1, o);
++    vuint64m8_t r = __riscv_vsll_vx_u64m8(__riscv_vid_v_u64m8(o), 3, o);
++    vint64m8_t s = __riscv_vluxei64_v_i64m8_tum(
++        __riscv_vlm_v_b8(std::vector<uint8_t>(o + 7).data(), o),
++        __riscv_vmv_v_x_i64m8(0, __riscv_vsetvlmax_e16m2()), &f[n], r, o);
++    vuint32m4_t t = __riscv_vsll_vx_u32m4(__riscv_vid_v_u32m4(o), 3, o);
++    vint64m8_t u = __riscv_vluxei32(&g[n], t, o);
++    vbool8_t v = __riscv_vlm_v_b8(&x[n], o);
++    __riscv_vle32ff_v_f32m4_mu(q, __riscv_vfmv_v_f_f32m4(0, __riscv_vsetvlmax_e8m1()), &j[n], &o, o);
++    vfloat32m1_t w = __riscv_vfmv_v_f_f32m1(0, __riscv_vsetvlmax_e32m1());
++    vfloat32m1_t aa = __riscv_vle32_v_f32m1_tu(w, &k[n], o);
++    s = __riscv_vcompress_vm_i64m8_tu(s, u, v, o);
++    vfloat32mf2_t ab = __riscv_vlmul_trunc_v_f32m1_f32mf2(aa);
++    vuint64m8_t ac = __riscv_vsll_vx_u64m8(__riscv_vid_v_u64m8(o), 3, o);
++    __riscv_vsuxei64_v_i64m8(&l[n], ac, s, o);
++    __riscv_vse32_v_f32mf2(&m[n], ab, o);
++    avl -= o;
++  }
++
++  /* Results are inconsistent between different VLENs.
++     "n" never changes so we will always store into l[0...] with a length of
++     "o".  What differs is "s".
++     At zvl128b and zvl256b we have more than one loop iteration and
++     "s" will be {86, 86, -1, -1} or {86, 86, 0, 0} depending on the
++     tail/mask policy.
++     At zvl512b there is only one iteration and s = {86, 86, 86, ...}.
++     I cross checked with clang and this seems correct.
++     Therefore only check l's fifth element.
++     The actual PR is about fault-only-first loads and the wrong code
++     caused element 5 to be incorrect as well.  */
++  if (l[5] != 86)
++    __builtin_abort ();
++}
+new file mode 100644
+--- /dev/null
 +++ b/src/gcc/testsuite/gcc.c-torture/compile/pr120250.c
 @@ -0,0 +1,38 @@
 +/* PR target/120250 */
@@ -722090,6 +724224,36 @@ new file mode 100644
 +#include "pr109410.c"
 new file mode 100644
 --- /dev/null
++++ b/src/gcc/testsuite/gcc.dg/pr116479.c
+@@ -0,0 +1,26 @@
++/* PR 116479 */
++/* { dg-do run { target { bitint } } } */
++/* { dg-additional-options "-O -funroll-loops -finline-stringops -fmodulo-sched --param=max-iterations-computation-cost=637924687 -std=c23" } */
++
++#if __BITINT_MAXWIDTH__ >= 13577
++_BitInt (13577) b;
++
++void
++foo (char *ret)
++{
++  __builtin_memset (&b, 4, 697);
++  *ret = 0;
++}
++#endif
++
++int
++main ()
++{
++#if __BITINT_MAXWIDTH__ >= 13577
++  char x;
++  foo (&x);
++  for (unsigned i = 0; i < sizeof (x); i++)
++    if (x != 0)
++      __builtin_abort ();
++#endif
++}
+new file mode 100644
+--- /dev/null
 +++ b/src/gcc/testsuite/gcc.dg/pr121506.c
 @@ -0,0 +1,8 @@
 +/* PR c/121506 */
@@ -722234,6 +724398,29 @@ new file mode 100644
 +{
 +  bar (1, 2);
 +  bar (3, x);
++}
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gcc.dg/pr123447.c
+@@ -0,0 +1,19 @@
++/* PR middle-end/123447 */
++/* { dg-do compile { target aarch64*-*-* } } */
++/* { dg-options "-O2 -mstrict-align" } */
++
++typedef __attribute__((__vector_size__(32))) _Decimal64 D;
++typedef __attribute__((__vector_size__(64))) int V;
++typedef __attribute__((__vector_size__(64))) _Decimal64 D64;
++
++D d;
++
++void foo1 () {
++  D _4;
++  D64 _5;
++  V _1;
++  _1 = (V) { 9, -64497, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
++  _5 = (D64) _1;
++  _4 = __builtin_shufflevector (_5, _5, 0, 1, 2, 3);
++  d = _4;
 +}
 new file mode 100644
 --- /dev/null
@@ -722397,6 +724584,15 @@ new file mode 100644
 +    c = c > i[j][j];
 +  return c;
 +}
+--- a/src/gcc/testsuite/gcc.dg/torture/pr120347.c
++++ b/src/gcc/testsuite/gcc.dg/torture/pr120347.c
+@@ -1,5 +1,5 @@
+ /* { dg-do assemble } */
+-/* { dg-additional-options "-march=armv7-a -mthumb" { target { arm_arch_v7a_ok && arm_thumb2_ok } } } */
++/* { dg-additional-options "-mcpu=unset -march=armv7-a+fp -mthumb" { target { arm_arch_v7a_ok && arm_thumb2_ok } } } */
+ 
+ void *end;
+ void **start;
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/gcc.dg/torture/pr121370.c
@@ -723063,6 +725259,17 @@ new file mode 100644
 +*/
 new file mode 100644
 --- /dev/null
++++ b/src/gcc/testsuite/gcc.target/aarch64/pr123206.c
+@@ -0,0 +1,7 @@
++/* { dg-do compile } */
++/* { dg-options "-O2 -march=armv8-a+nosimd" } */
++#include <arm_neon.h>
++mfloat8x8_t foo(uint8x8_t a, mfloat8x8_t b, mfloat8x8_t c)
++{
++  return vbsl_mf8(a,b,c); /* { dg-error "ACLE function 'vbsl_mf8' requires ISA extension 'simd'" } */
++}
+new file mode 100644
+--- /dev/null
 +++ b/src/gcc/testsuite/gcc.target/aarch64/pr123548.c
 @@ -0,0 +1,18 @@
 +/* { dg-do compile } */
@@ -723223,6 +725430,88 @@ new file mode 100644
 +/* { dg-final { scan-assembler-not {\t\.variant_pcs\tg1\n} } } */
 +/* { dg-final { scan-assembler-not {\t\.variant_pcs\tg2\n} } } */
 +/* { dg-final { scan-assembler-not {\t\.variant_pcs\tg3\n} } } */
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gcc.target/aarch64/sme/sme-shrinkwrap.c
+@@ -0,0 +1,78 @@
++/* { dg-options "-O3 -fshrink-wrap" } */
++/* { dg-do run { target { aarch64_sme_hw && aarch64_sve_hw } } } */
++/* { dg-do compile { target { ! { aarch64_sme_hw && aarch64_sve_hw } } } } */
++/* { dg-final { check-function-bodies "**" "" } } */
++
++#include <arm_sme.h>
++
++#pragma GCC target "+sve"
++
++[[gnu::noipa]]
++__arm_streaming
++int callee (int x)
++{
++  return 0;
++}
++
++/*
++** foo:
++**	cbnz	w0, [^\n]*
++**	cntd	x0
++**	ret
++**	...
++*/
++__arm_streaming
++int foo(int x)
++{
++    if (x)
++        return callee(3);
++    return svcntd();
++}
++
++/*
++** bar:
++**	...
++**	smstart	[^\n]*
++**	...
++** (
++**	cntd	[^\n]*
++**	...
++**	cbn?z	[^\n]*
++** |
++**	cbn?z	[^\n]*
++**	...
++**	cntd	[^\n]*
++** )
++**	...
++*/
++
++__arm_locally_streaming
++int bar(int x)
++{
++    if (x)
++        return callee(3);
++    return svcntd();
++}
++
++/*
++** baz:
++**	cbnz	w0, [^\n]*
++**	cntd	x0
++**	ret
++**	...
++*/
++__arm_streaming
++int baz(int x)
++{
++    if (x)
++        return callee(3);
++    return svcntd();
++}
++
++[[gnu::noipa]]
++int main()
++{
++  if (bar(0) != svcntsd())
++    __builtin_abort();
++  return 0;
++}
 --- a/src/gcc/testsuite/gcc.target/aarch64/sve/acle/asm/mul_s16.c
 +++ b/src/gcc/testsuite/gcc.target/aarch64/sve/acle/asm/mul_s16.c
 @@ -331,6 +331,16 @@ TEST_UNIFORM_Z (mul_1op1_s16_z_tied2, svint16_t,
@@ -724381,6 +726670,32 @@ new file mode 100644
 +**	mrrc2	p0, #15, r[0-9]+, r[0-9]+, CR10
 +** ...
 +*/
+--- a/src/gcc/testsuite/gcc.target/arm/aes-fuse-1.c
++++ b/src/gcc/testsuite/gcc.target/arm/aes-fuse-1.c
+@@ -1,7 +1,9 @@
+ /* { dg-do compile } */
+ /* { dg-require-effective-target arm_crypto_ok } */
++/* { dg-require-effective-target arm_cpu_cortex_a53 } */
+ /* { dg-add-options arm_crypto } */
+-/* { dg-additional-options "-mcpu=cortex-a53 -O3 -dp" } */
++/* { dg-add-options arm_cpu_cortex_a53 } */
++/* { dg-additional-options "-O3 -dp" } */
+ 
+ #include <arm_neon.h>
+ 
+--- a/src/gcc/testsuite/gcc.target/arm/aes-fuse-2.c
++++ b/src/gcc/testsuite/gcc.target/arm/aes-fuse-2.c
+@@ -1,7 +1,9 @@
+ /* { dg-do compile } */
+ /* { dg-require-effective-target arm_crypto_ok } */
++/* { dg-require-effective-target arm_cpu_cortex_a53 } */
+ /* { dg-add-options arm_crypto } */
+-/* { dg-additional-options "-mcpu=cortex-a53 -O3 -dp" } */
++/* { dg-add-options arm_cpu_cortex_a53 } */
++/* { dg-additional-options "-O3 -dp" } */
+ 
+ #include <arm_neon.h>
+ 
 --- a/src/gcc/testsuite/gcc.target/arm/armv8_2-fp16-arith-1.c
 +++ b/src/gcc/testsuite/gcc.target/arm/armv8_2-fp16-arith-1.c
 @@ -106,8 +106,7 @@ TEST_CMP (greaterthanqual, >=, int16x8_t, float16x8_t)
@@ -724414,6 +726729,39 @@ new file mode 100644
  }
 -/* { dg-final { scan-assembler "bx?(mi|pl)" } } */
 +/* { dg-final { scan-assembler "vselgt\.f16\t" } } */
+--- a/src/gcc/testsuite/gcc.target/arm/bfloat16_simd_1_2.c
++++ b/src/gcc/testsuite/gcc.target/arm/bfloat16_simd_1_2.c
+@@ -2,7 +2,7 @@
+ /* { dg-require-effective-target arm_softfp_ok } */
+ /* { dg-require-effective-target arm_v8_neon_ok } */
+ /* { dg-require-effective-target arm_v8_2a_bf16_neon_ok } */
+-/* { dg-additional-options "-march=armv8.2-a+bf16 -mfloat-abi=softfp -mfpu=auto" } */
++/* { dg-additional-options "-mcpu=unset -march=armv8.2-a+bf16 -mfloat-abi=softfp -mfpu=auto" } */
+ /* { dg-additional-options "-O3 --save-temps -std=gnu90" } */
+ /* { dg-final { check-function-bodies "**" "" } } */
+ 
+--- a/src/gcc/testsuite/gcc.target/arm/bfloat16_simd_2_2.c
++++ b/src/gcc/testsuite/gcc.target/arm/bfloat16_simd_2_2.c
+@@ -2,7 +2,7 @@
+ /* { dg-require-effective-target arm_softfp_ok } */
+ /* { dg-require-effective-target arm_v8_neon_ok } */
+ /* { dg-require-effective-target arm_v8_2a_bf16_neon_ok } */
+-/* { dg-additional-options "-march=armv8.2-a -mfloat-abi=softfp -mfpu=neon-fp-armv8" } */
++/* { dg-additional-options "-mcpu=unset -march=armv8.2-a -mfloat-abi=softfp -mfpu=neon-fp-armv8" } */
+ /* { dg-additional-options "-O3 --save-temps -std=gnu90" } */
+ /* { dg-final { check-function-bodies "**" "" } } */
+ 
+--- a/src/gcc/testsuite/gcc.target/arm/bfloat16_simd_3_2.c
++++ b/src/gcc/testsuite/gcc.target/arm/bfloat16_simd_3_2.c
+@@ -2,7 +2,7 @@
+ /* { dg-require-effective-target arm_softfp_ok } */
+ /* { dg-require-effective-target arm_v8_neon_ok } */
+ /* { dg-require-effective-target arm_v8_2a_bf16_neon_ok } */
+-/* { dg-additional-options "-march=armv8.2-a -mfloat-abi=softfp -mfpu=neon-fp-armv8" } */
++/* { dg-additional-options "-mcpu=unset -march=armv8.2-a -mfloat-abi=softfp -mfpu=neon-fp-armv8" } */
+ /* { dg-additional-options "-O3 --save-temps -std=gnu90" } */
+ /* { dg-final { check-function-bodies "**" "" } } */
+ 
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/gcc.target/arm/cbz-range.c
@@ -726001,6 +728349,31 @@ new file mode 100644
 +  if (out)
 +    foo();
 +}
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gcc.target/arm/pr124134.c
+@@ -0,0 +1,10 @@
++/* { dg-do compile } */
++/* { dg-require-effective-target arm_arch_v7a_fp_hard_ok } */
++/* { dg-add-options arm_arch_v7a_fp_hard } */
++/* { dg-additional-options "-O2 -mrestrict-it" } */
++double max___a, max___b;
++double max() {
++  if (max___a < max___b)
++    return max___b;
++  return max___a;
++}
+--- a/src/gcc/testsuite/gcc.target/arm/simd/bf16_vstn_1.c
++++ b/src/gcc/testsuite/gcc.target/arm/simd/bf16_vstn_1.c
+@@ -46,7 +46,7 @@ test_vst3_bf16 (bfloat16_t *ptr, bfloat16x4x3_t val)
+ /*
+ **test_vst3q_bf16:
+ **      ...
+-**	vst3.16	{d17, d19, d21}, \[r0\]
++**	vst3.16	{d1, d3, d5}, \[r0\]
+ **	bx	lr
+ */
+ void
 --- a/src/gcc/testsuite/gcc.target/arm/unsigned-extend-2.c
 +++ b/src/gcc/testsuite/gcc.target/arm/unsigned-extend-2.c
 @@ -1,6 +1,26 @@
@@ -727228,6 +729601,24 @@ new file mode 100644
 +/* { dg-options "-O2 -fPIC -mtls-dialect=gnu2" } */
 +
 +#include "pr121208-3a.c"
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gcc.target/i386/pr121571.c
+@@ -0,0 +1,14 @@
++/* { dg-do compile } */
++/* { dg-options "-march=skylake-avx512 -Os" } */
++
++int a, b, c, d, e, f;
++
++void
++foo ()
++{
++  int g[2] = { e, f };
++  if ((g[0] | g[1]) != 0)
++    __asm__ (""
++             : "=r" (d), "=&r" (c), "=&r" (b), "=&r" (a)
++             : "0" (0), "g" (g), "g" (g[1]), "g" (g[0]));
++}
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/gcc.target/i386/pr122104.c
@@ -729080,6 +731471,54 @@ new file mode 100644
 +void GB_AxB_saxpy5_unrolled_rvv() { vfloat64m8_t vc; }
 new file mode 100644
 --- /dev/null
++++ b/src/gcc/testsuite/gcc.target/riscv/pr121787-1.c
+@@ -0,0 +1,20 @@
++/* { dg-do compile } */
++/* { dg-options "-march=rv64gcv -mabi=lp64 -O" { target rv64 } } */
++/* { dg-options "-march=rv32gcv -mabi=ilp32 -O" { target rv32 } } */
++
++#include <stdint-gcc.h>
++typedef int a;
++int32_t b, e;
++int32_t **c;
++uint8_t d(int32_t *, int32_t *, uint16_t, const int32_t *, int32_t **);
++uint32_t f() {
++  uint16_t g;
++  d(0, &b, g, &b, c);
++  e = (__attribute__((__vector_size__(sizeof(a)))) a){}[4];
++}
++uint8_t d(int32_t *, int32_t *, uint16_t, const int32_t *, int32_t **) {
++  asm goto("" : : : : i);
++i:
++j:
++  asm goto("" : : : : j);
++}
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gcc.target/riscv/pr121787-2.c
+@@ -0,0 +1,20 @@
++/* { dg-do compile } */
++/* { dg-options "-march=rv64gcv -mabi=lp64 -O" { target rv64 } } */
++/* { dg-options "-march=rv32gcv -mabi=ilp32 -O" { target rv32 } } */
++
++#include <stdint-gcc.h>
++typedef int a;
++int32_t b, e;
++int32_t **c;
++uint8_t d(int32_t *, int32_t *, uint16_t, const int32_t *, int32_t **);
++uint32_t f(int a1) {
++  uint16_t g;
++  d(0, &b, g, &b, c);
++  e = (__attribute__((__vector_size__(sizeof(a)*16))) a){}[a1];
++}
++uint8_t d(int32_t *, int32_t *, uint16_t, const int32_t *, int32_t **) {
++  asm goto("#asm1" : : : : i);
++i:
++j:
++  asm goto("#asm2" : : : : j);
++}
+new file mode 100644
+--- /dev/null
 +++ b/src/gcc/testsuite/gcc.target/riscv/pr122215.c
 @@ -0,0 +1,46 @@
 +/* { dg-do compile } */
@@ -729740,6 +732179,50 @@ new file mode 100644
 +}
 new file mode 100644
 --- /dev/null
++++ b/src/gcc/testsuite/gcc.target/riscv/rvv/autovec/pr123910.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-options "-mcpu=xt-c920 -mrvv-vector-bits=zvl" } */
++
++int i;
++void *p;
++
++void
++foo ()
++{
++  __builtin_memset (p, i, 8);
++}
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gcc.target/riscv/rvv/autovec/pr123940.c
+@@ -0,0 +1,25 @@
++/* { dg-do run } */
++/* { dg-options "-O3 -march=rv64gcv -mabi=lp64d -std=gnu99 -fdump-tree-widening_mul" } */
++
++long a;
++long long b;
++_Bool c[16];
++char d[16];
++char e = 0;
++int f = 1;
++
++int main ()
++{
++  for (long i = 0; i < 16; ++i)
++    c[i] = 40;
++  for (int j = 0; j < 16; j++)
++    {
++      e = (c[j] ? j : d[j]) + d[j];
++      a = f * c[j] ?: ~0;
++    }
++  b = (int) e;
++  if (b != 15)
++    __builtin_abort ();
++}
++
++/* { dg-final { scan-tree-dump-not "FMA" "widening_mul" } } */
+new file mode 100644
+--- /dev/null
 +++ b/src/gcc/testsuite/gcc.target/riscv/rvv/base/pr122270-1.c
 @@ -0,0 +1,10 @@
 +/* { dg-options "" } */
@@ -729788,7 +732271,7 @@ new file mode 100644
 +#include "riscv_vector.h"
 +int a;
 +long b, c;
-+void d() { __riscv_vlseg2e32ff_v_i32mf2x2(&a, &c, b); } /* { dg-error "invalid argument to built-in function" } */
++void d() { __riscv_vlseg2e32ff_v_i32mf2x2(&a, &c, b); }
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/gcc.target/riscv/rvv/base/pr122656-2.c
@@ -729800,6 +732283,41 @@ new file mode 100644
 +int a;
 +long b, c;
 +void d() { vint32mf2x2_t v = __riscv_vlseg2e32ff_v_i32mf2x2(&a, &c, b); }
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gcc.target/riscv/rvv/base/pr122869.c
+@@ -0,0 +1,22 @@
++/* { dg-do run } */
++/* { dg-additional-options "-O0 -std=gnu99" } */
++/* We used to generate a separate riscv_read_vl () after the FoF load.
++   In case of -O0 (or otherwise) it could happen that "g" wouldn't
++   get a hard reg and we'd need to store it, clobbering VL.
++   This leads to an infinite loop or a segfault.  */
++
++#include <riscv_vector.h>
++
++uint8_t a[1];
++int16_t b[1];
++
++int main ()
++{
++  for (size_t c = 0, avl = 1; avl > 0;)
++    {
++      size_t d = avl;
++      vint16mf2_t g = __riscv_vle16ff_v_i16mf2 (&b[c], &d, d);
++      avl -= d;
++      c += d; // Segmentation fault
++    }
++}
+--- a/src/gcc/testsuite/gcc.target/riscv/rvv/vsetvl/ffload-3.c
++++ b/src/gcc/testsuite/gcc.target/riscv/rvv/vsetvl/ffload-3.c
+@@ -25,4 +25,5 @@ void f (int8_t * restrict in, int8_t * restrict out, int n, int m, int cond)
+     }
+ }
+ 
+-/* { dg-final { scan-assembler-times {vsetvli\s+zero,\s*[a-x0-9]+,\s*e8,\s*mf8,\s*t[au],\s*m[au]} 2 { target { no-opts "-O0" no-opts "-g" no-opts "-funroll-loops" } } } } */
++/* -O2 and -O3 fail now, see PR target/122869.  */
++/* { dg-final { scan-assembler-times {vsetvli\s+zero,\s*[a-x0-9]+,\s*e8,\s*mf8,\s*t[au],\s*m[au]} 2 { target { no-opts "-O0" no-opts "-g" no-opts "-funroll-loops" } xfail { any-opts "-O2" "-O3" } } } } */
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/gcc.target/riscv/rvv/vsetvl/pr121485.c
@@ -729817,6 +732335,119 @@ new file mode 100644
 +
 +
 +/* { dg-final { scan-assembler {vsetvli\szero,[a-x0-9]+,e32,m4,ta,ma} } } */
+--- a/src/gcc/testsuite/gcc.target/riscv/rvv/xtheadvector/pr114194-rv32.c
++++ b/src/gcc/testsuite/gcc.target/riscv/rvv/xtheadvector/pr114194-rv32.c
+@@ -1,5 +1,5 @@
+-/* { dg-do compile { target { { ! riscv_abi_e } && rv32 } } } */
+-/* { dg-options "-march=rv32gc_xtheadvector -O2" } */
++/* { dg-do compile { target { ! riscv_abi_e } } } */
++/* { dg-options "-march=rv32gc_xtheadvector -O2 -mabi=ilp32d " } */
+ /* { dg-final { check-function-bodies "**" "" } } */
+ 
+ /*
+@@ -13,7 +13,7 @@ void foo0_1 (void *p)
+ }
+ 
+ /*
+-** foo0_7:
++** foo0_7: { xfail *-*-* }
+ **	li\t[a-x0-9]+,7
+ **	th.vsetvli\tzero,[a-x0-9]+,e8,m1
+ **	th\.vmv\.v\.i\tv[0-9],0
+@@ -37,7 +37,7 @@ void foo1_1 (void *p)
+ }
+ 
+ /*
+-** foo1_5:
++** foo1_5: { xfail *-*-* }
+ **	li\t[a-x0-9]+,5
+ **	th.vsetvli\tzero,[a-x0-9]+,e8,m1
+ **	th\.vmv\.v\.i\tv[0-9],1
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gcc.target/riscv/rvv/xtheadvector/pr123969.c
+@@ -0,0 +1,19 @@
++/* { dg-do compile } */
++/* { dg-options "-O3 -march=rv64gcxtheadvector -mabi=lp64d -mtune=rocket" } */
++
++/* In order to trigger the issue strided broadcast must be enabled
++   and we must broadcast integer memory operands via strided load.
++   This is disabled and there is currently no param to change it
++   so the test will pass either way.  */
++
++#include <riscv_vector.h>
++
++void test(int16_t *dst, long vl) {
++  vuint16m1_t v6 = __riscv_vmv_v_x_u16m1(*dst, vl);
++  vfloat32m2_t s0 = __riscv_vfmv_v_f_f32m2(0, vl);
++  __riscv_vse16_v_u16m1(dst, v6, vl);
++  __riscv_vse32_v_f32m2((float*)dst, s0, vl);
++}
++
++/* { dg-final { scan-assembler-times "th.vsetvli\tzero,a1,e16,m1" 2 } } */
++/* { dg-final { scan-assembler-times "th.vsetvli\tzero,a1,e32,m2" 2 } } */
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gcc.target/riscv/rvv/xtheadvector/pr123971.c
+@@ -0,0 +1,12 @@
++/* { dg-do compile } */
++/* { dg-options "-O -mcpu=xt-c920 -mrvv-vector-bits=zvl" } */
++
++__attribute__((__vector_size__(sizeof(int)))) int u;
++__attribute__((__vector_size__(4 * sizeof(int)))) int v;
++__attribute__((__vector_size__(8 * sizeof(int)))) int w;
++
++void
++foo()
++{
++  v ^= __builtin_shufflevector(u, w % 3, 4, 3, 4, 1);
++}
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gcc.target/s390/vxe3/vcmp-1.c
+@@ -0,0 +1,42 @@
++/* { dg-do compile } */
++/* { dg-require-effective-target int128 } */
++/* { dg-final { check-function-bodies "**" "" "" } } */
++
++typedef __int128 __attribute__ ((vector_size (16))) V1TI;
++typedef unsigned __int128 __attribute__ ((vector_size (16))) UV1TI;
++
++/*
++** cmpeq:
++**	vceqq	%v24,%v24,%v26
++**	br	%r14
++*/
++
++V1TI
++cmpeq (V1TI x, V1TI y)
++{
++  return x == y;
++}
++
++/*
++** cmpgt:
++**	vchq	%v24,%v24,%v26
++**	br	%r14
++*/
++
++V1TI
++cmpgt (V1TI x, V1TI y)
++{
++  return x > y;
++}
++
++/*
++** cmpgtu:
++**	vchlq	%v24,%v24,%v26
++**	br	%r14
++*/
++
++V1TI
++cmpgtu (UV1TI x, UV1TI y)
++{
++  return x > y;
++}
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/gdc.dg/driver_debuglib.d
@@ -729925,6 +732556,31 @@ new file mode 100644
 +    int a = 1;
 +    int b : 4;
 +    long c : 8;
++}
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gdc.dg/pr124026.d
+@@ -0,0 +1,21 @@
++// { dg-do compile }
++struct UDA
++{
++    int delegate() foo;
++}
++
++static UDA getUDA(alias S)()
++{
++    return __traits(getAttributes, S)[0];
++}
++
++struct S124026
++{
++    @UDA({ return 42; }) int a;
++}
++
++void f124026()
++{
++    S124026 m;
++    enum uda = getUDA!(m.a);
 +}
 new file mode 100644
 --- /dev/null
@@ -730077,6 +732733,68 @@ new file mode 100644
 +  deallocate(inner)
 +  write(*,*) 'Dellocation DONE'
 +end
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gfortran.dg/class_array_24.f90
+@@ -0,0 +1,58 @@
++! { dg-do run }
++! { dg-additional-options "-O2 -fdump-tree-optimized" }
++!
++! PR fortran/123961 - SIZE and class array valued constructors and functions
++
++module test_overload_m
++  implicit none
++
++  type :: foo_t
++  end type foo_t
++
++  interface foo_t
++     module procedure foo_t_0_
++     module procedure foo_t_1_
++     module procedure foo_c_0_
++     module procedure foo_c_1_
++  end interface foo_t
++
++contains
++
++  function foo_t_0_(i) result(foo)
++    integer, intent(in)      :: i
++    type(foo_t), allocatable :: foo
++    allocate (foo)
++  end function foo_t_0_
++
++  function foo_t_1_(i) result(foo)
++    integer, intent(in)      :: i(:)
++    type(foo_t), allocatable :: foo(:)
++
++    allocate (foo(size (i)))
++  end function foo_t_1_
++
++  function foo_c_0_(r) result(foo)
++    real, intent(in)          :: r
++    class(foo_t), allocatable :: foo
++    allocate (foo)
++  end function foo_c_0_
++
++  function foo_c_1_(r) result(foo)
++    real, intent(in)          :: r(:)
++    class(foo_t), allocatable :: foo(:)
++
++    allocate (foo(size (r)))
++  end function foo_c_1_
++
++end module test_overload_m
++
++program test_overload
++   use test_overload_m
++   implicit none
++
++   if (size (foo_t([1,2,3])) /= 3) stop 1   ! Optimized
++   if (size (foo_t([1.,2.])) /= 2) stop 2   ! Optimized
++
++end program test_overload
++
++! { dg-final { scan-tree-dump-not "_gfortran_error_stop_numeric" "optimized" } }
 --- a/src/gcc/testsuite/gfortran.dg/coarray_lock_3.f90
 +++ b/src/gcc/testsuite/gfortran.dg/coarray_lock_3.f90
 @@ -24,7 +24,7 @@ end module m
@@ -731419,6 +734137,33 @@ new file mode 100644
 +end Aggr34_Pkg3;
 new file mode 100644
 --- /dev/null
++++ b/src/gcc/testsuite/gnat.dg/allocator4.adb
+@@ -0,0 +1,23 @@
++--  { dg-do compile }
++--  { dg-options "-gnatws" }
++
++with System.Storage_Pools.Subpools; use System.Storage_Pools.Subpools;
++with Ada.Finalization;              use Ada.Finalization;
++
++procedure Allocator4 is
++
++   type My_Subpool_Type is new Root_Subpool with null record;
++   type My_Subpool_Access_Type is access all My_Subpool_Type;
++
++   My_Subpool        : aliased My_Subpool_Type;
++   My_Subpool_Access : Subpool_Handle := My_Subpool'Unchecked_Access;
++
++   type T is new Ada.Finalization.Controlled with null record;
++
++   A : access T := new (Subpool_Handle'(My_Subpool'Unchecked_Access)) T;
++   B : access T := new (My_Subpool_Access) T;
++   C : access T := new (My_Subpool'Access) T;
++
++begin
++   null;
++end;
+new file mode 100644
+--- /dev/null
 +++ b/src/gcc/testsuite/gnat.dg/component_value1.adb
 @@ -0,0 +1,32 @@
 +--  { dg-do run }
@@ -731674,6 +734419,35 @@ new file mode 100644
 +  end record;
 +
 +end Prefix4_Pkg;
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/testsuite/gnat.dg/protected_type1.adb
+@@ -0,0 +1,25 @@
++--  { dg-do compile }
++
++with Ada.Finalization;
++
++procedure Protected_Type1 is
++
++  type T is new Ada.Finalization.Controlled with null record;
++
++  protected type Queue is
++    entry Get_Next_Line (Line : out String);
++  private
++    A : T;
++  end Queue;
++
++  protected body Queue is
++    entry Get_Next_Line (Line : out String)
++      when A /= (Ada.Finalization.Controlled with null record) is
++    begin
++      null;
++    end Get_Next_Line;
++  end Queue;
++
++begin
++  null;
++end;
 new file mode 100644
 --- /dev/null
 +++ b/src/gcc/testsuite/gnat.dg/put_image2.adb
@@ -731999,6 +734773,51 @@ new file mode 100644
 +end Put_Image2;
 new file mode 100644
 --- /dev/null
++++ b/src/gcc/testsuite/gnat.dg/subpools2.adb
+@@ -0,0 +1,41 @@
++-- { dg-do run }
++
++with System.Storage_Elements;       use System.Storage_Elements;
++with System.Storage_Pools.Subpools; use System.Storage_Pools.Subpools;
++
++procedure Subpools2 is
++
++   B : Storage_Array (1 .. 128) with Alignment => Standard'Maximum_Alignment;
++
++   type Pool_T    is new Root_Storage_Pool_With_Subpools with null record;
++   type Subpool_T is new Root_Subpool with null record;
++   type Rec       is record I : Integer := 0; end record;
++
++   overriding function Create_Subpool
++     (Pool : in out Pool_T) return not null Subpool_Handle is
++     (raise Constraint_Error);
++
++   overriding procedure Deallocate_Subpool
++     (Pool : in out Pool_T; Subpool : in out Subpool_Handle) is null;
++
++   overriding procedure Allocate_From_Subpool
++     (Pool                     : in out Pool_T;
++      Storage_Address          : out System.Address;
++      Size_In_Storage_Elements : Storage_Count;
++      Alignment                : Storage_Count;
++      Subpool                  : not null Subpool_Handle) is
++   begin
++      Storage_Address := B'Address;
++   end;
++
++   Pool    : Pool_T;
++   Subpool : aliased Subpool_T;
++   Handle  : Subpool_Handle := Subpool'Unchecked_Access;
++
++   type Subpool_A is access Rec with Storage_Pool => Pool;
++   Ptr : Subpool_A;
++
++begin
++   Set_Pool_Of_Subpool (Handle, Pool);
++   Ptr := new (Handle) Rec'(I => <>);
++end;
+new file mode 100644
+--- /dev/null
 +++ b/src/gcc/testsuite/gnat.dg/unchecked_union4.adb
 @@ -0,0 +1,19 @@
 +--  { dg-do compile }
@@ -732207,7 +735026,15 @@ new file mode 100644
  # Return 1 if this is an ARM target supporting the FP16 alternative
  # format.  Some multilibs may be incompatible with the options needed.  Also
  # set et_arm_fp16_alternative_flags to the best options to add.
-@@ -6465,6 +6472,22 @@ foreach N { 128 256 512 1024 2048 } {
+@@ -6080,6 +6087,7 @@ foreach { armfunc armflag armdefs } {
+ # flags).  See above for setting -march=.
+ foreach { armfunc armflag armdefs } {
+ 	    xscale_arm "-mcpu=xscale -mtune=xscale -mfloat-abi=soft -marm" "__XSCALE__ && !__thumb__"
++	    cortex_a53 "-mcpu=cortex-a53 -mtune=cortex-a53" __ARM_ARCH_8A__
+ 	    cortex_a57 "-mcpu=cortex-a57 -mtune=cortex-a57" __ARM_ARCH_8A__
+ 	    cortex_m0 "-mcpu=cortex-m0 -mtune=cortex-m0 -mfloat-abi=soft -mthumb" "__ARM_ARCH_6M__ && __thumb__"
+ 	    cortex_m0_small "-mcpu=cortex-m0.small-multiply -mtune=cortex-m0.small-multiply -mfloat-abi=soft -mthumb" "__ARM_ARCH_6M__ && __thumb__"
+@@ -6465,6 +6473,22 @@ foreach N { 128 256 512 1024 2048 } {
      }]
  }
  
@@ -732230,7 +735057,7 @@ new file mode 100644
  proc check_effective_target_arm_neonv2_hw { } {
      return [check_runtime arm_neon_hwv2_available {
  	#include "arm_neon.h"
-@@ -14393,3 +14416,11 @@ proc check_effective_target_speculation_barrier_defined { } {
+@@ -14393,3 +14417,11 @@ proc check_effective_target_speculation_barrier_defined { } {
  	    }
  	}]
  }
@@ -732400,7 +735227,23 @@ new file mode 100644
        ret = create_access (expr, stmt, write);
        break;
  
-@@ -4086,12 +4084,6 @@ get_access_for_expr (tree expr)
+@@ -3254,6 +3252,7 @@ propagate_subaccesses_from_rhs (struct access *lacc, struct access *racc)
+ 	}
+ 
+       if (rchild->grp_unscalarizable_region
++	  || (rchild->size % BITS_PER_UNIT) != 0
+ 	  || !budget_for_propagation_access (lacc->base))
+ 	{
+ 	  if (!lacc->grp_write && access_or_its_child_written (rchild))
+@@ -3313,6 +3312,7 @@ propagate_subaccesses_from_lhs (struct access *lacc, struct access *racc)
+       HOST_WIDE_INT norm_offset = lchild->offset + norm_delta;
+ 
+       if (lchild->grp_unscalarizable_region
++	  || (lchild->size % BITS_PER_UNIT) != 0
+ 	  || child_would_conflict_in_acc (racc, norm_offset, lchild->size,
+ 					  &matching_acc)
+ 	  || !budget_for_propagation_access (racc->base))
+@@ -4086,12 +4086,6 @@ get_access_for_expr (tree expr)
    tree base;
    bool reverse;
  
@@ -732456,7 +735299,18 @@ new file mode 100644
    if (dump_enabled_p ())
 --- a/src/gcc/tree-ssa-math-opts.cc
 +++ b/src/gcc/tree-ssa-math-opts.cc
-@@ -3802,6 +3802,7 @@ maybe_optimize_guarding_check (vec<gimple *> &mul_stmts, gimple *cond_stmt,
+@@ -3464,6 +3464,10 @@ convert_mult_to_fma (gimple *mul_stmt, tree op1, tree op2,
+ 					      &else_value, &len, &bias))
+ 	return false;
+ 
++      /* The multiplication result must be one of the addition operands.  */
++      if (ops[0] != result && ops[1] != result)
++	return false;
++
+       switch (code)
+ 	{
+ 	case MINUS_EXPR:
+@@ -3802,6 +3806,7 @@ maybe_optimize_guarding_check (vec<gimple *> &mul_stmts, gimple *cond_stmt,
    else
      gimple_cond_make_false (zero_cond);
    update_stmt (zero_cond);
@@ -732464,7 +735318,7 @@ new file mode 100644
    *cfg_changed = true;
  }
  
-@@ -4074,7 +4075,7 @@ build_saturation_binary_arith_call_and_replace (gimple_stmt_iterator *gsi,
+@@ -4074,7 +4079,7 @@ build_saturation_binary_arith_call_and_replace (gimple_stmt_iterator *gsi,
  						internal_fn fn, tree lhs,
  						tree op_0, tree op_1)
  {
@@ -733600,7 +736454,25 @@ new file mode 100644
      return nullptr;
 --- a/src/libcpp/ChangeLog
 +++ b/src/libcpp/ChangeLog
-@@ -1,3 +1,13 @@
+@@ -1,3 +1,31 @@
++2026-02-22  Nathaniel Shead  <nathanieloshead@gmail.com>
++
++	Backported from master:
++	2026-02-22  Nathaniel Shead  <nathanieloshead@gmail.com>
++
++	PR c++/124153
++	* lex.cc (cpp_maybe_module_directive): Set in_deferred_pragma
++	and eol when we see an unexpected CPP_PRAGMA_EOL.
++
++2026-02-22  Nathaniel Shead  <nathanieloshead@gmail.com>
++
++	Backported from master:
++	2026-02-22  Nathaniel Shead  <nathanieloshead@gmail.com>
++
++	PR c++/119756
++	* files.cc (search_path_head): Also treat empty string (stdin)
++	as an absolute path.
++
 +2025-08-08  Jakub Jelinek  <jakub@redhat.com>
 +
 +	Backported from master:
@@ -733614,6 +736486,17 @@ new file mode 100644
  2025-08-08  Release Manager
  
  	* GCC 15.2.0 released.
+--- a/src/libcpp/files.cc
++++ b/src/libcpp/files.cc
+@@ -1092,7 +1092,7 @@ search_path_head (cpp_reader *pfile, const char *fname, int angle_brackets,
+   cpp_dir *dir;
+   _cpp_file *file;
+ 
+-  if (IS_ABSOLUTE_PATH (fname))
++  if (IS_ABSOLUTE_PATH (fname) || *fname == '\0')
+     return &pfile->no_search_path;
+ 
+   /* pfile->buffer is NULL when processing an -include command-line flag.  */
 --- a/src/libcpp/lex.cc
 +++ b/src/libcpp/lex.cc
 @@ -3504,6 +3504,7 @@ cpp_maybe_module_directive (cpp_reader *pfile, cpp_token *result)
@@ -733639,7 +736522,23 @@ new file mode 100644
  	   : peek->type == CPP_SEMICOLON))
      {
        pfile->state.pragma_allow_expansion = !CPP_OPTION (pfile, preprocessed);
-@@ -3688,22 +3689,19 @@ cpp_maybe_module_directive (cpp_reader *pfile, cpp_token *result)
+@@ -3669,6 +3670,15 @@ cpp_maybe_module_directive (cpp_reader *pfile, cpp_token *result)
+ 		      peek->flags |= NO_DOT_COLON;
+ 		      break;
+ 		    }
++		  else if (peek->type == CPP_PRAGMA_EOL)
++		    {
++		      /* This is a broken module-directive; undo the clearing
++			 of in_deferred_pragma from _cpp_lex_direct so callers
++			 don't crash, and make sure we process the EOL again.  */
++		      pfile->state.in_deferred_pragma = true;
++		      eol = true;
++		      break;
++		    }
+ 		  else
+ 		    break;
+ 		}
+@@ -3688,22 +3698,19 @@ cpp_maybe_module_directive (cpp_reader *pfile, cpp_token *result)
        pfile->state.in_deferred_pragma = false;
        /* Do not let this remain on.  */
        pfile->state.angled_headers = false;
@@ -733665,7 +736564,7 @@ new file mode 100644
 -	}
 +      /* Put the peeked tokens back.  */
 +      _cpp_backup_tokens_direct (pfile, backup);
-+      /* But if the last one was an EOL in the not_module case, forget it.  */
++      /* But if the last one was an EOL, forget it.  */
 +      if (eol)
 +	pfile->lookaheads--;
      }
@@ -736096,7 +738995,55 @@ new file mode 100644
              extern (C) int cmp(scope const void* p1, scope const void* p2, scope void* ti)
 --- a/src/libstdc++-v3/ChangeLog
 +++ b/src/libstdc++-v3/ChangeLog
-@@ -1,3 +1,483 @@
+@@ -1,3 +1,531 @@
++2026-02-10  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2025-11-24  Jonathan Wakely  <jwakely@redhat.com>
++
++	* python/libstdcxx/v6/xmethods.py (ListMethodsMatcher.match):
++	Fix lookup for node type.
++
++2026-02-10  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2025-11-24  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/122821
++	* python/libstdcxx/v6/xmethods.py (_versioned_namespace): Remove
++	global variable.
++	(is_specialization_of): Do not use _versioned_namespace. Add
++	__debug:: to regex.
++
++2026-02-10  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2026-02-10  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/123991
++	* include/bits/basic_string.h (compare(size_type, size_type, T)):
++	Remove noexcept-specifier.
++	(compare(size_type, size_type, T, size_type, size_type)):
++	Likewise.
++	* include/bits/cow_string.h (compare(size_type, size_type, T)):
++	Remove noexcept-specifier.
++	(compare(size_type, size_type, T, size_type, size_type)):
++	Likewise.
++	* testsuite/21_strings/basic_string/operations/compare/char/123991.cc:
++	New test.
++	* testsuite/21_strings/basic_string/operations/compare/wchar_t/123991.cc:
++	New test.
++
++2026-02-09  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2026-02-09  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/124024
++	* include/bits/out_ptr.h (out_ptr): Fix doxygen comment to refer
++	to the right function.
++	(inout_ptr): Improve markup in doxygen comment.
++
 +2026-02-06  Tomasz Kamiński  <tkaminsk@redhat.com>
 +
 +	Backported from master:
@@ -738696,6 +741643,24 @@ new file mode 100644
        }
  
      struct __waiter_pool_base
+--- a/src/libstdc++-v3/include/bits/basic_string.h
++++ b/src/libstdc++-v3/include/bits/basic_string.h
+@@ -3505,7 +3505,6 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
+ 	_GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+ 	_If_sv<_Tp, int>
+ 	compare(size_type __pos, size_type __n, const _Tp& __svt) const
+-	noexcept(is_same<_Tp, __sv_type>::value)
+ 	{
+ 	  __sv_type __sv = __svt;
+ 	  return __sv_type(*this).substr(__pos, __n).compare(__sv);
+@@ -3526,7 +3525,6 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
+ 	_If_sv<_Tp, int>
+ 	compare(size_type __pos1, size_type __n1, const _Tp& __svt,
+ 		size_type __pos2, size_type __n2 = npos) const
+-	noexcept(is_same<_Tp, __sv_type>::value)
+ 	{
+ 	  __sv_type __sv = __svt;
+ 	  return __sv_type(*this)
 --- a/src/libstdc++-v3/include/bits/chrono_io.h
 +++ b/src/libstdc++-v3/include/bits/chrono_io.h
 @@ -3797,14 +3797,14 @@ namespace __detail
@@ -738725,6 +741690,24 @@ new file mode 100644
  				  else
  				    break;
  				}
+--- a/src/libstdc++-v3/include/bits/cow_string.h
++++ b/src/libstdc++-v3/include/bits/cow_string.h
+@@ -2979,7 +2979,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+       template<typename _Tp>
+ 	_If_sv<_Tp, int>
+ 	compare(size_type __pos, size_type __n, const _Tp& __svt) const
+-	noexcept(is_same<_Tp, __sv_type>::value)
+ 	{
+ 	  __sv_type __sv = __svt;
+ 	  return __sv_type(*this).substr(__pos, __n).compare(__sv);
+@@ -2999,7 +2998,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+ 	_If_sv<_Tp, int>
+ 	compare(size_type __pos1, size_type __n1, const _Tp& __svt,
+ 		size_type __pos2, size_type __n2 = npos) const
+-	noexcept(is_same<_Tp, __sv_type>::value)
+ 	{
+ 	  __sv_type __sv = __svt;
+ 	  return __sv_type(*this)
 --- a/src/libstdc++-v3/include/bits/cpp_type_traits.h
 +++ b/src/libstdc++-v3/include/bits/cpp_type_traits.h
 @@ -503,6 +503,13 @@ __INT_N(__GLIBCXX_TYPE_INT_N_3)
@@ -738752,6 +741735,26 @@ new file mode 100644
  	    {
  	      auto __prev = before_begin();
  	      auto __curr = begin();
+--- a/src/libstdc++-v3/include/bits/out_ptr.h
++++ b/src/libstdc++-v3/include/bits/out_ptr.h
+@@ -397,7 +397,7 @@ namespace __detail
+    * @tparam _Pointer The type of pointer to convert to.
+    * @param __s The pointer that should take ownership of the result.
+    * @param __args... Arguments to use when resetting the smart pointer.
+-   * @return A std::inout_ptr_t referring to `__s`.
++   * @return A `std::out_ptr_t` referring to `__s`.
+    * @since C++23
+    * @headerfile <memory>
+    */
+@@ -418,7 +418,7 @@ namespace __detail
+    * @tparam _Pointer The type of pointer to convert to.
+    * @param __s The pointer that should take ownership of the result.
+    * @param __args... Arguments to use when resetting the smart pointer.
+-   * @return A std::inout_ptr_t referring to `__s`.
++   * @return A `std::inout_ptr_t` referring to `__s`.
+    * @since C++23
+    * @headerfile <memory>
+    */
 --- a/src/libstdc++-v3/include/bits/random.tcc
 +++ b/src/libstdc++-v3/include/bits/random.tcc
 @@ -83,7 +83,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
@@ -739753,6 +742756,36 @@ new file mode 100644
      try:
          return gdb.lookup_type(t)
      except gdb.error as e:
+--- a/src/libstdc++-v3/python/libstdcxx/v6/xmethods.py
++++ b/src/libstdc++-v3/python/libstdcxx/v6/xmethods.py
+@@ -28,8 +28,6 @@ def get_bool_type():
+ def get_std_size_type():
+     return gdb.lookup_type('std::size_t')
+ 
+-_versioned_namespace = '__8::'
+-
+ def is_specialization_of(x, template_name):
+     """
+     Test whether a type is a specialization of the named class template.
+@@ -39,8 +37,7 @@ def is_specialization_of(x, template_name):
+     """
+     if isinstance(x, gdb.Type):
+         x = x.tag
+-    template_name = '(%s)?%s' % (_versioned_namespace, template_name)
+-    return re.match(r'^std::(__\d::)?%s<.*>$' % template_name, x) is not None
++    return re.match(r'^std::(__\d::|__debug::)?%s<.*>$' % template_name, x) is not None
+ 
+ class LibStdCxxXMethod(gdb.xmethod.XMethod):
+     def __init__(self, name, worker_class):
+@@ -445,7 +442,7 @@ class ListMethodsMatcher(gdb.xmethod.XMethodMatcher):
+         if method is None or not method.enabled:
+             return None
+         val_type = class_type.template_argument(0)
+-        node_type = gdb.lookup_type(str(class_type) + '::_Node').pointer()
++        node_type = gdb.lookup_type(str(class_type) + '::_Node_ptr')
+         return method.worker_class(val_type, node_type)
+ 
+ # Xmethods for std::vector
 --- a/src/libstdc++-v3/src/c++11/system_error.cc
 +++ b/src/libstdc++-v3/src/c++11/system_error.cc
 @@ -161,22 +161,23 @@ namespace
@@ -740688,6 +743721,126 @@ new file mode 100644
  
  // LWG 4148. unique_ptr::operator* should not allow dangling references
  
+new file mode 100644
+--- /dev/null
++++ b/src/libstdc++-v3/testsuite/21_strings/basic_string/operations/compare/char/123991.cc
+@@ -0,0 +1,56 @@
++// { dg-do run { target c++17 } }
++
++// Bug 123991 - std::string::compare crashes instead of throwing
++
++#include <string>
++#include <string_view>
++#include <stdexcept>
++#include <testsuite_hooks.h>
++
++void
++test_compare_3arg()
++{
++  std::string_view sv;
++  std::string s;
++  static_assert( ! noexcept(s.compare(0, 0, sv)) );
++#ifdef __cpp_exceptions
++  try
++  {
++    (void) s.compare(1, 0, sv);
++    VERIFY(false);
++  }
++  catch (const std::out_of_range&)
++  { }
++#endif
++}
++
++void
++test_compare_5arg()
++{
++  std::string_view sv;
++  std::string s;
++  static_assert( ! noexcept(s.compare(0, 0, sv, 0, 0)) );
++#ifdef __cpp_exceptions
++  try
++  {
++    (void) s.compare(1, 0, sv, 0, 0);
++    VERIFY(false);
++  }
++  catch (const std::out_of_range&)
++  { }
++
++  try
++  {
++    (void) s.compare(0, 0, sv, 1, 0);
++    VERIFY(false);
++  }
++  catch (const std::out_of_range&)
++  { }
++#endif
++}
++
++int main()
++{
++  test_compare_3arg();
++  test_compare_5arg();
++}
+new file mode 100644
+--- /dev/null
++++ b/src/libstdc++-v3/testsuite/21_strings/basic_string/operations/compare/wchar_t/123991.cc
+@@ -0,0 +1,56 @@
++// { dg-do run { target c++17 } }
++
++// Bug 123991 - std::string::compare crashes instead of throwing
++
++#include <string>
++#include <string_view>
++#include <stdexcept>
++#include <testsuite_hooks.h>
++
++void
++test_compare_3arg()
++{
++  std::wstring_view sv;
++  std::wstring s;
++  static_assert( ! noexcept(s.compare(0, 0, sv)) );
++#ifdef __cpp_exceptions
++  try
++  {
++    (void) s.compare(1, 0, sv);
++    VERIFY(false);
++  }
++  catch (const std::out_of_range&)
++  { }
++#endif
++}
++
++void
++test_compare_5arg()
++{
++  std::wstring_view sv;
++  std::wstring s;
++  static_assert( ! noexcept(s.compare(0, 0, sv, 0, 0)) );
++#ifdef __cpp_exceptions
++  try
++  {
++    (void) s.compare(1, 0, sv, 0, 0);
++    VERIFY(false);
++  }
++  catch (const std::out_of_range&)
++  { }
++
++  try
++  {
++    (void) s.compare(0, 0, sv, 1, 0);
++    VERIFY(false);
++  }
++  catch (const std::out_of_range&)
++  { }
++#endif
++}
++
++int main()
++{
++  test_compare_3arg();
++  test_compare_5arg();
++}
 --- a/src/libstdc++-v3/testsuite/23_containers/flat_map/1.cc
 +++ b/src/libstdc++-v3/testsuite/23_containers/flat_map/1.cc
 @@ -261,6 +261,17 @@ test08()
