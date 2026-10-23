@@ -1,3 +1,51 @@
+glibc (2.42-10) unstable; urgency=medium
+
+  [ Aurelien Jarno ]
+  * debian/sysdeps/{amd64,arm64,i386,x32}.mk: disable SFrame support.  Closes:
+    #1125944.
+  * debian/control.in/{main,libc}: drop versioned Build-Depends and Breaks on
+    binutils 2.45, now pointless.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Mon, 19 Jan 2026 20:12:24 +0100
+
+glibc (2.42-9) unstable; urgency=medium
+
+  [ Samuel Thibault ]
+  * debian/patches/hurd-i386/git-cancel-stack.diff: Fix crash on cancellation
+    with unaligned stack.
+
+  [ Aurelien Jarno ]
+  * debian/rules.d/debhelper.mk: do not strip ld.so on armhf.  Closes:
+    #1125796.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 18 Jan 2026 11:52:41 +0100
+
+glibc (2.42-8) unstable; urgency=medium
+
+  [ Samuel Thibault ]
+  * debian/testsuite-xfail-debian.mk: Avoid running tst-writev on hurd-amd64.
+  * debian/patches/hurd-i386/git-sigreturn-xmm.diff: Fix sigreturn using xmm
+    registers in the signal contention case.
+  * debian/patches/hurd-i386/local-intr-msg-clobber.diff: Try to re-introduce
+    mmx clobber work-around.
+  * debian/testsuite-xfail-debian.mk: Update hurd results.
+
+  [ Aurelien Jarno ]
+  * debian/rules.d/build.mk: do not write BUILD_CXX to configparms, it's
+    unused.
+  * debian/patches/git-updates.diff: update from upstream stable branch:
+    - Fix and integer overflow in _int_memalign leading to heap corruption
+      (CVE-2026-0861).  Closes: #1125678.
+    - Fix stack contents leak in getnetbyaddr (CVE-2026-0915).
+    - Optimize trylock for high cache contention workloads.
+
+  [ Helmut Grohne ]
+  * debian/control.in/main: avoid g++ dependency in nocheck builds.
+  * debian/control.in/main, rules, rules.d/build.mk: don't build nscd in
+    stage2.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Fri, 16 Jan 2026 21:50:10 +0100
+
 glibc (2.42-7) unstable; urgency=medium
 
   [ Aurelien Jarno ]

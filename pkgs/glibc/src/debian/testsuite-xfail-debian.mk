@@ -258,11 +258,6 @@ test-xfail-tst-aio10 = yes
 test-xfail-tst-aio9 = yes
 
 # Needs LD_AUDIT support
-test-xfail-tst-audit1 = yes
-test-xfail-tst-audit2 = yes
-test-xfail-tst-audit3 = yes
-test-xfail-tst-audit8 = yes
-test-xfail-tst-audit9 = yes
 test-xfail-tst-audit14 = yes
 test-xfail-tst-audit14-cmp = yes
 test-xfail-tst-audit14a = yes
@@ -272,7 +267,6 @@ test-xfail-tst-audit15-cmp = yes
 test-xfail-tst-audit16 = yes
 test-xfail-tst-audit16-cmp = yes
 test-xfail-tst-audit18 = yes
-test-xfail-tst-audit20 = yes
 test-xfail-tst-audit23 = yes
 test-xfail-tst-audit24a = yes
 test-xfail-tst-audit24b = yes
@@ -342,8 +336,6 @@ test-xfail-tst-pututxline-lockfail = yes
 # new in 2.32
 # Assumes some linuxish strings
 test-xfail-tst-strerror = yes
-# We always have several threads
-test-xfail-tst-single_threaded-pthread = yes
 # known to be fixed by the siginfo patch by fixing the returned value
 # But for dlsym errors it still returns 9 instead of 127...
 test-xfail-tst-latepthread = yes
@@ -438,6 +430,14 @@ test-xfail-tst-mallocfork2-malloc-largetcache = yes
 test-xfail-tst-malloc-alternate-path-malloc-largetcache = yes
 test-xfail-tst-sprintf-fortify-rdonly-static = yes
 
+# new in 2.43
+test-xfail-tst-pthread-exited = yes
+test-xfail-tst-malloc-alternate-path-threaded-worker = yes
+test-xfail-tst-malloc-alternate-path-threaded-main = yes
+# Fixed in 2.43
+test-xfail-tst-single_threaded-pthread = yes
+test-xfail-tst-single_threaded-pthread-static = yes
+
 # actually never succeded
 test-xfail-tst-create_format1 = yes
 test-xfail-tst-getcwd-abspath = yes
@@ -448,10 +448,6 @@ test-xfail-tst-lockf = yes
 
 # assumes that all st_mode flags (32bit) can exist in stx_mode flags (16bit)
 test-xfail-tst-statx = yes
-
-# Some issues with FPU flags
-test-xfail-test-fenv = yes
-test-xfail-test-fenv-sse-2 = yes
 
 # we don't actually set the secure flag when setgid doesn't actually increase permissions
 test-xfail-tst-env-setuid-static = yes
@@ -474,6 +470,7 @@ test-xfail-test-ldouble-log10 = yes
 test-xfail-test-ldouble-log2 = yes
 test-xfail-test-ldouble-y0 = yes
 test-xfail-test-ldouble-y1 = yes
+test-xfail-test-fenv = yes
 
 # memory leak
 test-xfail-tst-vfprintf-width-prec-mem = yes
@@ -484,6 +481,8 @@ test-xfail-tst-malloc-too-large = yes
 test-xfail-tst-malloc-too-large-malloc-check = yes
 test-xfail-tst-malloc-too-large-malloc-hugetlb1 = yes
 test-xfail-tst-malloc-too-large-malloc-hugetlb2 = yes
+test-xfail-tst-malloc-too-large-threaded-main = yes
+test-xfail-tst-malloc-too-large-threaded-worker = yes
 
 # missing support
 test-xfail-tst-map-32bit-1a = yes
@@ -496,6 +495,9 @@ test-xfail-tst-audit5 = yes
 test-xfail-tst-audit6 = yes
 test-xfail-tst-audit7 = yes
 test-xfail-tst-audit10 = yes
+
+# This tries to write 2G to /dev/null
+tests-unsupported += tst-writev
 endif
 
 

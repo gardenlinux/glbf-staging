@@ -4,11 +4,12 @@ Priority: required
 Build-Depends: gettext, xz-utils, file, quilt,
  autoconf, gawk, debhelper-compat (= 13), rdfind, symlinks, netbase, gperf, bison,
  linux-libc-dev [linux-any],
- libaudit-dev [linux-any], libcap-dev [linux-any] <!stage2>, libselinux1-dev [linux-any] <!stage2>,
+ libaudit-dev [linux-any] <!nocheck> <!stage1 !stage2>, libcap-dev [linux-any] <!stage2>, libselinux1-dev [linux-any] <!stage2>,
  mig-for-host (>= 1.8+git20200618-7~) [hurd-any], gnumach-dev (>= 2:1.8+git20200710-2~) [hurd-any],
  hurd-dev (>= 1:0.9.git20201127-4~) [hurd-any] | hurd-headers-dev [hurd-any],
- binutils-for-host, binutils-for-host (>= 2.45) [amd64 arm64 i386 x32],
- g++-15-for-host, g++-15-multilib [amd64 i386 mips mipsel mipsn32 mipsn32el mips64 mips64el mipsr6 mipsr6el mipsn32r6 mipsn32r6el mips64r6 mips64r6el powerpc ppc64 s390x sparc sparc64 x32] <!nobiarch>,
+ binutils-for-host,
+ gcc-15-for-host, gcc-15-multilib [amd64 i386 mips mipsel mipsn32 mipsn32el mips64 mips64el mipsr6 mipsr6el mipsn32r6 mipsn32r6el mips64r6 mips64r6el powerpc ppc64 s390x sparc sparc64 x32] <!nobiarch>,
+ g++-15-for-host <!nocheck>, g++-15-multilib [amd64 i386 mips mipsel mipsn32 mipsn32el mips64 mips64el mipsr6 mipsr6el mipsn32r6 mipsn32r6el mips64r6 mips64r6el powerpc ppc64 s390x sparc sparc64 x32] <!nobiarch !nocheck>,
  python3:native,
  libidn2-0 <!nocheck>,
  libc-bin (>= 2.42) <cross>,
@@ -159,7 +160,7 @@ Priority: optional
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Conflicts: unscd
-Build-Profiles: <!stage1>
+Build-Profiles: <!stage1 !stage2>
 Description: GNU C Library: Name Service Cache Daemon
  A daemon which handles passwd, group and host lookups
  for running programs and caches the results for the next
@@ -204,7 +205,7 @@ Multi-Arch: same
 Depends: libc6 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${rpcsvc-proto:Depends}
 Suggests: glibc-doc, manpages-dev
 Provides: libc-dev (= ${binary:Version}), libc6-dev [alpha hurd-any]
-Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), binutils (<< 2.45) [amd64 arm64]
+Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), libdpkg-perl (<< 1.23.0) [i386]
 Conflicts: libc6.1-dev, libc0.3-dev,
 Description: GNU C Library: Development Libraries and Header Files
  Contains the symlinks, headers, and object files needed to compile
@@ -275,7 +276,7 @@ Multi-Arch: same
 Depends: libc6.1 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${rpcsvc-proto:Depends}
 Suggests: glibc-doc, manpages-dev
 Provides: libc-dev (= ${binary:Version}), libc6-dev [alpha hurd-any]
-Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), binutils (<< 2.45) [amd64 arm64]
+Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), libdpkg-perl (<< 1.23.0) [i386]
 Conflicts: libc6-dev, libc0.3-dev,
 Description: GNU C Library: Development Libraries and Header Files
  Contains the symlinks, headers, and object files needed to compile
@@ -346,7 +347,7 @@ Multi-Arch: same
 Depends: libc0.3 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${rpcsvc-proto:Depends}
 Suggests: glibc-doc, manpages-dev
 Provides: libc-dev (= ${binary:Version}), libc6-dev [alpha hurd-any]
-Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), binutils (<< 2.45) [amd64 arm64]
+Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), libdpkg-perl (<< 1.23.0) [i386]
 Conflicts: libc6-dev, libc6.1-dev,
 Description: GNU C Library: Development Libraries and Header Files
  Contains the symlinks, headers, and object files needed to compile
@@ -399,6 +400,7 @@ Priority: optional
 Provides: lib32c-dev
 Depends: libc6-i386 (= ${binary:Version}) <!stage1>, libc6-dev (= ${binary:Version}), ${misc:Depends}
 Conflicts: libc6-dev-amd64 [amd64], libc6-dev-amd64:i386 [x32], libc6-dev-i386:amd64 [x32], libc6-dev-i386:x32 [amd64], libc6-dev-mips32, libc6-dev-mips64, libc6-dev-mipsn32, libc6-dev-powerpc, libc6-dev-ppc64, libc6-dev-s390, libc6-dev-sparc, libc6-dev-sparc64, libc6-dev-x32 [x32], libc6-dev-x32:i386 [amd64]
+Breaks: libdpkg-perl (<< 1.23.0)
 Recommends: gcc-multilib
 Build-Profiles: <!nobiarch>
 Description: GNU C Library: 32-bit development libraries for AMD64
