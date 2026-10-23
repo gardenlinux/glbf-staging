@@ -1,0 +1,50 @@
+Index: libselinux-3.7/man/man5/user_contexts.5
+===================================================================
+--- libselinux-3.7.orig/man/man5/user_contexts.5
++++ libselinux-3.7/man/man5/user_contexts.5
+@@ -60,7 +60,7 @@ This consists of a \fIrole\fB:\fItype\fR
+ .RE
+ .
+ .SH "EXAMPLE"
+-# Example for xguest_u at /etc/selinux/targeted/contexts/users/xguest_u
++# Example for xguest_u at /etc/selinux/default/contexts/users/xguest_u
+ .br
+ system_r:crond_t:s0			xguest_r:xguest_t:s0
+ .br
+Index: libselinux-3.7/man/man8/sefcontext_compile.8
+===================================================================
+--- libselinux-3.7.orig/man/man8/sefcontext_compile.8
++++ libselinux-3.7/man/man8/sefcontext_compile.8
+@@ -47,16 +47,16 @@ On error -1 is returned.  On success 0 i
+ .SH "EXAMPLES"
+ .B Example 1:
+ .br
+-sefcontext_compile /etc/selinux/targeted/contexts/files/file_contexts
++sefcontext_compile /etc/selinux/default/contexts/files/file_contexts
+ .sp
+ Results in the following file being generated:
+ .RS
+-/etc/selinux/targeted/contexts/files/file_contexts.bin
++/etc/selinux/default/contexts/files/file_contexts.bin
+ .RE
+ .sp
+ .B Example 2:
+ .br
+-sefcontext_compile -o new_fc.bin /etc/selinux/targeted/contexts/files/file_contexts
++sefcontext_compile -o new_fc.bin /etc/selinux/default/contexts/files/file_contexts
+ .sp
+ Results in the following file being generated in the cwd:
+ .RS
+Index: libselinux-3.7/src/selinux_config.c
+===================================================================
+--- libselinux-3.7.orig/src/selinux_config.c
++++ libselinux-3.7/src/selinux_config.c
+@@ -13,7 +13,7 @@
+ #include "selinux_internal.h"
+ #include "get_default_type_internal.h"
+ 
+-#define SELINUXDEFAULT "targeted"
++#define SELINUXDEFAULT "default"
+ #define SELINUXTYPETAG "SELINUXTYPE="
+ #define SELINUXTAG "SELINUX="
+ #define REQUIRESEUSERS "REQUIRESEUSERS="

@@ -1,0 +1,78 @@
+Description: link libgnarl with libatomic on armel
+ On other architectures, the library is ignored thanks to --as-needed.
+ .
+ Seen with 14-20240429-1:
+ cd rts; [bla]/./gcc/xgcc [bla] -shared [bla] -o libgnarl-14.so [bla]
+ /usr/bin/arm-linux-gnueabi-ld: libgnat-14.so: undefined reference to `__atomic_compare_exchange_8'
+ /usr/bin/arm-linux-gnueabi-ld: libgnat-14.so: undefined reference to `__atomic_load_8'
+ .
+ Libatomic becomes an artificial dependency for Ada in Makefile.def,
+ so a better solution is welcome.
+ .
+ Autogen should refresh src/Makefile.in from src/Makefile.{def,tpl}
+ at build time, but we do not want to Build-Depend: guile.
+ # export QUILT_PATCHES=debian/patches
+ # quilt pop $this.diff
+ # quilt add src/Makefile.in
+ # (cd src && autogen Makefile.def)
+ # quilt refresh --no-timestamps --no-index -pab
+ # quilt push -a
+ .
+ The issue is hidden without -Wl,--no-allow-shlib-undefined.
+ (ada-gnattools-cross.diff adds checking options to LDFLAGS,
+  then adds LDFLAGS to the command line).
+Bug-Debian: https://bugs.debian.org/861734
+Author: Matthias Klose <doko@debian.org>
+Author: Nicolas Boulenguez <nicolas@debian.org>
+
+--- a/src/gcc/ada/Makefile.rtl
++++ b/src/gcc/ada/Makefile.rtl
+@@ -2506,6 +2506,7 @@ endif
+ # ARM linux, GNU eabi
+ ifeq ($(SELECTED_PAIRS),PAIRS_NONE)
+ ifeq ($(strip $(filter-out arm% linux-gnueabi%,$(target_cpu) $(target_os))),)
++  MISCLIB = ../../../$(target_alias)/libatomic/.libs/libatomic.so
+ 
+   SELECTED_PAIRS=arm-linux-gnueabi
+ 
+--- a/src/Makefile.def
++++ b/src/Makefile.def
+@@ -418,6 +418,8 @@ dependencies = { module=all-target-libad
+ dependencies = { module=all-gnattools; on=all-target-libada; };
+ dependencies = { module=all-gnattools; on=all-target-libstdc++-v3; };
+ 
++dependencies = { module=all-target-libada; on=all-target-libatomic; };
++
+ // Depending on the specific configuration, the LTO plugin will either use the
+ // generic libiberty build or the specific build for linker plugins.
+ dependencies = { module=all-lto-plugin; on=all-libiberty; };
+--- a/src/Makefile.in
++++ b/src/Makefile.in
+@@ -69199,6 +69199,9 @@ configure-m4: stage_last
+ @endif gcc-bootstrap
+ 
+ @if gcc-bootstrap
++@unless target-libatomic-bootstrap
++all-target-libada: maybe-all-target-libatomic
++@endunless target-libatomic-bootstrap
+ @unless target-zlib-bootstrap
+ configure-target-fastjar: maybe-configure-target-zlib
+ @endunless target-zlib-bootstrap
+@@ -69234,6 +69237,7 @@ configure-target-libgo: maybe-all-target
+ @unless gcc-bootstrap
+ all-target-libada: maybe-all-gcc
+ all-gnattools: maybe-all-target-libstdc++-v3
++all-target-libada: maybe-all-target-libatomic
+ configure-libcc1: maybe-configure-gcc
+ all-libcc1: maybe-all-gcc
+ all-c++tools: maybe-all-gcc
+--- a/src/gcc/ada/gcc-interface/Makefile.in
++++ b/src/gcc/ada/gcc-interface/Makefile.in
+@@ -727,6 +727,7 @@ gnatlib-shared-default:
+ 		$(GNATRTL_TASKING_OBJS) \
+ 		$(SO_OPTS)libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
+ 		libgnat$(hyphen)$(LIBRARY_VERSION).so \
++		$(MISCLIB) \
+ 		$(THREADSLIB)
+ 	cd $(RTSDIR); $(LN_S) libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) \
+ 		libgnat$(soext)

@@ -1,0 +1,44 @@
+From: Christian Kastner <ckk@kvr.at>
+Date: Sat, 30 Apr 2016 14:12:45 +0200
+Subject: Filter out PIE flags when building shared objects
+
+Filter out -pie, -fpie, and -fPIE when building the shared library and the PAM
+module. This way, hardening=+all can be used unconditionally in debian/rules.
+
+Forwarded: not-needed
+Last-Update: 2022-03-04
+---
+ libcap/Makefile  | 4 ++++
+ pam_cap/Makefile | 4 ++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/libcap/Makefile b/libcap/Makefile
+index e90a950..148cd6e 100644
+--- a/libcap/Makefile
++++ b/libcap/Makefile
+@@ -18,6 +18,10 @@ CAPMAGICOBJ=cap_magic.o
+ PSXFILES=../psx/psx ../psx/psx_calls ../psx/wrap/psx_wrap
+ PSXMAGICOBJ=psx_magic.o
+ 
++# hardening=+all adds this universally, but we don't want this for the lib
++CFLAGS  := $(filter-out -fPIE,$(CFLAGS))
++LDFLAGS := $(filter-out -fPIE,$(filter-out -pie,$(LDFLAGS)))
++
+ # Always build libcap sources this way:
+ CFLAGS += -fPIC -D_LIBPSX_PTHREAD_LINKAGE
+ 
+diff --git a/pam_cap/Makefile b/pam_cap/Makefile
+index 258e519..080376c 100644
+--- a/pam_cap/Makefile
++++ b/pam_cap/Makefile
+@@ -3,6 +3,10 @@
+ topdir=$(shell pwd)/..
+ include ../Make.Rules
+ 
++# hardening=+all adds this universally, but we don't want this for the module
++CFLAGS  := $(filter-out -fPIE,$(CFLAGS))
++LDFLAGS := $(filter-out -fPIE,$(filter-out -pie,$(LDFLAGS)))
++
+ # Always build pam_cap sources this way:
+ CFLAGS += -fPIC
+ 

@@ -1,0 +1,6 @@
+build_profiles: [nocheck]
+build_options: [nocheck]
+runtime_depends:
+  base-passwd:
+    - glibc:libc6
+    - libselinux:libselinux1

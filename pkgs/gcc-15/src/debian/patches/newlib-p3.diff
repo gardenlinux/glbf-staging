@@ -1,0 +1,301 @@
+commit bd409f3c12e28e1464dec7fd0d45db30280f1e56
+Author: Andrew Stubbs <ams@baylibre.com>
+Date:   Wed Aug 27 10:11:25 2025 +0000
+
+    amdgcn, libm: fix vector ilogb bugs (bug 33272)
+
+
+--- a/newlib/libm/machine/amdgcn/amdgcn_veclib.h
++++ b/newlib-4.5.0.20241231/newlib/libm/machine/amdgcn/amdgcn_veclib.h
+@@ -267,7 +267,15 @@ do { \
+   __tmp; \
+ })
+ 
+-#define VECTOR_WHILE(cond, cond_var, prev_cond_var) \
++#define VECTOR_WHILE(cond, cond_var) \
++{ \
++  __auto_type cond_var = __mask; \
++  for (;;) { \
++    cond_var &= __builtin_convertvector (cond, __typeof (cond_var)); \
++    if (ALL_ZEROES_P (cond_var)) \
++      break;
++
++#define VECTOR_WHILE2(cond, cond_var, prev_cond_var) \
+ { \
+   __auto_type cond_var = prev_cond_var; \
+   for (;;) { \
+--- a/newlib-4.5.0.20241231/newlib/libm/machine/amdgcn/v64df_fmod.c
++++ b/newlib-4.5.0.20241231/newlib/libm/machine/amdgcn/v64df_fmod.c
+@@ -61,17 +61,19 @@ DEF_VD_MATH_FUNC (v64df, fmod, v64df x, v64df y)
+   v64si ix;
+   VECTOR_IF (hx < 0x00100000, cond)	// subnormal x
+     VECTOR_IF2 (hx == 0, cond2, cond)
+-      ix = VECTOR_INIT (-1043);
+-      for (v64si i = __builtin_convertvector (lx, v64si);
+-	   !ALL_ZEROES_P (cond2 & (i > 0));
+-	   i <<= 1)
+-	VECTOR_COND_MOVE (ix, ix - 1, cond2 & (i > 0));
++      VECTOR_COND_MOVE (ix, VECTOR_INIT (-1043), cond2);
++      v64si i = __builtin_convertvector (lx, v64si);
++      VECTOR_WHILE2 (i > 0, cond3, cond2);
++	VECTOR_COND_MOVE (ix, ix - 1, cond3);
++	VECTOR_COND_MOVE (i, i << 1, cond3);
++      VECTOR_ENDWHILE
+     VECTOR_ELSE2 (cond2, cond)
+-      ix = VECTOR_INIT (-1022);
+-      for (v64si i = __builtin_convertvector (hx << 11, v64si);
+-	   !ALL_ZEROES_P (cond2 & (i > 0));
+-	   i <<= 1)
+-	VECTOR_COND_MOVE (ix, ix - 1, cond2 & (i > 0));
++      VECTOR_COND_MOVE (ix, VECTOR_INIT (-1022), cond2);
++      v64si i = __builtin_convertvector (hx << 11, v64si);
++      VECTOR_WHILE2 (i > 0, cond3, cond2)
++	VECTOR_COND_MOVE (ix, ix - 1, cond3);
++	VECTOR_COND_MOVE (i, i << 1, cond3);
++      VECTOR_ENDWHILE
+     VECTOR_ENDIF
+   VECTOR_ELSE (cond)
+     VECTOR_COND_MOVE (ix, (hx >> 20) - 1023, cond);
+@@ -81,17 +83,19 @@ DEF_VD_MATH_FUNC (v64df, fmod, v64df x, v64df y)
+   v64si iy;
+   VECTOR_IF (hy < 0x00100000, cond)	// subnormal y
+     VECTOR_IF2 (hy == 0, cond2, cond)
+-      iy = VECTOR_INIT (-1043);
+-      for (v64si i = __builtin_convertvector (ly, v64si);
+-	   !ALL_ZEROES_P (cond2 & (i > 0));
+-	   i <<= 1)
+-	VECTOR_COND_MOVE (iy, iy - 1, cond2 & (i > 0));
++      VECTOR_COND_MOVE (iy, VECTOR_INIT (-1043), cond2);
++      v64si i = __builtin_convertvector (ly, v64si);
++      VECTOR_WHILE2 (i > 0, cond3, cond2);
++	VECTOR_COND_MOVE (iy, iy - 1, cond3);
++	VECTOR_COND_MOVE (i, i << 1, cond3);
++      VECTOR_ENDWHILE
+     VECTOR_ELSE2 (cond2, cond)
+-      iy = VECTOR_INIT (-1022);
+-      for (v64si i = __builtin_convertvector (hy << 11, v64si);
+-	   !ALL_ZEROES_P (cond2 & (i > 0));
+-	   i <<= 1)
+-	VECTOR_COND_MOVE (iy, iy - 1, cond2 & (i > 0));
++      VECTOR_COND_MOVE (iy, VECTOR_INIT (-1022), cond2);
++      v64si i = __builtin_convertvector (hy << 11, v64si);
++      VECTOR_WHILE2 (i > 0, cond3, cond2);
++	VECTOR_COND_MOVE (iy, iy - 1, cond3);
++	VECTOR_COND_MOVE (i, i << 1, cond3);
++      VECTOR_ENDWHILE
+     VECTOR_ENDIF
+   VECTOR_ELSE (cond)
+     VECTOR_COND_MOVE (iy, (hy >> 20) - 1023, cond);
+@@ -130,29 +134,26 @@ DEF_VD_MATH_FUNC (v64df, fmod, v64df x, v64df y)
+ 
+ /* fix point fmod */
+   v64si n = ix - iy;
+-  v64si cond = n != 0;
+ 
+-  while (!ALL_ZEROES_P (cond))
+-    {
+-      hz = hx - hy;
+-      lz = lx - ly;
+-      VECTOR_IF2 (lx < ly, cond2, cond)
+-	VECTOR_COND_MOVE (hz, hz - 1, cond2);
+-      VECTOR_ENDIF
+-      VECTOR_IF2 (hz < 0, cond2, cond)
+-	VECTOR_COND_MOVE (hx, hx + hx + (__builtin_convertvector(lx, v64usi) >> 31), cond2);
+-        VECTOR_COND_MOVE (lx, lx + lx, cond2);
+-      VECTOR_ELSE2 (cond2, cond)
+-	VECTOR_IF2 ((hz | lz) == 0, cond3, cond2)		// return sign(x)*0
+-	  VECTOR_RETURN (zeroes, cond3);
+-	VECTOR_ENDIF
+-        VECTOR_COND_MOVE (hx, hz + hz + (__builtin_convertvector(lz, v64usi) >> 31), cond2);
+-        VECTOR_COND_MOVE (lx, lz + lz, cond2);
++  VECTOR_WHILE (n != 0, cond)
++    hz = hx - hy;
++    lz = lx - ly;
++    VECTOR_IF2 (lx < ly, cond2, cond)
++      VECTOR_COND_MOVE (hz, hz - 1, cond2);
++    VECTOR_ENDIF
++    VECTOR_IF2 (hz < 0, cond2, cond)
++      VECTOR_COND_MOVE (hx, hx + hx + (__builtin_convertvector(lx, v64usi) >> 31), cond2);
++      VECTOR_COND_MOVE (lx, lx + lx, cond2);
++    VECTOR_ELSE2 (cond2, cond)
++      VECTOR_IF2 ((hz | lz) == 0, cond3, cond2)		// return sign(x)*0
++	VECTOR_RETURN (zeroes, cond3);
+       VECTOR_ENDIF
++      VECTOR_COND_MOVE (hx, hz + hz + (__builtin_convertvector(lz, v64usi) >> 31), cond2);
++      VECTOR_COND_MOVE (lx, lz + lz, cond2);
++    VECTOR_ENDIF
+ 
+-      n += cond;	// Active lanes should be -1
+-      cond &= (n != 0);
+-    }
++    VECTOR_COND_MOVE (n, n - 1, cond);
++  VECTOR_ENDWHILE
+ 
+   hz = hx - hy;
+   lz = lx - ly;
+@@ -164,15 +165,11 @@ DEF_VD_MATH_FUNC (v64df, fmod, v64df x, v64df y)
+ 
+   /* convert back to floating value and restore the sign */
+   VECTOR_RETURN (zeroes, (hx | lx) == 0);	// return sign(x)*0
+-  cond = hx < 0x00100000;
+-  while (!ALL_ZEROES_P (cond))		// normalize x
+-    {
+-      VECTOR_COND_MOVE (hx, hx + hx + (lx >> 31), cond);
+-      VECTOR_COND_MOVE (lx, lx + lx, cond);
+-      iy += cond;	// Active lanes should be -1
+-
+-      cond &= (hx < 0x00100000);
+-    }
++  VECTOR_WHILE (hx < 0x00100000, cond)     // normalize x
++    VECTOR_COND_MOVE (hx, hx + hx + (lx >> 31), cond);
++    VECTOR_COND_MOVE (lx, lx + lx, cond);
++    VECTOR_COND_MOVE (iy, iy - 1, cond);
++  VECTOR_ENDWHILE
+   VECTOR_IF (iy >= -1022, cond) // normalize output
+     VECTOR_COND_MOVE (hx, (hx - 0x00100000) | ((iy + 1023) << 20), cond);
+     INSERT_WORDS (x, hx | sx, lx, cond);
+--- a/newlib-4.5.0.20241231/newlib/libm/machine/amdgcn/v64df_ilogb.c
++++ b/newlib-4.5.0.20241231/newlib/libm/machine/amdgcn/v64df_ilogb.c
+@@ -36,17 +36,19 @@ DEF_VD_MATH_PRED (v64si, ilogb, v64df x)
+   VECTOR_IF (hx < 0x00100000, cond)
+     VECTOR_RETURN (VECTOR_INIT (-__INT_MAX__), cond & ((hx | lx) == 0));  // FP_ILOGB0
+     VECTOR_IF2 (hx == 0, cond2, cond)
+-      ix = VECTOR_INIT (-1043);
+-      for (v64si i = lx;
+-            !ALL_ZEROES_P (cond2 & (i > 0));
+-            i <<= 1)
+-        VECTOR_COND_MOVE (ix, ix - 1, cond2 & (i > 0));
++      VECTOR_COND_MOVE (ix, VECTOR_INIT (-1043), cond2);
++      v64si i = lx;
++      VECTOR_WHILE2 (i > 0, cond3, cond2)
++	VECTOR_COND_MOVE (ix, ix - 1, cond3);
++	VECTOR_COND_MOVE (i, i << 1, cond3);
++      VECTOR_ENDWHILE
+     VECTOR_ELSE2 (cond2, cond)
+-      ix = VECTOR_INIT (-1022);
+-      for (v64si i = (hx << 11);
+-            !ALL_ZEROES_P (cond2 & (i > 0));
+-            i <<= 1)
+-        VECTOR_COND_MOVE (ix, ix - 1, cond2 & (i > 0));
++      VECTOR_COND_MOVE (ix, VECTOR_INIT (-1022), cond2);
++      v64si i = (hx << 11);
++      VECTOR_WHILE2 (i > 0, cond3, cond2)
++	VECTOR_COND_MOVE (ix, ix - 1, cond3);
++	VECTOR_COND_MOVE (i, i << 1, cond3);
++      VECTOR_ENDWHILE
+     VECTOR_ENDIF
+     VECTOR_RETURN (ix, cond);
+   VECTOR_ENDIF
+--- a/newlib-4.5.0.20241231/newlib/libm/machine/amdgcn/v64sf_fmod.c
++++ b/newlib-4.5.0.20241231/newlib/libm/machine/amdgcn/v64sf_fmod.c
+@@ -57,11 +57,12 @@ DEF_VS_MATH_FUNC (v64sf, fmodf, v64sf x, v64sf y)
+   /* determine ix = ilogb(x) */
+   v64si ix;
+   VECTOR_IF (hx < 0x00800000, cond)	// subnormal x
+-    ix = VECTOR_INIT (-126);
+-    for (v64si i = (hx << 8);
+-	 !ALL_ZEROES_P (cond & (i > 0));
+-	 i <<= 1)
+-      VECTOR_COND_MOVE (ix, ix - 1, cond & (i > 0));
++    VECTOR_COND_MOVE (ix, VECTOR_INIT (-126), cond);
++    v64si i = hx << 8;
++    VECTOR_WHILE2 (i > 0, cond2, cond)
++      VECTOR_COND_MOVE (ix, ix - 1, cond2);
++      VECTOR_COND_MOVE (i, i << 1, cond2);
++    VECTOR_ENDWHILE
+   VECTOR_ELSE (cond)
+     VECTOR_COND_MOVE (ix, (hx >> 23) - 127, cond);
+   VECTOR_ENDIF
+@@ -69,12 +70,12 @@ DEF_VS_MATH_FUNC (v64sf, fmodf, v64sf x, v64sf y)
+   /* determine iy = ilogb(y) */
+   v64si iy;
+   VECTOR_IF (hy < 0x00800000, cond)	// subnormal y
+-    iy = VECTOR_INIT (-126);
+-    for (v64si i = (hy << 8); !ALL_ZEROES_P (cond & (i >= 0)); /* i <<= 1 */)
+-      {
+-	VECTOR_COND_MOVE (iy, iy - 1, cond & (i >= 0));
+-	VECTOR_COND_MOVE (i, i << 1, cond & (i >= 0));
+-      }
++    VECTOR_COND_MOVE (iy, VECTOR_INIT (-126), cond);
++    v64si i = (hy << 8);
++    VECTOR_WHILE2 (i >= 0, cond2, cond)
++      VECTOR_COND_MOVE (iy, iy - 1, cond2);
++      VECTOR_COND_MOVE (i, i << 1, cond2);
++    VECTOR_ENDWHILE
+   VECTOR_ELSE (cond)
+     VECTOR_COND_MOVE (iy, (hy >> 23) - 127, cond);
+   VECTOR_ENDIF
+@@ -99,24 +100,21 @@ DEF_VS_MATH_FUNC (v64sf, fmodf, v64sf x, v64sf y)
+ 
+ /* fix point fmod */
+   v64si n = ix - iy;
+-  v64si cond = n != 0;
+ 
+-  while (!ALL_ZEROES_P (cond))
+-    {
+-      hz = hx - hy;
+-      VECTOR_IF2 (hz < 0, cond2, cond)
+-	VECTOR_COND_MOVE (hx, hx + hx, cond2);
+-      VECTOR_ELSE2 (cond2, cond)
+-	VECTOR_IF2 (hz == 0, cond3, cond2)		// return sign(x)*0
+-	  VECTOR_RETURN (zeroes, cond3);
+-	VECTOR_ELSE2 (cond3, cond2)
+-	  VECTOR_COND_MOVE (hx, hz + hz, cond2);
+-	VECTOR_ENDIF
++  VECTOR_WHILE (n != 0, cond)
++    hz = hx - hy;
++    VECTOR_IF2 (hz < 0, cond2, cond)
++      VECTOR_COND_MOVE (hx, hx + hx, cond2);
++    VECTOR_ELSE2 (cond2, cond)
++      VECTOR_IF2 (hz == 0, cond3, cond2)		// return sign(x)*0
++	VECTOR_RETURN (zeroes, cond3);
++      VECTOR_ELSE2 (cond3, cond2)
++	VECTOR_COND_MOVE (hx, hz + hz, cond2);
+       VECTOR_ENDIF
++    VECTOR_ENDIF
+ 
+-      n += cond;	// Active lanes should be -1
+-      cond &= (n != 0);
+-    }
++    n += cond;	// Active lanes should be -1
++  VECTOR_ENDWHILE
+ 
+   hz = hx - hy;
+   VECTOR_COND_MOVE (hx, hz, hz >= 0);
+@@ -124,14 +122,10 @@ DEF_VS_MATH_FUNC (v64sf, fmodf, v64sf x, v64sf y)
+   /* convert back to floating value and restore the sign */
+   VECTOR_RETURN (zeroes, hx == 0);	// return sign(x)*0
+ 
+-  cond = hx < 0x00800000;
+-  while (!ALL_ZEROES_P (cond))		// normalize x
+-    {
++  VECTOR_WHILE (hx < 0x00800000, cond)		// normalize x
+       VECTOR_COND_MOVE (hx, hx + hx, cond);
+       iy += cond;	// Active lanes should be -1
+-
+-      cond &= (hx < 0x00800000);
+-    }
++  VECTOR_ENDWHILE
+   VECTOR_IF (iy >= -126, cond)		// normalize output
+     VECTOR_COND_MOVE (hx, (hx - 0x00800000) | ((iy + 127) << 23), cond);
+     SET_FLOAT_WORD (x, hx | sx, cond);
+--- a/newlib-4.5.0.20241231/newlib/libm/machine/amdgcn/v64sf_ilogb.c
++++ b/newlib-4.5.0.20241231/newlib/libm/machine/amdgcn/v64sf_ilogb.c
+@@ -38,11 +38,12 @@ DEF_VS_MATH_FUNC (v64si, ilogbf, v64sf x)
+     VECTOR_RETURN (VECTOR_INIT (-__INT_MAX__), cond);  // FP_ILOGB0
+   VECTOR_ENDIF
+   VECTOR_IF (FLT_UWORD_IS_SUBNORMAL (hx), cond)
+-    ix = VECTOR_INIT (-126);
+-    for (v64si i = (hx << 8);
+-       !ALL_ZEROES_P (cond & (i > 0));
+-       i <<= 1)
+-      VECTOR_COND_MOVE (ix, ix - 1, cond & (i > 0));
++    VECTOR_COND_MOVE (ix, VECTOR_INIT (-126), cond);
++    v64si i = (hx << 8);
++    VECTOR_WHILE2 (i > 0, cond2, cond)
++      VECTOR_COND_MOVE (ix, ix - 1, cond2);
++      VECTOR_COND_MOVE (i, i << 1, cond2);
++    VECTOR_ENDWHILE
+     VECTOR_RETURN (ix, cond);
+   VECTOR_ELSEIF (~FLT_UWORD_IS_FINITE (hx), cond)
+     VECTOR_RETURN (VECTOR_INIT (__INT_MAX__), cond);

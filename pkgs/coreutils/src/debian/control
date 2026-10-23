@@ -2,7 +2,7 @@ Source: coreutils
 Maintainer: Michael Stone <mstone@debian.org>
 Section: utils
 Standards-Version: 4.7.3
-Build-Depends: gettext (>= 0.10.37), debhelper-compat (= 13), texinfo (>= 4.2) <!nodoc>, libattr1-dev [linux-any], libacl1-dev [linux-any], libselinux-dev [linux-any], gperf, bison, libgmp3-dev, libssl-dev, libsystemd-dev
+Build-Depends: gettext (>= 0.10.37), debhelper-compat (= 13), texinfo (>= 4.2) <!nodoc>, libattr1-dev [linux-any], libacl1-dev [linux-any], libselinux-dev [linux-any], gperf, bison, libgmp3-dev, libssl-dev
 
 Package: coreutils
 Architecture: any

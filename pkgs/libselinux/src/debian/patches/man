@@ -1,0 +1,815 @@
+Index: libselinux-3.7/man/man3/getcon.3
+===================================================================
+--- libselinux-3.7.orig/man/man3/getcon.3
++++ libselinux-3.7/man/man3/getcon.3
+@@ -1,5 +1,5 @@
+-.TH "getcon" "3" "21 December 2011" "russell@coker.com.au" "SELinux API documentation"
+-.SH "NAME"
++.TH getcon 3 "21 December 2011" russell@coker.com.au "SELinux API documentation"
++.SH NAME
+ getcon, getprevcon, getpidcon \- get SELinux security context of a process
+ 
+ freecon, freeconary \- free memory associated with SELinux security contexts
+@@ -8,7 +8,7 @@ getpeercon \- get security context of a
+ 
+ setcon \- set current security context of a process
+ 
+-.SH "SYNOPSIS"
++.SH SYNOPSIS
+ .B #include <selinux/selinux.h>
+ .sp
+ .BI "int getcon(char **" context );
+@@ -39,10 +39,11 @@ setcon \- set current security context o
+ .sp
+ .BI "int setcon_raw(const char *" context );
+ 
+-.SH "DESCRIPTION"
++.SH DESCRIPTION
+ .TP
+ .BR getcon ()
+-retrieves the context of the current process, which must be free'd with
++retrieves the context of the current process,
++which must be free'd with
+ .BR freecon ().
+ 
+ .TP
+@@ -51,17 +52,20 @@ same as getcon but gets the context befo
+ 
+ .TP
+ .BR getpidcon ()
+-returns the process context for the specified PID, which must be free'd with
++returns the process context for the specified PID,
++which must be free'd with
+ .BR freecon ().
+ 
+ .TP
+ .BR getpidprevcon ()
+-returns the process context before the last exec for the specified PID, which must be free'd with
++returns the process context before the last exec for the specified PID,
++which must be free'd with
+ .BR freecon ().
+ 
+ .TP
+ .BR getpeercon ()
+-retrieves the context of the peer socket, which must be free'd with
++retrieves the context of the peer socket,
++which must be free'd with
+ .BR freecon ().
+ 
+ .TP
+@@ -70,7 +74,8 @@ frees the memory allocated for a securit
+ 
+ If
+ .I con
+-is NULL, no operation is performed.
++is NULL,
++no operation is performed.
+ 
+ .TP
+ .BR freeconary ()
+@@ -78,16 +83,19 @@ frees the memory allocated for a context
+ 
+ If
+ .I con
+-is NULL, no operation is performed.
++is NULL,
++no operation is performed.
+ 
+ .TP
+ .BR setcon ()
+-sets the current security context of the process to a new value.  Note
+-that use of this function requires that the entire application be
+-trusted to maintain any desired separation between the old and new
+-security contexts, unlike exec-based transitions performed via
++sets the current security context of the process to a new value.
++Note that use of this function requires
++that the entire application be trusted to maintain any desired separation
++between the old and new security contexts,
++unlike exec-based transitions performed via
+ .BR setexeccon (3).
+-When possible, decompose your application and use
++When possible,
++decompose your application and use
+ .BR setexeccon (3)
+ and
+ .BR execve (3)
+@@ -95,8 +103,10 @@ instead.
+ 
+ Since access to file descriptors is revalidated upon use by SELinux,
+ the new context must be explicitly authorized in the policy to use the
+-descriptors opened by the old context if that is desired.  Otherwise,
+-attempts by the process to use any existing descriptors (including
++descriptors opened by the old context if that is desired.
++Otherwise,
++attempts by the process to use any existing descriptors
++(including
+ .IR stdin ,
+ .IR stdout ,
+ and
+@@ -108,50 +118,58 @@ will fail.
+ A multi-threaded application can perform a
+ .BR setcon ()
+ prior to creating
+-any child threads, in which case all of the child threads will inherit
+-the new context.  However, prior to Linux 2.6.28,
++any child threads,
++in which case all of the child threads will inherit the new context.
++However,
++prior to Linux 2.6.28,
+ .BR setcon ()
+ would fail if there are any other
+ threads running in the same process since this would yield
+ an inconsistency among the security contexts of threads sharing
+-the same memory space.  Since Linux 2.6.28,
+-.BR setcon()
+-is permitted for threads within a multi-threaded process if the
+-new security context is bounded by the old security context, where
+-the bounded relation is defined through typebounds statements in the
+-policy and guarantees that the new security context has a subset of
++the same memory space.
++Since Linux 2.6.28,
++.BR setcon ()
++is permitted for threads within a multi-threaded process
++if the new security context is bounded by the old security context,
++where the bounded relation is defined through typebounds statements in the
++policy
++and guarantees that the new security context has a subset of
+ the permissions of the old security context.
+ 
+ If the process was being ptraced at the time of the
+ .BR setcon ()
+-operation, ptrace permission will be revalidated against the new
++operation,
++ptrace permission will be revalidated against the new
+ context and the
+ .BR setcon ()
+ will fail if it is not allowed by policy.
+ 
+ .TP
+-.BR *_raw()
++.BR *_raw (),
+ .BR getcon_raw (),
+ .BR getprevcon_raw (),
+ .BR getpidcon_raw (),
+ .BR getpidprevcon_raw (),
+-.BR getpeercon_raw ()
++.BR getpeercon_raw (),
+ and
+ .BR setcon_raw ()
+ behave identically to their non-raw counterparts but do not perform context
+ translation.
+ 
+ .SH "RETURN VALUE"
+-On error \-1 is returned with errno set.  On success 0 is returned.
++On error \-1 is returned with errno set.
++On success 0 is returned.
+ 
+-.SH "NOTES"
++.SH NOTES
+ The retrieval functions might return success and set
+ .I *context
+ to NULL if and only if SELinux is not enabled.
+ 
+-Querying a foreign process via its PID, e.g. \fBgetpidcon\fR() or
+-\fBgetpidprevcon\fR(), is inherently racy and therefore should never be relied
+-upon for security purposes.
++Querying a foreign process via its PID,
++e.g., \fBgetpidcon\fR()
++or \fBgetpidprevcon\fR(),
++is inherently racy
++and therefore should never be relied upon for security purposes.
+ 
+ .SH "SEE ALSO"
+-.BR selinux "(8), " setexeccon "(3)"
++.BR selinux "(8), " setexeccon (3)
+Index: libselinux-3.7/man/man3/getexeccon.3
+===================================================================
+--- libselinux-3.7.orig/man/man3/getexeccon.3
++++ libselinux-3.7/man/man3/getexeccon.3
+@@ -1,10 +1,11 @@
+-.TH "getexeccon" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
+-.SH "NAME"
+-getexeccon, setexeccon \- get or set the SELinux security context used for executing a new process
++.TH getexeccon 3 "1 January 2004" russell@coker.com.au "SELinux API documentation"
++.SH NAME
++getexeccon, setexeccon \- get or set the SELinux security context used for
++executing a new process
+ 
+ rpm_execcon \- run a helper for rpm in an appropriate security context
+ .
+-.SH "SYNOPSIS"
++.SH SYNOPSIS
+ .B #include <selinux/selinux.h>
+ .sp
+ .BI "int getexeccon(char **" context );
+@@ -17,9 +18,10 @@ rpm_execcon \- run a helper for rpm in a
+ .sp
+ .BI "int setexecfilecon(const char *" filename ", const char *" fallback_type );
+ .sp
+-.BI "int rpm_execcon(unsigned int " verified ", const char *" filename ", char *const " argv "[] , char *const " envp "[]);
++.BI "int rpm_execcon(unsigned int " verified ", const char *" filename ", \
++char *const " argv "[], char *const " envp []);
+ .
+-.SH "DESCRIPTION"
++.SH DESCRIPTION
+ .BR getexeccon ()
+ retrieves the context used for executing a new process.
+ This returned context should be freed with
+@@ -29,7 +31,8 @@ if non-NULL.
+ sets
+ .BI * context
+ to NULL if no exec context has been explicitly
+-set by the program (i.e. using the default policy behavior).
++set by the program
++(i.e., using the default policy behavior).
+ 
+ .BR setexeccon ()
+ sets the context used for the next
+@@ -46,11 +49,11 @@ so a program doesn't need to explicitly
+ can be applied prior to library
+ functions that internally perform an
+ .BR execve (2),
+-e.g.
++e.g.,
+ .BR execl *(3),
+ .BR execv *(3),
+ .BR popen (3),
+-in order to set an exec context for that operation.  
++in order to set an exec context for that operation.
+ 
+ .BR getexeccon_raw ()
+ and
+@@ -61,35 +64,41 @@ translation.
+ .B Note:
+ Signal handlers that perform an
+ .BR execve (2)
+-must take care to
+-save, reset, and restore the exec context to avoid unexpected behavior.
++must take care to save,
++reset,
++and restore the exec context to avoid unexpected behavior.
+ 
+ .BR setexecfilecon ()
+ sets the context used for the next
+ .BR execve (2)
+-call, based on the policy for the
++call,
++based on the policy for the
+ .IR filename ,
+ and falling back to a new context with a
+ .I fallback_type
+ in case there is no transition.
+ 
+ .BR rpm_execcon ()
+-is deprecated; please use
++is deprecated;
++please use
+ .BR setexecfilecon ()
+ in conjunction with
+ .BR execve (2)
+-in all new code. This function
+-runs a helper for rpm in an appropriate security context.  The
+-verified parameter should contain the return code from the signature
+-verification (0 == ok, 1 == notfound, 2 == verifyfail, 3 ==
+-nottrusted, 4 == nokey), although this information is not yet used by
+-the function.  The function determines the proper security context for
+-the helper based on policy, sets the exec context accordingly, and
+-then executes the specified filename with the provided argument and
+-environment arrays.
++in all new code.
++This function runs a helper for rpm in an appropriate security context.
++The verified parameter should contain the return code from the signature
++verification
++(0 == ok, 1 == notfound, 2 == verifyfail, 3 == nottrusted, 4 == nokey),
++although this information is not yet used by the function.
++The function determines the proper security context for
++the helper based on policy,
++sets the exec context accordingly,
++and then executes the specified filename with the provided argument
++and environment arrays.
+ .
+ .SH "RETURN VALUE"
+-On failure, \-1 is returned and
++On failure,
++\-1 is returned and
+ .I errno
+ is  set appropriately.
+ 
+@@ -100,8 +109,9 @@ and
+ .BR setexecfilecon ()
+ return 0.
+ .BR rpm_execcon ()
+-only returns upon errors, as it calls
++only returns upon errors,
++as it calls
+ .BR execve (2).
+ .
+ .SH "SEE ALSO"
+-.BR selinux "(8), " freecon "(3), " getcon "(3)"
++.BR selinux "(8), " freecon "(3), " getcon (3)
+Index: libselinux-3.7/man/man3/get_ordered_context_list.3
+===================================================================
+--- libselinux-3.7.orig/man/man3/get_ordered_context_list.3
++++ libselinux-3.7/man/man3/get_ordered_context_list.3
+@@ -1,23 +1,34 @@
+-.TH "get_ordered_context_list" "3" "1 January 2004" "russell@coker.com.au" "SELinux"
+-.SH "NAME"
+-get_ordered_context_list, get_ordered_context_list_with_level, get_default_context, get_default_context_with_level, get_default_context_with_role, get_default_context_with_rolelevel, query_user_context, manual_user_enter_context, get_default_role \- determine SELinux context(s) for user sessions
++.TH get_ordered_context_list 3 "1 January 2004" russell@coker.com.au SELinux
++.SH NAME
++get_ordered_context_list, get_ordered_context_list_with_level,
++get_default_context, get_default_context_with_level,
++get_default_context_with_role, get_default_context_with_rolelevel,
++query_user_context, manual_user_enter_context, get_default_role \- determine
++SELinux context(s) for user sessions
+ .
+-.SH "SYNOPSIS"
++.SH SYNOPSIS
+ .B #include <selinux/selinux.h>
+ .br
+ .B #include <selinux/get_context_list.h>
+ .sp
+-.BI "int get_ordered_context_list(const char *" user ", const char *" fromcon ", char ***" list );
++.BI "int get_ordered_context_list(const char *" user ", const char *" \
++fromcon ", char ***" list );
+ .sp
+-.BI "int get_ordered_context_list_with_level(const char *" user ", const char *" level ", const char *" fromcon ", char ***" list );
++.BI "int get_ordered_context_list_with_level(const char *" user \
++", const char *" level ", const char *" fromcon ", char ***" list );
+ .sp
+-.BI "int get_default_context(const char *" user ", const char *" fromcon ", char **" newcon );
++.BI "int get_default_context(const char *" user ", const char *" fromcon \
++", char **" newcon );
+ .sp
+-.BI "int get_default_context_with_level(const char *" user ", const char *" level ", const char *" fromcon ", char **" newcon );
++.BI "int get_default_context_with_level(const char *" user ", const char *" \
++level ", const char *" fromcon ", char **" newcon );
+ .sp
+-.BI "int get_default_context_with_role(const char *" user ", const char *" role ", const char *" fromcon ", char **" newcon ");
++.BI "int get_default_context_with_role(const char *" user ", const char *" \
++role ", const char *" fromcon ", char **" newcon );
+ .sp
+-.BI "int get_default_context_with_rolelevel(const char *" user ", const char *" role ", const char *" level ", const char *" fromcon ", char **" newcon ");
++.BI "int get_default_context_with_rolelevel(const char *" user \
++", const char *" role ", const char *" level ", const char *" fromcon \
++", char **" newcon );
+ .sp
+ .BI "int query_user_context(char **" list ", char **" newcon );
+ .sp
+@@ -25,15 +36,17 @@ get_ordered_context_list, get_ordered_co
+ .sp
+ .BI "int get_default_type(const char *" role ", char **" type );
+ .
+-.SH "DESCRIPTION"
++.SH DESCRIPTION
+ 
+ This family of functions can be used to obtain either a prioritized list of
+ all reachable security contexts for a given SELinux user or a single default
+ (highest priority) context for a given SELinux user for use by login-like
+-programs.  These functions takes a SELinux user identity that must
+-be defined in the SELinux policy as their input, not a Linux username.
++programs.
++These functions takes a SELinux user identity that must
++be defined in the SELinux policy as their input,
++not a Linux username.
+ Most callers should typically first call
+-.BR getseuserbyname(3)
++.BR getseuserbyname (3)
+ to look up the SELinux user identity and level for a given
+ Linux username and then invoke one of
+ .BR get_ordered_context_list_with_level ()
+@@ -51,11 +64,14 @@ context based on the global
+ .I \%/etc/selinux/{SELINUXTYPE}/contexts/default_contexts
+ file and the per-user
+ .I \%/etc/selinux/{SELINUXTYPE}/contexts/users/<username>
+-file if it exists.  The 
++file if it exists.
++The
+ .I fromcon
+ parameter may be NULL to indicate that the current context should
+-be used.  The function returns the number of contexts in the
+-list, or \-1 upon errors.  The list must be freed using the
++be used.
++The function returns the number of contexts in the list,
++or \-1 upon errors.
++The list must be freed using the
+ .BR freeconary (3)
+ function.
+ 
+@@ -79,8 +95,9 @@ function and applies the specified level
+ .BR get_default_context_with_role ()
+ is the same as
+ .BR get_default_context ()
+-but only returns a context with the specified role, returning \-1 if no
+-such context is reachable for the user.
++but only returns a context with the specified role,
++returning \-1
++if no such context is reachable for the user.
+ 
+ .BR get_default_context_with_rolelevel ()
+ invokes the
+@@ -88,14 +105,16 @@ invokes the
+ function and applies the specified level.
+ 
+ .BR query_user_context ()
+-takes a list of contexts, queries the user via stdin/stdout as to which context
+-they want, and returns a new context as selected by the user (which has to be
+-freed with
++takes a list of contexts,
++queries the user via stdin/stdout as to which context they want,
++and returns a new context as selected by the user
++(which has to be freed with
+ .BR freecon (3)).
+ 
+ .BR manual_user_enter_context ()
+ allows the user to manually enter a context as a fallback if a list of
+-authorized contexts could not be obtained. Caller must free via
++authorized contexts could not be obtained.
++Caller must free via
+ .BR freecon (3).
+ 
+ .BR get_default_type ()
+@@ -103,7 +122,8 @@ Get the default type (domain) for
+ .I role
+ and set
+ .I type
+-to refer to it, which has to be freed with free.
++to refer to it,
++which has to be freed with free.
+ .
+ .SH "RETURN VALUE"
+ .BR get_ordered_context_list ()
+@@ -113,7 +133,7 @@ return the number of contexts in the lis
+ The other functions return 0 for success or \-1 for errors.
+ .
+ .SH "SEE ALSO"
+-.ad l
++.na
+ .nh
+ .BR selinux (8),
+ .BR freeconary (3),
+Index: libselinux-3.7/man/man3/getseuserbyname.3
+===================================================================
+--- libselinux-3.7.orig/man/man3/getseuserbyname.3
++++ libselinux-3.7/man/man3/getseuserbyname.3
+@@ -1,25 +1,27 @@
+-.TH "getseuserbyname" "3" "29 September 2005" "dwalsh@redhat.com" "SELinux API documentation"
+-.SH "NAME"
++.TH getseuserbyname 3 "29 September 2005" dwalsh@redhat.com \
++"SELinux API documentation"
++.SH NAME
+ getseuserbyname \- get SELinux username and level for a given Linux username
+ .
+-.SH "SYNOPSIS"
++.SH SYNOPSIS
+ .B #include <selinux/selinux.h>
+ .sp
+-.BI "int getseuserbyname(const char *" linuxuser ", char **" selinuxuser ", char **" level ");
++.BI "int getseuserbyname(const char *" linuxuser ", char **" selinuxuser \
++", char **" level );
+ .
+-.SH "DESCRIPTION"
++.SH DESCRIPTION
+ .BR getseuserbyname ()
+-retrieves the SELinux username and security level associated with 
++retrieves the SELinux username and security level associated with
+ a given Linux username.  The SELinux username and security level can
+-then be passed to other libselinux functions such as 
++then be passed to other libselinux functions such as
+ .BR \%get_ordered_context_list_with_level (3)
+ and
+ .BR \%get_default_context_with_level (3).
+ 
+ The returned SELinux username and level should be freed by the caller
+-using free.  
++using free.
+ .
+-.SH "RETURN VALUE"
++.SH RETURN VALUE
+ On success, 0 is returned.
+ On failure, \-1 is returned and
+ .I errno
+Index: libselinux-3.7/man/man3/init_selinuxmnt.3
+===================================================================
+--- libselinux-3.7.orig/man/man3/init_selinuxmnt.3
++++ libselinux-3.7/man/man3/init_selinuxmnt.3
+@@ -1,15 +1,15 @@
+-.TH "init_selinuxmnt" "3" "21 Nov 2009" "" "SELinux API documentation"
+-.SH "NAME"
++.TH init_selinuxmnt 3 "21 Nov 2009" "" "SELinux API documentation"
++.SH NAME
+ init_selinuxmnt \- initialize the global variable selinux_mnt
+ .
+-.SH "SYNOPSIS"
+-.BI "static void init_selinuxmnt(void);"
++.SH SYNOPSIS
++.B "static void init_selinuxmnt(void);"
+ .sp
+-.BI "static void fini_selinuxmnt(void);"
++.B "static void fini_selinuxmnt(void);"
+ .sp
+-.BI "void set_selinuxmnt(const char *" mnt ");"
++.BI "void set_selinuxmnt(const char *" mnt );
+ .
+-.SH "DESCRIPTION"
++.SH DESCRIPTION
+ .BR init_selinuxmnt ()
+ initializes the global variable
+ .I selinux_mnt
+@@ -24,7 +24,7 @@ that stores the selinuxfs mountpoint.
+ changes the selinuxfs mountpoint to
+ .IR mnt .
+ .
+-.SH "AUTHOR"
++.SH AUTHOR
+ This manual page has been written by Guido Trentalancia <guido@trentalancia.com>
+ .
+ .SH "SEE ALSO"
+Index: libselinux-3.7/man/man3/is_selinux_enabled.3
+===================================================================
+--- libselinux-3.7.orig/man/man3/is_selinux_enabled.3
++++ libselinux-3.7/man/man3/is_selinux_enabled.3
+@@ -1,25 +1,31 @@
+-.TH "is_selinux_enabled" "3" "7 Mar 2010" "russell@coker.com.au" "SELinux API documentation"
+-.SH "NAME"
++.TH is_selinux_enabled 3 "7 Mar 2010" russell@coker.com.au \
++"SELinux API documentation"
++.SH NAME
+ is_selinux_enabled \- check whether SELinux is enabled
+ .
+-.SH "NAME"
+-is_selinux_mls_enabled \- check whether SELinux is enabled for (Multi Level Security) MLS
++.SH NAME
++is_selinux_mls_enabled \- check whether SELinux is enabled for
++(Multi Level Security)
++MLS
+ .
+-.SH "SYNOPSIS"
++.SH SYNOPSIS
+ .B #include <selinux/selinux.h>
+ .sp
+ .B int is_selinux_enabled(void);
+ .sp
+ .B int is_selinux_mls_enabled(void);
+ .
+-.SH "DESCRIPTION"
++.SH DESCRIPTION
+ .BR is_selinux_enabled ()
+-returns 1 if SELinux is running or 0 if it is not. 
++returns 1 if SELinux is running or 0 if it is not.
+ 
+ .BR is_selinux_mls_enabled ()
+-returns 1 if SELinux is capable of running in MLS mode or 0 if it is not. To
+-determine the policy in use on the system, use
++returns 1
++if SELinux is capable of running in MLS mode
++or 0 if it is not.
++To determine the policy in use on the system,
++use
+ .BR selinux_getpolicytype (3).
+ .
+ .SH "SEE ALSO"
+-.BR selinux "(8)"
++.BR selinux (8)
+Index: libselinux-3.7/man/man3/matchpathcon.3
+===================================================================
+--- libselinux-3.7.orig/man/man3/matchpathcon.3
++++ libselinux-3.7/man/man3/matchpathcon.3
+@@ -1,23 +1,27 @@
+-.TH "matchpathcon" "3" "21 November 2009" "stephen.smalley.work@gmail.com" "SELinux API documentation"
+-.SH "NAME"
+-matchpathcon, matchpathcon_index \- get the default SELinux security context for the specified path from the file contexts configuration
++.TH matchpathcon 3 "21 November 2009" stephen.smalley.work@gmail.com \
++"SELinux API documentation"
++.SH NAME
++matchpathcon, matchpathcon_index \- get the default SELinux security context \
++for the specified path from the file contexts configuration
+ .
+-.SH "SYNOPSIS"
++.SH SYNOPSIS
+ .B #include <selinux/selinux.h>
+ .sp
+ .BI "int matchpathcon_init(const char *" path ");"
+ .sp
+ .BI "int matchpathcon_init_prefix(const char *" path ", const char *" prefix ");"
+ .sp
+-.BI "int matchpathcon_fini(void);"
++.B int matchpathcon_fini(void);
+ .sp
+-.BI "int matchpathcon(const char *" path ", mode_t " mode ", char **" con ");
++.BI "int matchpathcon(const char *" path ", mode_t " mode ", char **" con );
+ .sp
+ .BI "int matchpathcon_index(const char *" name ", mode_t " mode ", char **" con ");"
+ .
+-.SH "DESCRIPTION"
++.SH DESCRIPTION
+ 
+-This family of functions is deprecated.  For new code, please use
++This family of functions is deprecated.
++For new code,
++please use
+ .BR selabel_open (3)
+ with the
+ .B SELABEL_CTX_FILE
+@@ -37,78 +41,88 @@ The remaining description below is for t
+ .BR matchpathcon_init ()
+ loads the file contexts configuration specified by
+ .I path
+-into memory for use by subsequent 
++into memory for use by subsequent
+ .BR matchpathcon ()
+-calls.  If
++calls.
++If
+ .I path
+-is NULL, then the active file contexts configuration is loaded by default,
+-i.e. the path returned by 
++is NULL,
++then the active file contexts configuration is loaded by default,
++i.e., the path returned by
+ .BR selinux_file_context_path (3).
+-Unless the 
+-.B MATCHPATHCON_BASEONLY 
+-flag has been set via 
++Unless the
++.B MATCHPATHCON_BASEONLY
++flag has been set via
+ .BR \%set_matchpathcon_flags (3),
+-files with the same path prefix but a 
++files with the same path prefix but a
+ .B \%.homedirs
+ and
+ .B .local
+-suffix are also looked up and loaded if present.  These files provide
+-dynamically generated entries for user home directories and for local
+-customizations.
++suffix are also looked up and loaded if present.
++These files provide dynamically generated entries for user home directories
++and for local customizations.
+ 
+ .BR matchpathcon_init_prefix ()
+ is the same as
+ .BR matchpathcon_init ()
+ but only loads entries with regular expressions whose first pathname
+ component is a prefix of
+-.I \%prefix
+-, e.g. pass "/dev" if you only intend to call
++.IR \%prefix ,
++e.g., pass "/dev"
++if you only intend to call
+ .BR matchpathcon ()
+ with pathnames beginning with /dev.
+-However, this optimization is no longer necessary due to the use of
++However,
++this optimization is no longer necessary due to the use of
+ .I file_contexts.bin
+-files with precompiled regular expressions, so use of this interface
+-is deprecated.
++files with precompiled regular expressions,
++so use of this interface is deprecated.
+ 
+ .BR matchpathcon_fini ()
+ frees the memory allocated by a prior call to
+-.BR matchpathcon_init. ()
+-This function can be used to free and reset the internal state between multiple 
++.BR matchpathcon_init ().
++This function can be used to free and reset the internal state between multiple
+ .BR matchpathcon_init ()
+-calls, or to free memory when finished using 
++calls,
++or to free memory when finished using
+ .BR matchpathcon ().
+ 
+ .BR matchpathcon ()
+ matches the specified
+-.I pathname,
++.IR pathname ,
+ after transformation via
+ .BR realpath (3)
+ excepting any final symbolic link component if S_IFLNK was
+ specified as the
+-.I mode,
++.IR mode ,
+ and
+ .I mode
+ against the
+ .I file contexts
+-configuration and sets the security context 
+-.I con 
++configuration and sets the security context
++.I con
+ to refer to the
+-resulting context. The caller must free the returned security context 
++resulting context.
++The caller must free the returned security context
+ .I con
+ using
+ .BR freecon (3)
+ when finished using it.
+ .I mode
+-can be 0 to disable mode matching, but
+-should be provided whenever possible, as it may affect the matching.
+-Only the file format bits (i.e. the file type) of the 
+-.I mode 
++can be 0 to disable mode matching,
++but should be provided whenever possible,
++as it may affect the matching.
++Only the file format bits
++(i.e., the file type)
++of the
++.I mode
+ are used.
+-If 
++If
+ .BR matchpathcon_init ()
+-has not already been called, then this function will call it upon
++has not already been called,
++then this function will call it upon
+ its first invocation with a NULL
+-.I path,
++.IR path ,
+ defaulting to the active file contexts configuration.
+ 
+ .BR matchpathcon_index ()
+@@ -124,4 +138,8 @@ Returns zero on success or \-1 otherwise
+ .SH "SEE ALSO"
+ .ad l
+ .nh
+-.BR selinux "(8), " set_matchpathcon_flags "(3), " set_matchpathcon_invalidcon "(3), " set_matchpathcon_printf "(3), " matchpathcon_filespec_add "(3), " matchpathcon_checkmatches "(3), " freecon "(3), " setfilecon "(3), " setfscreatecon "(3)"
++.BR selinux "(8), " set_matchpathcon_flags "(3), " \
++set_matchpathcon_invalidcon "(3), " set_matchpathcon_printf "(3), " \
++matchpathcon_filespec_add "(3), " matchpathcon_checkmatches "(3), " freecon \
++"(3), " setfilecon "(3), " setfscreatecon (3)
++
+Index: libselinux-3.7/man/man3/matchpathcon_checkmatches.3
+===================================================================
+--- libselinux-3.7.orig/man/man3/matchpathcon_checkmatches.3
++++ libselinux-3.7/man/man3/matchpathcon_checkmatches.3
+@@ -1,19 +1,24 @@
+-.TH "matchpathcon_checkmatches" "3" "21 November 2009" "stephen.smalley.work@gmail.com" "SELinux API documentation"
+-.SH "NAME"
+-matchpathcon_checkmatches, matchpathcon_filespec_add, matchpathcon_filespec_destroy, matchpathcon_filespec_eval \- check and report whether any specification index has no matches with any inode. Maintenance and statistics on inode associations
++.TH matchpathcon_checkmatches 3 "21 November 2009" \
++stephen.smalley.work@gmail.com "SELinux API documentation"
++.SH NAME
++matchpathcon_checkmatches, matchpathcon_filespec_add,
++matchpathcon_filespec_destroy, matchpathcon_filespec_eval \- check and report
++whether any specification index has no matches with any inode.
++Maintenance and statistics on inode associations
+ .
+-.SH "SYNOPSIS"
++.SH SYNOPSIS
+ .B #include <selinux/selinux.h>
+ .sp
+-.BI "void matchpathcon_checkmatches(char *" str ");"
++.BI "void matchpathcon_checkmatches(char *" str );
+ .sp
+-.BI "int matchpathcon_filespec_add(ino_t " ino ", int " specind ", const char *" file ");"
++.BI "int matchpathcon_filespec_add(ino_t " ino ", int " specind \
++", const char *" file );
+ .sp
+-.BI "void matchpathcon_filespec_destroy(void);"
++.B void matchpathcon_filespec_destroy(void);
+ .sp
+-.BI "void matchpathcon_filespec_eval(void);"
++.B void matchpathcon_filespec_eval(void);
+ .
+-.SH "DESCRIPTION"
++.SH DESCRIPTION
+ .BR matchpathcon_checkmatches ()
+ checks whether any specification has no matches and reports them.
+ The
+@@ -26,15 +31,17 @@ maintains an association between an inod
+ and a specification index
+ .IR specind ,
+ and checks whether a conflicting specification is already associated
+-with the same inode (e.g. due to multiple hard links). If so, then
+-it uses the latter of the two specifications based on their order in the 
++with the same inode
++(e.g., due to multiple hard links).
++If so,
++then it uses the latter of the two specifications based on their order in the
+ .I file
+-context configuration. Returns the specification index used or \-1 on
+-error.
++context configuration.
++Returns the specification index used or \-1 on error.
+ .sp
+ .BR matchpathcon_filespec_destroy ()
+-destroys any inode associations that have been added, e.g. to restart
+-for a new filesystem.
++destroys any inode associations that have been added,
++e.g., to restart for a new filesystem.
+ .sp
+ .BR matchpathcon_filespec_eval ()
+ displays statistics on the hash table usage for the inode associations.
+@@ -43,6 +50,7 @@ displays statistics on the hash table us
+ Returns zero on success or \-1 otherwise.
+ .
+ .SH "SEE ALSO"
+-.ad l
++.na
+ .nh
+-.BR selinux "(8), " matchpathcon "(3), " matchpathcon_index "(3), " freecon "(3), " setfilecon "(3), " setfscreatecon "(3)"
++.BR selinux "(8), " matchpathcon "(3), " matchpathcon_index "(3), " freecon \
++"(3), " setfilecon "(3), " setfscreatecon (3)

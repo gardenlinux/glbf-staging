@@ -1,0 +1,44 @@
+From 8a687ad35493af0112f156f4551ef5ece82fae54 Mon Sep 17 00:00:00 2001
+From: Oleg Endo <olegendo@gcc.gnu.org>
+Date: Sun, 29 Sep 2024 21:33:29 +0900
+Subject: [PATCH] SH: Add support for LRA and enable it by default
+
+SH: Tighten memory predicates and constraints
+
+--- a/src/gcc/doc/tm.texi
++++ b/src/gcc/doc/tm.texi
+@@ -3093,9 +3093,20 @@ A target hook which returns @code{true} if @var{subst} can't
+ substitute safely pseudos with equivalent memory values during
+ register allocation.
+ The default version of this target hook returns @code{false}.
+-On most machines, this default should be used.  For generally
+-machines with non orthogonal register usage for addressing, such
+-as SH, this hook can be used to avoid excessive spilling.
++On most machines, this default should be used.  For machines with
++non-orthogonal register usage for addressing, such as SH,
++this hook can be used to avoid excessive spilling.
++@end deftypefn
++
++@deftypefn {Target Hook} bool TARGET_CANNOT_SUBSTITUTE_CONST_EQUIV_P (rtx @var{subst})
++A target hook which returns @code{true} if @var{subst} can't
++substitute safely pseudos with equivalent constant values during
++register allocation.
++The default version of this target hook returns @code{false}.
++On most machines, this default should be used.  For machines with
++special constant load instructions that have additional constraints
++or being dependent on mode-switching, such as SH, this hook can be
++used to avoid unsafe substitution.
+ @end deftypefn
+ 
+ @deftypefn {Target Hook} bool TARGET_LEGITIMIZE_ADDRESS_DISPLACEMENT (rtx *@var{offset1}, rtx *@var{offset2}, poly_int64 @var{orig_offset}, machine_mode @var{mode})
+--- a/src/gcc/doc/tm.texi.in
++++ b/src/gcc/doc/tm.texi.in
+@@ -2398,6 +2398,8 @@ in the reload pass.
+ 
+ @hook TARGET_CANNOT_SUBSTITUTE_MEM_EQUIV_P
+ 
++@hook TARGET_CANNOT_SUBSTITUTE_CONST_EQUIV_P
++
+ @hook TARGET_LEGITIMIZE_ADDRESS_DISPLACEMENT
+ 
+ @hook TARGET_SPILL_CLASS

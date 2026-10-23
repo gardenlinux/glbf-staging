@@ -1,0 +1,16 @@
+libcap/cap_test                 usr/lib/${DEB_HOST_MULTIARCH}/libcap2/tests
+pam_cap/test_pam_cap            usr/lib/${DEB_HOST_MULTIARCH}/libcap2/tests
+progs/tcapsh-static             usr/lib/${DEB_HOST_MULTIARCH}/libcap2/tests
+tests/exploit                   usr/lib/${DEB_HOST_MULTIARCH}/libcap2/tests
+tests/libcap_launch_test        usr/lib/${DEB_HOST_MULTIARCH}/libcap2/tests
+tests/libcap_psx_launch_test    usr/lib/${DEB_HOST_MULTIARCH}/libcap2/tests
+tests/libcap_psx_test           usr/lib/${DEB_HOST_MULTIARCH}/libcap2/tests
+tests/noexploit                 usr/lib/${DEB_HOST_MULTIARCH}/libcap2/tests
+tests/noop                      usr/lib/${DEB_HOST_MULTIARCH}/libcap2/tests
+tests/psx_test                  usr/lib/${DEB_HOST_MULTIARCH}/libcap2/tests
+tests/uns_test                  usr/lib/${DEB_HOST_MULTIARCH}/libcap2/tests
+usr/include
+usr/lib/*/*.a
+usr/lib/*/*.so
+usr/lib/*/pkgconfig
+usr/share/man/man3

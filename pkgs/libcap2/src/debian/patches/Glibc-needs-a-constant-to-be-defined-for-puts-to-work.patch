@@ -1,0 +1,33 @@
+From: "Andrew G. Morgan" <morgan@kernel.org>
+Date: Sat, 22 Mar 2025 09:49:50 -0700
+Subject: Glibc needs a constant to be defined for puts() to work.
+
+See https://bugzilla.kernel.org/show_bug.cgi?id=219880
+
+Signed-off-by: Andrew G. Morgan <morgan@kernel.org>
+---
+ libcap/execable.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/libcap/execable.h b/libcap/execable.h
+index 89e61a3..a68ea24 100644
+--- a/libcap/execable.h
++++ b/libcap/execable.h
+@@ -23,6 +23,17 @@
+ #endif
+ #define __EXECABLE_H
+ 
++#ifdef __GLIBC__
++/*
++ * https://bugzilla.kernel.org/show_bug.cgi?id=219880 So far as I can
++ * tell this value is some legacy magic meaning, but is a detail no
++ * longer important to glibc. Only the existence of this constant in
++ * the linkage is needed.
++ */
++extern const int _IO_stdin_used;
++const int _IO_stdin_used __attribute__((weak)) = 131073;
++#endif /* def __GLIBC__ */
++
+ const char __execable_dl_loader[] __attribute((section(".interp"))) =
+     SHARED_LOADER ;
+ 
