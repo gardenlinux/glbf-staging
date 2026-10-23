@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Mark Brown <broonie@debian.org>
 Standards-Version: 4.6.1
 Homepage: http://zlib.net/
-Build-Depends: dpkg-dev (>= 1.22.5), debhelper (>= 13), gcc-multilib [amd64 i386 kfreebsd-amd64 mips mipsel powerpc ppc64 s390 sparc s390x mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el mips64 mips64el mips64r6 mips64r6el x32] <!nobiarch>, dpkg-dev (>= 1.16.1), autoconf
+Build-Depends: dpkg-dev (>= 1.22.5), debhelper (>= 13), gcc-multilib [amd64 i386 kfreebsd-amd64 mips mipsel powerpc ppc64 s390 sparc mipsn32 mipsn32el mipsr6 mipsr6el mipsn32r6 mipsn32r6el mips64 mips64el mips64r6 mips64r6el x32] <!nobiarch>, dpkg-dev (>= 1.16.1), autoconf
 
 Package: zlib1g
 Architecture: any
@@ -33,6 +33,7 @@ Description: compression library - development
 
 Package: zlib1g-udeb
 XC-Package-Type: udeb
+Build-Profiles: <!noudeb>
 Architecture: any
 Priority: optional
 Section: debian-installer
@@ -68,7 +69,7 @@ Description: compression library - 64 bit - DO NOT USE EXCEPT FOR PACKAGING
  runtime.
 
 Package: lib32z1
-Architecture: amd64 ppc64 kfreebsd-amd64 s390x
+Architecture: amd64 ppc64 kfreebsd-amd64
 Build-Profiles: <!nobiarch>
 Conflicts: libc6-i386 (<= 2.9-18)
 Depends: ${shlibs:Depends}, ${misc:Depends}
@@ -80,7 +81,7 @@ Description: compression library - 32 bit runtime
 
 Package: lib32z1-dev
 Section: libdevel
-Architecture: amd64 ppc64 kfreebsd-amd64 s390x
+Architecture: amd64 ppc64 kfreebsd-amd64
 Build-Profiles: <!nobiarch>
 Conflicts: libc6-i386 (<= 2.9-18)
 Depends: lib32z1 (= ${binary:Version}), zlib1g-dev (= ${binary:Version}), lib32c-dev, ${misc:Depends}
