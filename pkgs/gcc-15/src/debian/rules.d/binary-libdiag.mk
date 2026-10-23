@@ -96,7 +96,7 @@ $(binary_stamp)-libdiagdoc: $(install_jit_stamp)
 	trap '' 1 2 3 15; touch $@; mv $(install_stamp)-tmp $(install_stamp)
 	touch $@
 
-$(binary_stamp)-diag: $(install_jit_stamp) $(binary_stamp)-libdiag
+$(binary_stamp)-diag: $(install_jit_stamp)
 	dh_testdir
 	dh_testroot
 	mv $(install_stamp) $(install_stamp)-tmp

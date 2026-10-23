@@ -1,7 +1,7 @@
-# DP: updates from the 15 branch upto 20260207 (documentation).
+# DP: updates from the 15 branch upto 20260223 (documentation).
 
 LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
-	5115c7e447fc07457443df874bf57840e8316d5f ababaaf45fa0dc369c07e19ca64862c4eefaadc1 \
+	5115c7e447fc07457443df874bf57840e8316d5f 546758a8ac5412285ab6bee799fb3d882de77041 \
 	| awk '/^diff .*\.texi/ {skip=0; print; next} /^diff / {skip=1; next} skip==0' \
         | grep -v -E '^(diff|index)'
 

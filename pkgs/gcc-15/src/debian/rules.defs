@@ -377,9 +377,9 @@ ifneq ($(trunk_build),yes)
           with_bootstrap := profiled
         endif
         # PR target/119937
-        ifeq ($(distribution)-$(DEB_HOST_ARCH),Debian-armhf)
-          with_bootstrap :=
-        endif
+        #ifeq ($(distribution)-$(DEB_HOST_ARCH),Debian-armhf)
+        #  with_bootstrap :=
+        #endif
       endif
     endif
   endif
@@ -396,7 +396,7 @@ ifneq ($(trunk_build),yes)
   # FIXME: not yet tried to build: alpha
   # FIXME: ia64, see https://gcc.gnu.org/PR98504
   # FIXME: mips64el requested by syq
-  ifneq (,$(filter $(DEB_HOST_ARCH), alpha hppa ia64 loong64 m68k mips mipsel mips64el sh4 sparc64 hurd-amd64 hurd-i386))
+  ifneq (,$(filter $(DEB_HOST_ARCH), alpha hppa ia64 m68k mips mipsel mips64el sh4 sparc64 hurd-amd64 hurd-i386))
     with_lto_build :=
   endif
   # Slow builders in Debian
@@ -1305,9 +1305,9 @@ ifeq ($(with_m2),yes)
   ifeq ($(with_dev),yes)
     with_m2dev := yes
   endif
-  ifeq ($(with_common_libs),yes)
+  #ifeq ($(with_common_libs),yes)
     with_libgm2 := yes
-  endif
+  #endif
   enabled_languages += m2
 endif
 
@@ -1395,9 +1395,9 @@ ifeq ($(with_cobol),yes)
   ifeq ($(with_dev),yes)
     with_coboldev := yes
   endif
-  ifeq ($(with_common_libs),yes)
+  #ifeq ($(with_common_libs),yes)
     with_libgcobol := yes
-  endif
+  #endif
   enabled_languages += cobol
 endif
 
@@ -1436,9 +1436,9 @@ ifeq ($(with_algol),yes)
   ifeq ($(with_dev),yes)
     with_algoldev := yes
   endif
-  ifeq ($(with_common_libs),yes)
+  #ifeq ($(with_common_libs),yes)
     with_libga68 := yes
-  endif
+  #endif
   enabled_languages += algol68
 endif
 
