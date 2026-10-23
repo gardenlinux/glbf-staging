@@ -25,7 +25,6 @@ $(stamp)control: debian/rules.d/control.mk $(control_deps) debian/tests/control.
 	(echo; cat debian/control.in/i386)		>> $@T
 	(echo; cat debian/control.in/sparc)		>> $@T
 	(echo; cat debian/control.in/sparc64)		>> $@T
-	(echo; cat debian/control.in/s390) 		>> $@T
 	(echo; cat debian/control.in/amd64)		>> $@T
 	(echo; cat debian/control.in/powerpc)		>> $@T
 	(echo; cat debian/control.in/ppc64)		>> $@T
