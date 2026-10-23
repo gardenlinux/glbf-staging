@@ -51,9 +51,9 @@ jobs:
             echo "update-tag=${{       inputs.update-tag      || 'debian:testing' }}"
             echo "repo=${{             inputs.repo            || 'https://deb.debian.org/debian' }}"
             echo "dist=${{             inputs.dist            || 'testing' }}"
-            echo "update-lockfile=${{  inputs.update-lockfile || 'false' }}"
+            echo "update-lockfile=${{  inputs.update-lockfile == '' && 'false' || inputs.update-lockfile }}"
             echo "glbx-ref=${{         inputs.glbx-ref        || 'main' }}"
-            echo "auto-merge=${{       inputs.auto-merge      || 'true' }}"
+            echo "auto-merge=${{       inputs.auto-merge      == '' && 'true'  || inputs.auto-merge }}"
           } >> "$GITHUB_OUTPUT"
 
   build-glbx:
