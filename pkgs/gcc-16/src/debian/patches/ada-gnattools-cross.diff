@@ -19,7 +19,7 @@ to stamp-gnatlib2 is not necessary anymore with gcc-9.
 
 --- a/src/gcc/ada/Makefile.rtl
 +++ b/src/gcc/ada/Makefile.rtl
-@@ -2041,6 +2041,11 @@ ifeq ($(strip $(filter-out s390% linux%,
+@@ -2042,6 +2042,11 @@ ifeq ($(strip $(filter-out s390% linux%,
  endif
  endif
  

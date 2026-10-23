@@ -2,7 +2,7 @@
 
 --- a/src/gcc/configure.ac
 +++ b/src/gcc/configure.ac
-@@ -2192,7 +2192,7 @@ else
+@@ -2204,7 +2204,7 @@ else
  	# Clearing GMPINC is necessary to prevent host headers being
  	# used by the build compiler.  Defining GENERATOR_FILE stops
  	# system.h from including gmp.h.

@@ -1,3 +1,27 @@
+gcc-16 (16-20260322-1) unstable; urgency=medium
+
+  * Snapshot, taken from the trunk (20260322).
+    - Fix PR target/123852 (SH), bootstrap on sh4.
+    - ga68: add missing symbols to libga68/ga68.map. Closes: #1130580.
+  * Update sh-bootstrap-compare patch (Adrian Glaubitz). Closes: #1130857.
+  * For backports, require at least GCC 11 for the bootstrap.
+
+ -- Matthias Klose <doko@debian.org>  Sun, 22 Mar 2026 09:29:00 +0100
+
+gcc-16 (16-20260315-1) unstable; urgency=medium
+
+  * Snapshot, taken from the trunk (20260315).
+  * Pass configure flags for libgcobol cross builds.
+  * For backports, require binutils (>= 2.40) on riscv64.
+  * libga68-dev: Depend on libgc-dev. Closes: #1130580.
+  * Fix PR ada/107475 also for armhf and s390x.
+  * Disable dwz on alpha, see PR dwz/33990.
+  * Refresh patches.
+  * Update libgcc-s, libcc1, lib*asan, liblsan, libtsan and libgcobol
+    symbol files.
+
+ -- Matthias Klose <doko@debian.org>  Sun, 15 Mar 2026 13:17:23 +0100
+
 gcc-16 (16-20260308-1) unstable; urgency=medium
 
   * Snapshot, taken from the trunk (20260308).
@@ -18,7 +42,7 @@ gcc-16 (16-20260226-1) experimental; urgency=medium
   * Snapshot, taken from the trunk (20260226). Also closes: #1128648.
   * Disable again profiled+lto build on armhf.
   * Fix s390x backport builds.
-  * Disable dwz on riscv64, see https://sourceware.org/bugzilla/show_bug.cgi?id=33929.
+  * Disable dwz on riscv64, see PR dwz/33929.
   * Disable profiled+lto build. See https://gcc.gnu.org/PR124238.
 
  -- Matthias Klose <doko@debian.org>  Thu, 26 Feb 2026 06:00:27 +0100
