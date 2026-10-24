@@ -1,5 +1,5 @@
 Tests: executables
-Restrictions: isolation-machine
+Restrictions: isolation-machine, needs-root
 Depends: gcc, libc-dev, libcap2-bin
 
 Tests: upstream-root
