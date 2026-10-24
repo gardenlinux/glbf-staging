@@ -65,6 +65,10 @@ hurd-i386/git-sig-alarm.diff
 hurd-i386/git-libio-mtsafe.diff
 hurd-i386/git-timedrwlock-unlock.diff
 hurd-i386/git-sigtimedwait-timeout.diff
+hurd-i386/git-MSG_EXAMINE.diff
+hurd-i386/git-interrupt-EINTR.diff
+hurd-i386/git-SEM_FAILED.diff
+hurd-i386/git-tst-fix.diff
 
 i386/local-biarch.diff
 i386/unsubmitted-quiet-ldconfig.diff
