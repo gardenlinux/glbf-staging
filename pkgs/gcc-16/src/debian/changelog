@@ -1,3 +1,28 @@
+gcc-16 (16-20260425-1) unstable; urgency=medium
+
+  * Snapshot, taken from the gcc-16 branch (20260425, release candidate).
+  * Fix typo in libgcc-s symbols file.
+  * Update libgphobos symbols file for amd64.
+  * Refresh cross-install-location patch.
+  * Replace outdated postal FSF address with URL.
+  * Turn on again PGO/LTO builds for most 64bit architectures.
+  * Turn on running the testsuite again.
+
+ -- Matthias Klose <doko@debian.org>  Sat, 25 Apr 2026 07:19:09 +0200
+
+gcc-16 (16-20260423-1) unstable; urgency=medium
+
+  * Snapshot, taken from the gcc-16 branch (20260423).
+  * Require bison 3.5.1 or 3.8.2 for the gcobol build.
+  * Update the ada-armel-libatomic patch for PR ada/107475.
+  * Build gcc itself with branch-protection (Emanuele Rocca). Closes: #1130592.
+    - On arm64 by appending CFLAGS_SECURE to BOOT_CFLAGS.
+    - Set BOOT_CFLAGS explicitly instead of relying on upstream defaults.
+  * libgfortran-dev: Install libcaf_shmem.a.
+  * Add conflicts for GCC 15 binary packages. Closes: #1133161.
+
+ -- Matthias Klose <doko@debian.org>  Thu, 23 Apr 2026 12:03:13 +0200
+
 gcc-16 (16-20260322-1) unstable; urgency=medium
 
   * Snapshot, taken from the trunk (20260322).

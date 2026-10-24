@@ -2,7 +2,7 @@
 
 --- a/src/gcc/doc/invoke.texi
 +++ b/src/gcc/doc/invoke.texi
-@@ -9410,6 +9410,10 @@ to turn on such checking by using @optio
+@@ -9408,6 +9408,10 @@ to turn on such checking by using @optio
  and is equivalent to @option{-Wbidi-chars=unpaired,ucn}, if no previous
  @option{-Wbidi-chars=any} was specified.
  
@@ -13,7 +13,7 @@
  @opindex Wno-bool-compare
  @opindex Wbool-compare
  @item -Wbool-compare
-@@ -13468,6 +13472,19 @@ also turns on the following optimization
+@@ -13472,6 +13476,19 @@ also turns on the following optimization
  Please note the warning under @option{-fgcse} about
  invoking @option{-O2} on programs that use computed gotos.
  
@@ -33,7 +33,7 @@
  @opindex O3
  @item -O3
  Optimize yet more.  @option{-O3} turns on all optimizations specified
-@@ -17767,6 +17784,10 @@ Currently the x86 GNU/Linux target provi
+@@ -17770,6 +17787,10 @@ Currently the x86 GNU/Linux target provi
  on Intel Control-flow Enforcement Technology (CET) which works for
  i686 processor or newer.
  
@@ -44,7 +44,7 @@
  @opindex fharden-compares
  @opindex fno-harden-compares
  @item -fharden-compares
-@@ -17926,6 +17947,11 @@ references to local frame addresses.  On
+@@ -17929,6 +17950,11 @@ references to local frame addresses.  On
  allocated on the stack are considered, optimized away variables or variables
  allocated in registers don't count.
  
@@ -56,7 +56,7 @@
  @opindex fstack-protector-explicit
  @item -fstack-protector-explicit
  Like @option{-fstack-protector} but only protects those functions which
-@@ -17991,6 +18017,10 @@ allocations.  @option{-fstack-clash-prot
+@@ -17994,6 +18020,10 @@ allocations.  @option{-fstack-clash-prot
  protection for static stack allocations if the target supports
  @option{-fstack-check=specific}.
  
@@ -67,7 +67,7 @@
  @opindex fstack-limit-register
  @opindex fstack-limit-symbol
  @opindex fno-stack-limit
-@@ -18789,6 +18819,9 @@ For example, @option{-Wl,-Map,output.map
+@@ -18802,6 +18832,9 @@ For example, @option{-Wl,-Map,output.map
  linker.  When using the GNU linker, you can also get the same effect with
  @option{-Wl,-Map=output.map}.
  
@@ -77,7 +77,7 @@
  @opindex u
  @opindex force-link
  @item -u @var{symbol}
-@@ -19761,6 +19794,11 @@ zero initialization of padding bits of o
+@@ -19711,6 +19744,11 @@ zero initialization of padding bits of o
  the padding in between @code{b.a} and @code{b.b} (if any) and
  tail padding in the structure (if any).
  
