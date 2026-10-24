@@ -1,3 +1,28 @@
+libselinux (3.10-1) unstable; urgency=medium
+
+  * New upstream version 3.10
+
+  * d/watch: rewrite in version 5
+  * d/u/signing-key.asc: add key from Jason Zaman
+  * d/patches:
+    - rebase and drop upstream applied patch
+    - fix FTBFS on alpha
+  * d/libselinux1.symbols: add selinux_restorecon_get_relabeled_files(3)
+
+ -- Christian Göttsche <cgzones@googlemail.com>  Tue, 10 Feb 2026 23:01:23 +0100
+
+libselinux (3.9-5) unstable; urgency=medium
+
+  * d/changelog: fix typo
+  * d/control:
+    - drop priority field with default value
+    - bump Standards-Version to 4.7.3 (no further changes)
+    - drop deprecated and unused XS-Ruby-Versions field
+  * d/patches: build shared libraries with -fPIC (Closes: #1123905)
+  * d/copyright: update debian/* section
+
+ -- Christian Göttsche <cgzones@googlemail.com>  Sun, 01 Feb 2026 19:49:54 +0100
+
 libselinux (3.9-4) unstable; urgency=medium
 
   * d/control: add versioned dependency to Provides (Closes: #1121285)
@@ -39,7 +64,7 @@ libselinux (3.9-1) unstable; urgency=medium
 
   * 3.9 upstream release
   * Always use -D_LARGEFILE64_SOURCE thanks Helmut Grohne Closes: #1104987
-  * Don't apply patch x32 becuase it conflicts and an upstream change appears
+  * Don't apply patch x32 because it conflicts and an upstream change appears
     to fix the problem.
   * Delegate Built-Using to dh-sequence-builtusing
     Refine pattern in debian/*.install with DEB_HOST_MULTIARCH
