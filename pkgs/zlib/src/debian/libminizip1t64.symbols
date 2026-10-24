@@ -5,6 +5,20 @@ libminizip.so.1 libminizip1t64
  fill_fopen64_filefunc@Base 1.1
  fill_fopen_filefunc@Base 1.1
  fill_zlib_filefunc64_32_def_from_filefunc32@Base 1.1
+ set_alloc@Base 1.3.dfsg+really1.3.2
+ set_clear@Base 1.3.dfsg+really1.3.2
+ set_end@Base 1.3.dfsg+really1.3.2
+ set_found@Base 1.3.dfsg+really1.3.2
+ set_free@Base 1.3.dfsg+really1.3.2
+ set_grow@Base 1.3.dfsg+really1.3.2
+ set_insert@Base 1.3.dfsg+really1.3.2
+ set_node@Base 1.3.dfsg+really1.3.2
+ set_ok@Base 1.3.dfsg+really1.3.2
+ set_rand@Base 1.3.dfsg+really1.3.2
+ set_seed@Base 1.3.dfsg+really1.3.2
+ set_start@Base 1.3.dfsg+really1.3.2
+ set_sweep@Base 1.3.dfsg+really1.3.2
+ set_uniq@Base 1.3.dfsg+really1.3.2
  unzClose@Base 1.1
  unzCloseCurrentFile@Base 1.1
  unzGetCurrentFileInfo64@Base 1.1
@@ -40,6 +54,7 @@ libminizip.so.1 libminizip1t64
  unzeof@Base 1.1
  unztell64@Base 1.1
  unztell@Base 1.1
+ zipAlreadyThere@Base 1.3.dfsg+really1.3.2
  zipClose@Base 1.1
  zipCloseFileInZip@Base 1.1
  zipCloseFileInZipRaw64@Base 1.1

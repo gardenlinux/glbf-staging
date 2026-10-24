@@ -77,9 +77,9 @@ configure-stamp: configure
 
 	if [ ! -f Makefile.stash ]; then cp Makefile Makefile.stash ; fi
 
-	AR=$(AR) CC="$(DEB_HOST_GNU_TYPE)-gcc" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" uname=GNU ./configure --shared --prefix=/usr --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH)
+	AR=$(AR) CC="$(DEB_HOST_GNU_TYPE)-gcc" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" uname=GNU ./configure --shared --prefix=/usr --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) --disable-crcvx
 
-	cd contrib/minizip && autoreconf -fis && CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" uname=GNU ./configure --prefix=/usr --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH)
+	cd contrib/minizip && autoreconf -fis && CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" uname=GNU ./configure --prefix=/usr --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) --build=$(DEB_BUILD_GNU_TYPE) --host=$(DEB_HOST_GNU_TYPE)
 
 	touch $@
 
@@ -125,6 +125,7 @@ build-stamp: configure-stamp
 	$(MAKE) -C contrib/minizip minizip miniunzip
 
 	-$(MAKE) test
+	$(MAKE) -C contrib/minizip test
 
 	touch $@
 
@@ -206,13 +207,13 @@ binary-arch: build install $(EXTRA_INSTALL)
 	dh_makeshlibs -pzlib1g -V"zlib1g (>= 1:1.2.3.3.dfsg-1)" --add-udeb=zlib1g-udeb
 ifeq (,$(filter nobiarch,$(DEB_BUILD_PROFILES)))
 ifneq (,$(filter $(DEB_HOST_ARCH), $(32-ARCHS)))
-	dh_makeshlibs -plib32z1 -V"lib32z1 (>= 1:1.2.3.3.dfsg-1)"
+	dh_makeshlibs -plib32z1 -V"lib32z1 (>= 1:1.2.3.3.dfsg-1)" --add-udeb=zlib1g-udeb
 endif
 ifneq (,$(filter $(DEB_HOST_ARCH), $(64-ARCHS)))
-	dh_makeshlibs -plib64z1 -V"lib64z1 (>= 1:1.2.3.3.dfsg-1)"
+	dh_makeshlibs -plib64z1 -V"lib64z1 (>= 1:1.2.3.3.dfsg-1)" --add-udeb=zlib1g-udeb
 endif
 ifneq (,$(filter $(DEB_HOST_ARCH), $(N32-ARCHS)))
-	dh_makeshlibs -plibn32z1 -V"libn32z1 (>= 1:1.2.3.3.dfsg-1)"
+	dh_makeshlibs -plibn32z1 -V"libn32z1 (>= 1:1.2.3.3.dfsg-1)" --add-udeb=zlib1g-udeb
 endif
 endif
 	dh_installdeb -a
