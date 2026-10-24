@@ -1,0 +1,36 @@
+From: =?utf-8?q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
+Date: Sun, 1 Feb 2026 18:17:23 +0100
+Subject: Build shared libraries with -fPIC
+
+Since LTO is being used, code can be generated at the linking stage.
+Unless passing -fPIC, this code is not position-independent as is
+required for shared libraries. This happens to work on most
+architectures but x32 by chance. The -fPIC flag really needs to passed
+to the linker as well.
+
+Suggested-by: Helmut Grohne <helmut@subdivi.de>
+---
+ src/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/Makefile b/src/Makefile
+index a9bfe06..04f5b68 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -161,14 +161,14 @@ $(SWIGRUBYLOBJ): $(SWIGRUBYCOUT)
+ 	$(CC) $(CPPFLAGS) $(CFLAGS) $(SWIG_CFLAGS) $(RUBYINC) -fPIC -DSHARED -c -o $@ $<
+ 
+ $(SWIGRUBYSO): $(SWIGRUBYLOBJ)
+-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -L. -shared -o $@ $^ -lselinux $(RUBYLIBS)
++	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -L. -fPIC -shared -o $@ $^ -lselinux $(RUBYLIBS)
+ 
+ $(LIBA): $(OBJS)
+ 	$(AR) rcs $@ $^
+ 	$(RANLIB) $@
+ 
+ $(LIBSO): $(LOBJS)
+-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ $(PCRE_LDLIBS) $(FTS_LDLIBS) -ldl -Wl,$(LD_SONAME_FLAGS)
++	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -fPIC -shared -o $@ $^ $(PCRE_LDLIBS) $(FTS_LDLIBS) -ldl -Wl,$(LD_SONAME_FLAGS)
+ 	ln -sf $@ $(TARGET)
+ 
+ $(LIBPC): $(LIBPC).in ../VERSION
