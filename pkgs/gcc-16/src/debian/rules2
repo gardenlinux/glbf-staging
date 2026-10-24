@@ -189,6 +189,7 @@ ifneq (,$(filter $(build_type), build-cross cross-build-cross))
     LDFLAGS += -Wl,--no-relax
   endif
 else
+  BOOT_CFLAGS	= -g -O2
   BOOT_LDFLAGS	= -Wl,-z,relro
   ifeq ($(DEB_TARGET_ARCH),alpha)
     BOOT_LDFLAGS += -Wl,--no-relax
@@ -241,6 +242,7 @@ ifeq ($(DEB_TARGET_ARCH),arm64)
     # Native build
     CFLAGS += $(CFLAGS_SECURE)
     CXXFLAGS += $(CFLAGS_SECURE)
+    BOOT_CFLAGS += $(CFLAGS_SECURE)
   endif
 endif
 
@@ -1237,7 +1239,9 @@ endif
 	@echo "CFLAGS: $(CFLAGS)"
 	@echo "LDFLAGS: $(LDFLAGS)"
 	@echo "FCFLAGS: $(FCFLAGS)"
+	@echo "STAGE1_CFLAGS: $(STAGE1_CFLAGS)"
 	@echo "BOOT_CFLAGS: $(BOOT_CFLAGS)"
+	@echo "BOOT_LDFLAGS: $(BOOT_LDFLAGS)"
 	@echo "DEBIAN_BUILDARCH: $(DEBIAN_BUILDARCH)"
 	@echo "Install prefix: /$(PF)"
 ifeq ($(biarchn32)-$(biarch64),yes-yes)

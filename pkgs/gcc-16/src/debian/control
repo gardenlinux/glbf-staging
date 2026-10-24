@@ -1961,7 +1961,7 @@ Architecture: all
 Depends: gcc-16-base (>= ${gcc:SoftVersion}), ${misc:Depends}
 Conflicts: libgccjit-5-doc, libgccjit-6-doc, libgccjit-7-doc, libgccjit-8-doc,
   libgccjit-9-doc, libgccjit-10-doc, libgccjit-11-doc, libgccjit-12-doc,
-  libgccjit-13-doc, libgccjit-14-doc,
+  libgccjit-13-doc, libgccjit-14-doc, libgccjit-15-doc,
 Description: GCC just-in-time compilation (documentation)
  libgccjit provides an embeddable shared library with an API for adding
  compilation to existing programs using GCC.
@@ -3899,7 +3899,7 @@ Conflicts: libstdc++5-dbg, libstdc++5-3.3-dbg, libstdc++6-dbg,
  libstdc++6-4.9-dbg, libstdc++6-5-dbg, libstdc++6-6-dbg,
  libstdc++6-7-dbg, libstdc++6-8-dbg, libstdc++6-9-dbg,
  libstdc++6-10-dbg, libstdc++6-11-dbg, libstdc++6-12-dbg,
- libstdc++6-13-dbg, libstdc++6-14-dbg,
+ libstdc++6-13-dbg, libstdc++6-14-dbg, libstdc++6-15-dbg,
 Description: GNU Standard C++ Library v3 (debug build)
  This package contains a debug build of the shared libstdc++ library.  The debug
  symbols for the default build can be found in the libstdc++6-dbgsym package.
@@ -3932,7 +3932,7 @@ Conflicts: lib32stdc++6-dbg, lib32stdc++6-4.0-dbg,
  lib32stdc++6-5-dbg, lib32stdc++6-6-dbg, lib32stdc++6-7-dbg,
  lib32stdc++6-8-dbg, lib32stdc++6-9-dbg, lib32stdc++6-10-dbg,
  lib32stdc++6-11-dbg, lib32stdc++6-12-dbg, lib32stdc++6-13-dbg,
- lib32stdc++6-14-dbg,
+ lib32stdc++6-14-dbg, lib32stdc++6-15-dbg,
 Description: GNU Standard C++ Library v3 (debug build)
  This package contains a debug build of the shared libstdc++ library.  The debug
  symbols for the default build can be found in the libstdc++6-dbgsym package.
@@ -3965,7 +3965,7 @@ Conflicts: lib64stdc++6-dbg, lib64stdc++6-4.0-dbg,
  lib64stdc++6-5-dbg, lib64stdc++6-6-dbg, lib64stdc++6-7-dbg,
  lib64stdc++6-8-dbg, lib64stdc++6-9-dbg, lib64stdc++6-10-dbg,
  lib64stdc++6-11-dbg, lib64stdc++6-12-dbg, lib64stdc++6-13-dbg,
- lib64stdc++6-14-dbg,
+ lib64stdc++6-14-dbg, lib64stdc++6-15-dbg,
 Description: GNU Standard C++ Library v3 (debug build)
  This package contains a debug build of the shared libstdc++ library.  The debug
  symbols for the default build can be found in the libstdc++6-dbgsym package.
@@ -3998,7 +3998,7 @@ Conflicts: libn32stdc++6-dbg, libn32stdc++6-4.0-dbg,
  libn32stdc++6-5-dbg, libn32stdc++6-6-dbg, libn32stdc++6-7-dbg,
  libn32stdc++6-8-dbg, libn32stdc++6-9-dbg, libn32stdc++6-10-dbg,
  libn32stdc++6-11-dbg, libn32stdc++6-12-dbg, libn32stdc++6-13-dbg,
- libn32stdc++6-14-dbg,
+ libn32stdc++6-14-dbg, libn32stdc++6-15-dbg,
 Description: GNU Standard C++ Library v3 (debug build)
  This package contains a debug build of the shared libstdc++ library.  The debug
  symbols for the default build can be found in the libstdc++6-dbgsym package.
@@ -4029,7 +4029,7 @@ Conflicts: libx32stdc++6-dbg, libx32stdc++6-4.6-dbg,
  libx32stdc++6-5-dbg, libx32stdc++6-6-dbg, libx32stdc++6-7-dbg,
  libx32stdc++6-8-dbg, libx32stdc++6-9-dbg, libx32stdc++6-10-dbg,
  libx32stdc++6-11-dbg, libx32stdc++6-12-dbg, libx32stdc++6-13-dbg,
- libx32stdc++6-14-dbg,
+ libx32stdc++6-14-dbg, libx32stdc++6-15-dbg,
 Description: GNU Standard C++ Library v3 (debug build)
  This package contains a debug build of the shared libstdc++ library.  The debug
  symbols for the default build can be found in the libstdc++6-dbgsym package.
@@ -4045,6 +4045,7 @@ Conflicts: libstdc++5-doc, libstdc++5-3.3-doc, libstdc++6-doc,
  libstdc++-4.8-doc, libstdc++-4.9-doc, libstdc++-5-doc, libstdc++-6-doc,
  libstdc++-7-doc, libstdc++-8-doc, libstdc++-9-doc, libstdc++-10-doc,
  libstdc++-11-doc, libstdc++-12-doc, libstdc++-13-doc, libstdc++-14-doc,
+ libstdc++-15-doc,
 Description: GNU Standard C++ Library v3 (documentation files)
  This package contains documentation files for the GNU stdc++ library.
  .

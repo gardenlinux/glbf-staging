@@ -3,7 +3,7 @@
 
 --- a/src/gcc/gcc.cc
 +++ b/src/gcc/gcc.cc
-@@ -8278,13 +8278,16 @@ do_report_bug (const char **new_argv, co
+@@ -8280,13 +8280,16 @@ do_report_bug (const char **new_argv, co
    if (status == ATTEMPT_STATUS_SUCCESS)
      {
        const bool gcc_dump = has_deb_build_options ("gcc-ice", "nodump");
@@ -21,7 +21,7 @@
  	{
  	  char *cmd = XNEWVEC (char, 50 + strlen (*out_file));
  
-@@ -8298,6 +8301,15 @@ do_report_bug (const char **new_argv, co
+@@ -8300,6 +8303,15 @@ do_report_bug (const char **new_argv, co
  	  fflush (stderr);
  	  free (cmd);
  	}
