@@ -8,7 +8,7 @@ Build-Depends: patchelf,
                libpam0g-dev,
 Build-Depends-Indep: dh-golang,
                      golang-any,
-Standards-Version: 4.7.3
+Standards-Version: 4.7.4
 Homepage: https://sites.google.com/site/fullycapable/
 Vcs-Git: https://salsa.debian.org/debian/libcap2.git
 Vcs-Browser: https://salsa.debian.org/debian/libcap2

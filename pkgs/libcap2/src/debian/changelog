@@ -1,3 +1,13 @@
+libcap2 (1:2.78-1) unstable; urgency=medium
+
+  * New upstream version 2.78
+    - Fixes CVE-2026-4878
+    - Refresh patches
+  * Bump Standards-Version to 4.7.4 (no changes needed)
+  * autopkgtest: Re-add needs-root (not implied by isolation-machine)
+
+ -- Christian Kastner <ckk@debian.org>  Mon, 06 Apr 2026 22:01:03 +0200
+
 libcap2 (1:2.77-1) unstable; urgency=medium
 
   * New upstream version 2.77

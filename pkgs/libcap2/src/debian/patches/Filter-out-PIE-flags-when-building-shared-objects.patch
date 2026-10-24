@@ -13,7 +13,7 @@ Last-Update: 2022-03-04
  2 files changed, 8 insertions(+)
 
 diff --git a/libcap/Makefile b/libcap/Makefile
-index f0eb87e..006e59d 100644
+index e90a950..148cd6e 100644
 --- a/libcap/Makefile
 +++ b/libcap/Makefile
 @@ -18,6 +18,10 @@ CAPMAGICOBJ=cap_magic.o
