@@ -1,3 +1,22 @@
+glibc (2.42-15) unstable; urgency=medium
+
+  [ Aurelien Jarno ]
+  * debian/patches/git-updates.diff: update from upstream stable branch:
+    - Fix random failure of tst-link-map-contiguous-ldso.
+    - Fix tst-rseq with Linux 7.0.
+    - Fix a possible crash due to an assertion failure when converting inputs
+      from the IBM139x character sets (CVE-2026-4046).  Closes: #1132499.
+
+  [ Samuel Thibault ]
+  * debian/patches/hurd-i386/git-MSG_EXAMINE.diff: alterations to MSG_EXAMINE
+    interface.
+  * debian/patches/hurd-i386/git-interrupt-EINTR.diff: Interrupted RPC returning
+    EINTR when server has actually changed state.
+  * debian/patches/hurd-i386/git-SEM_FAILED.diff: Fix SEM_FAILED type.
+  * debian/patches/hurd-i386/git-tst-fix.diff: Fix test build.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 19 Apr 2026 15:41:41 +0200
+
 glibc (2.42-14) unstable; urgency=medium
 
   [ Samuel Thibault ]
@@ -43,7 +62,7 @@ glibc (2.42-14) unstable; urgency=medium
     - Fix incorrect handling of DNS responses in gethostbyaddr and
       gethostbyaddr_r (CVE-2026-4437).  Closes: #1131435.
     - Fix invalid DNS hostnames returned by gethostbyaddr and
-      gethostbyaddr_r (CVE-2026-4438).  Closes: #113887.
+      gethostbyaddr_r (CVE-2026-4438).  Closes: #1131887.
 
  -- Aurelien Jarno <aurel32@debian.org>  Fri, 27 Mar 2026 22:08:16 +0100
 
