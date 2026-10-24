@@ -1,6 +1,6 @@
 sources:
-    - file: zlib_1.3.dfsg+really1.3.1.orig.tar.gz
-      sha256: 60dd315c07f616887caa029408308a018ace66e3d142726a97db164b3b8f69fb
+    - file: zlib_1.3.dfsg+really1.3.2.orig.tar.gz
+      sha256: 7b6903eb019983987b7112eccf90f1703f1c6c0e0cede36564bf611d19ca579d
       urls:
-        - https://snapshot.debian.org/archive/debian/20260226T000000Z/pool/main/z/zlib/zlib_1.3.dfsg+really1.3.1.orig.tar.gz
-        - https://snapshot.debian.org/file/3b19b81105d3436095134a648c521b678905eaac/zlib_1.3.dfsg+really1.3.1.orig.tar.gz
+        - https://snapshot.debian.org/archive/debian/20260507T000000Z/pool/main/z/zlib/zlib_1.3.dfsg+really1.3.2.orig.tar.gz
+        - https://snapshot.debian.org/file/4db0dac92273fb295e6064d9be076e124f6c71bd/zlib_1.3.dfsg+really1.3.2.orig.tar.gz

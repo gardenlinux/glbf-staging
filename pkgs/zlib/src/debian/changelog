@@ -1,3 +1,33 @@
+zlib (1:1.3.dfsg+really1.3.2-3) unstable; urgency=low
+
+  * Suppress crcvx to fix building of minizip on s390 with patch
+    from Adrian Bunk (closes: #1132458).
+  * Fix up missing --host from prior minizip patch (closes: #1050995).
+
+ -- Mark Brown <broonie@debian.org>  Wed, 01 Apr 2026 22:50:49 +0100
+
+zlib (1:1.3.dfsg+really1.3.2-2) unstable; urgency=low
+
+  * Add --add-udeb=zlib1g-udeb to the dh_makeshlibs call for all
+    lib32z1, lib64z1, and libn32z1 packages, avoiding dependencies like
+    zlib1g-udeb → lib32z1 on amd64, using a patch provided by Cyril
+    Brulebois (closes: #1132159).
+  * Fix upstream issue with not installing all minizip headers using a
+    patch from Bas Couwenberg (closes: #1132119).
+  * Reintroduce support for cross building with work from Helmut 
+    Grohne (closes: #1050995).
+
+ -- Mark Brown <broonie@debian.org>  Sat, 28 Mar 2026 17:55:24 +0100
+
+zlib (1:1.3.dfsg+really1.3.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * Don't create /lib, patch from Michael Biebl (closes: #1126919).
+  * minizip now has a testsuite, run it.
+  * Bump debhelper compat to 15 (no changes).
+
+ -- Mark Brown <broonie@debian.org>  Tue, 24 Mar 2026 01:05:33 +0000
+
 zlib (1:1.3.dfsg+really1.3.1-3) unstable; urgency=low
 
   * Apply fixup for s390x removal from Helmut Grohne (closes: #1127743).

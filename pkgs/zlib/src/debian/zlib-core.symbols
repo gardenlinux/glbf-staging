@@ -12,12 +12,17 @@
  ZLIB_1.2.7.1@ZLIB_1.2.7.1 1:1.2.8
  ZLIB_1.2.9@ZLIB_1.2.9 1:1.2.11.dfsg
  ZLIB_1.2.12@ZLIB_1.2.12 1:1.2.13.dfsg
+ ZLIB_1.3.1.2@ZLIB_1.3.1.2 1:1.3.dfsg+really1.3.2
+ ZLIB_1.3.2@ZLIB_1.3.2 1:1.3.dfsg+really1.3.2
  adler32@Base 1:1.1.4
  adler32_combine@ZLIB_1.2.2 1:1.2.2
  adler32_z@ZLIB_1.2.9 1:1.2.11.dfsg
  compress2@Base 1:1.1.4
+ compress2_z@ZLIB_1.3.2 1:1.3.dfsg+really1.3.2
  compress@Base 1:1.1.4
  compressBound@ZLIB_1.2.0 1:1.2.0
+ compressBound_z@ZLIB_1.3.2 1:1.3.dfsg+really1.3.2
+ compress_z@ZLIB_1.3.2 1:1.3.dfsg+really1.3.2
  crc32@Base 1:1.1.4
  crc32_combine@ZLIB_1.2.2 1:1.2.2
  crc32_z@ZLIB_1.2.9 1:1.2.11.dfsg
@@ -26,6 +31,7 @@
  crc32_combine_op@ZLIB_1.2.12 1:1.2.13.dfsg
  deflate@Base 1:1.1.4
  deflateBound@ZLIB_1.2.0 1:1.2.0
+ deflateBound_z@ZLIB_1.3.2 1:1.3.dfsg+really1.3.2
  deflateCopy@Base 1:1.1.4
  deflateEnd@Base 1:1.1.4
  deflateGetDictionary@ZLIB_1.2.9 1:1.2.11.dfsg
@@ -39,6 +45,7 @@
  deflateSetDictionary@Base 1:1.1.4
  deflateSetHeader@ZLIB_1.2.2 1:1.2.2
  deflateTune@ZLIB_1.2.2.3 1:1.2.2.3
+ deflateUsed@ZLIB_1.3.1.2 1:1.3.dfsg+really1.3.2
  get_crc_table@Base 1:1.1.4
  gzbuffer@ZLIB_1.2.3.5 1:1.2.6
  gzclearerr@ZLIB_1.2.0.2 1:1.2.0.2
@@ -90,7 +97,9 @@
  inflateUndermine@ZLIB_1.2.3.3 1:1.2.3.4
  inflateValidate@ZLIB_1.2.9 1:1.2.11.dfsg
  uncompress2@ZLIB_1.2.9 1:1.2.11.dfsg
+ uncompress2_z@ZLIB_1.3.2 1:1.3.dfsg+really1.3.2
  uncompress@Base 1:1.1.4
+ uncompress_z@ZLIB_1.3.2 1:1.3.dfsg+really1.3.2
  zError@Base 1:1.1.4
  zlibCompileFlags@ZLIB_1.2.0.2 1:1.2.0.2
  zlibVersion@Base 1:1.1.4

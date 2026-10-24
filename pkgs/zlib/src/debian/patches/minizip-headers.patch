@@ -1,0 +1,14 @@
+Description: Install all headers like CMakeLists.txt.
+Author: Bas Couwenberg <sebastic@debian.org>
+Bug-Debian: https://bugs.debian.org/1132119
+
+--- a/contrib/minizip/Makefile.am
++++ b/contrib/minizip/Makefile.am
+@@ -27,6 +27,7 @@ libminizip_la_LDFLAGS = $(AM_LDFLAGS) -v
+ minizip_includedir = $(includedir)/minizip
+ minizip_include_HEADERS = \
+ 	crypt.h \
++	ints.h \
+ 	ioapi.h \
+ 	mztools.h \
+ 	unzip.h \
