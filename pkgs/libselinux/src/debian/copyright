@@ -36,7 +36,10 @@ Copyright: 2004 Red Hat, Inc., James Morris <jmorris@redhat.com>
 License: GPL-2
 
 Files: debian/*
-Copyright: © 2005, 2006, Manoj Srivastava <srivasta@debian.org>
+Copyright: 2005-2006, Manoj Srivastava <srivasta@debian.org>
+           2012-2024, Laurent Bigonville <bigon@debian.org>
+           2008-2025, Russell Coker <etbe@debian.org>
+           2021-2026, Christian Göttsche <cgzones@googlemail.com>
 License: GPL-2
 
 License: GPL-2

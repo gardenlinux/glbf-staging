@@ -1,6 +1,7 @@
 libselinux.so.1 libselinux1 #MINVER#
 * Build-Depends-Package: libselinux-dev
  LIBSELINUX_1.0@LIBSELINUX_1.0 3.1~
+ LIBSELINUX_3.10@LIBSELINUX_3.10 3.10
  LIBSELINUX_3.4@LIBSELINUX_3.4 3.4
  LIBSELINUX_3.5@LIBSELINUX_3.5 3.5
  LIBSELINUX_3.8@LIBSELINUX_3.8 3.8
@@ -197,6 +198,7 @@ libselinux.so.1 libselinux1 #MINVER#
  selinux_reset_config@LIBSELINUX_1.0 3.1~
  selinux_restorecon@LIBSELINUX_1.0 3.1~
  selinux_restorecon_default_handle@LIBSELINUX_1.0 3.1~
+ selinux_restorecon_get_relabeled_files@LIBSELINUX_3.10 3.10
  selinux_restorecon_get_skipped_errors@LIBSELINUX_3.4 3.4
  selinux_restorecon_parallel@LIBSELINUX_3.4 3.4
  selinux_restorecon_set_alt_rootpath@LIBSELINUX_1.0 3.1~
