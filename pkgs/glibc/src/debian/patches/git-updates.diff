@@ -1,4 +1,4 @@
-GIT update of https://sourceware.org/git/glibc.git/release/2.42/master from glibc-2.42 to 3e87cf9be93acf19d685e8003fc649cdb052a891
+GIT update of https://sourceware.org/git/glibc.git/release/2.42/master from glibc-2.42 to f6713070c6accac5c93d96c1d580833afacde3f5
 
 diff --git a/ADVISORIES b/ADVISORIES
 new file mode 100644
@@ -1056,6 +1056,19 @@ index 7209acd616..ff3eda7f91 100644
        if (ret != 0)
  	exit (1);
        return 0;
+diff --git a/elf/tst-glibc-hwcaps-prepend-cache.c b/elf/tst-glibc-hwcaps-prepend-cache.c
+index b7df3962b5..2d51c22328 100644
+--- a/elf/tst-glibc-hwcaps-prepend-cache.c
++++ b/elf/tst-glibc-hwcaps-prepend-cache.c
+@@ -46,7 +46,7 @@ do_test (void)
+ 
+   {
+     /* Install the default implementation of libmarkermod1.so.  */
+-    char *conf_path = xasprintf ("%s/ld.so.conf", support_sysconfdir_prefix);
++    char *conf_path = xasprintf ("%s/ld.so.conf.d/hwcaps.conf", support_sysconfdir_prefix);
+     xmkdirp (support_sysconfdir_prefix, 0777);
+     support_write_file_string (conf_path, "/glibc-test/lib\n");
+     free (conf_path);
 diff --git a/elf/tst-link-map-contiguous-ldso.c b/elf/tst-link-map-contiguous-ldso.c
 new file mode 100644
 index 0000000000..f0e26682f2
@@ -1334,6 +1347,92 @@ index 0000000000..2d1a054f0f
 +  return 0;
 +}
 +#include <support/test-driver.c>
+diff --git a/iconv/Makefile b/iconv/Makefile
+index 9a94a41ba4..028d24ffc3 100644
+--- a/iconv/Makefile
++++ b/iconv/Makefile
+@@ -138,7 +138,8 @@ $(objpfx)test-iconvconfig.out: $(objpfx)iconvconfig
+ 	 rm -f $$tmp) > $@; \
+ 	$(evaluate-test)
+ 
+-$(objpfx)tst-iconv_prog.out: tst-iconv_prog.sh $(objpfx)iconv_prog
++$(objpfx)tst-iconv_prog.out: tst-iconv_prog.sh $(objpfx)iconv_prog \
++  $(gen-locales)
+ 	$(BASH) $< $(common-objdir) '$(test-wrapper-env)' \
+ 		 '$(run-program-env)' > $@; \
+ 	$(evaluate-test)
+diff --git a/iconv/loop.c b/iconv/loop.c
+index 1378d23147..74b2a3e26d 100644
+--- a/iconv/loop.c
++++ b/iconv/loop.c
+@@ -144,8 +144,10 @@
+     if (irreversible == NULL)						      \
+       {									      \
+ 	/* This means we are in call from __gconv_transliterate.  In this     \
+-	   case we are not doing any error recovery ourselves.  */	      \
+-	result = __gconv_mark_illegal_input (step_data);		      \
++	   case we are not doing any error recovery ourselves.  Do not create \
++	   a persistent error state.  If __gconv_transliterate exhausts all   \
++	   alternatives, it will call __gconv_mark_illegal_input itself.  */  \
++	result = __GCONV_ILLEGAL_INPUT;					      \
+ 	break;								      \
+       }									      \
+ 									      \
+diff --git a/iconv/tst-iconv_prog.sh b/iconv/tst-iconv_prog.sh
+index e2a43280d2..7d7948b7aa 100644
+--- a/iconv/tst-iconv_prog.sh
++++ b/iconv/tst-iconv_prog.sh
+@@ -27,10 +27,10 @@ LIBPATH=$codir:$codir/iconvdata
+ 
+ # How the start the iconv(1) program.  $from is not defined/expanded yet.
+ ICONV='
++$test_wrapper_env $run_program_env
+ $codir/elf/ld.so --library-path $LIBPATH --inhibit-rpath ${from}.so
+ $codir/iconv/iconv_prog
+ '
+-ICONV="$test_wrapper_env $run_program_env $ICONV"
+ 
+ TIMEOUTFACTOR=${TIMEOUTFACTOR:-1}
+ 
+@@ -218,6 +218,7 @@ testarray=(
+ "\x00\x00;;INVALID;UTF-8;1"
+ "\x00\x00;;UTF-8;INVALID;1"
+ "\xc3\xa9;;UTF-8;ASCII//TRANSLIT;0"
++"X\xc2\xbdY;;UTF-8;ASCII//TRANSLIT;0"
+ )
+ 
+ # Requires $twobyte input, $c flag, $from, and $to to be set; sets $ret
+@@ -278,12 +279,21 @@ check_errtest_result ()
+   fi
+ }
+ 
+-for testcommand in "${testarray[@]}"; do
+-  twobyte="$(echo "$testcommand" | cut -d";" -f 1)"
+-  c="$(echo "$testcommand" | cut -d";" -f 2)"
+-  from="$(echo "$testcommand" | cut -d";" -f 3)"
+-  to="$(echo "$testcommand" | cut -d";" -f 4)"
+-  eret="$(echo "$testcommand" | cut -d";" -f 5)"
+-  execute_test
+-  check_errtest_result
+-done
++run_test_array ()
++{
++  for testcommand in "${testarray[@]}"; do
++    twobyte="$(echo "$testcommand" | cut -d";" -f 1)"
++    c="$(echo "$testcommand" | cut -d";" -f 2)"
++    from="$(echo "$testcommand" | cut -d";" -f 3)"
++    to="$(echo "$testcommand" | cut -d";" -f 4)"
++    eret="$(echo "$testcommand" | cut -d";" -f 5)"
++    execute_test
++    check_errtest_result
++  done
++}
++
++echo "info: testing C locale"
++run_test_array
++echo "info: testing en_US.UTF-8 locale"
++run_program_env="$run_program_env LC_ALL=en_US.UTF-8"
++run_test_array
 diff --git a/iconvdata/Makefile b/iconvdata/Makefile
 index 5a2abeea24..cc689f63e9 100644
 --- a/iconvdata/Makefile
@@ -1681,6 +1780,78 @@ index e88e28664c..b7dab1bb39 100644
  /* Perform file control operations on FD.  */
  int
  __fcntl (int fd, int cmd, ...)
+diff --git a/libio/Makefile b/libio/Makefile
+index f020f8ec4d..fa2b8ae791 100644
+--- a/libio/Makefile
++++ b/libio/Makefile
+@@ -83,6 +83,7 @@ tests = \
+   bug-ungetwc1 \
+   bug-ungetwc2 \
+   bug-wfflush \
++  bug-wgenops-bz33998 \
+   bug-wmemstream1 \
+   bug-wsetpos \
+   test-fmemopen \
+diff --git a/libio/bug-wgenops-bz33998.c b/libio/bug-wgenops-bz33998.c
+new file mode 100644
+index 0000000000..cc4067da99
+--- /dev/null
++++ b/libio/bug-wgenops-bz33998.c
+@@ -0,0 +1,54 @@
++/* Regression test for ungetwc operating on byte stream (BZ #33998)
++   Copyright (C) 2026 The GNU Toolchain Authors.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include "support/temp_file.h"
++#include "support/xstdio.h"
++#include "support/xunistd.h"
++#include <stdlib.h>
++#include <unistd.h>
++#include <sys/mman.h>
++#include <stdio.h>
++#include <wchar.h>
++#include <support/check.h>
++
++static int
++do_test (void)
++{
++  char *filename;
++  int fd = create_temp_file ("tst-bz33998-", &filename);
++  TEST_VERIFY (fd != -1);
++  xwrite (fd, "A", sizeof ("A")); // write "A\0" by design
++  xclose (fd);
++
++  FILE *fp = xfopen (filename, "r+");
++  TEST_COMPARE (getwc (fp), L'A');
++  /* If the bug is fixed, then ungetwc should not touch byte stream.
++     If the bug is not fixed, ungetwc firstly match last read char, L'A',
++     failed, then the pbackfail branch, matching last read char in byte
++     stream, that is, '\0' (initialized when setup wide stream). */
++  char *old_read_ptr = fp->_IO_read_ptr;
++  TEST_COMPARE (ungetwc (L'\0', fp), L'\0');
++  TEST_VERIFY (fp->_IO_read_ptr == old_read_ptr);
++
++  xfclose (fp);
++  free (filename);
++
++  return 0;
++}
++
++#include <support/test-driver.c>
 diff --git a/libio/stdio.h b/libio/stdio.h
 index d042b36618..e0e70945fa 100644
 --- a/libio/stdio.h
@@ -1700,6 +1871,34 @@ index d042b36618..e0e70945fa 100644
  
  /* Rename file OLD relative to OLDFD to NEW relative to NEWFD, with
     additional flags.  */
+diff --git a/libio/wgenops.c b/libio/wgenops.c
+index 0a11d1b1de..9e0b2c00ea 100644
+--- a/libio/wgenops.c
++++ b/libio/wgenops.c
+@@ -108,8 +108,8 @@ _IO_wdefault_pbackfail (FILE *fp, wint_t c)
+ {
+   if (fp->_wide_data->_IO_read_ptr > fp->_wide_data->_IO_read_base
+       && !_IO_in_backup (fp)
+-      && (wint_t) fp->_IO_read_ptr[-1] == c)
+-    --fp->_IO_read_ptr;
++      && (wint_t) fp->_wide_data->_IO_read_ptr[-1] == c)
++    --fp->_wide_data->_IO_read_ptr;
+   else
+     {
+       /* Need to handle a filebuf in write mode (switch to read mode). FIXME!*/
+diff --git a/localedata/Makefile b/localedata/Makefile
+index 4a23593cca..e212facef0 100644
+--- a/localedata/Makefile
++++ b/localedata/Makefile
+@@ -236,6 +236,8 @@ tests = \
+   bug-iconv-trans \
+   bug-setlocale1 \
+   bug-usesetlocale \
++  tst-bz12701-lc \
++  tst-bz12701-lc2 \
+   tst-bz13988 \
+   tst-c-utf8-consistency \
+   tst-digits \
 diff --git a/localedata/locales/bg_BG b/localedata/locales/bg_BG
 index 159a6c3334..eda2a8d01b 100644
 --- a/localedata/locales/bg_BG
@@ -1715,6 +1914,283 @@ index 159a6c3334..eda2a8d01b 100644
  mon_decimal_point         ","
  mon_thousands_sep         " "
  mon_grouping              3
+diff --git a/localedata/tst-bz12701-lc.c b/localedata/tst-bz12701-lc.c
+new file mode 100644
+index 0000000000..23c2ab7d2a
+--- /dev/null
++++ b/localedata/tst-bz12701-lc.c
+@@ -0,0 +1,218 @@
++/* Verify scanf field width handling with the 'lc' conversion (BZ #12701).
++   Copyright (C) 2025-2026 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <locale.h>
++#include <stddef.h>
++#include <stdio.h>
++#include <string.h>
++#include <wchar.h>
++
++#include <libc-diag.h>
++#include <support/check.h>
++#include <support/next_to_fault.h>
++#include <support/xstdio.h>
++
++/* Compare character-wise the initial part of the wide character object
++   pointed to by WS corresponding to wide characters obtained by the
++   conversion of first N bytes of the multibyte character object pointed
++   to by S.  */
++
++static int
++tst_bz12701_lc_memcmp (const wchar_t *ds, const char *s, size_t n)
++{
++  size_t nc = mbsnrtowcs (NULL, &s, n, 0, NULL);
++
++  struct support_next_to_fault ntf;
++  ntf = support_next_to_fault_allocate (nc * sizeof (wchar_t));
++  wchar_t *ss = (wchar_t *) ntf.buffer;
++
++  mbsnrtowcs (ss, &s, n, nc, NULL);
++  int r = wmemcmp (ds, ss, nc);
++
++  support_next_to_fault_free (&ntf);
++
++  return r;
++}
++
++/* Verify various aspects of field width handling, including the data
++   obtained, the number of bytes consumed, and the stream position.  */
++
++static int
++do_test (void)
++{
++  if (setlocale (LC_ALL, "pl_PL.UTF-8") == NULL)
++    FAIL_EXIT1 ("setlocale (LC_ALL, \"pl_PL.UTF-8\")");
++
++  /* Part of a tongue-twister in Polish, which says:
++     "On a rainy morning cuckoos and warblers, rather than starting
++     on earthworms, stuffed themselves fasted with the flesh of cress."  */
++  static const char s[126] = "Dżdżystym rankiem gżegżółki i piegże, "
++			     "zamiast wziąć się za dżdżownice, "
++			     "nażarły się na czczo miąższu rzeżuchy";
++
++  const char *sp = s;
++  size_t nc;
++  TEST_VERIFY_EXIT ((nc = mbsnrtowcs (NULL, &sp, sizeof (s), 0, NULL)) == 108);
++
++  struct support_next_to_fault ntfo, ntfi;
++  ntfo = support_next_to_fault_allocate (nc * sizeof (wchar_t));
++  ntfi = support_next_to_fault_allocate (sizeof (s));
++  wchar_t *e = (wchar_t *) ntfo.buffer + nc;
++  char *b = ntfi.buffer;
++
++  wchar_t *c;
++  FILE *f;
++  int ic;
++  int n;
++  int i;
++
++  memcpy (ntfi.buffer, s, sizeof (s));
++
++  ic = i = 0;
++  f = xfmemopen (b, sizeof (s), "r");
++
++  c = e - 1;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  /* Avoid: "warning: zero width in gnu_scanf format [-Werror=format=]".  */
++  DIAG_PUSH_NEEDS_COMMENT;
++  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat");
++  TEST_VERIFY_EXIT (fscanf (f, "%0lc%n", c, &n) == 1);
++  DIAG_POP_NEEDS_COMMENT;
++  TEST_VERIFY_EXIT (n == 1);
++  TEST_VERIFY_EXIT (tst_bz12701_lc_memcmp (c, s + i, n) == 0);
++  ic += 1;
++  i += n;
++
++  c = e - 1;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%lc%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 2);
++  TEST_VERIFY_EXIT (tst_bz12701_lc_memcmp (c, s + i, n) == 0);
++  ic += 1;
++  i += n;
++
++  c = e - 1;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%1lc%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 1);
++  TEST_VERIFY_EXIT (tst_bz12701_lc_memcmp (c, s + i, n) == 0);
++  ic += 1;
++  i += n;
++
++  c = e - 2;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%2lc%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 3);
++  TEST_VERIFY_EXIT (tst_bz12701_lc_memcmp (c, s + i, n) == 0);
++  ic += 2;
++  i += n;
++
++  c = e - 4;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%4lc%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 4);
++  TEST_VERIFY_EXIT (tst_bz12701_lc_memcmp (c, s + i, n) == 0);
++  ic += 4;
++  i += n;
++
++  c = e - 8;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%8lc%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 8);
++  TEST_VERIFY_EXIT (tst_bz12701_lc_memcmp (c, s + i, n) == 0);
++  ic += 8;
++  i += n;
++
++  c = e - 16;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%16lc%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 20);
++  TEST_VERIFY_EXIT (tst_bz12701_lc_memcmp (c, s + i, n) == 0);
++  ic += 16;
++  i += n;
++
++  c = e - 32;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%32lc%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 38);
++  TEST_VERIFY_EXIT (tst_bz12701_lc_memcmp (c, s + i, n) == 0);
++  ic += 32;
++  i += n;
++
++  c = e - (nc - ic);
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_COMPARE (fscanf (f, "%64lc%n", c, &n), 1);
++  TEST_COMPARE (n , 49);
++  TEST_VERIFY_EXIT (tst_bz12701_lc_memcmp (c, s + i, sizeof (s) - i) == 0);
++
++  TEST_VERIFY_EXIT (ftell (f) == sizeof (s));
++  TEST_VERIFY_EXIT (feof (f) != 0);
++
++  xfclose (f);
++
++  ic = i = 0;
++  f = xfmemopen (b, 3, "r");
++
++  c = e - 2;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%2lc%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 3);
++  TEST_VERIFY_EXIT (tst_bz12701_lc_memcmp (c, s + i, n) == 0);
++  ic += 2;
++  i += n;
++
++  c = e - (nc - ic);
++  TEST_VERIFY_EXIT (feof (f) == 0);
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%2lc%n", c, &n) == EOF);
++  TEST_VERIFY_EXIT (n == 3);
++
++  TEST_VERIFY_EXIT (ftell (f) == 3);
++  TEST_VERIFY_EXIT (feof (f) != 0);
++
++  xfclose (f);
++
++  ic = i = 0;
++  f = xfmemopen (b, 3, "r");
++
++  c = e - 1;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%lc%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 1);
++  TEST_VERIFY_EXIT (tst_bz12701_lc_memcmp (c, s + i, n) == 0);
++  ic += 1;
++  i += n;
++
++  c = e - (nc - ic);
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%2lc%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 2);
++  TEST_VERIFY_EXIT (tst_bz12701_lc_memcmp (c, s + i, 3 - i) == 0);
++
++  TEST_VERIFY_EXIT (ftell (f) == 3);
++  TEST_VERIFY_EXIT (feof (f) != 0);
++
++  xfclose (f);
++
++  support_next_to_fault_free (&ntfi);
++  support_next_to_fault_free (&ntfo);
++
++  return 0;
++}
++
++#include <support/test-driver.c>
+diff --git a/localedata/tst-bz12701-lc2.c b/localedata/tst-bz12701-lc2.c
+new file mode 100644
+index 0000000000..b24e86df0b
+--- /dev/null
++++ b/localedata/tst-bz12701-lc2.c
+@@ -0,0 +1,47 @@
++/* Verify scanf memory handling with the 'c' conversion (BZ #12701).
++   Copyright (C) 2026 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <stdio.h>
++#include <malloc.h>
++#include <string.h>
++
++#include <libc-diag.h>
++#include <support/check.h>
++#include <support/next_to_fault.h>
++#include <support/xstdio.h>
++
++static int
++do_test (void)
++{
++  wchar_t *c = NULL;
++  int i;
++
++  TEST_VERIFY (sscanf ("1234", "%30mlc", &c) == 1);
++
++  TEST_VERIFY (c != NULL);
++  TEST_COMPARE_BLOB (c, 5 * sizeof (wchar_t),
++		     L"1234\0", 5 * sizeof (wchar_t));
++  for (i = 5; i < 30; i ++)
++    TEST_VERIFY (c[i] == L'\0');
++
++  TEST_VERIFY (malloc_usable_size (c) >= 30 * sizeof(wchar_t));
++
++  return 0;
++}
++
++#include <support/test-driver.c>
 diff --git a/malloc/malloc.c b/malloc/malloc.c
 index 5ca390cc22..1d5aa304d3 100644
 --- a/malloc/malloc.c
@@ -3319,6 +3795,264 @@ index 6cc7af6ac8..7ea1edf8c0 100644
    type = $3;
    size = $5;
    sub(/^0*/, "", size);
+diff --git a/stdio-common/Makefile b/stdio-common/Makefile
+index 64b3575acb..27e7ea20f0 100644
+--- a/stdio-common/Makefile
++++ b/stdio-common/Makefile
+@@ -260,6 +260,8 @@ tests := \
+   tllformat \
+   tst-bz11319 \
+   tst-bz11319-fortify2 \
++  tst-bz12701-c \
++  tst-bz12701-c2 \
+   tst-cookie \
+   tst-dprintf-length \
+   tst-fclose-devzero \
+@@ -347,6 +349,7 @@ tests := \
+   tst-vfprintf-user-type \
+   tst-vfprintf-width-i18n \
+   tst-vfprintf-width-prec-alloc \
++  tst-vfscanf-bz34008 \
+   tst-wc-printf \
+   tstdiomisc \
+   tstgetln \
+@@ -562,6 +565,9 @@ tst-printf-bz18872-ENV = MALLOC_TRACE=$(objpfx)tst-printf-bz18872.mtrace \
+ tst-vfprintf-width-prec-ENV = \
+   MALLOC_TRACE=$(objpfx)tst-vfprintf-width-prec.mtrace \
+   LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
++tst-vfscanf-bz34008-ENV = \
++  MALLOC_CHECK_=3 \
++  LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
+ tst-printf-bz25691-ENV = \
+   MALLOC_TRACE=$(objpfx)tst-printf-bz25691.mtrace \
+   LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
+diff --git a/stdio-common/tst-bz12701-c.c b/stdio-common/tst-bz12701-c.c
+new file mode 100644
+index 0000000000..4f3616fbfd
+--- /dev/null
++++ b/stdio-common/tst-bz12701-c.c
+@@ -0,0 +1,169 @@
++/* Verify scanf field width handling with the 'c' conversion (BZ #12701).
++   Copyright (C) 2025-2026 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <stdio.h>
++#include <string.h>
++
++#include <libc-diag.h>
++#include <support/check.h>
++#include <support/next_to_fault.h>
++#include <support/xstdio.h>
++
++/* Verify various aspects of field width handling, including the data
++   obtained, the number of bytes consumed, and the stream position.  */
++
++static int
++do_test (void)
++{
++  static const char s[43] = "The quick brown fox jumps over the lazy dog";
++  struct support_next_to_fault ntfo, ntfi;
++  ntfo = support_next_to_fault_allocate (sizeof (s));
++  ntfi = support_next_to_fault_allocate (sizeof (s));
++  char *e = ntfo.buffer + sizeof (s);
++  char *b = ntfi.buffer;
++
++  char *c;
++  FILE *f;
++  int n;
++  int i;
++
++  memcpy (ntfi.buffer, s, sizeof (s));
++
++  i = 0;
++  f = xfmemopen (b, sizeof (s), "r");
++
++  c = e - 1;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  /* Avoid: "warning: zero width in gnu_scanf format [-Werror=format=]".  */
++  DIAG_PUSH_NEEDS_COMMENT;
++  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat");
++  TEST_VERIFY_EXIT (fscanf (f, "%0c%n", c, &n) == 1);
++  DIAG_POP_NEEDS_COMMENT;
++  TEST_VERIFY_EXIT (n == 1);
++  TEST_VERIFY_EXIT (memcmp (c, s + i, n) == 0);
++  i += n;
++
++  c = e - 1;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%c%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 1);
++  TEST_VERIFY_EXIT (memcmp (c, s + i, n) == 0);
++  i += n;
++
++  c = e - 1;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%1c%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 1);
++  TEST_VERIFY_EXIT (memcmp (c, s + i, n) == 0);
++  i += n;
++
++  c = e - 2;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%2c%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 2);
++  TEST_VERIFY_EXIT (memcmp (c, s + i, n) == 0);
++  i += n;
++
++  c = e - 4;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%4c%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 4);
++  TEST_VERIFY_EXIT (memcmp (c, s + i, n) == 0);
++  i += n;
++
++  c = e - 8;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%8c%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 8);
++  TEST_VERIFY_EXIT (memcmp (c, s + i, n) == 0);
++  i += n;
++
++  c = e - 16;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%16c%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 16);
++  TEST_VERIFY_EXIT (memcmp (c, s + i, n) == 0);
++  i += n;
++
++  c = e - (sizeof (s) - i);
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%32c%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 10);
++  TEST_VERIFY_EXIT (memcmp (c, s + i, sizeof (s) - i) == 0);
++
++  TEST_VERIFY_EXIT (ftell (f) == sizeof (s));
++  TEST_VERIFY_EXIT (feof (f) != 0);
++
++  xfclose (f);
++
++  i = 0;
++  f = xfmemopen (b, 3, "r");
++
++  c = e - 1;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%c%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 1);
++  TEST_VERIFY_EXIT (memcmp (c, s + i, n) == 0);
++  i += n;
++
++  c = e - 2;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%2c%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 2);
++  TEST_VERIFY_EXIT (memcmp (c, s + i, n) == 0);
++  i += n;
++
++  c = e - (3 - i);
++  TEST_VERIFY_EXIT (feof (f) == 0);
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%2c%n", c, &n) == EOF);
++  TEST_VERIFY_EXIT (n == 2);
++
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (feof (f) != 0);
++
++  xfclose (f);
++
++  i = 0;
++  f = xfmemopen (b, 3, "r");
++
++  c = e - 2;
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%2c%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 2);
++  TEST_VERIFY_EXIT (memcmp (c, s + i, n) == 0);
++  i += n;
++
++  c = e - (3 - i);
++  TEST_VERIFY_EXIT (ftell (f) == i);
++  TEST_VERIFY_EXIT (fscanf (f, "%2c%n", c, &n) == 1);
++  TEST_VERIFY_EXIT (n == 1);
++  TEST_VERIFY_EXIT (memcmp (c, s + i, 3 - i) == 0);
++
++  TEST_VERIFY_EXIT (ftell (f) == 3);
++  TEST_VERIFY_EXIT (feof (f) != 0);
++
++  xfclose (f);
++
++  support_next_to_fault_free (&ntfi);
++  support_next_to_fault_free (&ntfo);
++
++  return 0;
++}
++
++#include <support/test-driver.c>
+diff --git a/stdio-common/tst-bz12701-c2.c b/stdio-common/tst-bz12701-c2.c
+new file mode 100644
+index 0000000000..5f9ca7c592
+--- /dev/null
++++ b/stdio-common/tst-bz12701-c2.c
+@@ -0,0 +1,46 @@
++/* Verify scanf memory handling with the 'c' conversion (BZ #12701).
++   Copyright (C) 2026 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <stdio.h>
++#include <malloc.h>
++#include <string.h>
++
++#include <libc-diag.h>
++#include <support/check.h>
++#include <support/next_to_fault.h>
++#include <support/xstdio.h>
++
++static int
++do_test (void)
++{
++  char *c = NULL;
++  int i;
++
++  TEST_VERIFY (sscanf ("1234", "%30mc", &c) == 1);
++
++  TEST_VERIFY (c != NULL);
++  TEST_COMPARE_BLOB (c, 5, "1234\0", 5);
++  for (i = 5; i < 30; i ++)
++    TEST_VERIFY (c[i] == '\0');
++
++  TEST_VERIFY (malloc_usable_size (c) >= 30);
++
++  return 0;
++}
++
++#include <support/test-driver.c>
 diff --git a/stdio-common/tst-renameat2.c b/stdio-common/tst-renameat2.c
 index 12aa0f8b0f..6213e1376d 100644
 --- a/stdio-common/tst-renameat2.c
@@ -3336,6 +4070,137 @@ index 12aa0f8b0f..6213e1376d 100644
  /* Directory with the temporary files.  */
  static char *directory;
  static int directory_fd;
+diff --git a/stdio-common/tst-vfscanf-bz34008.c b/stdio-common/tst-vfscanf-bz34008.c
+new file mode 100644
+index 0000000000..48371c8a3d
+--- /dev/null
++++ b/stdio-common/tst-vfscanf-bz34008.c
+@@ -0,0 +1,48 @@
++/* Regression test for vfscanf %Nmc out-of-bound write (BZ #34008)
++   Copyright (C) 2026 The GNU Toolchain Authors.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include "malloc/mcheck.h"
++#include <stddef.h>
++#include <stdio.h>
++#include <string.h>
++#include <wchar.h>
++#include <stdlib.h>
++#include <malloc.h>
++#include <support/check.h>
++
++#define WIDTH 0x410
++#define SCANFSTR "%1040mc"
++static int
++do_test (void)
++{
++  mcheck_pedantic (NULL);
++  char *input = malloc (WIDTH + 1);
++  TEST_VERIFY (input != NULL);
++  memset (input, 'A', WIDTH);
++  input[WIDTH] = '\0';
++
++  char *buf = NULL;
++  TEST_VERIFY (sscanf (input, SCANFSTR, &buf) != -1);
++  TEST_VERIFY (buf != NULL);
++
++  free (buf);
++  free (input);
++  return 0;
++}
++
++#include <support/test-driver.c>
+diff --git a/stdio-common/vfscanf-internal.c b/stdio-common/vfscanf-internal.c
+index 86ae5019a6..90a1886951 100644
+--- a/stdio-common/vfscanf-internal.c
++++ b/stdio-common/vfscanf-internal.c
+@@ -780,9 +780,9 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
+ 		    conv_error ();					      \
+ 		} while (0)
+ #ifdef COMPILE_WSCANF
+-	      STRING_ARG (str, char, 100);
++	      STRING_ARG (str, char, (width > 0 ? width : 1));
+ #else
+-	      STRING_ARG (str, char, (width > 1024 ? 1024 : width));
++	      STRING_ARG (str, char, (width > 0 ? width : 1));
+ #endif
+ 
+ 	      c = inchar ();
+@@ -853,8 +853,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
+ 			{
+ 			  /* Enlarge the buffer.  */
+ 			  size_t newsize
+-			    = strsize
+-			      + (strsize >= width ? width - 1 : strsize);
++			    = strsize + (strsize >= width ? width : strsize);
+ 
+ 			  str = (char *) realloc (*strptr, newsize);
+ 			  if (str == NULL)
+@@ -892,6 +891,11 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
+ 
+ 	      if (!(flags & SUPPRESS))
+ 		{
++		  /* If the buffer isn't completely filled, pad it with NULs.  */
++		  if (flags & MALLOC)
++		    while (width-- > 0)
++		      *str++ = '\0';
++
+ 		  if ((flags & MALLOC) && str - *strptr != strsize)
+ 		    {
+ 		      char *cp = (char *) realloc (*strptr, str - *strptr);
+@@ -909,7 +913,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
+ 	  if (width == -1)
+ 	    width = 1;
+ 
+-	  STRING_ARG (wstr, wchar_t, (width > 1024 ? 1024 : width));
++	  STRING_ARG (wstr, wchar_t, (width > 0 ? width : 1));
+ 
+ 	  c = inchar ();
+ 	  if (__glibc_unlikely (c == EOF))
+@@ -925,7 +929,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
+ 		      && wstr == (wchar_t *) *strptr + strsize)
+ 		    {
+ 		      size_t newsize
+-			= strsize + (strsize > width ? width - 1 : strsize);
++			= strsize + (strsize >= width ? width : strsize);
+ 		      /* Enlarge the buffer.  */
+ 		      wstr = (wchar_t *) realloc (*strptr,
+ 						  newsize * sizeof (wchar_t));
+@@ -980,7 +984,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
+ 		    && wstr == (wchar_t *) *strptr + strsize)
+ 		  {
+ 		    size_t newsize
+-		      = strsize + (strsize > width ? width - 1 : strsize);
++		      = strsize + (strsize >= width ? width : strsize);
+ 		    /* Enlarge the buffer.  */
+ 		    wstr = (wchar_t *) realloc (*strptr,
+ 						newsize * sizeof (wchar_t));
+@@ -1045,6 +1049,11 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
+ 
+ 	  if (!(flags & SUPPRESS))
+ 	    {
++	      /* If the buffer isn't completely filled, pad it with NULs.  */
++	      if (flags & MALLOC)
++		while (width-- > 0)
++		  *wstr++ = L'\0';
++
+ 	      if ((flags & MALLOC) && wstr - (wchar_t *) *strptr != strsize)
+ 		{
+ 		  wchar_t *cp = (wchar_t *) realloc (*strptr,
 diff --git a/stdlib/abort.c b/stdlib/abort.c
 index caa9e6dc04..904244a2fb 100644
 --- a/stdlib/abort.c
@@ -3360,6 +4225,18 @@ index caa9e6dc04..904244a2fb 100644
  }
  
  void
+diff --git a/support/Makefile b/support/Makefile
+index d41278eeab..f67f38130a 100644
+--- a/support/Makefile
++++ b/support/Makefile
+@@ -134,6 +134,7 @@ libsupport-routines = \
+   xfclose \
+   xfdopendir \
+   xfgets \
++  xfmemopen \
+   xfopen \
+   xfork \
+   xfread \
 diff --git a/support/resolv_test.c b/support/resolv_test.c
 index ab37d3d58c..29e59da958 100644
 --- a/support/resolv_test.c
@@ -3437,6 +4314,55 @@ index 1c40ab377f..d78139622f 100644
 +      fclose (f);
        if (cnt == 1 && val != files[i].bad_value)
  	continue;
+ 
+diff --git a/support/xfmemopen.c b/support/xfmemopen.c
+new file mode 100644
+index 0000000000..f1dbc72c67
+--- /dev/null
++++ b/support/xfmemopen.c
+@@ -0,0 +1,31 @@
++/* fmemopen with error checking.
++   Copyright (C) 2025 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <support/xstdio.h>
++
++#include <support/check.h>
++#include <stdlib.h>
++
++FILE *
++xfmemopen (void *mem, size_t len, const char *mode)
++{
++  FILE *fp = fmemopen (mem, len, mode);
++  if (fp == NULL)
++    FAIL_EXIT1 ("fmemopen (mode \"%s\"): %m", mode);
++  return fp;
++}
+diff --git a/support/xstdio.h b/support/xstdio.h
+index c3fdf9496f..70b83f11da 100644
+--- a/support/xstdio.h
++++ b/support/xstdio.h
+@@ -27,6 +27,7 @@ __BEGIN_DECLS
+ FILE *xfopen (const char *path, const char *mode);
+ void xfclose (FILE *);
+ FILE *xfreopen (const char *path, const char *mode, FILE *stream);
++FILE *xfmemopen (void *mem, size_t len, const char *mode);
+ void xfread (void *ptr, size_t size, size_t nmemb, FILE *stream);
+ char *xfgets (char *s, int size, FILE *stream);
  
 diff --git a/sysdeps/aarch64/Makefile b/sysdeps/aarch64/Makefile
 index bb97d31355..9479fb9679 100644
@@ -4709,6 +5635,356 @@ index 63f6eebeb4..00118ef506 100644
 -}
 -
 -#include <support/test-driver.c>
+diff --git a/sysdeps/arm/Makefile b/sysdeps/arm/Makefile
+index 9c4fd6b236..be9e46aeeb 100644
+--- a/sysdeps/arm/Makefile
++++ b/sysdeps/arm/Makefile
+@@ -30,6 +30,25 @@ $(objpfx)tst-armtlsdescloc: $(objpfx)tst-armtlsdesclocmod.so
+ $(objpfx)tst-armtlsdescextnow: $(objpfx)tst-armtlsdescextnowmod.so
+ $(objpfx)tst-armtlsdescextlazy: $(objpfx)tst-armtlsdescextlazymod.so
+ endif
++
++tests += \
++  tst-bz34144 \
++  tst-bz34144-audit \
++  # tests
++modules-names += \
++  tst-bz34144-auditmod \
++  tst-bz34144-mod \
++  # modules-names
++$(objpfx)tst-bz34144: $(objpfx)tst-bz34144-mod.so
++$(objpfx)tst-bz34144-audit: $(objpfx)tst-bz34144-mod.so
++$(objpfx)tst-bz34144-audit.out: $(objpfx)tst-bz34144-auditmod.so
++# Use lazy binding to check if _dl_runtime_resolve correctly save/restore
++# the VFP state.
++LDFLAGS-tst-bz34144 = -Wl,-z,lazy
++# With LD_AUDIT, lazy resolution goes through _dl_runtime_profile, which
++# must also save/restore VFP state (BZ 34144).
++LDFLAGS-tst-bz34144-audit = -Wl,-z,lazy
++tst-bz34144-audit-ENV = LD_AUDIT=$(objpfx)tst-bz34144-auditmod.so
+ endif
+ endif
+ 
+diff --git a/sysdeps/arm/dl-trampoline.S b/sysdeps/arm/dl-trampoline.S
+index fffac55050..ef358d48bc 100644
+--- a/sysdeps/arm/dl-trampoline.S
++++ b/sysdeps/arm/dl-trampoline.S
+@@ -20,6 +20,7 @@
+ #define NO_THUMB
+ #include <sysdep.h>
+ #include <libc-symbols.h>
++#include <rtld-global-offsets.h>
+ 
+ 	.text
+ 	.globl _dl_runtime_resolve
+@@ -36,13 +37,40 @@ _dl_runtime_resolve:
+ 	@	ip contains &GOT[n+3] (pointer to function)
+ 	@	lr points to &GOT[2]
+ 
+-	@ Save arguments.  We save r4 to realign the stack.
++	@ Save arguments.  We save r4 to realign the stack and to hold
++	@ the hwcap value used to decide whether to save VFP registers.
+ 	push	{r0-r4}
+ 	cfi_adjust_cfa_offset (20)
+ 	cfi_rel_offset (r0, 0)
+ 	cfi_rel_offset (r1, 4)
+ 	cfi_rel_offset (r2, 8)
+ 	cfi_rel_offset (r3, 12)
++	cfi_rel_offset (r4, 16)
++
++#ifdef SHARED
++	@ Preserve all call-clobbered VFP registers across _dl_fixup.
++	@ VFP may be used by IFUNC resolvers, audit modules, interposed
++	@ malloc, and the __aeabi_mem* helpers required by RTABI32,
++	@ which mandates that those helpers only corrupt integer core
++	@ registers.
++	LDR_GLOBAL (r4, r3, C_SYMBOL_NAME(_rtld_global_ro), \
++		    RTLD_GLOBAL_RO_DL_HWCAP_OFFSET)
++
++	tst	r4, #HWCAP_ARM_VFP
++	beq	.Lno_vfp_save
++
++# define VFP_STACK_REQ (32*8 + 8)
++	sub	sp, sp, VFP_STACK_REQ
++	cfi_adjust_cfa_offset (VFP_STACK_REQ)
++	mov	r3, sp
++	.inst	0xeca30b20	@ vstmia r3!, {d0-d15}
++	tst	r4, #HWCAP_ARM_VFPD32
++	beq	1f
++	.inst	0xece30b20	@ vstmia r3!, {d16-d31}
++1:	.inst	0xeef12a10	@ vmrs r2, fpscr
++	str	r2, [r3]
++.Lno_vfp_save:
++#endif /* SHARED */
+ 
+ 	@ get pointer to linker struct
+ 	ldr	r0, [lr, #-4]
+@@ -59,8 +87,23 @@ _dl_runtime_resolve:
+ 	@ save the return
+ 	mov	ip, r0
+ 
+-	@ get arguments and return address back.  We restore r4
+-	@ only to realign the stack.
++#ifdef SHARED
++	tst	r4, #HWCAP_ARM_VFP
++	beq	.Lno_vfp_restore
++	mov	r3, sp
++	.inst	0xecb30b20	@ vldmia r3!, {d0-d15}
++	tst	r4, #HWCAP_ARM_VFPD32
++	beq	2f
++	.inst	0xecf30b20	@ vldmia r3!, {d16-d31}
++2:	ldr	r2, [r3]
++	.inst	0xeee12a10	@ vmsr fpscr, r2
++	add	sp, sp, VFP_STACK_REQ
++	cfi_adjust_cfa_offset (-VFP_STACK_REQ)
++.Lno_vfp_restore:
++#endif /* SHARED */
++
++	@ get arguments and return address back.  We restore r4 to
++	@ its original value as well.
+ 	pop	{r0-r4,lr}
+ 	cfi_adjust_cfa_offset (-24)
+ 
+@@ -124,14 +167,71 @@ _dl_runtime_profile:
+ 	add	r3, sp, #8
+ 	stmia	r3!, {r0,r1}
+ 
++	@ Preserve all call-clobbered VFP registers across
++	@ _dl_profile_fixup.  See the matching comment in
++	@ _dl_runtime_resolve above for the rationale (BZ 34144,
++	@ BZ 15792).
++	@
++	@ Stack layout below the current sp (which becomes the new sp
++	@ after the sub):
++	@   sp +  0 ..   3: outgoing arg (framesizep) for _dl_profile_fixup
++	@   sp +  4 ..   7: saved hwcap (so we can test it after the call)
++	@   sp +  8 ..  11: saved r2 (used as scratch for LDR_GLOBAL)
++	@   sp + 12 ..  15: padding (for 8-byte alignment of the VFP area)
++	@   sp + 16 .. 16+VFP_STACK_REQ-1: VFP regs + fpscr
++#define VFP_PROFILE_STACK (16 + VFP_STACK_REQ)
++	sub	sp, sp, #VFP_PROFILE_STACK
++	cfi_adjust_cfa_offset (VFP_PROFILE_STACK)
++
++	@ r2 holds the retaddr (3rd arg to _dl_profile_fixup); spill
++	@ it so we can use it as the LDR_GLOBAL destination.
++	str	r2, [sp, #8]
++
++	LDR_GLOBAL (r2, ip, C_SYMBOL_NAME(_rtld_global_ro), \
++		    RTLD_GLOBAL_RO_DL_HWCAP_OFFSET)
++	str	r2, [sp, #4]
++
++	tst	r2, #HWCAP_ARM_VFP
++	beq	.Lprofile_no_vfp_save
++	add	ip, sp, #16
++	.inst	0xecac0b20	@ vstmia ip!, {d0-d15}
++	tst	r2, #HWCAP_ARM_VFPD32
++	beq	7f
++	.inst	0xecec0b20	@ vstmia ip!, {d16-d31}
++7:	.inst	0xeef12a10	@ vmrs r2, fpscr
++	str	r2, [ip]
++.Lprofile_no_vfp_save:
++
++	@ Restore r2 (retaddr) for _dl_profile_fixup.
++	ldr	r2, [sp, #8]
++
+ 	@ Set up extra args for _dl_profile_fixup.
+-	@ r2 and r3 are already loaded.
+-	add	ip, sp, #208
++	@ The framesize slot is at the old sp+208, which is the new
++	@ sp + VFP_PROFILE_STACK + 208 -- compute in two steps because
++	@ the combined offset is not encodable as an ARM immediate.
++	add	ip, sp, #VFP_PROFILE_STACK
++	add	ip, ip, #208
+ 	str	ip, [sp, #0]
+ 
+ 	@ call profiling fixup routine
+ 	bl	_dl_profile_fixup
+ 
++	@ Restore VFP registers.  r0 holds the resolved function
++	@ address; r1/r2/ip are caller-saved by the call.
++	ldr	r1, [sp, #4]
++	tst	r1, #HWCAP_ARM_VFP
++	beq	.Lprofile_no_vfp_restore
++	add	ip, sp, #16
++	.inst	0xecbc0b20	@ vldmia ip!, {d0-d15}
++	tst	r1, #HWCAP_ARM_VFPD32
++	beq	8f
++	.inst	0xecfc0b20	@ vldmia ip!, {d16-d31}
++8:	ldr	r2, [ip]
++	.inst	0xeee12a10	@ vmsr fpscr, r2
++.Lprofile_no_vfp_restore:
++	add	sp, sp, #VFP_PROFILE_STACK
++	cfi_adjust_cfa_offset (-VFP_PROFILE_STACK)
++
+ 	@ The address to call is now in r0.
+ 
+ 	@ Check whether we're wrapping this function.
+diff --git a/sysdeps/arm/tst-bz34144-audit.c b/sysdeps/arm/tst-bz34144-audit.c
+new file mode 100644
+index 0000000000..8f1084fa0a
+--- /dev/null
++++ b/sysdeps/arm/tst-bz34144-audit.c
+@@ -0,0 +1,32 @@
++/* Test that lazy PLT resolution via _dl_runtime_profile preserves
++   caller-saved VFP registers used to pass double arguments (BZ 34144).
++   Copyright (C) 2026 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <support/test-driver.h>
++
++extern void test_float_args (double a, double b, double c, double d,
++			     double e, double f, double g, double h);
++
++static int
++do_test (void)
++{
++  test_float_args (2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0);
++  return 0;
++}
++
++#include <support/test-driver.c>
+diff --git a/sysdeps/arm/tst-bz34144-auditmod.c b/sysdeps/arm/tst-bz34144-auditmod.c
+new file mode 100644
+index 0000000000..ada9f126c2
+--- /dev/null
++++ b/sysdeps/arm/tst-bz34144-auditmod.c
+@@ -0,0 +1,50 @@
++/* Minimal audit module used by tst-bz34144-audit to force PLT calls
++   to go through _dl_runtime_profile instead of _dl_runtime_resolve.
++   Copyright (C) 2026 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <link.h>
++#include <stddef.h>
++#include <stdint.h>
++
++unsigned int
++la_version (unsigned int v)
++{
++  return v;
++}
++
++unsigned int
++la_objopen (struct link_map *l, Lmid_t lmid, uintptr_t *cookie)
++{
++  return LA_FLG_BINDFROM | LA_FLG_BINDTO;
++}
++
++uintptr_t
++la_symbind32 (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
++	      uintptr_t *defcook, unsigned int *flags, const char *symname)
++{
++  return sym->st_value;
++}
++
++Elf32_Addr
++la_arm_gnu_pltenter (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
++		     uintptr_t *defcook, La_arm_regs *regs,
++		     unsigned int *flags, const char *symname,
++		     long int *framesizep)
++{
++  return sym->st_value;
++}
+diff --git a/sysdeps/arm/tst-bz34144-mod.c b/sysdeps/arm/tst-bz34144-mod.c
+new file mode 100644
+index 0000000000..be6b54bf91
+--- /dev/null
++++ b/sysdeps/arm/tst-bz34144-mod.c
+@@ -0,0 +1,28 @@
++/* DSO used by tst-bz34144.
++   Copyright (C) 2026 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <stdlib.h>
++
++void
++test_float_args (double a, double b, double c, double d,
++		 double e, double f, double g, double h)
++{
++  if (a != 2.0 || b != 3.0 || c != 4.0 || d != 5.0
++      || e != 6.0 || f != 7.0 || g != 8.0 || h != 9.0)
++    abort ();
++}
+diff --git a/sysdeps/arm/tst-bz34144.c b/sysdeps/arm/tst-bz34144.c
+new file mode 100644
+index 0000000000..61e41b3945
+--- /dev/null
++++ b/sysdeps/arm/tst-bz34144.c
+@@ -0,0 +1,32 @@
++/* Test that lazy PLT resolution preserves caller-saved VFP registers
++   used to pass double arguments (BZ 34144).
++   Copyright (C) 2026 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <support/test-driver.h>
++
++extern void test_float_args (double a, double b, double c, double d,
++			     double e, double f, double g, double h);
++
++static int
++do_test (void)
++{
++  test_float_args (2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0);
++  return 0;
++}
++
++#include <support/test-driver.c>
 diff --git a/sysdeps/i386/Makefile b/sysdeps/i386/Makefile
 index ee6470d78e..c0c017b899 100644
 --- a/sysdeps/i386/Makefile
