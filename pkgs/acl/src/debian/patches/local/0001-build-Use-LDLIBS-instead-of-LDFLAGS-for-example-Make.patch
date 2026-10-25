@@ -1,4 +1,4 @@
-From f5f206e7520540a96a73062d267605698503855b Mon Sep 17 00:00:00 2001
+From a09497538a0cb6846d7371e0ec0e16942c64ed45 Mon Sep 17 00:00:00 2001
 From: Guillem Jover <guillem@hadrons.org>
 Date: Sun, 15 Feb 2026 13:48:06 +0100
 Subject: [PATCH acl] build: Use LDLIBS instead of LDFLAGS for example Makefile
@@ -20,5 +20,5 @@ index 74642ca..2356aaf 100644
  PROGS = get-acl copy-acl set-acl copyperm
  
 -- 
-2.51.0
+2.53.0
 
