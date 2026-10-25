@@ -1,4 +1,4 @@
-GIT update of https://sourceware.org/git/glibc.git/release/2.42/master from glibc-2.42 to f13c1bb0f97fbc12a6ba1ab5669ce561ea32b80a
+GIT update of https://sourceware.org/git/glibc.git/release/2.42/master from glibc-2.42 to 3e87cf9be93acf19d685e8003fc649cdb052a891
 
 diff --git a/ADVISORIES b/ADVISORIES
 new file mode 100644
@@ -1666,6 +1666,21 @@ index 6738221a54..cc476ebcfd 100644
  			  __glibc_objsize (__dst),
  			  __af, __src, __dst);
  };
+diff --git a/io/fcntl.c b/io/fcntl.c
+index e88e28664c..b7dab1bb39 100644
+--- a/io/fcntl.c
++++ b/io/fcntl.c
+@@ -18,6 +18,10 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ 
++#ifndef __O_CLOEXEC
++# error __O_CLOEXEC not defined by fcntl.h/cloexec.h
++#endif
++
+ /* Perform file control operations on FD.  */
+ int
+ __fcntl (int fd, int cmd, ...)
 diff --git a/libio/stdio.h b/libio/stdio.h
 index d042b36618..e0e70945fa 100644
 --- a/libio/stdio.h
@@ -3291,6 +3306,19 @@ index d9f69649d0..181be80835 100644
    check_reverse (1,
                   "name: 1.in-addr.arpa\n"
                   "net: 0x00000001\n");
+diff --git a/scripts/abilist.awk b/scripts/abilist.awk
+index 6cc7af6ac8..7ea1edf8c0 100644
+--- a/scripts/abilist.awk
++++ b/scripts/abilist.awk
+@@ -38,7 +38,7 @@ $4 == "*UND*" { next }
+ $2 == "l" { next }
+ 
+ # If the target uses ST_OTHER, it will be output before the symbol name.
+-$2 == "g" || $2 == "w" && (NF == 7 || NF == 8) {
++$2 == "g" || $2 == "w" && (NF == 6 || NF == 7 || NF == 8) {
+   type = $3;
+   size = $5;
+   sub(/^0*/, "", size);
 diff --git a/stdio-common/tst-renameat2.c b/stdio-common/tst-renameat2.c
 index 12aa0f8b0f..6213e1376d 100644
 --- a/stdio-common/tst-renameat2.c
@@ -5381,6 +5409,18 @@ index ade58ad19e..c17f1eaa13 100644
    return 0;
  }
  
+diff --git a/sysdeps/unix/sysv/linux/Makefile b/sysdeps/unix/sysv/linux/Makefile
+index c47cbdf428..053041f256 100644
+--- a/sysdeps/unix/sysv/linux/Makefile
++++ b/sysdeps/unix/sysv/linux/Makefile
+@@ -129,6 +129,7 @@ CFLAGS-test-errno-linux.c += $(no-fortify-source)
+ 
+ sysdep_headers += \
+   bits/a.out.h \
++  bits/cloexec.h \
+   bits/epoll.h \
+   bits/eventfd.h \
+   bits/inotify.h \
 diff --git a/sysdeps/unix/sysv/linux/aarch64/clone.S b/sysdeps/unix/sysv/linux/aarch64/clone.S
 index 40015c6933..53f1efd728 100644
 --- a/sysdeps/unix/sysv/linux/aarch64/clone.S
@@ -5501,6 +5541,35 @@ index d5943a7485..2600bc9be3 100644
  	mov	x0, #0x4111	/* CLONE_VM | CLONE_VFORK | SIGCHLD */
  	mov	x1, sp
  	DO_CALL (clone, 2)
+diff --git a/sysdeps/unix/sysv/linux/alpha/bits/cloexec.h b/sysdeps/unix/sysv/linux/alpha/bits/cloexec.h
+new file mode 100644
+index 0000000000..f381f28a53
+--- /dev/null
++++ b/sysdeps/unix/sysv/linux/alpha/bits/cloexec.h
+@@ -0,0 +1 @@
++#define __O_CLOEXEC 010000000
+diff --git a/sysdeps/unix/sysv/linux/bits/cloexec.h b/sysdeps/unix/sysv/linux/bits/cloexec.h
+new file mode 100644
+index 0000000000..3059fb6473
+--- /dev/null
++++ b/sysdeps/unix/sysv/linux/bits/cloexec.h
+@@ -0,0 +1 @@
++#define __O_CLOEXEC 02000000
+diff --git a/sysdeps/unix/sysv/linux/bits/fcntl-linux.h b/sysdeps/unix/sysv/linux/bits/fcntl-linux.h
+index f425a4bf22..98954feaca 100644
+--- a/sysdeps/unix/sysv/linux/bits/fcntl-linux.h
++++ b/sysdeps/unix/sysv/linux/bits/fcntl-linux.h
+@@ -81,9 +81,7 @@
+ #ifndef __O_NOFOLLOW
+ # define __O_NOFOLLOW	0400000
+ #endif
+-#ifndef __O_CLOEXEC
+-# define __O_CLOEXEC   02000000
+-#endif
++#include <bits/cloexec.h>
+ #ifndef __O_DIRECT
+ # define __O_DIRECT	 040000
+ #endif
 diff --git a/sysdeps/unix/sysv/linux/getlogin_r.c b/sysdeps/unix/sysv/linux/getlogin_r.c
 index f03ecd4da9..0e66944570 100644
 --- a/sysdeps/unix/sysv/linux/getlogin_r.c
@@ -5560,6 +5629,64 @@ index f03ecd4da9..0e66944570 100644
        goto out;
      }
  
+diff --git a/sysdeps/unix/sysv/linux/hppa/bits/cloexec.h b/sysdeps/unix/sysv/linux/hppa/bits/cloexec.h
+new file mode 100644
+index 0000000000..f381f28a53
+--- /dev/null
++++ b/sysdeps/unix/sysv/linux/hppa/bits/cloexec.h
+@@ -0,0 +1 @@
++#define __O_CLOEXEC 010000000
+diff --git a/sysdeps/unix/sysv/linux/sparc/bits/cloexec.h b/sysdeps/unix/sysv/linux/sparc/bits/cloexec.h
+new file mode 100644
+index 0000000000..6706eaa7d5
+--- /dev/null
++++ b/sysdeps/unix/sysv/linux/sparc/bits/cloexec.h
+@@ -0,0 +1 @@
++#define __O_CLOEXEC 0x400000
+diff --git a/sysdeps/unix/sysv/linux/sys/mount.h b/sysdeps/unix/sysv/linux/sys/mount.h
+index b549e75148..30ba56c1e8 100644
+--- a/sysdeps/unix/sysv/linux/sys/mount.h
++++ b/sysdeps/unix/sysv/linux/sys/mount.h
+@@ -21,7 +21,6 @@
+ #ifndef _SYS_MOUNT_H
+ #define _SYS_MOUNT_H	1
+ 
+-#include <fcntl.h>
+ #include <features.h>
+ #include <stdint.h>
+ #include <stddef.h>
+@@ -265,9 +264,16 @@ enum fsconfig_command
+ #define FSOPEN_CLOEXEC          0x00000001
+ 
+ /* open_tree flags.  */
+-#define OPEN_TREE_CLONE    1         /* Clone the target tree and attach the clone */
+-#define OPEN_TREE_CLOEXEC  O_CLOEXEC /* Close the file on execve() */
+-
++#ifndef OPEN_TREE_CLONE
++# define OPEN_TREE_CLONE    1 /* Clone the target tree and attach the clone */
++#endif
++#ifndef O_CLOEXEC
++# include <bits/cloexec.h>
++# define O_CLOEXEC __O_CLOEXEC
++#endif
++#ifndef OPEN_TREE_CLOEXEC
++# define OPEN_TREE_CLOEXEC  O_CLOEXEC /* Close the file on execve() */
++#endif
+ 
+ __BEGIN_DECLS
+ 
+diff --git a/sysdeps/unix/sysv/linux/tst-mount.c b/sysdeps/unix/sysv/linux/tst-mount.c
+index 40913c7082..78a2772b2f 100644
+--- a/sysdeps/unix/sysv/linux/tst-mount.c
++++ b/sysdeps/unix/sysv/linux/tst-mount.c
+@@ -20,6 +20,7 @@
+ #include <support/check.h>
+ #include <support/xunistd.h>
+ #include <support/namespace.h>
++#include <fcntl.h> /* For AT_ constants.  */
+ #include <sys/mount.h>
+ 
+ _Static_assert (sizeof (struct mount_attr) == MOUNT_ATTR_SIZE_VER0,
 diff --git a/sysdeps/unix/sysv/linux/tst-rseq.c b/sysdeps/unix/sysv/linux/tst-rseq.c
 index 00181cfefb..e83ea2b939 100644
 --- a/sysdeps/unix/sysv/linux/tst-rseq.c
