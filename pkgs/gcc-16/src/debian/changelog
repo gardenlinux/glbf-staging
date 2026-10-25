@@ -1,3 +1,59 @@
+gcc-16 (16.1.0-3) unstable; urgency=high
+
+  * Update to git 20260719 from the gcc-16 branch.
+    - Fix PR tree-optimization/126262, PR tree-optimization/126257,
+      PR middle-end/126084, PR tree-optimization/120201,
+      PR tree-optimization/126194, PR tree-optimization/126150,
+      PR tree-optimization/125953, PR middle-end/125875,
+      PR tree-optimization/125786, PR tree-optimization/125668,
+      PR tree-optimization/125296, PR tree-optimization/126008,
+      PR tree-optimization/125730, PR tree-optimization/125040,
+      PR ipa/125121, PR ipa/124128, PR target/126054 (S390),
+      PR target/126148 (x86), PR tree-optimization/125597,
+      PR tree-optimization/125597, PR tree-optimization/125597,
+      PR target/126081 (or1k), PR target/126049 (RISCV),
+      PR target/126098 (x86), PR target/67459 (SH), PR target/122948 (SH),
+      PR target/125972 (S390), PR rtl-optimization/125173,
+      PR target/124908 (AArch64), PR target/125838 (AArch64),
+      PR target/125883 (x86), PR target/125818 (AArch64),
+      PR target/125469 (x86), PR target/125469 (x86), PR target/125949 (x86),
+      PR target/125992 (S390), PR middle-end/125977, PR target/125628 (MIPS),
+      PR target/125478 (RISCV), PR target/106895 (PPC), PR target/122665 (PPC),
+      PR target/125670 (RISCV), PR middle-end/125621,
+      PR target/125148 (AArch64), PR tree-optimization/125431,
+      PR target/125795 (AArch64), PR tree-optimization/125501,
+      PR tree-optimization/125776, PR tree-optimization/125774,
+      PR target/120144 (MIPS), PR ipa/125699, PR tree-optimization/125419,
+      PR tree-optimization/125652, PR tree-optimization/125686,
+      PR tree-optimization/125646, PR tree-optimization/125553,
+      PR tree-optimization/125545, PR tree-optimization/125502,
+      PR tree-optimization/125477, PR target/124948, PR c/125072, PR c/125935, 
+      PR c/125604, PR c/123569, PR c/125252, PR c/124303, PR c/124985,
+      PR c++/126057, PR c++/126036, PR c++/126007, PR c++/125674, PR c++/91155,
+      PR c++/126066, PR c++/125901, PR c++/126031, PR c++/121552, PR c++/124584,
+      PR c++/121094, PR c++/117259, PR c++/123536, PR c++/125900, PR c++/125334,
+      PR c++/125768, PR c++/125939, PR c++/125745, PR c++/125408, PR c++/124978,
+      PR c++/115314, PR c++/125889, PR c++/125764, PR c++/125759, PR c++/65271,
+      PR c++/125770, PR fortran/126234, PR fortran/125172, PR fortran/126210,
+      PR fortran/126170, PR fortran/126127, PR fortran/103367,
+      PR fortran/126018, PR fortran/125051, PR fortran/125902,
+      PR fortran/125902, PR fortran/60576, PR fortran/125430,
+      PR fortran/125527, PR fortran/125535, PR fortran/125650,
+      PR fortran/125481, PR fortran/125527, PR fortran/125528,
+      PR fortran/125529, PR fortran/125530, PR fortran/125531,
+      PR fortran/125534, PR fortran/125535, PR lto/125257, PR libgcc/123976,
+      PR target/125752 (AVR), PR libfortran/126116, PR libstdc++/126111,
+      PR libstdc++/125956, PR libstdc++/118158, PR libstdc++/125228,
+      PR libstdc++/125890.
+  * Let the ada build fail on an alihash mismatch, if fail_on_alihash_mismatch
+    is enabled.
+  * Enable Modula-2 on powerpc and ppc64. Closes: #1141560, #1141596.
+  * Enable LRA by default on m68k for snapshot builds (Adrian Glaubitz).
+    Addresses: #1142039.
+  * Disable running tests on Debian/riscv64 for meaningful build times.
+
+ -- Matthias Klose <doko@debian.org>  Sun, 19 Jul 2026 13:28:39 +0200
+
 gcc-16 (16.1.0-2) unstable; urgency=medium
 
   * Update to git 20260613 from the gcc-16 branch.
