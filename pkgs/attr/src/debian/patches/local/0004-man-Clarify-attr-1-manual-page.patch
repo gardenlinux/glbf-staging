@@ -1,4 +1,4 @@
-From 622be1ba3c92be641fb0e7337e0145b25ffc7461 Mon Sep 17 00:00:00 2001
+From 41e982c868242f0ebb6ddf8f68594596b0e4be71 Mon Sep 17 00:00:00 2001
 From: Guillem Jover <guillem@hadrons.org>
 Date: Sun, 24 Dec 2023 20:20:53 +0100
 Subject: [PATCH attr 4/7] man: Clarify attr(1) manual page
@@ -72,16 +72,6 @@ index afc8d6c..037b50d 100644
 -They are the
 -.B root
 -and
--.B user
--address spaces.
--The
--.B root
--address space is accessible only to the superuser,
--and then only by specifying a flag argument to the function call.
--Other users will not see or be able to modify attributes in the
--.B root
--address space.
--The
 +Extended attributes use several disjoint attribute namespaces associated with
 +every filesystem object: the
 +.B trusted
@@ -94,6 +84,16 @@ index afc8d6c..037b50d 100644
 +namespace with the same properties except used for security metadata,
 +and the
  .B user
+-address spaces.
+-The
+-.B root
+-address space is accessible only to the superuser,
+-and then only by specifying a flag argument to the function call.
+-Other users will not see or be able to modify attributes in the
+-.B root
+-address space.
+-The
+-.B user
 -address space is protected by the normal file permissions mechanism,
 +namespace, which is protected by the normal file permissions mechanism,
  so the owner of the file can decide who is able to see and/or modify
@@ -134,5 +134,5 @@ index afc8d6c..037b50d 100644
  The list option present in the IRIX version of this command is not supported.
  .B getfattr
 -- 
-2.47.2
+2.53.0
 

@@ -1,4 +1,4 @@
-From ae4dbdb24a3cc108db293d248016e2f73debaaad Mon Sep 17 00:00:00 2001
+From 10cb5218d11c99b386c81a499b044101dd2bde95 Mon Sep 17 00:00:00 2001
 From: Guillem Jover <guillem@hadrons.org>
 Date: Sun, 24 Dec 2023 20:15:33 +0100
 Subject: [PATCH attr 3/7] man: Fix formatting markup for attr(1)
@@ -164,5 +164,5 @@ index ebbd2ef..afc8d6c 100644
  .SH AUTHOR
  Andreas Gruenbacher,
 -- 
-2.47.2
+2.53.0
 

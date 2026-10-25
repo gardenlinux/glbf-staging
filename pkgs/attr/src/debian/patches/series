@@ -1,5 +1,5 @@
 # Upstream patches
-upstream/0001-tools-attr.c-Add-missing-libgen.h-include-for-basena.patch
+
 # Local patches
 local/0001-po-Update-Dutch-translation.patch
 local/0002-build-Fix-cross-compilation-on-musl-based-systems.patch

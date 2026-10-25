@@ -1,4 +1,4 @@
-From f27b258645cca00593715c51dab0523a5e760818 Mon Sep 17 00:00:00 2001
+From d23c53b096e0672338935e6ba5914bb5cb2f4a65 Mon Sep 17 00:00:00 2001
 From: Guillem Jover <guillem@hadrons.org>
 Date: Sat, 3 Dec 2022 12:35:16 +0100
 Subject: [PATCH attr 2/7] build: Fix cross-compilation on musl-based systems
@@ -19,12 +19,12 @@ Signed-off-by: Guillem Jover <guillem@hadrons.org>
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/configure.ac b/configure.ac
-index 98477b5..00d2a1b 100644
+index 91a75ca..560cb7b 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -37,7 +37,10 @@ AC_SYS_LARGEFILE
- AM_PROG_AR
- LT_INIT
+@@ -66,7 +66,10 @@ AM_CONDITIONAL([NEED_XATTRAT],
+ 		     "x$ac_cv_func_listxattrat" = xno -o \
+ 		     "x$ac_cv_func_removexattrat" = xno])
  
 -AM_GNU_GETTEXT_VERSION([0.18.2])
 +dnl Minimal version supporting AM_GNU_GETTEXT_REQUIRE_VERSION.
@@ -35,5 +35,5 @@ index 98477b5..00d2a1b 100644
  
  AC_ARG_ENABLE([debug],
 -- 
-2.47.2
+2.53.0
 
