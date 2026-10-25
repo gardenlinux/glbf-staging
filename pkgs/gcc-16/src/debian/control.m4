@@ -58,7 +58,7 @@ XSBC-Original-Maintainer: MAINTAINER
 Maintainer: MAINTAINER
 ')dnl DIST
 Uploaders: Matthias Klose <doko@debian.org>
-Standards-Version: 4.7.2
+Standards-Version: 4.7.4
 ifdef(`TARGET',`dnl cross
 Build-Depends: DEBHELPER_BUILD_DEP DPKG_BUILD_DEP
   LIBC_BUILD_DEP, LIBC_BIARCH_BUILD_DEP
