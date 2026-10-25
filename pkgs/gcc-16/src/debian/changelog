@@ -1,3 +1,31 @@
+gcc-16 (16.1.0-1) unstable; urgency=medium
+
+  * GCC 16.1.0 release.
+  * Update to git 20260509 from the gcc-16 branch.
+    - Fix PR target/120587 (OR1K), PR target/125155 (OR1K),
+      PR target/125057 (loongarch), PR target/125180 (x86),
+      PR tree-optimization/125079, PR tree-optimization/125079,
+      PR target/125117 (x86), PR target/124984 (RISCV), PR middle-end/123635,
+      PR tree-optimization/125039, PR target/124133 (PPC), PR middle-end/123635,
+      PR tree-optimization/124988, PR ada/125168, PR ada/125044,
+      PR c++/124770, PR c++/125206, PR c++/125179, PR c++/124957,
+      PR c++/125115, PR c++/124926, PR c++/124989, PR c++/124756,
+      PR c++/125096, PR c++/125035, PR c++/124582, PR c++/123810,
+      PR c++/124953, PR c++/124981, PR d/125089, PR libstdc++/109965,
+      PR libstdc++/121919, PR libstdc++/125112, PR libstdc++/125024,
+      PR tree-optimization/125185, PR middle-end/125146,
+      PR tree-optimization/125025, PR tree-optimization/125025,.
+    - Revert fix for PR tree-optimization/120003.
+  * d/shlibs.common: Add libgdiagnostics.
+  * Drop the debian/lib{32,64}stdc++CXX.postinst scripts, GCC 4.4 times ...
+  * Update NEWS files.
+  * Bump standards version.
+  * libstdc++-dev: Make baseline file reproducible. Addresses: #1133772.
+  * Configure with --enable-checking=release on amd64, but keep the extra
+    checking on arm64 i386 mips64el ppc64 ppc64el s390x for now.
+
+ -- Matthias Klose <doko@debian.org>  Sat, 09 May 2026 06:46:33 +0200
+
 gcc-16 (16-20260425-1) unstable; urgency=medium
 
   * Snapshot, taken from the gcc-16 branch (20260425, release candidate).
