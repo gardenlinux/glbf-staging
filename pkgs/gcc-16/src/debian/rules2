@@ -1510,6 +1510,26 @@ endif
 	    > bootstrap-summary; \
 	fi
 
+ifeq ($(build_type),build-native)
+  ifeq ($(with_ada),yes)
+    ifneq (,$(findstring $(BASE_VERSION),$(GNAT)))
+	echo "checking ALIHASH ..."; \
+	p=gnat-$(BASE_VERSION)-$(subst _,-,$(TARGET_ALIAS)); \
+	old=$$(dpkg-query -W -f '$${Provides}' $$p); \
+	new=gnat-$(BASE_VERSION)-$$(debian/ada/libgnat_alihash | sed 's/.*=//'); \
+	if [ $$old = $$new ]; then \
+	  echo "  -> matching alihash ($$old)"; \
+	else \
+	  echo "  -> alihash mismatch: $$old (installed), $$new (built)"; \
+	  if [ x$(fail_on_alihash_mismatch) = xyes ]; then \
+	    exit 1; \
+	  fi; \
+	fi
+    else
+	@echo 'not checking ALIHASH, using $(GNAT) for the bootstrap'
+    endif
+  endif
+endif
 	touch $(build_stamp)
 	@echo === END $@ ===
 
