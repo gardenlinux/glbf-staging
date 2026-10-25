@@ -1,7 +1,8 @@
-version=4
+Version: 5
 
 # Use this file for downloading weekly snapshots with uscan
 # i.e. "uscan --watchfile debian/watch.patchlevel"
-
-opts=uversionmangle=s/-/+/,pgpsigurlmangle=s/$/.asc/ \
- https://invisible-mirror.net/archives/ncurses/current/ncurses-(.*)\.tgz
+Source: https://invisible-mirror.net/archives/ncurses/current/
+Matching-Pattern: ncurses-(.*)\.tgz
+Pgpsigurlmangle: s/$/.asc/
+Uversionmangle: s/-/+/
