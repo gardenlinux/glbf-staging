@@ -6,26 +6,26 @@ Maintainer: Debian SELinux maintainers <selinux-devel@lists.alioth.debian.org>
 Uploaders: Laurent Bigonville <bigon@debian.org>,
            Russell Coker <russell@coker.com.au>,
            Christian Göttsche <cgzones@googlemail.com>
-Standards-Version: 4.7.3
-Build-Depends: debhelper-compat (= 13),
+Standards-Version: 4.7.4
+Build-Depends: debhelper-compat (= 14),
                dh-sequence-builtusing,
                dh-sequence-python3 <!nopython>,
                dh-sequence-ruby <!noruby>,
                file,
-               libsepol-dev (>= 3.10),
+               libsepol-dev (>= 3.11),
                libpcre2-dev,
                libpython3-all-dev <!nopython>,
                pkgconf,
                python3-all-dev:any <!nopython>,
+               python3-build <!nopython>,
                python3-pip <!nopython>,
                python3-setuptools <!nopython>,
                swig <!nopython> <!noruby>
-Homepage: https://github.com/SELinuxProject
+Homepage: https://selinuxproject.github.io/
 
 Package: selinux-utils
 Architecture: linux-any
 Section: admin
-Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: SELinux utility programs
  This package provides various utility programs for a Security-enhanced
  Linux system. Security-enhanced Linux is a patch of the Linux kernel
@@ -37,8 +37,7 @@ Description: SELinux utility programs
 Package: libselinux1
 Architecture: linux-any
 Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Recommends: selinux-utils
 Description: SELinux runtime shared libraries
  This package provides the shared libraries for Security-enhanced
  Linux that provides interfaces (e.g. library functions for the
@@ -63,13 +62,13 @@ Description: SELinux runtime shared libraries
 Package: libselinux-dev
 Architecture: linux-any
 Depends: libselinux1 (= ${binary:Version}),
-         libsepol-dev (>= 3.10),
-         libpcre2-dev,
-         ${misc:Depends}
+         libsepol-dev (>= 3.11),
+         libpcre2-dev
 Section: libdevel
 Multi-Arch: same
 Provides: libselinux1-dev (= ${binary:Version})
 Conflicts: libselinux1-dev
+Replaces: libselinux1-dev
 Description: SELinux development headers
  This package provides the  static libraries and header files
  needed for developing SELinux applications.  Security-enhanced Linux
@@ -87,8 +86,6 @@ Architecture: linux-any
 Section: debian-installer
 Package-Type: udeb
 Build-Profiles: <!noudeb>
-Pre-Depends: ${misc:Pre-Depends}
-Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: SELinux runtime shared libraries
  This package provides the shared libraries for Security-enhanced
  Linux that provides interfaces (e.g. library functions for the
@@ -108,7 +105,6 @@ Description: SELinux runtime shared libraries
 
 Package: ruby-selinux
 Architecture: linux-any
-Depends: ${misc:Depends}, ${shlibs:Depends}
 Section: ruby
 Multi-Arch: same
 Build-Profiles: <!noruby>
@@ -126,7 +122,7 @@ Description: Ruby bindings to SELinux shared libraries
 
 Package: python3-selinux
 Architecture: linux-any
-Depends: ${misc:Depends}, ${python3:Depends}, ${shlibs:Depends}
+Depends: ${python3:Depends}
 Built-Using: ${dh-builtusing:libsepol-dev}
 Section: python
 Build-Profiles: <!nopython>

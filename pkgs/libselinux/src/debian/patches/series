@@ -1,5 +1,5 @@
 default
 man
-Prefix-ruby-objects-with-interpreter-Closes-1095018.patch
-Build-shared-libraries-with-fPIC.patch
 Fix-matchpathcon_filespec_add-condition-for-alpha.patch
+Link-the-Python-bindings-with-fPIC.patch
+Do-not-use-64-bit-atomics-on-architectures-lacking-them.patch
