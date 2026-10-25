@@ -63,6 +63,8 @@ override_dh_auto_install: $(PY3VERSIONS:%=install-python-%) \
 	find $(destdir) -name RECORD -exec sed -i '/\/direct_url.json,/d' {} +
 
 install-python-%:
+  # Drop wheels from other Python versions so upstream's `pip install dist/*.whl` only sees this one.
+	rm -f src/dist/*.whl
 	$(MAKE) install-pywrap $(extra_make_args) PYTHON=python$* DESTDIR=$(destdir) DEB_PYTHON_INSTALL_LAYOUT=deb
 
 install-ruby-%:
