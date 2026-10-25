@@ -1,4 +1,4 @@
-From 8cab9b208a4927b053607b87504044392babdad8 Mon Sep 17 00:00:00 2001
+From f92c182b9922d0c7535dc8cb8c6ce4de2a5e6358 Mon Sep 17 00:00:00 2001
 From: Bjarni Ingi Gislason <bjarniig@simnet.is>
 Date: Fri, 21 Feb 2025 11:07:51 +0100
 Subject: [PATCH attr 6/7] man: Improve markup and editorial changes for
@@ -9,23 +9,23 @@ Bug-Debian: https://bugs.debian.org/1092503
 Forwarded: no
 Signed-off-by: Guillem Jover <guillem@hadrons.org>
 ---
- man/man1/setfattr.1 | 68 ++++++++++++++++++++++++++-------------------
- 1 file changed, 39 insertions(+), 29 deletions(-)
+ man/man1/setfattr.1 | 63 ++++++++++++++++++++++++++-------------------
+ 1 file changed, 36 insertions(+), 27 deletions(-)
 
 diff --git a/man/man1/setfattr.1 b/man/man1/setfattr.1
-index e011ca7..90cede3 100644
+index d24135c..f5aef69 100644
 --- a/man/man1/setfattr.1
 +++ b/man/man1/setfattr.1
-@@ -28,59 +28,69 @@
+@@ -28,39 +28,47 @@
  setfattr \- set extended attributes of filesystem objects
  .SH SYNOPSIS
  .nf
 -\f3setfattr\f1 [\f3\-h\f1] \f3\-n name\f1 [\f3\-v value\f1] \f3pathname\f1...
 -\f3setfattr\f1 [\f3\-h\f1] \f3\-x name\f1 \f3pathname\f1...
--\f3setfattr\f1 [\f3\-h\f1] \f3\-\-restore=file\f1
+-\f3setfattr\f1 [\f3\-hP\f1] \f3\-\-restore=file\f1
 +\fBsetfattr\fR [\fB\-h\fR] \fB\-n name\fR [\fB\-v value\fR] \fBpathname\fR...
 +\fBsetfattr\fR [\fB\-h\fR] \fB\-x name\fR \fBpathname\fR...
-+\fBsetfattr\fR [\fB\-h\fR] \fB\-\-restore=file\fR
++\fBsetfattr\fR [\fB\-hP\fR] \fB\-\-restore=file\fR
  .fi
  .SH DESCRIPTION
 -The 
@@ -80,11 +80,11 @@ index e011ca7..90cede3 100644
 +Do not follow symlinks.
 +If
  .I pathname
--is a symbolic link, it is not followed, but is instead itself the
--inode being modified.
-+is a symbolic link,
-+it is not followed,
-+but is instead itself the inode being modified.
+ is a symbolic link, it is not followed, but is instead modified itself.
+ .TP
+@@ -68,22 +76,23 @@ is a symbolic link, it is not followed, but is instead modified itself.
+ Do not traverse symbolic links in pathnames during a restore.  Can be combined
+ with option \-h.
  .TP
 -.BR \-\-restore =\f2file\f1
 +.BI \-\-restore= file
@@ -111,7 +111,7 @@ index e011ca7..90cede3 100644
  .TP
  .B \-\-version
  Print the version of
-@@ -92,19 +102,19 @@ Print help explaining the command line options.
+@@ -95,19 +104,19 @@ Print help explaining the command line options.
  .TP
  .B \-\-
  End of command line options.
@@ -136,5 +136,5 @@ index e011ca7..90cede3 100644
  .SH AUTHOR
  Andreas Gruenbacher,
 -- 
-2.47.2
+2.53.0
 

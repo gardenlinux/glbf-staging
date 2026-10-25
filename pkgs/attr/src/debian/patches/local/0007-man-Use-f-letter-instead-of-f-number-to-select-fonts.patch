@@ -1,4 +1,4 @@
-From 756d8ee52a66ff9b8a22d9af1449b0461215a373 Mon Sep 17 00:00:00 2001
+From 13107fc0af255ecd70cde3ef8f61790a715c65ea Mon Sep 17 00:00:00 2001
 From: Guillem Jover <guillem@hadrons.org>
 Date: Fri, 21 Feb 2025 11:09:10 +0100
 Subject: [PATCH attr 7/7] man: Use \f<letter> instead of \f<number> to select
@@ -97,7 +97,7 @@ index 037b50d..e2ae8f5 100644
  The standard file interchange/archive programs
  .BR tar (1),
 diff --git a/man/man1/getfattr.1 b/man/man1/getfattr.1
-index df8bb8a..cf83b91 100644
+index 10c5083..6b9cccd 100644
 --- a/man/man1/getfattr.1
 +++ b/man/man1/getfattr.1
 @@ -25,10 +25,10 @@
@@ -140,9 +140,9 @@ index df8bb8a..cf83b91 100644
  Encode values after retrieving them.
  Valid values of
  .I en
-@@ -82,7 +82,7 @@ Do not dereference symlinks. Instead of the file a symlink refers to, the
- symlink itself is examined.  Unless doing a logical (\-L) traversal, do not
- traverse symlinks to directories.
+@@ -81,7 +81,7 @@ while strings encoded as hexadecimal and base64 are prefixed with
+ Do not dereference symlinks. Instead of the file a symlink refers to, the
+ symlink itself is examined.
  .TP
 -.BR \-m " \f2pattern\f1, " \-\-match "=\f2pattern\f1"
 +.BR \-m " \fIpattern\fR, " \-\-match "=\fIpattern\fR"
@@ -346,5 +346,5 @@ index c803638..1c76269 100644
  The
  .B attr_set
 -- 
-2.47.2
+2.53.0
 

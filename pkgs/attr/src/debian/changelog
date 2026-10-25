@@ -1,3 +1,22 @@
+attr (1:2.6.0-1) unstable; urgency=medium
+
+  * New upstream release.
+    - Refresh local patches.
+    - Remove upstream patches included in this release.
+    - Update upstream OpenPGP signing certificates.
+    - Fix symlink traversal vulnerability [CVE-2026-54371]. Closes: #1141107
+  * Remove build dependency on debhelper (>= 13.10) implied by
+    debhelper-compat (= 13) since Debian bookworm.
+  * Remove build dependencies on automake, autoconf and libtool implied
+    by debhelper-compat (>= 10) since Debian stretch.
+  * Switch to Standards-Version 4.7.4 (no changes needed).
+  * Refactor common synopsis into a source stanza Description field.
+  * Improve and clarify package descriptions.
+  * Switch debian/watch URL to use the one not affected by mirroring,
+    as that has delays of up to a day.
+
+ -- Guillem Jover <guillem@debian.org>  Mon, 29 Jun 2026 23:34:26 +0200
+
 attr (1:2.5.2-4) unstable; urgency=medium
 
   * Remove «Rules-Requires-Root: no», which is the current default.
