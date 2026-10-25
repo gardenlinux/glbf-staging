@@ -9,7 +9,7 @@ Build-Depends: debhelper-compat (= 13),
                autoconf-dickey (>= 2.52+20210509),
 Build-Depends-Arch: g++-multilib [amd64 i386 powerpc ppc64 s390 sparc] <!nobiarch>
 Build-Depends-Indep: ncurses-term <pkg.ncurses.terminfocheck>
-Standards-Version: 4.7.3
+Standards-Version: 4.7.4
 Vcs-Browser: https://salsa.debian.org/debian/ncurses
 Vcs-Git: https://salsa.debian.org/debian/ncurses.git
 Homepage: https://invisible-island.net/ncurses/

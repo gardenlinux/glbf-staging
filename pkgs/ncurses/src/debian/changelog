@@ -1,3 +1,21 @@
+ncurses (6.6+20260608-2) unstable; urgency=medium
+
+  * Upload to unstable.
+
+ -- Sven Joachim <svenjoac@gmx.de>  Thu, 02 Jul 2026 17:00:27 +0200
+
+ncurses (6.6+20260608-1) experimental; urgency=low
+
+  * New upstream patchlevel.
+    - Add ech to screen terminfo (Closes: #707308).
+  * Update symbols files.
+  * Update upstream signing key.
+  * Convert the watch files to version 5.
+  * Update years in debian/copyright.
+  * Upgrade Standards-Version to 4.7.4, no changes needed.
+
+ -- Sven Joachim <svenjoac@gmx.de>  Wed, 10 Jun 2026 17:50:16 +0200
+
 ncurses (6.6+20251231-1) unstable; urgency=medium
 
   * New upstream patchlevel.
