@@ -1,7 +1,164 @@
-Index: libselinux-3.7/man/man3/getcon.3
-===================================================================
---- libselinux-3.7.orig/man/man3/getcon.3
-+++ libselinux-3.7/man/man3/getcon.3
+From: Russell Coker <russell@coker.com.au>
+Date: Thu, 6 Feb 2025 18:47:02 +1100
+Subject: man
+
+Man page cleanups from Bjarni Ingi Gislason
+---
+ man/man3/get_ordered_context_list.3  | 70 +++++++++++++++++---------
+ man/man3/getcon.3                    | 86 ++++++++++++++++++-------------
+ man/man3/getexeccon.3                | 60 +++++++++++++---------
+ man/man3/getseuserbyname.3           | 20 ++++----
+ man/man3/init_selinuxmnt.3           | 16 +++---
+ man/man3/is_selinux_enabled.3        | 26 ++++++----
+ man/man3/matchpathcon.3              | 98 +++++++++++++++++++++---------------
+ man/man3/matchpathcon_checkmatches.3 | 42 +++++++++-------
+ 8 files changed, 250 insertions(+), 168 deletions(-)
+
+diff --git a/man/man3/get_ordered_context_list.3 b/man/man3/get_ordered_context_list.3
+index 2a1e08f..a68ef7a 100644
+--- a/man/man3/get_ordered_context_list.3
++++ b/man/man3/get_ordered_context_list.3
+@@ -1,23 +1,34 @@
+-.TH "get_ordered_context_list" "3" "1 January 2004" "russell@coker.com.au" "SELinux"
+-.SH "NAME"
+-get_ordered_context_list, get_ordered_context_list_with_level, get_default_context, get_default_context_with_level, get_default_context_with_role, get_default_context_with_rolelevel, query_user_context, manual_user_enter_context, get_default_role \- determine SELinux context(s) for user sessions
++.TH get_ordered_context_list 3 "1 January 2004" russell@coker.com.au SELinux
++.SH NAME
++get_ordered_context_list, get_ordered_context_list_with_level,
++get_default_context, get_default_context_with_level,
++get_default_context_with_role, get_default_context_with_rolelevel,
++query_user_context, manual_user_enter_context, get_default_role \- determine
++SELinux context(s) for user sessions
+ .
+-.SH "SYNOPSIS"
++.SH SYNOPSIS
+ .B #include <selinux/selinux.h>
+ .br
+ .B #include <selinux/get_context_list.h>
+ .sp
+-.BI "int get_ordered_context_list(const char *" user ", const char *" fromcon ", char ***" list );
++.BI "int get_ordered_context_list(const char *" user ", const char *" \
++fromcon ", char ***" list );
+ .sp
+-.BI "int get_ordered_context_list_with_level(const char *" user ", const char *" level ", const char *" fromcon ", char ***" list );
++.BI "int get_ordered_context_list_with_level(const char *" user \
++", const char *" level ", const char *" fromcon ", char ***" list );
+ .sp
+-.BI "int get_default_context(const char *" user ", const char *" fromcon ", char **" newcon );
++.BI "int get_default_context(const char *" user ", const char *" fromcon \
++", char **" newcon );
+ .sp
+-.BI "int get_default_context_with_level(const char *" user ", const char *" level ", const char *" fromcon ", char **" newcon );
++.BI "int get_default_context_with_level(const char *" user ", const char *" \
++level ", const char *" fromcon ", char **" newcon );
+ .sp
+-.BI "int get_default_context_with_role(const char *" user ", const char *" role ", const char *" fromcon ", char **" newcon ");
++.BI "int get_default_context_with_role(const char *" user ", const char *" \
++role ", const char *" fromcon ", char **" newcon );
+ .sp
+-.BI "int get_default_context_with_rolelevel(const char *" user ", const char *" role ", const char *" level ", const char *" fromcon ", char **" newcon ");
++.BI "int get_default_context_with_rolelevel(const char *" user \
++", const char *" role ", const char *" level ", const char *" fromcon \
++", char **" newcon );
+ .sp
+ .BI "int query_user_context(char **" list ", char **" newcon );
+ .sp
+@@ -25,15 +36,17 @@ get_ordered_context_list, get_ordered_context_list_with_level, get_default_conte
+ .sp
+ .BI "int get_default_type(const char *" role ", char **" type );
+ .
+-.SH "DESCRIPTION"
++.SH DESCRIPTION
+ 
+ This family of functions can be used to obtain either a prioritized list of
+ all reachable security contexts for a given SELinux user or a single default
+ (highest priority) context for a given SELinux user for use by login-like
+-programs.  These functions takes a SELinux user identity that must
+-be defined in the SELinux policy as their input, not a Linux username.
++programs.
++These functions takes a SELinux user identity that must
++be defined in the SELinux policy as their input,
++not a Linux username.
+ Most callers should typically first call
+-.BR getseuserbyname(3)
++.BR getseuserbyname (3)
+ to look up the SELinux user identity and level for a given
+ Linux username and then invoke one of
+ .BR get_ordered_context_list_with_level ()
+@@ -51,11 +64,14 @@ context based on the global
+ .I \%/etc/selinux/{SELINUXTYPE}/contexts/default_contexts
+ file and the per-user
+ .I \%/etc/selinux/{SELINUXTYPE}/contexts/users/<username>
+-file if it exists.  The 
++file if it exists.
++The
+ .I fromcon
+ parameter may be NULL to indicate that the current context should
+-be used.  The function returns the number of contexts in the
+-list, or \-1 upon errors.  The list must be freed using the
++be used.
++The function returns the number of contexts in the list,
++or \-1 upon errors.
++The list must be freed using the
+ .BR freeconary (3)
+ function.
+ 
+@@ -79,8 +95,9 @@ function and applies the specified level.
+ .BR get_default_context_with_role ()
+ is the same as
+ .BR get_default_context ()
+-but only returns a context with the specified role, returning \-1 if no
+-such context is reachable for the user.
++but only returns a context with the specified role,
++returning \-1
++if no such context is reachable for the user.
+ 
+ .BR get_default_context_with_rolelevel ()
+ invokes the
+@@ -88,14 +105,16 @@ invokes the
+ function and applies the specified level.
+ 
+ .BR query_user_context ()
+-takes a list of contexts, queries the user via stdin/stdout as to which context
+-they want, and returns a new context as selected by the user (which has to be
+-freed with
++takes a list of contexts,
++queries the user via stdin/stdout as to which context they want,
++and returns a new context as selected by the user
++(which has to be freed with
+ .BR freecon (3)).
+ 
+ .BR manual_user_enter_context ()
+ allows the user to manually enter a context as a fallback if a list of
+-authorized contexts could not be obtained. Caller must free via
++authorized contexts could not be obtained.
++Caller must free via
+ .BR freecon (3).
+ 
+ .BR get_default_type ()
+@@ -103,7 +122,8 @@ Get the default type (domain) for
+ .I role
+ and set
+ .I type
+-to refer to it, which has to be freed with free.
++to refer to it,
++which has to be freed with free.
+ .
+ .SH "RETURN VALUE"
+ .BR get_ordered_context_list ()
+@@ -113,7 +133,7 @@ return the number of contexts in the list upon success or \-1 upon errors.
+ The other functions return 0 for success or \-1 for errors.
+ .
+ .SH "SEE ALSO"
+-.ad l
++.na
+ .nh
+ .BR selinux (8),
+ .BR freeconary (3),
+diff --git a/man/man3/getcon.3 b/man/man3/getcon.3
+index be60341..62b4c2a 100644
+--- a/man/man3/getcon.3
++++ b/man/man3/getcon.3
 @@ -1,5 +1,5 @@
 -.TH "getcon" "3" "21 December 2011" "russell@coker.com.au" "SELinux API documentation"
 -.SH "NAME"
@@ -10,7 +167,7 @@ Index: libselinux-3.7/man/man3/getcon.3
  getcon, getprevcon, getpidcon \- get SELinux security context of a process
  
  freecon, freeconary \- free memory associated with SELinux security contexts
-@@ -8,7 +8,7 @@ getpeercon \- get security context of a
+@@ -8,7 +8,7 @@ getpeercon \- get security context of a peer socket
  
  setcon \- set current security context of a process
  
@@ -19,7 +176,7 @@ Index: libselinux-3.7/man/man3/getcon.3
  .B #include <selinux/selinux.h>
  .sp
  .BI "int getcon(char **" context );
-@@ -39,10 +39,11 @@ setcon \- set current security context o
+@@ -39,10 +39,11 @@ setcon \- set current security context of a process
  .sp
  .BI "int setcon_raw(const char *" context );
  
@@ -33,7 +190,7 @@ Index: libselinux-3.7/man/man3/getcon.3
  .BR freecon ().
  
  .TP
-@@ -51,17 +52,20 @@ same as getcon but gets the context befo
+@@ -51,17 +52,20 @@ same as getcon but gets the context before the last exec.
  
  .TP
  .BR getpidcon ()
@@ -57,7 +214,7 @@ Index: libselinux-3.7/man/man3/getcon.3
  .BR freecon ().
  
  .TP
-@@ -70,7 +74,8 @@ frees the memory allocated for a securit
+@@ -70,7 +74,8 @@ frees the memory allocated for a security context.
  
  If
  .I con
@@ -67,7 +224,7 @@ Index: libselinux-3.7/man/man3/getcon.3
  
  .TP
  .BR freeconary ()
-@@ -78,16 +83,19 @@ frees the memory allocated for a context
+@@ -78,16 +83,19 @@ frees the memory allocated for a context array.
  
  If
  .I con
@@ -182,10 +339,10 @@ Index: libselinux-3.7/man/man3/getcon.3
  .SH "SEE ALSO"
 -.BR selinux "(8), " setexeccon "(3)"
 +.BR selinux "(8), " setexeccon (3)
-Index: libselinux-3.7/man/man3/getexeccon.3
-===================================================================
---- libselinux-3.7.orig/man/man3/getexeccon.3
-+++ libselinux-3.7/man/man3/getexeccon.3
+diff --git a/man/man3/getexeccon.3 b/man/man3/getexeccon.3
+index edaa666..e78f53a 100644
+--- a/man/man3/getexeccon.3
++++ b/man/man3/getexeccon.3
 @@ -1,10 +1,11 @@
 -.TH "getexeccon" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
 -.SH "NAME"
@@ -202,7 +359,7 @@ Index: libselinux-3.7/man/man3/getexeccon.3
  .B #include <selinux/selinux.h>
  .sp
  .BI "int getexeccon(char **" context );
-@@ -17,9 +18,10 @@ rpm_execcon \- run a helper for rpm in a
+@@ -17,9 +18,10 @@ rpm_execcon \- run a helper for rpm in an appropriate security context
  .sp
  .BI "int setexecfilecon(const char *" filename ", const char *" fallback_type );
  .sp
@@ -225,7 +382,7 @@ Index: libselinux-3.7/man/man3/getexeccon.3
  
  .BR setexeccon ()
  sets the context used for the next
-@@ -46,11 +49,11 @@ so a program doesn't need to explicitly
+@@ -46,11 +49,11 @@ so a program doesn't need to explicitly sanitize it upon startup.
  can be applied prior to library
  functions that internally perform an
  .BR execve (2),
@@ -307,151 +464,10 @@ Index: libselinux-3.7/man/man3/getexeccon.3
  .SH "SEE ALSO"
 -.BR selinux "(8), " freecon "(3), " getcon "(3)"
 +.BR selinux "(8), " freecon "(3), " getcon (3)
-Index: libselinux-3.7/man/man3/get_ordered_context_list.3
-===================================================================
---- libselinux-3.7.orig/man/man3/get_ordered_context_list.3
-+++ libselinux-3.7/man/man3/get_ordered_context_list.3
-@@ -1,23 +1,34 @@
--.TH "get_ordered_context_list" "3" "1 January 2004" "russell@coker.com.au" "SELinux"
--.SH "NAME"
--get_ordered_context_list, get_ordered_context_list_with_level, get_default_context, get_default_context_with_level, get_default_context_with_role, get_default_context_with_rolelevel, query_user_context, manual_user_enter_context, get_default_role \- determine SELinux context(s) for user sessions
-+.TH get_ordered_context_list 3 "1 January 2004" russell@coker.com.au SELinux
-+.SH NAME
-+get_ordered_context_list, get_ordered_context_list_with_level,
-+get_default_context, get_default_context_with_level,
-+get_default_context_with_role, get_default_context_with_rolelevel,
-+query_user_context, manual_user_enter_context, get_default_role \- determine
-+SELinux context(s) for user sessions
- .
--.SH "SYNOPSIS"
-+.SH SYNOPSIS
- .B #include <selinux/selinux.h>
- .br
- .B #include <selinux/get_context_list.h>
- .sp
--.BI "int get_ordered_context_list(const char *" user ", const char *" fromcon ", char ***" list );
-+.BI "int get_ordered_context_list(const char *" user ", const char *" \
-+fromcon ", char ***" list );
- .sp
--.BI "int get_ordered_context_list_with_level(const char *" user ", const char *" level ", const char *" fromcon ", char ***" list );
-+.BI "int get_ordered_context_list_with_level(const char *" user \
-+", const char *" level ", const char *" fromcon ", char ***" list );
- .sp
--.BI "int get_default_context(const char *" user ", const char *" fromcon ", char **" newcon );
-+.BI "int get_default_context(const char *" user ", const char *" fromcon \
-+", char **" newcon );
- .sp
--.BI "int get_default_context_with_level(const char *" user ", const char *" level ", const char *" fromcon ", char **" newcon );
-+.BI "int get_default_context_with_level(const char *" user ", const char *" \
-+level ", const char *" fromcon ", char **" newcon );
- .sp
--.BI "int get_default_context_with_role(const char *" user ", const char *" role ", const char *" fromcon ", char **" newcon ");
-+.BI "int get_default_context_with_role(const char *" user ", const char *" \
-+role ", const char *" fromcon ", char **" newcon );
- .sp
--.BI "int get_default_context_with_rolelevel(const char *" user ", const char *" role ", const char *" level ", const char *" fromcon ", char **" newcon ");
-+.BI "int get_default_context_with_rolelevel(const char *" user \
-+", const char *" role ", const char *" level ", const char *" fromcon \
-+", char **" newcon );
- .sp
- .BI "int query_user_context(char **" list ", char **" newcon );
- .sp
-@@ -25,15 +36,17 @@ get_ordered_context_list, get_ordered_co
- .sp
- .BI "int get_default_type(const char *" role ", char **" type );
- .
--.SH "DESCRIPTION"
-+.SH DESCRIPTION
- 
- This family of functions can be used to obtain either a prioritized list of
- all reachable security contexts for a given SELinux user or a single default
- (highest priority) context for a given SELinux user for use by login-like
--programs.  These functions takes a SELinux user identity that must
--be defined in the SELinux policy as their input, not a Linux username.
-+programs.
-+These functions takes a SELinux user identity that must
-+be defined in the SELinux policy as their input,
-+not a Linux username.
- Most callers should typically first call
--.BR getseuserbyname(3)
-+.BR getseuserbyname (3)
- to look up the SELinux user identity and level for a given
- Linux username and then invoke one of
- .BR get_ordered_context_list_with_level ()
-@@ -51,11 +64,14 @@ context based on the global
- .I \%/etc/selinux/{SELINUXTYPE}/contexts/default_contexts
- file and the per-user
- .I \%/etc/selinux/{SELINUXTYPE}/contexts/users/<username>
--file if it exists.  The 
-+file if it exists.
-+The
- .I fromcon
- parameter may be NULL to indicate that the current context should
--be used.  The function returns the number of contexts in the
--list, or \-1 upon errors.  The list must be freed using the
-+be used.
-+The function returns the number of contexts in the list,
-+or \-1 upon errors.
-+The list must be freed using the
- .BR freeconary (3)
- function.
- 
-@@ -79,8 +95,9 @@ function and applies the specified level
- .BR get_default_context_with_role ()
- is the same as
- .BR get_default_context ()
--but only returns a context with the specified role, returning \-1 if no
--such context is reachable for the user.
-+but only returns a context with the specified role,
-+returning \-1
-+if no such context is reachable for the user.
- 
- .BR get_default_context_with_rolelevel ()
- invokes the
-@@ -88,14 +105,16 @@ invokes the
- function and applies the specified level.
- 
- .BR query_user_context ()
--takes a list of contexts, queries the user via stdin/stdout as to which context
--they want, and returns a new context as selected by the user (which has to be
--freed with
-+takes a list of contexts,
-+queries the user via stdin/stdout as to which context they want,
-+and returns a new context as selected by the user
-+(which has to be freed with
- .BR freecon (3)).
- 
- .BR manual_user_enter_context ()
- allows the user to manually enter a context as a fallback if a list of
--authorized contexts could not be obtained. Caller must free via
-+authorized contexts could not be obtained.
-+Caller must free via
- .BR freecon (3).
- 
- .BR get_default_type ()
-@@ -103,7 +122,8 @@ Get the default type (domain) for
- .I role
- and set
- .I type
--to refer to it, which has to be freed with free.
-+to refer to it,
-+which has to be freed with free.
- .
- .SH "RETURN VALUE"
- .BR get_ordered_context_list ()
-@@ -113,7 +133,7 @@ return the number of contexts in the lis
- The other functions return 0 for success or \-1 for errors.
- .
- .SH "SEE ALSO"
--.ad l
-+.na
- .nh
- .BR selinux (8),
- .BR freeconary (3),
-Index: libselinux-3.7/man/man3/getseuserbyname.3
-===================================================================
---- libselinux-3.7.orig/man/man3/getseuserbyname.3
-+++ libselinux-3.7/man/man3/getseuserbyname.3
+diff --git a/man/man3/getseuserbyname.3 b/man/man3/getseuserbyname.3
+index c231e65..00964fd 100644
+--- a/man/man3/getseuserbyname.3
++++ b/man/man3/getseuserbyname.3
 @@ -1,25 +1,27 @@
 -.TH "getseuserbyname" "3" "29 September 2005" "dwalsh@redhat.com" "SELinux API documentation"
 -.SH "NAME"
@@ -489,10 +505,10 @@ Index: libselinux-3.7/man/man3/getseuserbyname.3
  On success, 0 is returned.
  On failure, \-1 is returned and
  .I errno
-Index: libselinux-3.7/man/man3/init_selinuxmnt.3
-===================================================================
---- libselinux-3.7.orig/man/man3/init_selinuxmnt.3
-+++ libselinux-3.7/man/man3/init_selinuxmnt.3
+diff --git a/man/man3/init_selinuxmnt.3 b/man/man3/init_selinuxmnt.3
+index 6c83698..1a378c5 100644
+--- a/man/man3/init_selinuxmnt.3
++++ b/man/man3/init_selinuxmnt.3
 @@ -1,15 +1,15 @@
 -.TH "init_selinuxmnt" "3" "21 Nov 2009" "" "SELinux API documentation"
 -.SH "NAME"
@@ -525,10 +541,10 @@ Index: libselinux-3.7/man/man3/init_selinuxmnt.3
  This manual page has been written by Guido Trentalancia <guido@trentalancia.com>
  .
  .SH "SEE ALSO"
-Index: libselinux-3.7/man/man3/is_selinux_enabled.3
-===================================================================
---- libselinux-3.7.orig/man/man3/is_selinux_enabled.3
-+++ libselinux-3.7/man/man3/is_selinux_enabled.3
+diff --git a/man/man3/is_selinux_enabled.3 b/man/man3/is_selinux_enabled.3
+index 16b7cd3..075f227 100644
+--- a/man/man3/is_selinux_enabled.3
++++ b/man/man3/is_selinux_enabled.3
 @@ -1,25 +1,31 @@
 -.TH "is_selinux_enabled" "3" "7 Mar 2010" "russell@coker.com.au" "SELinux API documentation"
 -.SH "NAME"
@@ -571,10 +587,10 @@ Index: libselinux-3.7/man/man3/is_selinux_enabled.3
  .SH "SEE ALSO"
 -.BR selinux "(8)"
 +.BR selinux (8)
-Index: libselinux-3.7/man/man3/matchpathcon.3
-===================================================================
---- libselinux-3.7.orig/man/man3/matchpathcon.3
-+++ libselinux-3.7/man/man3/matchpathcon.3
+diff --git a/man/man3/matchpathcon.3 b/man/man3/matchpathcon.3
+index 88bc47c..374f892 100644
+--- a/man/man3/matchpathcon.3
++++ b/man/man3/matchpathcon.3
 @@ -1,23 +1,27 @@
 -.TH "matchpathcon" "3" "21 November 2009" "stephen.smalley.work@gmail.com" "SELinux API documentation"
 -.SH "NAME"
@@ -611,7 +627,7 @@ Index: libselinux-3.7/man/man3/matchpathcon.3
  .BR selabel_open (3)
  with the
  .B SELABEL_CTX_FILE
-@@ -37,78 +41,88 @@ The remaining description below is for t
+@@ -37,78 +41,88 @@ The remaining description below is for the legacy interface.
  .BR matchpathcon_init ()
  loads the file contexts configuration specified by
  .I path
@@ -731,7 +747,7 @@ Index: libselinux-3.7/man/man3/matchpathcon.3
  defaulting to the active file contexts configuration.
  
  .BR matchpathcon_index ()
-@@ -124,4 +138,8 @@ Returns zero on success or \-1 otherwise
+@@ -124,4 +138,8 @@ Returns zero on success or \-1 otherwise.
  .SH "SEE ALSO"
  .ad l
  .nh
@@ -741,10 +757,10 @@ Index: libselinux-3.7/man/man3/matchpathcon.3
 +matchpathcon_filespec_add "(3), " matchpathcon_checkmatches "(3), " freecon \
 +"(3), " setfilecon "(3), " setfscreatecon (3)
 +
-Index: libselinux-3.7/man/man3/matchpathcon_checkmatches.3
-===================================================================
---- libselinux-3.7.orig/man/man3/matchpathcon_checkmatches.3
-+++ libselinux-3.7/man/man3/matchpathcon_checkmatches.3
+diff --git a/man/man3/matchpathcon_checkmatches.3 b/man/man3/matchpathcon_checkmatches.3
+index 8e1cd2a..934e08f 100644
+--- a/man/man3/matchpathcon_checkmatches.3
++++ b/man/man3/matchpathcon_checkmatches.3
 @@ -1,19 +1,24 @@
 -.TH "matchpathcon_checkmatches" "3" "21 November 2009" "stephen.smalley.work@gmail.com" "SELinux API documentation"
 -.SH "NAME"
@@ -779,7 +795,7 @@ Index: libselinux-3.7/man/man3/matchpathcon_checkmatches.3
  .BR matchpathcon_checkmatches ()
  checks whether any specification has no matches and reports them.
  The
-@@ -26,15 +31,17 @@ maintains an association between an inod
+@@ -26,15 +31,17 @@ maintains an association between an inode
  and a specification index
  .IR specind ,
  and checks whether a conflicting specification is already associated
@@ -803,7 +819,7 @@ Index: libselinux-3.7/man/man3/matchpathcon_checkmatches.3
  .sp
  .BR matchpathcon_filespec_eval ()
  displays statistics on the hash table usage for the inode associations.
-@@ -43,6 +50,7 @@ displays statistics on the hash table us
+@@ -43,6 +50,7 @@ displays statistics on the hash table usage for the inode associations.
  Returns zero on success or \-1 otherwise.
  .
  .SH "SEE ALSO"

@@ -4,24 +4,24 @@ set -eu
 
 
 if [ ! -f /etc/selinux/config ]; then
-    return
+    exit 0
 fi
 
 if ! command -v sefcontext_compile >/dev/null 2>&1; then
     echo "Pre-compiled SELinux file contexts not built: sefcontext_compile not found (missing package selinux-utils)"
-    return
+    exit 0
 fi
 
 . /etc/selinux/config
 
-if [ -z ${SELINUXTYPE+x} ]; then
+if [ -z "${SELINUXTYPE+x}" ]; then
     echo "Pre-compiled SELinux file contexts not built: SELINUXTYPE not defined in /etc/selinux/config"
-    return
+    exit 0
 fi
 
 if [ ! -d "/etc/selinux/$SELINUXTYPE/contexts/files" ]; then
-    echo "Pre-compiled SELinux file contexts not build: configuration for policy $SELINUXTYPE not found"
-    return
+    echo "Pre-compiled SELinux file contexts not built: configuration for policy $SELINUXTYPE not found"
+    exit 0
 fi
 
 if [ -f "/etc/selinux/$SELINUXTYPE/contexts/files/file_contexts" ]; then
