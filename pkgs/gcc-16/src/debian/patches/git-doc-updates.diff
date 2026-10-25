@@ -1,7 +1,7 @@
-# DP: updates from the 16 branch upto 20260613 (documentation).
+# DP: updates from the 16 branch upto 20260719 (documentation).
 
 LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
-	6afcc4f6da931eb93f3ab001a0dd9650ea71d1ea 1997e95e4e8da1a7a2c9dd6712730bf6f12cd99b \
+	6afcc4f6da931eb93f3ab001a0dd9650ea71d1ea 6948a8396d8271a194c201e0ed362e15616dc1dc \
 	| awk '/^diff .*\.texi/ {skip=0; print; next} /^diff / {skip=1; next} skip==0' \
         | grep -v -E '^(diff|index)'
 
@@ -775,7 +775,677 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  them will raise @code{Constraint_Error}. If command line access is
 --- a/src/gcc/doc/extend.texi
 +++ b/src/gcc/doc/extend.texi
-@@ -29051,6 +29051,18 @@ AMD Family 1ah Zen version 5.
+@@ -1618,13 +1618,13 @@ The preprocessor symbols @code{__SEG_FS} and @code{__SEG_GS} are
+ defined when these address spaces are supported.
+ @end table
+ 
++@node Attributes
+ @anchor{Function Attributes}
+ @anchor{Variable Attributes}
+ @anchor{Type Attributes}
+ @anchor{Label Attributes}
+ @anchor{Enumerator Attributes}
+ @anchor{Statement Attributes}
+-@node Attributes
+ @section Attributes Specific to GCC
+ @cindex attributes
+ @cindex declaring attributes
+@@ -1807,10 +1807,10 @@ ordinary functions or C++ member functions.
+ * Attribute Syntax::            Formal syntax for traditional GNU attributes.
+ @end menu
+ 
++@node Common Attributes
+ @anchor{Common Function Attributes}
+ @anchor{Common Variable Attributes}
+ @anchor{Common Type Attributes}
+-@node Common Attributes
+ @subsection Common Attributes
+ 
+ The following GNU-specific attributes are supported on most targets in
+@@ -5731,8 +5731,8 @@ The default for the attribute is controlled by @option{-fzero-call-used-regs}.
+ * Xstormy16 Attributes::
+ @end menu
+ 
+-@anchor{AArch64 Function Attributes}
+ @node AArch64 Attributes
++@anchor{AArch64 Function Attributes}
+ @subsubsection AArch64 Attributes
+ 
+ The following target-specific function attributes are available for the
+@@ -5954,8 +5954,8 @@ architectural feature rules specified above.
+ 
+ @end table
+ 
+-@anchor{AMD GCN Function Attributes}
+ @node AMD GCN Attributes
++@anchor{AMD GCN Function Attributes}
+ @subsubsection AMD GCN Attributes
+ 
+ These attributes are supported by the AMD GCN back end:
+@@ -6047,10 +6047,10 @@ OpenACC/OpenMP).
+ @end table
+ @end table
+ 
++@node ARC Attributes
+ @anchor{ARC Function Attributes}
+ @anchor{ARC Type Attributes}
+ @anchor{ARC Variable Attributes}
+-@node ARC Attributes
+ @subsubsection ARC Attributes
+ 
+ These attributes are supported by the ARC back end:
+@@ -6145,9 +6145,9 @@ without involving the additional semantic implications of
+ loads and stores of data declared @code{uncached}.
+ @end table
+ 
++@node ARM Attributes
+ @anchor{ARM Function Attributes}
+ @anchor{ARM Type Attributes}
+-@node ARM Attributes
+ @subsubsection ARM Attributes
+ 
+ These attributes are supported for ARM targets:
+@@ -6326,9 +6326,9 @@ most Symbian OS code uses @code{__declspec}.)
+ 
+ @end table
+ 
++@node AVR Attributes
+ @anchor{AVR Function Attributes}
+ @anchor{AVR Variable Attributes}
+-@node AVR Attributes
+ @subsubsection AVR Attributes
+ 
+ These attributes are supported by the AVR back end:
+@@ -6671,9 +6671,9 @@ See also the @option{-mabsdata} @ref{AVR Options,command-line option}.
+ 
+ @end table
+ 
++@node Blackfin Attributes
+ @anchor{Blackfin Function Attributes}
+ @anchor{Blackfin Variable Attributes}
+-@node Blackfin Attributes
+ @subsubsection Blackfin Attributes
+ 
+ These attributes are supported by the Blackfin back end:
+@@ -6789,9 +6789,9 @@ the specific section named @code{.l1.data.A}. Those with @code{l1_data_B}
+ attribute are put into the specific section named @code{.l1.data.B}.
+ @end table
+ 
++@node BPF Attributes
+ @anchor{BPF Function Attributes}
+ @anchor{BPF Type Attributes}
+-@node BPF Attributes
+ @subsubsection BPF Attributes
+ 
+ These attributes are supported by the BPF back end:
+@@ -6823,8 +6823,8 @@ of that type. The behavior is equivalent to manually
+ wrapping every such access with @code{__builtin_preserve_access_index}.
+ @end table
+ 
+-@anchor{C-SKY Function Attributes}
+ @node C-SKY Attributes
++@anchor{C-SKY Function Attributes}
+ @subsubsection C-SKY Attributes
+ 
+ These attributes are supported by the C-SKY back end:
+@@ -6847,8 +6847,8 @@ are ignored with a warning otherwise.  @xref{C-SKY Options}.
+ @end table
+ 
+ 
+-@anchor{Epiphany Function Attributes}
+ @node Epiphany Attributes
++@anchor{Epiphany Function Attributes}
+ @subsubsection Epiphany Attributes
+ 
+ These attributes are supported by the Epiphany back end:
+@@ -6929,9 +6929,9 @@ command-line switch and @code{#pragma long_calls} settings.
+ @end table
+ 
+ 
++@node H8/300 Attributes
+ @anchor{H8/300 Function Attributes}
+ @anchor{H8/300 Variable Attributes}
+-@node H8/300 Attributes
+ @subsubsection H8/300 Attributes
+ 
+ These attributes are available for H8/300 targets:
+@@ -7006,9 +7006,9 @@ on data in the tiny data section.  Note the tiny data area is limited to
+ slightly under 32KB of data.
+ @end table
+ 
++@node IA-64 Attributes
+ @anchor{IA-64 Function Attributes}
+ @anchor{IA-64 Variable Attributes}
+-@node IA-64 Attributes
+ @subsubsection IA-64 Attributes
+ 
+ These attributes are supported on IA-64 targets:
+@@ -7053,9 +7053,9 @@ independent and hence this attribute must not be used for objects
+ defined by shared libraries.
+ @end table
+ 
++@node LoongArch Attributes
+ @anchor{LoongArch Function Attributes}
+ @anchor{LoongArch Variable Attributes}
+-@node LoongArch Attributes
+ @subsubsection LoongArch Attributes
+ 
+ The following attributes are supported by the LoongArch back end:
+@@ -7383,8 +7383,8 @@ specially.  Currently the only supported values of @var{name} are
+ @code{normal} and @code{extreme}.
+ @end table
+ 
+-@anchor{M32C Function Attributes}
+ @node M32C Attributes
++@anchor{M32C Function Attributes}
+ @subsubsection M32C Attributes
+ 
+ These attributes are supported by the M32C back end:
+@@ -7455,9 +7455,9 @@ function entry and exit sequences suitable for use in an interrupt handler
+ when this attribute is present.
+ @end table
+ 
++@node M32R/D Attributes
+ @anchor{M32R/D Function Attributes}
+ @anchor{M32R/D Variable Attributes}
+-@node M32R/D Attributes
+ @subsubsection M32R/D Attributes
+ 
+ These attributes are supported by the M32R/D back end:
+@@ -7497,8 +7497,8 @@ and may not be reachable with the @code{bl} instruction (the compiler
+ generates the much slower @code{seth/add3/jl} instruction sequence).
+ @end table
+ 
+-@anchor{m68k Function Attributes}
+ @node m68k Attributes
++@anchor{m68k Function Attributes}
+ @subsubsection m68k Attributes
+ 
+ These attributes are supported by the m68k back end:
+@@ -7526,8 +7526,8 @@ sequences and replaces the return instruction with a @code{sleep}
+ instruction.  This attribute is available only on fido.
+ @end table
+ 
+-@anchor{MicroBlaze Function Attributes}
+ @node MicroBlaze Attributes
++@anchor{MicroBlaze Function Attributes}
+ @subsubsection MicroBlaze Attributes
+ 
+ These attributes are supported on MicroBlaze targets:
+@@ -7572,9 +7572,9 @@ emits appropriate prologue code and generates a return from the handler
+ using @code{rtid} instead of @code{rtsd}.
+ @end table
+ 
++@node Microsoft Windows Attributes
+ @anchor{Microsoft Windows Function Attributes}
+ @anchor{Microsoft Windows Variable Attributes}
+-@node Microsoft Windows Attributes
+ @subsubsection Microsoft Windows Attributes
+ 
+ @cindex @code{__declspec}
+@@ -7733,8 +7733,8 @@ linkers work.  See @code{section} attribute for more information.
+ The @code{shared} attribute is only available on Microsoft Windows@.
+ @end table
+ 
+-@anchor{MIPS Function Attributes}
+ @node MIPS Attributes
++@anchor{MIPS Function Attributes}
+ @subsubsection MIPS Attributes
+ 
+ These attributes are supported by the MIPS back end:
+@@ -7903,9 +7903,9 @@ The function can read the instruction stream in a pc-relative mode.
+ If there is no argument supplied, the default of @code{"yes"} applies.
+ @end table
+ 
++@node MSP430 Attributes
+ @anchor{MSP430 Function Attributes}
+ @anchor{MSP430 Variable Attributes}
+-@node MSP430 Attributes
+ @subsubsection MSP430 Attributes
+ 
+ These attributes are supported by the MSP430 back end:
+@@ -8009,8 +8009,8 @@ is used, and the @code{.lower} prefix is not added.
+ 
+ @end table
+ 
+-@anchor{NDS32 Function Attributes}
+ @node NDS32 Attributes
++@anchor{NDS32 Function Attributes}
+ @subsubsection NDS32 Attributes
+ 
+ These attributes are supported by the NDS32 back end:
+@@ -8074,9 +8074,9 @@ Provide a user-defined function to handle warm reset exception.
+ @end table
+ @end table
+ 
++@node Nvidia PTX Attributes
+ @anchor{Nvidia PTX Function Attributes}
+ @anchor{Nvidia PTX Variable Attributes}
+-@node Nvidia PTX Attributes
+ @subsubsection Nvidia PTX Attributes
+ 
+ These attributes are supported by the Nvidia PTX back end:
+@@ -8103,10 +8103,10 @@ within one thread block refer to the same instance of the variable.
+ The runtime does not initialize variables in this memory space.
+ @end table
+ 
++@node PowerPC Attributes
+ @anchor{PowerPC Function Attributes}
+ @anchor{PowerPC Type Attributes}
+ @anchor{PowerPC Variable Attributes}
+-@node PowerPC Attributes
+ @subsubsection PowerPC Attributes
+ 
+ These attributes are supported by the PowerPC back end:
+@@ -8335,8 +8335,8 @@ These attributes mainly are intended to support the @code{__vector},
+ @code{__pixel}, and @code{__bool} AltiVec keywords.
+ @end table
+ 
+-@anchor{RISC-V Function Attributes}
+ @node RISC-V Attributes
++@anchor{RISC-V Function Attributes}
+ @subsubsection RISC-V Attributes
+ 
+ These attributes are supported by the RISC-V back end:
+@@ -8449,9 +8449,9 @@ and @code{zbb} extensions and tunes it for @code{rocket}.
+ 
+ @end table
+ 
++@node RL78 Attributes
+ @anchor{RL78 Function Attributes}
+ @anchor{RL78 Variable Attributes}
+-@node RL78 Attributes
+ @subsubsection RL78 Attributes
+ 
+ These attributes are supported by the RL78 back end:
+@@ -8482,8 +8482,8 @@ which can be accessed more efficiently than the default memory region.
+ 
+ @end table
+ 
+-@anchor{RX Function Attributes}
+ @node RX Attributes
++@anchor{RX Function Attributes}
+ @subsubsection RX Attributes
+ 
+ These attributes are supported by the RX back end:
+@@ -8539,8 +8539,8 @@ function (i.e.@: it retains the normal C function calling ABI).  See the
+ @code{interrupt} attribute for a description of its arguments.
+ @end table
+ 
+-@anchor{S/390 Function Attributes}
+ @node S/390 Attributes
++@anchor{S/390 Function Attributes}
+ @subsubsection S/390 Attributes
+ 
+ These attributes are supported on the S/390:
+@@ -8609,8 +8609,8 @@ change any feature macros.  For example,
+ does not undefine the @code{__VEC__} macro.
+ @end table
+ 
+-@anchor{SH Function Attributes}
+ @node SH Attributes
++@anchor{SH Function Attributes}
+ @subsubsection SH Attributes
+ 
+ These attributes are supported on the SH family of processors:
+@@ -8706,16 +8706,16 @@ On SH targets this attribute is similar to @code{interrupt_handler}
+ but it does not save and restore all registers.
+ @end table
+ 
+-@anchor{Symbian OS Function Attributes}
+ @node Symbian OS Attributes
++@anchor{Symbian OS Function Attributes}
+ @subsubsection Symbian OS Attributes
+ 
+ @xref{Microsoft Windows Attributes}, for discussion of the
+ @code{dllexport} and @code{dllimport} attributes.
+ 
++@node V850 Attributes
+ @anchor{V850 Function Attributes}
+ @anchor{V850 Variable Attributes}
+-@node V850 Attributes
+ @subsubsection V850 Attributes
+ 
+ The V850 back end supports these attributes:
+@@ -8754,8 +8754,8 @@ Use it to explicitly place a variable in the first 32 kilobytes
+ of memory.
+ @end table
+ 
+-@anchor{Visium Function Attributes}
+ @node Visium Attributes
++@anchor{Visium Function Attributes}
+ @subsubsection Visium Attributes
+ 
+ These attributes are supported by the Visium back end:
+@@ -8771,10 +8771,10 @@ function entry and exit sequences suitable for use in an interrupt handler
+ when this attribute is present.
+ @end table
+ 
++@node x86 Attributes
+ @anchor{x86 Function Attributes}
+ @anchor{x86 Type Attributes}
+ @anchor{x86 Variable Attributes}
+-@node x86 Attributes
+ @subsubsection x86 Attributes
+ 
+ These attributes are supported by the x86 back end:
+@@ -9782,9 +9782,9 @@ see @ref{x86 Options}, for details of how structure layout is affected.
+ @end table
+ 
+ 
++@node Xstormy16 Attributes
+ @anchor{Xstormy16 Function Attributes}
+ @anchor{Xstormy16 Variable Attributes}
+-@node Xstormy16 Attributes
+ @subsubsection Xstormy16 Attributes
+ 
+ These attributes are supported by the Xstormy16 back end:
+@@ -23948,6 +23948,29 @@ defined, then the @code{__builtin_set_fpscr_rn} built-in returns the FPSCR
+ fields.  If not defined, the @code{__builtin_set_fpscr_rn} does not return a
+ value.  If the @option{-msoft-float} option is used, the
+ @code{__builtin_set_fpscr_rn} built-in will not return a value.
++@defbuiltin{bool __builtin_ppc_atomic_cas_local (@var{type} *@var{ptr}, @var{type} *@var{expected}, @var{type} *@var{desired}, bool @var{weak}, int @var{success_memorder}, int @var{failure_memorder})}
++This built-in function implements a PowerPC-specific atomic compare and
++exchange operation.  It behaves identically to the generic
++@code{__atomic_compare_exchange} built-in function, with one key difference:
++it uses an EH (Extended Hint) value of 1 in the @code{lbarx}, @code{lharx},
++@code{lwarx}, or @code{ldarx} instruction (load-and-reserve indexed).
++
++The EH bit provides a hint to the processor that the program will perform a
++subsequent store to the specified location.  This hint helps optimize lock
++contention on PowerPC systems by keeping the lock cacheline in the local
++processor longer, reducing performance penalties from cache coherence protocol
++traffic.
++
++For details on the behavior and semantics of the arguments, refer to the
++@code{__atomic_compare_exchange} documentation.
++
++The first three pointer arguments (@var{ptr}, @var{expected}, and
++@var{desired}) must point to complete types, and the size of the types they
++point to must be the same and known at compile time.  The types themselves may
++differ.  The supported type sizes are 1, 2, 4, 8, or 16 bytes.
++
++@enddefbuiltin
++
+ 
+ @node Basic PowerPC Built-in Functions Available on ISA 2.05
+ @subsubsection Basic PowerPC Built-in Functions Available on ISA 2.05
+@@ -24696,6 +24719,7 @@ The PVIPR documents the following overloaded functions:
+ * PowerPC AltiVec Built-in Functions Available on ISA 2.07::
+ * PowerPC AltiVec Built-in Functions Available on ISA 3.0::
+ * PowerPC AltiVec Built-in Functions Available on ISA 3.1::
++* PowerPC AltiVec/VSX Built-in Functions Available on Future ISA::
+ @end menu
+ 
+ @node PowerPC AltiVec Built-in Functions on ISA 2.05
+@@ -26693,6 +26717,105 @@ int vec_any_le (vector signed __int128, vector signed __int128);
+ int vec_any_le (vector unsigned __int128, vector unsigned __int128);
+ @end smallexample
+ 
++@subsubheading PowerPC Elliptic Curve Cryptography Assist Built-in-Functions
++
++The following additional built-in functions may be available for the
++PowerPC family of processors, on Future ISA.
++These instructions provide hardware acceleration for Elliptic Curve
++Cryptography (ECC) operations, specifically optimized for P-256 and P-384
++elliptic curves.
++
++The ECC built-in functions are organized into five categories:
++multiply-multiply operations, scaled multiply-sum operations,
++quadword add/subtract operations, merge operations and rebase operations.
++
++@smallexample
++vector unsigned __int128
++__builtin_vsx_xxmulmul (vector unsigned long long ,
++                        vector unsigned long long ,
++                        const int);
++vector unsigned __int128
++__builtin_vsx_xxmulmulhiadd (vector unsigned __int128 ,
++                             vector unsigned long long ,
++                             vector unsigned long long ,
++                             const int ,
++                             const int ,
++                             const int);
++vector unsigned __int128
++__builtin_vsx_xxmulmulloadd (vector unsigned __int128 ,
++                             vector unsigned long long ,
++                             vector unsigned long long ,
++                             const int ,
++                             const int);
++vector unsigned __int128
++__builtin_vsx_xxssumudm (vector unsigned __int128 ,
++                         vector unsigned long long ,
++                         vector unsigned long long ,
++                         const int);
++vector unsigned __int128
++__builtin_vsx_xxssumudmc (vector unsigned __int128 ,
++                          vector unsigned long long ,
++                          vector unsigned long long ,
++                          const int);
++vector unsigned __int128
++__builtin_vsx_xxssumudmcext (vector unsigned long long ,
++                             vector unsigned long long ,
++                             vector unsigned __int128 ,
++                             const int);
++vector unsigned __int128
++__builtin_vsx_xsaddadduqm (vector unsigned __int128 ,
++                           vector unsigned __int128 ,
++                           vector unsigned __int128);
++vector unsigned __int128
++__builtin_vsx_xsaddaddsuqm (vector unsigned __int128 ,
++                            vector unsigned __int128 ,
++                            vector unsigned __int128);
++vector unsigned __int128
++__builtin_vsx_xsaddsubuqm (vector unsigned __int128 ,
++                           vector unsigned __int128 ,
++                           vector unsigned __int128);
++vector unsigned __int128
++__builtin_vsx_xsaddsubsuqm (vector unsigned __int128 ,
++                            vector unsigned __int128 ,
++                            vector unsigned __int128);
++vector unsigned __int128
++__builtin_vsx_xsmerge2t1uqm (vector unsigned __int128 ,
++                             vector unsigned __int128);
++vector unsigned __int128
++__builtin_vsx_xsmerge2t2uqm (vector unsigned __int128 ,
++                             vector unsigned __int128);
++vector unsigned __int128
++__builtin_vsx_xsmerge2t3uqm (vector unsigned __int128 ,
++                             vector unsigned __int128);
++vector unsigned __int128
++__builtin_vsx_xsmerge3t1uqm (vector unsigned __int128 ,
++                             vector unsigned __int128 ,
++                             vector unsigned __int128);
++vector unsigned __int128
++__builtin_vsx_xsrebase2t1uqm (vector unsigned __int128 ,
++                              vector unsigned __int128);
++vector unsigned __int128
++__builtin_vsx_xsrebase2t2uqm (vector unsigned __int128 ,
++                              vector unsigned __int128);
++vector unsigned __int128
++__builtin_vsx_xsrebase2t3uqm (vector unsigned __int128 ,
++                              vector unsigned __int128);
++vector unsigned __int128
++__builtin_vsx_xsrebase2t4uqm (vector unsigned __int128 ,
++                              vector unsigned __int128);
++vector unsigned __int128
++__builtin_vsx_xsrebase3t1uqm (vector unsigned __int128 ,
++                              vector unsigned __int128 ,
++                              vector unsigned __int128);
++vector unsigned __int128
++__builtin_vsx_xsrebase3t2uqm (vector unsigned __int128 ,
++                              vector unsigned __int128 ,
++                              vector unsigned __int128);
++vector unsigned __int128
++__builtin_vsx_xsrebase3t3uqm (vector unsigned __int128 ,
++                              vector unsigned __int128 ,
++                              vector unsigned __int128);
++@end smallexample
+ 
+ The following instances are extension of the existing overloaded built-ins
+ @code{vec_sld}, @code{vec_sldw}, @code{vec_slo}, @code{vec_sro}, @code{vec_srl}
+@@ -26729,6 +26852,76 @@ vector unsigned char);
+ vector unsigned char);
+ @end smallexample
+ 
++@node PowerPC AltiVec/VSX Built-in Functions Available on Future ISA
++@subsubsection PowerPC AltiVec/VSX Built-in Functions Available on Future ISA
++
++The following additional built-in functions are available for the
++PowerPC family of processors, starting with Future ISA.
++
++@subsubheading PowerPC Advanced Encryption Standard (AES) Acceleration Built-in Functions
++
++Future ISA of the PowerPC may add new instructions for accelerating AES
++algorithm. GCC provides support for these new instructions through the
++following built-in functions. The third argument to
++@var{__builtin_aes_encrypt_paired} and @var{__builtin_aes_decrypt_paired} must
++be a constant integer that is 0, 1 or 2. The values correspond to 128, 192 and
++256 bit AES encryption/decryption respectively. The third argument to
++@var{__builtin_galois_field_mult} must be a constant integer that is 0 or 1.
++The values correspond to gcm and xts variant respectively.
++
++@smallexample
++__vector_pair  __builtin_aes_encrypt_paired (__vector_pair, __vector_pair,
++                                             int);
++
++__vector_pair  __builtin_aes128_encrypt_paired (__vector_pair, __vector_pair);
++
++__vector_pair  __builtin_aes192_encrypt_paired (__vector_pair, __vector_pair);
++
++__vector_pair  __builtin_aes256_encrypt_paired (__vector_pair, __vector_pair);
++
++__vector_pair  __builtin_aes_decrypt_paired (__vector_pair, __vector_pair,
++                                             int);
++
++__vector_pair  __builtin_aes128_decrypt_paired (__vector_pair, __vector_pair);
++
++__vector_pair  __builtin_aes192_decrypt_paired (__vector_pair, __vector_pair);
++
++__vector_pair  __builtin_aes256_decrypt_paired (__vector_pair, __vector_pair);
++
++__vector_pair  __builtin_aes_genlastkey_paired (__vector_pair, int);
++
++__vector_pair  __builtin_aes128_genlastkey_paired (__vector_pair);
++
++__vector_pair  __builtin_aes192_genlastkey_paired (__vector_pair);
++
++__vector_pair  __builtin_aes256_genlastkey_paired (__vector_pair);
++
++vec_t __builtin_galois_field_mult (vec_t, vec_t, int);
++
++vec_t __builtin_galois_field_mult_gcm (vec_t, vec_t);
++
++vec_t __builtin_galois_field_mult_xts (vec_t, vec_t);
++@end smallexample
++
++@subsubheading PowerPC Vector Integer Multiply High Built-in Functions
++
++Future PowerPC processors may add new instructions for vector integer
++multiply high for halfword. GCC provides support for these instructions through
++the following built-in functions.
++
++@findex vec_mulh
++@smallexample
++@exdent vector signed short
++@exdent vec_mulh (vector signed short @var{a}, vector signed short @var{b});
++@exdent vector unsigned short
++@exdent vec_mulh (vector unsigned short @var{a}, vector unsigned short @var{b});
++@end smallexample
++
++For each integer value @code{i} from 0 to 7, do the following. The integer
++value in halfword element @code{i} of @var{a} is multiplied by the integer
++value in halfword element @code{i} of @var{b}. The high-order 16 bits of the
++32-bit product are placed into halfword element @code{i} of the vector returned.
++
+ @node PowerPC Hardware Transactional Memory Built-in Functions
+ @subsection PowerPC Hardware Transactional Memory Built-in Functions
+ GCC provides two interfaces for accessing the Hardware Transactional
+@@ -26965,11 +27158,19 @@ uint32_t amo_lwat_and (uint32_t *, uint32_t);
+ uint32_t amo_lwat_umax (uint32_t *, uint32_t);
+ uint32_t amo_lwat_umin (uint32_t *, uint32_t);
+ uint32_t amo_lwat_swap (uint32_t *, uint32_t);
++uint32_t amo_lwat_cas_neq (uint32_t *, uint32_t, uint32_t);
++uint32_t amo_lwat_inc_eq (uint32_t *);
++uint32_t amo_lwat_inc_bounded (uint32_t *);
++uint32_t amo_lwat_dec_bounded (uint32_t *);
+ 
+ int32_t amo_lwat_sadd (int32_t *, int32_t);
+ int32_t amo_lwat_smax (int32_t *, int32_t);
+ int32_t amo_lwat_smin (int32_t *, int32_t);
+ int32_t amo_lwat_sswap (int32_t *, int32_t);
++int32_t amo_lwat_scas_neq (int32_t *, int32_t, int32_t);
++int32_t amo_lwat_sinc_eq (int32_t *);
++int32_t amo_lwat_sinc_bounded (int32_t *);
++int32_t amo_lwat_sdec_bounded (int32_t *);
+ 
+ uint64_t amo_ldat_add (uint64_t *, uint64_t);
+ uint64_t amo_ldat_xor (uint64_t *, uint64_t);
+@@ -26978,11 +27179,19 @@ uint64_t amo_ldat_and (uint64_t *, uint64_t);
+ uint64_t amo_ldat_umax (uint64_t *, uint64_t);
+ uint64_t amo_ldat_umin (uint64_t *, uint64_t);
+ uint64_t amo_ldat_swap (uint64_t *, uint64_t);
++uint64_t amo_ldat_cas_neq (uint64_t *, uint64_t, uint64_t);
++uint64_t amo_ldat_inc_eq (uint64_t *);
++uint64_t amo_ldat_inc_bounded (uint64_t *);
++uint64_t amo_ldat_dec_bounded (uint64_t *);
+ 
+ int64_t amo_ldat_sadd (int64_t *, int64_t);
+ int64_t amo_ldat_smax (int64_t *, int64_t);
+ int64_t amo_ldat_smin (int64_t *, int64_t);
+ int64_t amo_ldat_sswap (int64_t *, int64_t);
++int64_t amo_ldat_scas_neq (int64_t *, int64_t, int64_t);
++int64_t amo_ldat_sinc_eq (int64_t *);
++int64_t amo_ldat_sinc_bounded (int64_t *);
++int64_t amo_ldat_sdec_bounded (int64_t *);
+ 
+ void amo_stwat_add (uint32_t *, uint32_t);
+ void amo_stwat_xor (uint32_t *, uint32_t);
+@@ -26990,10 +27199,12 @@ void amo_stwat_ior (uint32_t *, uint32_t);
+ void amo_stwat_and (uint32_t *, uint32_t);
+ void amo_stwat_umax (uint32_t *, uint32_t);
+ void amo_stwat_umin (uint32_t *, uint32_t);
++void amo_stwat_twin (uint32_t *, uint32_t);
+ 
+ void amo_stwat_sadd (int32_t *, int32_t);
+ void amo_stwat_smax (int32_t *, int32_t);
+ void amo_stwat_smin (int32_t *, int32_t);
++void amo_stwat_stwin (int32_t *, int32_t);
+ 
+ void amo_stdat_add (uint64_t *, uint64_t);
+ void amo_stdat_xor (uint64_t *, uint64_t);
+@@ -27001,10 +27212,30 @@ void amo_stdat_ior (uint64_t *, uint64_t);
+ void amo_stdat_and (uint64_t *, uint64_t);
+ void amo_stdat_umax (uint64_t *, uint64_t);
+ void amo_stdat_umin (uint64_t *, uint64_t);
++void amo_stdat_twin (uint64_t *, uint64_t);
+ 
+ void amo_stdat_sadd (int64_t *, int64_t);
+ void amo_stdat_smax (int64_t *, int64_t);
+ void amo_stdat_smin (int64_t *, int64_t);
++void amo_stdat_stwin (int64_t *, int64_t);
++@end smallexample
++
++Future ISA of the PowerPC added new atomic memory operation (AMO) instructions.
++
++The AMO functions described in this section may be available on future PowerPC
++processors. At present, these functions exist to allow testing of new
++instructions. There is no guarantee that these instructions will actually be
++implemented.
++
++The functions supported are:
++
++@smallexample
++#include <amo.h>
++
++uint32_t amo_lwat_cas_eq  (uint32_t *, uint32_t, uint32_t);
++int32_t  amo_lwat_scas_eq (int32_t *, int32_t, int32_t);
++uint64_t amo_ldat_cas_eq  (uint64_t *, uint64_t, uint64_t);
++int64_t  amo_ldat_scas_eq (int64_t *, int64_t, int64_t);
+ @end smallexample
+ 
+ @node PowerPC Matrix-Multiply Assist Built-in Functions
+@@ -29051,6 +29282,21 @@ AMD Family 1ah Zen version 5.
  
  @item znver6
  AMD Family 1ah Zen version 6.
@@ -791,9 +1461,53 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
 +
 +@item c86-4g-m7
 +HYGON Family 18h model 7 chengdu CPU.
++
++@item c86-4g-m8
++HYGON Family 18h model 8 suzhou CPU.
  @end table
  
  Here is an example:
+--- a/src/gcc/doc/ifn.texi
++++ b/src/gcc/doc/ifn.texi
+@@ -743,7 +743,7 @@ The @code{IFN_VEC_WIDEN_PLUS} set of internal functions directly map to
+ the @code{vec_widen_sadd} and @code{vec_widen_uadd} instruction patterns,
+ depending on the sign of the first argument. The @code{IFN_VEC_WIDEN_PLUS_LO}
+ and @code{IFN_VEC_WIDEN_PLUS_HI} work on the low and high parts of a vector,
+-the @code{IFN_VEC_WIDEN_PLUS_EVEN} and @code {IFN_VEC_WIDEN_PLUS_ODD}
++the @code{IFN_VEC_WIDEN_PLUS_EVEN} and @code{IFN_VEC_WIDEN_PLUS_ODD}
+ functions work on the even and odd elements of a vector.
+ 
+ @cindex @code{IFN_VEC_WIDEN_MINUS} internal function
+@@ -756,7 +756,7 @@ The @code{IFN_VEC_WIDEN_MINUS} set of internal functions directly map to the
+ @code{vec_widen_ssub} and @code{vec_widen_usub} instruction patterns,
+ depending on the sign of the first argument. The @code{IFN_VEC_WIDEN_MINUS_LO}
+ and @code{IFN_VEC_WIDEN_MINUS_HI} work on the low and high parts of a vector,
+-the @code{IFN_VEC_WIDEN_MINUS_EVEN} and @code {IFN_VEC_WIDEN_MINUS_ODD}
++the @code{IFN_VEC_WIDEN_MINUS_EVEN} and @code{IFN_VEC_WIDEN_MINUS_ODD}
+ functions work on the even and odd elements of a vector.
+ 
+ @cindex @code{IFN_VEC_WIDEN_ABD} internal function
+@@ -769,7 +769,7 @@ The @code{IFN_VEC_WIDEN_ABD} set of internal functions directly map to the
+ @code{vec_widen_sabd} and @code{vec_widen_uabd} instruction patterns,
+ depending on the sign of the first argument. The @code{IFN_VEC_WIDEN_ABD_LO}
+ and @code{IFN_VEC_WIDEN_ABD_HI} work on the low and high parts of a vector,
+-the @code{IFN_VEC_WIDEN_ABD_EVEN} and @code {IFN_VEC_WIDEN_ABD_ODD} functions
++the @code{IFN_VEC_WIDEN_ABD_EVEN} and @code{IFN_VEC_WIDEN_ABD_ODD} functions
+ work on the even and odd elements of a vector.
+ 
+ @end table
+@@ -1535,5 +1535,11 @@ The @code{IFN_FLOATTOBITINT} internal function is expanded by the
+ The @code{IFN_BITINTTOFLOAT} internal function is expanded by the
+ @code{expand_BITINTTOFLOAT} function.
+ 
++@cindex @code{IFN_VARYING} internal function
++@item @samp{IFN_VARYING}
++Use @code{IFN_VARYING} as a temporary placeholder for a value whose
++definition is still being built by the current pass.  The pass that creates
++it must replace it before finishing; the verifier rejects any remaining calls.
++
+ @end table
+ 
 --- a/src/gcc/doc/invoke.texi
 +++ b/src/gcc/doc/invoke.texi
 @@ -8319,10 +8319,10 @@ void foo (void)
@@ -809,7 +1523,55 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
    int k = j--;
    (void) k;
    int l = 0; // No warning, l used
-@@ -35391,6 +35391,27 @@ instruction set support.
+@@ -21141,8 +21141,8 @@ problems or, in some cases, to provide workarounds for compiler bugs.
+ for documentation of these internal parameters.
+ @end table
+ 
+-@anchor{Submodel Options}
+ @node Target-Specific Options
++@anchor{Submodel Options}
+ @section Target-Specific Options
+ @cindex submodel options
+ @cindex hardware-specific options
+@@ -21522,7 +21522,7 @@ performance of the code.  Permissible values for this option are:
+ @samp{neoverse-512tvb}, @samp{neoverse-e1}, @samp{neoverse-n1},
+ @samp{neoverse-n2}, @samp{neoverse-v1}, @samp{neoverse-v2}, @samp{grace},
+ @samp{neoverse-v3}, @samp{neoverse-v3ae}, @samp{armagicpu}, @samp{neoverse-n3},
+-@samp{olympus}, @samp{cortex-a725}, @samp{cortex-x925},
++@samp{olympus}, @samp{rigel}, @samp{cortex-a725}, @samp{cortex-x925},
+ @samp{qdf24xx}, @samp{saphira}, @samp{phecda}, @samp{xgene1}, @samp{vulcan},
+ @samp{octeontx}, @samp{octeontx81},  @samp{octeontx83},
+ @samp{octeontx2}, @samp{octeontx2t98}, @samp{octeontx2t96}
+@@ -21935,8 +21935,6 @@ Enable the TIndex Exception-like Vector Extension.
+ Enable the TLBI Domains Extension.
+ @item gcie
+ Enable the GICv5 (Generic Interrupt Controller) CPU Interface Extension.
+-@item mpamv2
+-Enable MPAMv2 system registers.
+ @item lscp
+ Enable the load acquire and store release pair extension.
+ @item mops-go
+@@ -31588,8 +31586,8 @@ Supported values for @var{cpu_type} are @samp{401}, @samp{403},
+ @samp{e6500}, @samp{ec603e}, @samp{G3}, @samp{G4}, @samp{G5},
+ @samp{titan}, @samp{power3}, @samp{power4}, @samp{power5}, @samp{power5+},
+ @samp{power6}, @samp{power6x}, @samp{power7}, @samp{power8},
+-@samp{power9}, @samp{power10}, @samp{power11}, @samp{powerpc}, @samp{powerpc64},
+-@samp{powerpc64le}, @samp{rs64}, and @samp{native}.
++@samp{power9}, @samp{power10}, @samp{power11}, @samp{future}, @samp{powerpc},
++@samp{powerpc64}, @samp{powerpc64le}, @samp{rs64}, and @samp{native}.
+ 
+ @option{-mcpu=powerpc}, @option{-mcpu=powerpc64}, and
+ @option{-mcpu=powerpc64le} specify pure 32-bit PowerPC (either
+@@ -35115,7 +35113,7 @@ MOVDIRI, MOVDIR64B, ENQCMD, CLDEMOTE, PTWRITE, WAITPKG, SERIALIZE, TSXLDTRK,
+ UINTR, AMX-BF16, AMX-TILE, AMX-INT8, AVX-VNNI, AVX512FP16, AVX512BF16, AMX-FP16,
+ PREFETCHI, AMX-COMPLEX, AVX10.1-512, AVX-IFMA, AVX-NE-CONVERT, AVX-VNNI-INT16,
+ AVX-VNNI-INT8, CMPccXADD, SHA512, SM3, SM4, AVX10.2-512, APX_F, AMX-AVX512,
+-AMX-FP8, AMX-TF32, MOVRS and AMX-MOVRS instruction set support.
++AMX-FP8, MOVRS and AMX-MOVRS instruction set support.
+ 
+ @item bonnell
+ @itemx atom
+@@ -35391,6 +35389,36 @@ instruction set support.
  
  @item geode
  AMD Geode embedded processor with MMX and 3DNow!@: instruction set support.
@@ -834,12 +1596,55 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
 +AVX512BW, AVX512VL, AVX512BF16, AVX512VBMI, AVX512VBMI2, GFNI, AVX512VNNI, VAES,
 +AVX512BITALG, AVX512VPOPCNTDQ, AVX512VP2INTERSECT, AVXVNNI, VPCLMULQDQ,
 +WBNOINVD instruction set support.
++
++@item c86-4g-m8
++HYGON c86-4g-m8 CPU with x86-64, MMX, SSE, SSE2, SSE3, SSE4A, CX16, ABM, SSSE3,
++SSE4.1, SSE4.2, AES, PCLMUL, AVX, AVX2, BMI, BMI2, F16C, FMA, PRFCHW, FXSR, SHA,
++XSAVE, XSAVEOPT, XSAVEC, FSGSBASE, RDRND, MOVBE, MWAITX, ADX, RDSEED, CLZERO,
++CLFLUSHOPT, XSAVES, LZCNT, POPCNT, AVX512F, AVX512DQ, AVX512IFMA, AVX512CD,
++AVX512BW, AVX512VL, AVX512BF16, AVX512VBMI, AVX512VBMI2, GFNI, AVX512VNNI, VAES,
++AVX512BITALG, AVX512VPOPCNTDQ, AVX512VP2INTERSECT, AVXVNNI, VPCLMULQDQ,
++WBNOINVD instruction set support.
  @end table
  
  @opindex mtune
+--- a/src/gcc/doc/riscv-mcpu.texi
++++ b/src/gcc/doc/riscv-mcpu.texi
+@@ -60,6 +60,8 @@ by particular CPU name. Permissible values for this option are:
+ 
+ @samp{xt-c920v2},
+ 
++@samp{tt-ascalon-x},
++
+ @samp{tt-ascalon-d8},
+ 
+ @samp{xiangshan-nanhu},
+--- a/src/gcc/doc/riscv-mtune.texi
++++ b/src/gcc/doc/riscv-mtune.texi
+@@ -30,6 +30,8 @@ particular CPU name.  Permissible values for this option are:
+ 
+ @samp{sifive-p600-series},
+ 
++@samp{tt-ascalon-x},
++
+ @samp{tt-ascalon-d8},
+ 
+ @samp{thead-c906},
 --- a/src/gcc/doc/sourcebuild.texi
 +++ b/src/gcc/doc/sourcebuild.texi
-@@ -2351,6 +2351,11 @@ ARM target supporting @code{-mbranch-protection=standard}.
+@@ -2216,6 +2216,11 @@ ARM target supports options to generate instructions from ARMv8.1-M with
+ the M-Profile Vector Extension (MVE). Some multilibs may be incompatible
+ with these options.
+ 
++@item arm_v8_1m_mve_link
++ARM target supports linking programs using the options selected by
++@code{arm_v8_1m_mve_ok}. Some multilibs may be incompatible with these
++options.
++
+ @item arm_v8_1m_mve_fp_ok
+ ARM target supports options to generate instructions from ARMv8.1-M with
+ the Half-precision floating-point instructions (HP), Floating-point Extension
+@@ -2351,6 +2356,11 @@ ARM target supporting @code{-mbranch-protection=standard}.
  @item arm_pacbti_hw
  Test system supports for executing non nop pacbti instructions.
  

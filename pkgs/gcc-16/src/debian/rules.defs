@@ -1003,6 +1003,9 @@ ifeq ($(with_ada),yes)
   enabled_languages += ada
   with_libgnat := yes
   #with_gnatsjlj := yes
+
+  # set once we don't want the alihash to change
+  #fail_on_alihash_mismatch = yes
 endif
 
 # C++ -------------------------
@@ -1287,7 +1290,7 @@ ifneq ($(with_base_only),yes)
     with_m2 := yes
   endif
 endif
-m2_no_cpus = powerpc ppc64 sh4
+m2_no_cpus = sh4
 m2_no_systems =
 ifneq (,$(filter $(DEB_TARGET_ARCH_CPU),$(m2_no_cpus)))
   with_m2 := disabled for cpu $(DEB_TARGET_ARCH_CPU)
@@ -1819,6 +1822,8 @@ ifeq ($(derivative),Ubuntu)
 else ifeq ($(derivative),Debian)
   # test suite times out on the buildds
   check_no_cpus += alpha
+  # for some meaningful build times ...
+  check_no_cpus += riscv64
 endif
 check_no_systems := gnu
 ifneq (,$(filter $(DEB_TARGET_ARCH_CPU),$(check_no_cpus)))

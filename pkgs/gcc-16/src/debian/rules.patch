@@ -188,6 +188,7 @@ debian_patches += \
 	gdc-dynamic-link-phobos \
 	libstdc++-pythondir \
 	gcc-verbose-lto-link \
+	m68k-lra-enable \
 
 ifeq ($(with_ada),yes)
   # debian_patches += ada-verbose
