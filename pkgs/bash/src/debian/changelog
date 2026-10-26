@@ -1,3 +1,9 @@
+bash (5.3-4) unstable; urgency=medium
+
+  * Apply upstream patches 010 - 015.
+
+ -- Matthias Klose <doko@debian.org>  Fri, 04 Sep 2026 10:34:01 +0200
+
 bash (5.3-3) unstable; urgency=medium
 
   * Build with -O1 on sh4 (Adrian Glaubitz). Addresses: #1130485.
