@@ -20,7 +20,7 @@ deb_maint_conf_args +=--disable-jit
 endif
 
 %:
-	dh $@ --parallel --with autoreconf
+	dh $@
 
 override_dh_auto_configure:
 	dh_auto_configure -- $(deb_maint_conf_args)

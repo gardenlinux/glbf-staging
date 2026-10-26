@@ -1,3 +1,39 @@
+pcre2 (10.48-3) unstable; urgency=medium
+
+  * Bump dh compat to 13 (with some changes to rules file)
+
+ -- Matthew Vernon <matthew@debian.org>  Sat, 12 Sep 2026 15:45:16 +0100
+
+pcre2 (10.48-2) unstable; urgency=high
+
+  * remove unnecessary libS logic from pcre2-config.in (closes: #1146381)
+
+ -- Matthew Vernon <matthew@debian.org>  Tue, 01 Sep 2026 12:54:23 +0100
+
+pcre2 (10.48-1) unstable; urgency=high
+
+  * New upstream release
+
+ -- Matthew Vernon <matthew@debian.org>  Mon, 31 Aug 2026 21:37:22 +0100
+
+pcre2 (10.48~rc1-1) experimental; urgency=medium
+
+  * New upstream version (RC, for testing)
+
+ -- Matthew Vernon <matthew@debian.org>  Tue, 25 Aug 2026 16:30:31 +0100
+
+pcre2 (10.47-2) experimental; urgency=medium
+
+  * Undo symbol versioning at least for now (Closes: #1119027)
+
+ -- Matthew Vernon <matthew@debian.org>  Mon, 27 Oct 2025 11:06:43 +0000
+
+pcre2 (10.47-1) experimental; urgency=medium
+
+  * New upstream version (Closes: #902060)
+
+ -- Matthew Vernon <matthew@debian.org>  Tue, 21 Oct 2025 11:09:46 +0100
+
 pcre2 (10.46-1) unstable; urgency=high
 
   * New upstream release to fix CVE-2025-58050 (Closes: #1112278)
