@@ -74,7 +74,7 @@ Date:   Wed Mar 4 02:12:48 2026 +0100
  #include <pthread.h>
  
  #include <pt-internal.h>
-@@ -25,15 +26,22 @@ pthread_cancel (pthread_t t)
+@@ -27,15 +28,22 @@ pthread_cancel (pthread_t t)
  {
    int err = 0;
    struct __pthread *p;
@@ -97,7 +97,7 @@ Date:   Wed Mar 4 02:12:48 2026 +0100
        return 0;
      }
  
-@@ -42,12 +50,14 @@ pthread_cancel (pthread_t t)
+@@ -44,12 +52,14 @@ pthread_cancel (pthread_t t)
    if (p->cancel_state != PTHREAD_CANCEL_ENABLE)
      {
        __pthread_mutex_unlock (&p->cancel_lock);
@@ -113,7 +113,7 @@ Date:   Wed Mar 4 02:12:48 2026 +0100
    else
      {
        if (p->cancel_hook != NULL)
-@@ -57,6 +67,8 @@ pthread_cancel (pthread_t t)
+@@ -59,6 +69,8 @@ pthread_cancel (pthread_t t)
  
        __pthread_mutex_unlock (&p->cancel_lock);
      }
@@ -124,7 +124,7 @@ Date:   Wed Mar 4 02:12:48 2026 +0100
  }
 --- a/htl/pt-internal.h
 +++ b/htl/pt-internal.h
-@@ -289,7 +289,7 @@ libc_hidden_proto (__pthread_wakeup)
+@@ -292,7 +292,7 @@ libc_hidden_proto (__pthread_wakeup)
  
  /* Perform a cancelation.  The CANCEL_LOCK member of the given thread must
     be locked before calling this function, which must unlock it.  */
@@ -157,7 +157,7 @@ Date:   Wed Mar 4 02:12:48 2026 +0100
    __pthread_mutex_unlock (&p->cancel_lock);
 +  HURD_CRITICAL_END;
  
-   if (cancelled && __pthread_exit)
+   if (cancelled)
      __pthread_exit (PTHREAD_CANCELED);
 --- a/htl/pt-setcanceltype.c
 +++ b/htl/pt-setcanceltype.c
@@ -182,7 +182,7 @@ Date:   Wed Mar 4 02:12:48 2026 +0100
    __pthread_mutex_unlock (&p->cancel_lock);
 +  HURD_CRITICAL_END;
  
-   if (cancelled && __pthread_exit)
+   if (cancelled)
      __pthread_exit (PTHREAD_CANCELED);
 --- a/htl/pt-testcancel.c
 +++ b/htl/pt-testcancel.c
@@ -194,7 +194,7 @@ Date:   Wed Mar 4 02:12:48 2026 +0100
  #include <pthread.h>
  
  #include <pt-internal.h>
-@@ -27,9 +28,11 @@ __pthread_testcancel (void)
+@@ -28,9 +29,11 @@ __pthread_testcancel (void)
    struct __pthread *p = _pthread_self ();
    int cancelled;
  

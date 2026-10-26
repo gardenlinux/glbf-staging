@@ -1,20 +1,16 @@
-struct ortentry and struct ifalias req are actually not defined
+struct ortentry is actually not defined
 struct arpreq is defined, but can not be passed to an ioctl on the Hurd.
 so let's make packages not believe these are available.
 
 ---
- sysdeps/mach/hurd/bits/ioctls.h |    6 ++++++
- 1 file changed, 6 insertions(+)
+ sysdeps/mach/hurd/bits/ioctls.h |    2 ++
+ 1 file changed, 2 insertions(+)
 
 --- a/sysdeps/mach/hurd/bits/ioctls.h
 +++ b/sysdeps/mach/hurd/bits/ioctls.h
-@@ -304,12 +306,16 @@
- #define	SIOCGIFMETRIC	_IOWR('i',23, struct ifreq_int)	/* get IF metric */
- #define	SIOCSIFMETRIC	_IOW('i',24, struct ifreq_int)	/* set IF metric */
+@@ -308,10 +308,12 @@
  #define	SIOCDIFADDR	_IOW('i',25, struct ifreq)	/* delete IF addr */
-+#if 0
- #define	SIOCAIFADDR	_IOW('i',26, struct ifaliasreq)	/* add/chg IF alias */
-+#endif
+ /* #define	SIOCAIFADDR	_IOW('i',26, struct ifaliasreq)	 add/chg IF alias */
  
 +#if 0
  #define	SIOCSARP	_IOW('i', 30, struct arpreq)	/* set arp entry */

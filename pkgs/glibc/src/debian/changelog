@@ -1,3 +1,72 @@
+glibc (2.43-3) unstable; urgency=medium
+
+  [ Samuel Thibault ]
+  * debian/testsuite-xfail-debian.mk: Update hurd results.
+  * debian/patches/hurd-i386/submitted-path_mounted.diff: Renamed to
+    git-path_mounted.diff.
+
+  [ Aurelien Jarno ]
+  * debian/patches/git-updates.diff: update from upstream stable branch:
+    - debian/patches/hurd-i386/local-disable-ioctls.diff: rebased.
+    - debian/patches/hurd-i386/submitted-AF_LINK.diff: upstreamed.
+    - debian/patches/hurd-i386/submitted-AF_ROUTE.diff: upstreamed.
+    - Fix a buffer overread in ns_sprintrrf with corrupted RDATA field
+      (CVE-2026-6238).  Closes: #1135231.
+    - Fix an out-of-bounds write in ns_sprintrrf when printing TSIG records
+      (CVE-2026-5435).  Closes: #1135230.
+    - Fix stack overflow in wordexp tilde expansion (CVE-2026-6791).
+    - Cache cpuid results in ld.so for Intel CPUs.
+    - Restore optimized memchr for POWER10.
+  * debian/control.in/libc, debian/rules.d/debhelper.mk: drop the libc6-dev
+    dependency on rpcsvc-proto.
+  * debian/watch: set Git-Mode to shallow.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Mon, 10 Aug 2026 14:19:03 +0200
+
+glibc (2.43-2) experimental; urgency=medium
+
+  [ Samuel Thibault ]
+  * debian/testsuite-xfail-debian.mk: Update hurd results.
+
+  [ Aurelien Jarno ]
+  * debian/patches/git-updates.diff: update from upstream stable branch:
+    - Fix redefinition of 'struct open_how' when cross compiling.
+    - Avoid accessing /sys/kernel/mm files during malloc on arm64.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sat, 28 Mar 2026 12:50:41 +0100
+
+glibc (2.43-1) experimental; urgency=medium
+
+  [ Aurelien Jarno ]
+  * New upstream release:
+    - debian/copyright: update following upstream changes.
+    - debian/symbols.wildcards: add 2.43.
+    - debian/patches/git-updates.diff: update from upstream stable branch.
+    - debian/patches/hurd-i386/local-enable-ldconfig.diff: rebased.
+    - debian/patches/hurd-i386/git-sigreturn-SEGV.diff: upstreamed.
+    - debian/patches/hurd-i386/git-rlimit-as.diff: upstreamed.
+    - debian/patches/hurd-i386/git-run-iconv-test.sh.diff: upstreamed.
+    - debian/patches/hurd-i386/git-elf-ordering.diff: upstreamed.
+    - debian/patches/hurd-i386/git-rename.diff: upstreamed.
+    - debian/patches/hurd-i386/git-signal-SSE-MMX.diff: upstreamed.
+    - debian/patches/hurd-i386/git-sigreturn-xmm.diff: upstreamed.
+    - debian/patches/hurd-i386/git-cancel-stack.diff: upstreamed.
+    - debian/patches/i386/unsubmitted-quiet-ldconfig.diff: rebased.
+    - debian/patches/any/local-asserth-decls.diff: rebased.
+    - debian/patches/any/local-tcsetaddr.diff: rebased.
+    - debian/patches/any/submitted-nptl-invalid-td.patch: drop, obsolete.
+    - debian/patches/any/git-ldd-set-u.diff: upstreamed.
+    - debian/patches/any/git-linux-termios.diff: upstreamed.
+    - debian/patches/hurd-i386/submitted-net.diff: rebased.
+    - debian/patches/hurd-i386/tg-bits_atomic.h_multiple_threads.diff: drop,
+      obsolete.
+    - debian/patches/hurd-i386/local-clock_gettime_MONOTONIC.diff: rebased.
+    - debian/patches/hurd-i386/local-fix-nss.diff: rebased.
+    - debian/libc0.3.symbols.hurd-i386: update following the move of symbols
+      from libpthread.so.0.3 to libc.so.0.3.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Wed, 28 Jan 2026 22:35:15 +0100
+
 glibc (2.42-17) unstable; urgency=medium
 
   [ Aurelien Jarno ]

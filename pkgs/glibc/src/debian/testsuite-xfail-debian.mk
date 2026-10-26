@@ -286,6 +286,12 @@ test-xfail-tst-sprofil = yes
 test-xfail-tst-timer4 = yes
 test-xfail-tst-timer5 = yes
 
+# Needs LFS support
+test-xfail-tst-tzset = yes
+
+# eats ample memory
+tests-unsupported += test-bz22786
+
 # want /proc/self/fd
 # TODO: make them use FD_TO_FILENAME_PREFIX from <arch-fd_to_filename.h>
 test-xfail-tst-if_index-long = yes
@@ -299,12 +305,12 @@ test-xfail-tst-spawn5 = yes
 test-xfail-tst-open-tmpfile = yes
 test-xfail-tst-closedir-leaks = yes
 test-xfail-tst-closedir-leaks-mem = yes
-
-# new in 2.22
-test-xfail-tst-prelink = yes
-
-# new in 2.24
 test-xfail-tst-spawn2 = yes
+test-xfail-tst-freopen2 = yes
+test-xfail-tst-freopen3 = yes
+test-xfail-tst-freopen5 = yes
+test-xfail-tst-freopen64-2 = yes
+test-xfail-tst-freopen64-3 = yes
 
 # fails randomly
 test-xfail-tst-preadvwritev64 = yes
@@ -328,10 +334,6 @@ test-xfail-tst-tls1-static-non-pie = yes
 
 # new in 2.30
 test-xfail-tst-nss-files-hosts-long = yes
-
-# wants pthread_barrierattr_setpshared
-test-xfail-tst-pututxline-cache = yes
-test-xfail-tst-pututxline-lockfail = yes
 
 # new in 2.32
 # Assumes some linuxish strings
@@ -361,17 +363,12 @@ test-xfail-tst-dlinfo-phdr = yes
 # new in 2.35
 test-xfail-tst-compathooks-on = yes
 test-xfail-tst-sched_getaffinity = yes
-test-xfail-tst-malloc-tcache-leak-malloc-hugetlb1 = yes
-test-xfail-tst-malloc-tcache-leak-malloc-hugetlb2 = yes
 
 # new in 2.36
-test-xfail-tst-arc4random-fork = yes
 test-xfail-tst-arc4random-thread = yes
 test-xfail-tst-nss-gai-actions = yes
 
 # new in 2.37
-test-xfail-tst-fcntl-lock = yes
-test-xfail-tst-fcntl-lock-lfs = yes
 test-xfail-tst-nss-gai-hv2-canonname = yes
 
 # new in 2.38
@@ -400,11 +397,6 @@ test-xfail-tst-truncate64 = yes
 
 # new in 2.41
 test-xfail-tst-getrandom2 = yes
-test-xfail-tst-freopen2 = yes
-test-xfail-tst-freopen3 = yes
-test-xfail-tst-freopen5 = yes
-test-xfail-tst-freopen64-2 = yes
-test-xfail-tst-freopen64-3 = yes
 test-xfail-tst-freopen2-mem = yes
 test-xfail-tst-freopen3-mem = yes
 test-xfail-tst-freopen5-mem = yes
@@ -426,7 +418,6 @@ test-xfail-tst-execstack-prog-static-tunable = yes
 test-xfail-tst-fclose-devzero = yes
 test-xfail-tst-malloc-tcache-leak-malloc-largetcache = yes
 test-xfail-tst-malloc-too-large-malloc-largetcache = yes
-test-xfail-tst-mallocfork2-malloc-largetcache = yes
 test-xfail-tst-malloc-alternate-path-malloc-largetcache = yes
 test-xfail-tst-sprintf-fortify-rdonly-static = yes
 test-xfail-tst-pie-bss-static = yes
@@ -435,16 +426,31 @@ test-xfail-tst-pie-bss-static = yes
 test-xfail-tst-pthread-exited = yes
 test-xfail-tst-malloc-alternate-path-threaded-worker = yes
 test-xfail-tst-malloc-alternate-path-threaded-main = yes
-# Fixed in 2.43
-test-xfail-tst-single_threaded-pthread = yes
-test-xfail-tst-single_threaded-pthread-static = yes
+test-xfail-tst-getline-enomem = yes
+test-xfail-tst-getline-enomem-mem = yes
+test-xfail-tst-asprintf-null = yes
+test-xfail-test-cxa_atexit-race2 = yes
 
 # new in 2.44
-test-xfail-tst-cancel32 = yes
-test-xfail-test-cxa_atexit-race2 = yes
-test-xfail-tst-ld_profile = yes
-test-xfail-tst-tls-debug-recursive = yes
 test-xfail-tst-dl-debug-exclude = yes
+test-xfail-tst-dl-path-buf-mem = yes
+test-xfail-tst-dst-needed-minstack = yes
+test-xfail-tst-ifunc-resolver-protector-static-non-pie = yes
+test-xfail-tst-ld_profile = yes
+test-xfail-tst-tls-allocation-failure-static-patched = yes
+test-xfail-tst-tls-debug-recursive = yes
+test-xfail-tst-cancel32 = yes
+test-xfail-tst-resolv-res_init-failure = yes
+
+# fixed in 2.44
+test-xfail-tst-map-32bit-1a = yes
+test-xfail-tst-map-32bit-1b = yes
+test-xfail-tst-map-32bit-2 = yes
+# upstreamed in 2.44
+test-xfail-tst-mallocfork2-malloc-largetcache = yes
+test-xfail-tst-pututxline-cache = yes
+test-xfail-tst-pututxline-lockfail = yes
+test-xfail-tst-arc4random-fork = yes
 
 # actually never succeded
 test-xfail-tst-create_format1 = yes
@@ -453,6 +459,8 @@ test-xfail-tst-udp-error = yes
 
 # Child seems to be inheriting the lockf from the parent?
 test-xfail-tst-lockf = yes
+test-xfail-tst-fcntl-lock = yes
+test-xfail-tst-fcntl-lock-lfs = yes
 
 # assumes that all st_mode flags (32bit) can exist in stx_mode flags (16bit)
 test-xfail-tst-statx = yes
@@ -479,6 +487,7 @@ test-xfail-test-ldouble-log2 = yes
 test-xfail-test-ldouble-y0 = yes
 test-xfail-test-ldouble-y1 = yes
 test-xfail-test-fenv = yes
+test-xfail-test-narrowing-trap = yes
 
 # memory leak
 test-xfail-tst-vfprintf-width-prec-mem = yes
@@ -491,11 +500,6 @@ test-xfail-tst-malloc-too-large-malloc-hugetlb1 = yes
 test-xfail-tst-malloc-too-large-malloc-hugetlb2 = yes
 test-xfail-tst-malloc-too-large-threaded-main = yes
 test-xfail-tst-malloc-too-large-threaded-worker = yes
-
-# missing support
-test-xfail-tst-map-32bit-1a = yes
-test-xfail-tst-map-32bit-1b = yes
-test-xfail-tst-map-32bit-2 = yes
 
 test-xfail-tst-platform-1 = yes
 test-xfail-tst-audit4 = yes
