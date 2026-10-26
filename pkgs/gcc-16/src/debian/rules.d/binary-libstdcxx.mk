@@ -284,6 +284,9 @@ define __do_libstdcxx_dev
 	rm -f $(d_l)/$(gcc_lib_dir$(2))/libstdc++.so
 	cp -a $(d)/$(usr_lib$(2))/libstdc++.so.$(CXX_SONAME).*[0-9] \
 		$(d_l)/$(gcc_lib_dir$(2))/libstdc++.so
+	mkdir -p $(d_l)/usr/share/lintian/overrides
+	echo '$(p_l) binary: binary-from-other-architecture' \
+		>> $(d_l)/usr/share/lintian/overrides/$(p_l)
 	)
 	debian/dh_doclink -p$(p_l) $(p_lbase)
 	debian/dh_rmemptydirs -p$(p_l)

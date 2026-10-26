@@ -1,14 +1,26 @@
-# SymbolsHelper-Confirmed: 16 amd64 arm64 armhf i386 loong64 powerpc ppc64 ppc64el riscv64 s390x sparc64 x32
+# SymbolsHelper-Confirmed: 16.1 amd64 arm64 armhf i386 loong64 powerpc ppc64 ppc64el riscv64 s390x sparc64 x32
 libasan.so.8 libasan8 #MINVER#
  _Unwind_RaiseException@Base 15
  _ZdaPv@Base 15
  _ZdaPvRKSt9nothrow_t@Base 15
  _ZdaPvSt11align_val_t@Base 15
  _ZdaPvSt11align_val_tRKSt9nothrow_t@Base 15
+ (subst)_ZdaPv{size_t}@Base 16.1
+ (subst)_ZdaPv{size_t}St11align_val_t@Base 16.1
  _ZdlPv@Base 15
  _ZdlPvRKSt9nothrow_t@Base 15
  _ZdlPvSt11align_val_t@Base 15
  _ZdlPvSt11align_val_tRKSt9nothrow_t@Base 15
+ (subst)_ZdlPv{size_t}@Base 16.1
+ (subst)_ZdlPv{size_t}St11align_val_t@Base 16.1
+ (subst)_Zna{size_t}@Base 16.1
+ (subst)_Zna{size_t}RKSt9nothrow_t@Base 16.1
+ (subst)_Zna{size_t}St11align_val_t@Base 16.1
+ (subst)_Zna{size_t}St11align_val_tRKSt9nothrow_t@Base 16.1
+ (subst)_Znw{size_t}@Base 16.1
+ (subst)_Znw{size_t}RKSt9nothrow_t@Base 16.1
+ (subst)_Znw{size_t}St11align_val_t@Base 16.1
+ (subst)_Znw{size_t}St11align_val_tRKSt9nothrow_t@Base 16.1
  (arch=amd64 arm64 armhf loong64 riscv64 x32)___interceptor__Unwind_RaiseException@Base 16
  (arch=armhf)___interceptor___aeabi_memclr4@Base 15
  (arch=armhf)___interceptor___aeabi_memclr8@Base 15

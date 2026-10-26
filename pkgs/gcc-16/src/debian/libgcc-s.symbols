@@ -27,5 +27,6 @@ libgcc_s.so.1 #PACKAGE# #MINVER#
  (symver|arch=arm64)GCC_11.0 11
  (symver|arch=amd64 i386 x32 hurd-amd64 hurd-i386)GCC_12.0.0 12
  (symver|arch=amd64 arm64 i386 x32 hurd-amd64 hurd-i386)GCC_13.0.0 13
+ (symver|arch=arm64)GCC_14.0 14
  (symver)GCC_14.0.0 14
- (symver|arch=arm64 loong64 riscv64 s390x)GCC_16.0 16
+ (symver|arch=arm64 loong64 riscv64 s390x)GCC_16.0.0 16

@@ -1,9 +1,6 @@
-# SymbolsHelper-Confirmed: 16 armhf hppa hurd-i386 i386 m68k powerpc x32
+# SymbolsHelper-Confirmed: 16.1 alpha amd64 arm64 armhf hppa hurd-amd64 hurd-i386 i386 loong64 powerpc ppc64 ppc64el riscv64 s390x sparc64 x32
 libcc1.so.0 libcc1-0 #MINVER#
  _ZNSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaIS5_EE9push_backERKS5_@Base 16
- _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE10_M_disposeEv@Base 16
- (subst)_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE9_M_mutateE{size_t}{size_t}PKc{size_t}@Base 16
- _ZNSt7__cxx119to_stringEi@Base 16
  _xexit_cleanup@Base 15
  concat@Base 15
  concat_copy2@Base 15
