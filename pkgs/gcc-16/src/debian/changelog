@@ -1,3 +1,52 @@
+gcc-16 (16.2.0-1) unstable; urgency=medium
+
+  * GCC 16.2.0 release.
+    - Fix PR target/126581 (x86), PR tree-optimization/126504,
+      PR tree-optimization/126503, PR middle-end/126497,
+      PR tree-optimization/126490, PR tree-optimization/126464,
+      PR tree-optimization/126476, PR tree-optimization/126464,
+      PR middle-end/126084, PR tree-optimization/126471, PR target/126446,
+      PR middle-end/126410, PR tree-optimization/126457,
+      PR tree-optimization/126404, PR tree-optimization/126404,
+      PR target/126438 (PPC), PR target/126450 (x86), PR middle-end/126447,
+      PR middle-end/126405, PR rtl-optimization/126184,
+      PR rtl-optimization/126184, PR target/126429 (x86),
+      PR tree-optimization/125396, PR tree-optimization/125290,
+      PR target/126320 (x86), PR middle-end/126341, PR target/123625 (AArch64),
+      PR target/121957 (AArch64), PR rtl-optimization/125209,
+      PR middle-end/124637, PR tree-optimization/126171,
+      PR tree-optimization/126225, PR tree-optimization/124663, PR ipa/125207,
+      PR target/119210 (AArch64), PR target/105116, PR driver/1240,
+      PR ada/126553, PR ada/126379, PR ada/126482, PR algol68/126330,
+      PR c++/126309, PR c++/126508, PR c++/126420, PR c++/126423,
+      PR c++/126343, PR c++/126406, PR c++/119343, PR c++/126209,
+      PR c++/126310, PR c++/126280, PR c++/126215, PR driver/124058,
+      PR fortran/125866, PR fortran/126386, PR fortran/126303,
+      PR fortran/97592, PR fortran/125998, PR sanitizer/126307,
+      PR libstdc++/122197, PR libstdc++/124854, PR libstdc++/116110,
+      PR libstdc++/124853, PR libstdc++/116110, PR libstdc++/124852,
+      PR libstdc++/124852, PR libstdc++/124851, PR libstdc++/123165.
+  * Update to git 20260809 from the gcc-16 branch.
+    - Fix PR target/126484 (MIPS), PR tree-optimization/126576,
+      PR tree-optimization/126547, PR tree-optimization/126549,
+      PR tree-optimization/126564, PR tree-optimization/126601,
+      PR target/124948, PR tree-optimization/126464, PR preprocessor/125048,
+      PR libstdc++/125200, PR c++/125591, PR c++/125601, PR c++/125680,
+      PR c++/125541, PR fortran/126205, PR target/126667 (S390),
+      PR fortran/125263.
+
+  [ Matthias Klose ]
+  * Update libgcc-s, libcc1, libasan and libgcobol symbols files.
+  * d/rules2: Use rva23u64 with zifencei extension for Ubuntu (Vladimir Petko).
+    LP: #2158577.
+  * d/rules: Reformat riscv64 extensions for Debian.
+  * Configure with --enable-checking=release on every architecture.
+
+  [ Aurelien Jarno ]
+  * d/rules2: Use rva20u64 with zifencei extension for Debian.
+
+ -- Matthias Klose <doko@debian.org>  Sun, 09 Aug 2026 06:10:29 +0200
+
 gcc-16 (16.1.0-3) unstable; urgency=high
 
   * Update to git 20260719 from the gcc-16 branch.

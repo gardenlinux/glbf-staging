@@ -2016,11 +2016,11 @@ Depends: gcc-16-base (= ${gcc:Version}), libgdiagnostics0 (>= ${gcc:Version}),
 Suggests: libgdiagnostic-16-dbg
 Description: GCC diagnostic-handling code wrapped into a library (development files)
  GCCs diagnostic-handling code covers things like
- - quoting pertinent source code (with a cache)
- - underlining points and ranges in the source code, possibly with labels
- - emitting fix-it hints
- - generating patches from fix-it hints
- - SARIF output
+  - quoting pertinent source code (with a cache)
+  - underlining points and ranges in the source code, possibly with labels
+  - emitting fix-it hints
+  - generating patches from fix-it hints
+  - SARIF output
 
 Package: gcc-16-diagnostics
 Section: devel

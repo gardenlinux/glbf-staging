@@ -2597,11 +2597,11 @@ BUILT_USING`'dnl
 Suggests: libgdiagnostic`'PV-dbg
 Description: GCC diagnostic-handling code wrapped into a library (development files)
  GCCs diagnostic-handling code covers things like
- - quoting pertinent source code (with a cache)
- - underlining points and ranges in the source code, possibly with labels
- - emitting fix-it hints
- - generating patches from fix-it hints
- - SARIF output
+  - quoting pertinent source code (with a cache)
+  - underlining points and ranges in the source code, possibly with labels
+  - emitting fix-it hints
+  - generating patches from fix-it hints
+  - SARIF output
 
 Package: gcc`'PV-diagnostics
 ifdef(`TARGET',`dnl',`Section: devel')
