@@ -1,3 +1,10 @@
+libzstd (1.5.7+dfsg-4) unstable; urgency=medium
+
+  * Declare compliance with Policy 4.7.4 with no changes.
+  * Switch back to debhelper-compat now that debhelper 14 is out.
+
+ -- Peter Pentchev <roam@debian.org>  Sat, 01 Aug 2026 19:42:00 +0300
+
 libzstd (1.5.7+dfsg-3) unstable; urgency=medium
 
   * Add a superficial `debputy reformat` autopkgtest.
