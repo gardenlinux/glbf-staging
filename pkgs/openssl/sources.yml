@@ -1,6 +1,6 @@
 sources:
-    - file: openssl_3.6.3.orig.tar.gz
-      sha256: 243a86649cf6f23eeb6a2ff2456e09e5d77dd9018a54d3d96b0c6bdd6ba6c7f1
+    - file: openssl_3.6.4.orig.tar.gz
+      sha256: 9bffaa1ad1e07b354c21bd3324ec02fa15579f45a7d0494b3e74bc449b7333ef
       urls:
-        - https://snapshot.debian.org/archive/debian/20260701T000000Z/pool/main/o/openssl/openssl_3.6.3.orig.tar.gz
-        - https://snapshot.debian.org/file/72142e828396004a60af4a8458f30216a7906cbb/openssl_3.6.3.orig.tar.gz
+        - https://snapshot.debian.org/archive/debian/20261001T000000Z/pool/main/o/openssl/openssl_3.6.4.orig.tar.gz
+        - https://snapshot.debian.org/file/85aed0a4acf51f2e0d448310fd61099acf4d100a/openssl_3.6.4.orig.tar.gz
