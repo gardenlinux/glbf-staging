@@ -61,6 +61,12 @@ hurd-i386/git-tst-fix.diff
 hurd-i386/git-SO_TIMESTAMP.diff
 hurd-i386/git-path_mounted.diff
 
+# committed for 2.45
+hurd-i386/git-timedblock-signal.diff
+hurd-i386/git-time_bits_i386.diff
+hurd-i386/git-time_bits_i386_32.diff
+hurd-i386/git-setreugid.diff
+
 i386/local-biarch.diff
 i386/unsubmitted-quiet-ldconfig.diff
 i386/local-setcontext-revert-eax-ecx-edx.patch
