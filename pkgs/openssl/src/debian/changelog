@@ -1,3 +1,28 @@
+openssl (3.6.4-1) unstable; urgency=medium
+
+  * Import 3.6.4
+    - CVE-2026-18798 ("QUIC Server May Trigger Double Free When Processing
+      INITIAL Packet")
+    - CVE-2026-63072 ("Heap Buffer Overflow in CMS Key Unwrapping")
+    - CVE-2026-63076 ("Invalid Pointer Dereference in CMP Server via Crafted
+      protectionAlg")
+    - CVE-2026-14457 ("RPK Server Signature Algorithm Selection Can Dereference
+      a Missing Certificate")
+    - CVE-2026-54874 ("Excessive Memory Use Buffering DTLS Records for a Future
+      Epoch")
+    - CVE-2026-63073 ("Untrusted Sender DN Used as Format String in CMP Response
+      Validation")
+    - CVE-2026-63074 ("CMP Indefinite Cache Growth of ExtraCerts")
+    - CVE-2026-63075 ("QUIC ACK-only Packet Retention Can Cause Memory
+      Exhaustion")
+    - CVE-2026-75803 ("AEAD Forgeries with Empty Ciphertext When Using
+      EVP_Cipher()") (Closes: #1145172)
+    - CVE-2026-14456 ("Unbounded Memory Growth in QUIC Server Incoming Channel
+      Queue") (Closes: #1144615)
+    - CVE-2026-54876 ("Client-Side Memory Leak in OCSP Response Checking") (Closes: #1143841)
+
+ -- Sebastian Andrzej Siewior <sebastian@breakpoint.cc>  Tue, 25 Aug 2026 20:40:24 +0200
+
 openssl (3.6.3-1) unstable; urgency=medium
 
   * Import 3.6.3 (Closes: #1139674)
