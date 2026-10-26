@@ -1,4 +1,4 @@
-From 444b35222cd525f0496837b0cc2d35571ea741f2 Mon Sep 17 00:00:00 2001
+From fe0c9f503bfa0d95b377dc7370b50e0bc31faa50 Mon Sep 17 00:00:00 2001
 From: Guillem Jover <guillem@hadrons.org>
 Date: Sat, 12 Oct 2024 19:55:38 +0200
 Subject: [PATCH attr 5/7] man: Mention the origins of ENOATTR
@@ -99,5 +99,5 @@ index 6887652..c803638 100644
  .SM
  \%[E2BIG]
 -- 
-2.47.2
+2.53.0
 
