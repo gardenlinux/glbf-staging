@@ -175,7 +175,6 @@ endif
 ifeq ($(filter stage1 stage2,$(DEB_BUILD_PROFILES)),)
 	echo 'libgcc:Depends=libgcc-s1 [!hppa !m68k], libgcc-s2 [m68k], libgcc-s4 [hppa]' >> tmp.substvars
 	echo 'libc-gconv-modules-extra:Depends=libc-gconv-modules-extra (= $${binary:Version})' >> tmp.substvars
-	echo 'rpcsvc-proto:Depends=rpcsvc-proto' >> tmp.substvars
 	echo 'libc-dev:Breaks=$(libc)-dev-$(DEB_HOST_ARCH)-cross (<< $(DEB_VERSION_UPSTREAM)~)' >> tmp.substvars
 endif
 	for pkg in $(DEB_ARCH_REGULAR_PACKAGES) $(DEB_INDEP_REGULAR_PACKAGES) $(DEB_UDEB_PACKAGES); do \

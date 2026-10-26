@@ -22,9 +22,9 @@
  
    memset (&k_termios, 0, sizeof k_termios);
  
-@@ -74,7 +76,65 @@
-       k_termios.c_cflag &= ~CIBAUD;
-     }
+@@ -75,7 +77,65 @@
+   else
+     cmd += TCSETS;
  
 -  return INLINE_SYSCALL_CALL (ioctl, fd, cmd, &k_termios);
 +  /* Preserve the previous termios state if we can. */

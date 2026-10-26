@@ -13,9 +13,9 @@ index ef9e411f22..2a43285372 100644
 --- a/htl/pt-create.c
 +++ b/htl/pt-create.c
 @@ -27,6 +27,7 @@
- #include <atomic.h>
- #include <hurd/resource.h>
  #include <sys/single_threaded.h>
+ #include <shlib-compat.h>
+ #include <ldsodefs.h>
 +#include <libioP.h>
  
  #include <pt-internal.h>

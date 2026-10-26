@@ -1,3 +1,5 @@
+TODO: implement an aux vector properly
+
 diff --git a/misc/getauxval.c b/misc/getauxval.c
 index a973956760..ccedaddeb5 100644
 --- a/misc/getauxval.c

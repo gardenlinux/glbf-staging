@@ -12,7 +12,7 @@ Build-Depends: gettext, xz-utils, file, quilt,
  g++-15-for-host <!nocheck>, g++-15-multilib [amd64 i386 mips mipsel mipsn32 mipsn32el mips64 mips64el mipsr6 mipsr6el mipsn32r6 mipsn32r6el mips64r6 mips64r6el powerpc ppc64 sparc sparc64 x32] <!nobiarch !nocheck>,
  python3:native,
  libidn2-0 <!nocheck>,
- libc-bin (>= 2.42) <cross>,
+ libc-bin (>= 2.43) <cross>,
  libgd-dev <!stage1 !stage2>,
  systemtap-sdt-dev [linux-any] <!stage1 !stage2 !pkg.glibc.nosystemtap>,
 Build-Depends-Indep: perl, po-debconf
@@ -49,7 +49,7 @@ Priority: optional
 Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: manpages, manpages-dev
-Suggests: libc-devtools (>> 2.42)
+Suggests: libc-devtools (>> 2.43)
 Build-Profiles: <!stage1>
 Description: GNU C Library: Development binaries
  This package contains utility programs related to the GNU C Library
@@ -127,7 +127,7 @@ Package: locales
 Architecture: all
 Section: localization
 Priority: standard
-Depends: libc-bin (>> 2.42), libc-l10n (>> 2.42), ${misc:Depends}, debconf | debconf-2.0
+Depends: libc-bin (>> 2.43), libc-l10n (>> 2.43), ${misc:Depends}, debconf | debconf-2.0
 Build-Profiles: <!stage1>
 Description: GNU C Library: National Language (locale) data [support]
  Machine-readable data files, shared objects and programs used by the
@@ -144,7 +144,7 @@ Architecture: any
 Section: localization
 Priority: optional
 Multi-Arch: foreign
-Depends: libc-l10n (>> 2.42), ${misc:Depends}
+Depends: libc-l10n (>> 2.43), ${misc:Depends}
 Build-Profiles: <!stage1>
 Description: GNU C Library: Precompiled locale data
  This package contains the precompiled locale data for all supported locales.
@@ -177,7 +177,7 @@ Recommends: libidn2-0 (>= 2.0.5~)
 Suggests: glibc-doc, debconf | debconf-2.0, libc-l10n, locales [!hurd-any], libnss-nis
 Provides: libc6-sparcv9b [sparc sparc64], libc0.3-i686 [hurd-i386], libc6-i686 [i386]
 Conflicts: libc6-i686 [i386], libc6.1-alphaev67 [alpha]
-Breaks: nscd (<< 2.42), locales (<< 2.42), locales-all (<< 2.42), sysvinit-core (<< 3.09-2~), sysvinit (<< 3.09-2~), base-files (<< 13.3~), openssh-server (<< 1:9.9p1-3+hurd.1) [hurd-amd64], dhcpcd (<< 1:10.1.0-7~), pd-scaf (<< 1:0.14.1+darcs20180201-6+b4), postgresql-15-pllua (<< 1:2.0.12-4), postgresql-17-pllua (<< 1:2.0.12-3+b2), librccl1 (<< 5.4.3-3+b1), libamdhip64-5 (<< 5.7.1-5+b1), libhiprtc-builtins5 (<< 5.7.1-5+b1), lua-swupdate (<< 2024.12.1+dfsg-1+b3), libswupdate0.1 (<< 2024.12.1+dfsg-1+b3), uwsgi-plugin-pypy3 (<< 0.0.2+b1), python3-onnxruntime (<< 1.20.1+dfsg-2~), libde265-0 (<< 1.0.15-1+b3) [armel armhf], libmad0 (<< 0.15.1b-11+b1) [armel armhf], libx264-164 (<< 2:0.164.3108+git31e19f9-2+b1) [armel armhf], doublecmd-gtk (<< 1.1.22-1+b1) [armel armhf], doublecmd-plugins (<< 1.1.22-1+b1) [armel armhf], doublecmd-qt (<< 1.1.22-1+b1) [armel armhf], libmpeg2-4 (<<  0.5.1-9+b3) [armel armhf], libne10-10t64 (<< 1.2.1-5.1+b2) [armhf], libpdbg5 (<< 3.5-1+b1) [armel], libopenblas0-openmp (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas0-pthread (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas0-serial (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas64-0-openmp (<< 0.3.29+ds-2+b1) [s390x], libopenblas64-0-pthread (<< 0.3.29+ds-2+b1) [s390x], libopenblas64-0-serial (<< 0.3.29+ds-2+b1) [s390x], libfec0 (<< 1.0-26-gc5d935f-1+b3) [i386], python3-mrgingham (<< 1.25-1), linux-perf (<< 6.12.16-1) [armel], libqt6webenginecore6 (<< 6.8.2+dfsg-3) [i386]
+Breaks: nscd (<< 2.43), locales (<< 2.43), locales-all (<< 2.43), sysvinit-core (<< 3.09-2~), sysvinit (<< 3.09-2~), base-files (<< 13.3~), openssh-server (<< 1:9.9p1-3+hurd.1) [hurd-amd64], dhcpcd (<< 1:10.1.0-7~), pd-scaf (<< 1:0.14.1+darcs20180201-6+b4), postgresql-15-pllua (<< 1:2.0.12-4), postgresql-17-pllua (<< 1:2.0.12-3+b2), librccl1 (<< 5.4.3-3+b1), libamdhip64-5 (<< 5.7.1-5+b1), libhiprtc-builtins5 (<< 5.7.1-5+b1), lua-swupdate (<< 2024.12.1+dfsg-1+b3), libswupdate0.1 (<< 2024.12.1+dfsg-1+b3), uwsgi-plugin-pypy3 (<< 0.0.2+b1), python3-onnxruntime (<< 1.20.1+dfsg-2~), libde265-0 (<< 1.0.15-1+b3) [armel armhf], libmad0 (<< 0.15.1b-11+b1) [armel armhf], libx264-164 (<< 2:0.164.3108+git31e19f9-2+b1) [armel armhf], doublecmd-gtk (<< 1.1.22-1+b1) [armel armhf], doublecmd-plugins (<< 1.1.22-1+b1) [armel armhf], doublecmd-qt (<< 1.1.22-1+b1) [armel armhf], libmpeg2-4 (<<  0.5.1-9+b3) [armel armhf], libne10-10t64 (<< 1.2.1-5.1+b2) [armhf], libpdbg5 (<< 3.5-1+b1) [armel], libopenblas0-openmp (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas0-pthread (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas0-serial (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas64-0-openmp (<< 0.3.29+ds-2+b1) [s390x], libopenblas64-0-pthread (<< 0.3.29+ds-2+b1) [s390x], libopenblas64-0-serial (<< 0.3.29+ds-2+b1) [s390x], libfec0 (<< 1.0-26-gc5d935f-1+b3) [i386], python3-mrgingham (<< 1.25-1), linux-perf (<< 6.12.16-1) [armel], libqt6webenginecore6 (<< 6.8.2+dfsg-3) [i386]
 Replaces: libc6-amd64 [amd64],
           libc6-i386 [i386],
           libc0.3-i686 [hurd-i386],
@@ -201,7 +201,7 @@ Architecture: amd64 arc arm64 armel armhf hppa i386 loong64 m68k mips mipsel mip
 Section: libdevel
 Priority: optional
 Multi-Arch: same
-Depends: libc6 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${rpcsvc-proto:Depends}
+Depends: libc6 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any]
 Suggests: glibc-doc, manpages-dev
 Provides: libc-dev (= ${binary:Version}), libc6-dev [alpha hurd-any]
 Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), libdpkg-perl (<< 1.22.22) [amd64 i386 x32]
@@ -247,7 +247,7 @@ Recommends: libidn2-0 (>= 2.0.5~)
 Suggests: glibc-doc, debconf | debconf-2.0, libc-l10n, locales [!hurd-any], libnss-nis
 Provides: libc6-sparcv9b [sparc sparc64], libc0.3-i686 [hurd-i386], libc6-i686 [i386]
 Conflicts: libc6-i686 [i386], libc6.1-alphaev67 [alpha]
-Breaks: nscd (<< 2.42), locales (<< 2.42), locales-all (<< 2.42), sysvinit-core (<< 3.09-2~), sysvinit (<< 3.09-2~), base-files (<< 13.3~), openssh-server (<< 1:9.9p1-3+hurd.1) [hurd-amd64], dhcpcd (<< 1:10.1.0-7~), pd-scaf (<< 1:0.14.1+darcs20180201-6+b4), postgresql-15-pllua (<< 1:2.0.12-4), postgresql-17-pllua (<< 1:2.0.12-3+b2), librccl1 (<< 5.4.3-3+b1), libamdhip64-5 (<< 5.7.1-5+b1), libhiprtc-builtins5 (<< 5.7.1-5+b1), lua-swupdate (<< 2024.12.1+dfsg-1+b3), libswupdate0.1 (<< 2024.12.1+dfsg-1+b3), uwsgi-plugin-pypy3 (<< 0.0.2+b1), python3-onnxruntime (<< 1.20.1+dfsg-2~), libde265-0 (<< 1.0.15-1+b3) [armel armhf], libmad0 (<< 0.15.1b-11+b1) [armel armhf], libx264-164 (<< 2:0.164.3108+git31e19f9-2+b1) [armel armhf], doublecmd-gtk (<< 1.1.22-1+b1) [armel armhf], doublecmd-plugins (<< 1.1.22-1+b1) [armel armhf], doublecmd-qt (<< 1.1.22-1+b1) [armel armhf], libmpeg2-4 (<<  0.5.1-9+b3) [armel armhf], libne10-10t64 (<< 1.2.1-5.1+b2) [armhf], libpdbg5 (<< 3.5-1+b1) [armel], libopenblas0-openmp (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas0-pthread (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas0-serial (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas64-0-openmp (<< 0.3.29+ds-2+b1) [s390x], libopenblas64-0-pthread (<< 0.3.29+ds-2+b1) [s390x], libopenblas64-0-serial (<< 0.3.29+ds-2+b1) [s390x], libfec0 (<< 1.0-26-gc5d935f-1+b3) [i386], python3-mrgingham (<< 1.25-1), linux-perf (<< 6.12.16-1) [armel], libqt6webenginecore6 (<< 6.8.2+dfsg-3) [i386]
+Breaks: nscd (<< 2.43), locales (<< 2.43), locales-all (<< 2.43), sysvinit-core (<< 3.09-2~), sysvinit (<< 3.09-2~), base-files (<< 13.3~), openssh-server (<< 1:9.9p1-3+hurd.1) [hurd-amd64], dhcpcd (<< 1:10.1.0-7~), pd-scaf (<< 1:0.14.1+darcs20180201-6+b4), postgresql-15-pllua (<< 1:2.0.12-4), postgresql-17-pllua (<< 1:2.0.12-3+b2), librccl1 (<< 5.4.3-3+b1), libamdhip64-5 (<< 5.7.1-5+b1), libhiprtc-builtins5 (<< 5.7.1-5+b1), lua-swupdate (<< 2024.12.1+dfsg-1+b3), libswupdate0.1 (<< 2024.12.1+dfsg-1+b3), uwsgi-plugin-pypy3 (<< 0.0.2+b1), python3-onnxruntime (<< 1.20.1+dfsg-2~), libde265-0 (<< 1.0.15-1+b3) [armel armhf], libmad0 (<< 0.15.1b-11+b1) [armel armhf], libx264-164 (<< 2:0.164.3108+git31e19f9-2+b1) [armel armhf], doublecmd-gtk (<< 1.1.22-1+b1) [armel armhf], doublecmd-plugins (<< 1.1.22-1+b1) [armel armhf], doublecmd-qt (<< 1.1.22-1+b1) [armel armhf], libmpeg2-4 (<<  0.5.1-9+b3) [armel armhf], libne10-10t64 (<< 1.2.1-5.1+b2) [armhf], libpdbg5 (<< 3.5-1+b1) [armel], libopenblas0-openmp (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas0-pthread (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas0-serial (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas64-0-openmp (<< 0.3.29+ds-2+b1) [s390x], libopenblas64-0-pthread (<< 0.3.29+ds-2+b1) [s390x], libopenblas64-0-serial (<< 0.3.29+ds-2+b1) [s390x], libfec0 (<< 1.0-26-gc5d935f-1+b3) [i386], python3-mrgingham (<< 1.25-1), linux-perf (<< 6.12.16-1) [armel], libqt6webenginecore6 (<< 6.8.2+dfsg-3) [i386]
 Replaces: libc6-amd64 [amd64],
           libc6-i386 [i386],
           libc0.3-i686 [hurd-i386],
@@ -271,7 +271,7 @@ Architecture: alpha
 Section: libdevel
 Priority: optional
 Multi-Arch: same
-Depends: libc6.1 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${rpcsvc-proto:Depends}
+Depends: libc6.1 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any]
 Suggests: glibc-doc, manpages-dev
 Provides: libc-dev (= ${binary:Version}), libc6-dev [alpha hurd-any]
 Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), libdpkg-perl (<< 1.22.22) [amd64 i386 x32]
@@ -317,7 +317,7 @@ Recommends: libidn2-0 (>= 2.0.5~)
 Suggests: glibc-doc, debconf | debconf-2.0, libc-l10n, locales [!hurd-any], libnss-nis
 Provides: libc6-sparcv9b [sparc sparc64], libc0.3-i686 [hurd-i386], libc6-i686 [i386]
 Conflicts: libc6-i686 [i386], libc6.1-alphaev67 [alpha]
-Breaks: nscd (<< 2.42), locales (<< 2.42), locales-all (<< 2.42), sysvinit-core (<< 3.09-2~), sysvinit (<< 3.09-2~), base-files (<< 13.3~), openssh-server (<< 1:9.9p1-3+hurd.1) [hurd-amd64], dhcpcd (<< 1:10.1.0-7~), pd-scaf (<< 1:0.14.1+darcs20180201-6+b4), postgresql-15-pllua (<< 1:2.0.12-4), postgresql-17-pllua (<< 1:2.0.12-3+b2), librccl1 (<< 5.4.3-3+b1), libamdhip64-5 (<< 5.7.1-5+b1), libhiprtc-builtins5 (<< 5.7.1-5+b1), lua-swupdate (<< 2024.12.1+dfsg-1+b3), libswupdate0.1 (<< 2024.12.1+dfsg-1+b3), uwsgi-plugin-pypy3 (<< 0.0.2+b1), python3-onnxruntime (<< 1.20.1+dfsg-2~), libde265-0 (<< 1.0.15-1+b3) [armel armhf], libmad0 (<< 0.15.1b-11+b1) [armel armhf], libx264-164 (<< 2:0.164.3108+git31e19f9-2+b1) [armel armhf], doublecmd-gtk (<< 1.1.22-1+b1) [armel armhf], doublecmd-plugins (<< 1.1.22-1+b1) [armel armhf], doublecmd-qt (<< 1.1.22-1+b1) [armel armhf], libmpeg2-4 (<<  0.5.1-9+b3) [armel armhf], libne10-10t64 (<< 1.2.1-5.1+b2) [armhf], libpdbg5 (<< 3.5-1+b1) [armel], libopenblas0-openmp (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas0-pthread (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas0-serial (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas64-0-openmp (<< 0.3.29+ds-2+b1) [s390x], libopenblas64-0-pthread (<< 0.3.29+ds-2+b1) [s390x], libopenblas64-0-serial (<< 0.3.29+ds-2+b1) [s390x], libfec0 (<< 1.0-26-gc5d935f-1+b3) [i386], python3-mrgingham (<< 1.25-1), linux-perf (<< 6.12.16-1) [armel], libqt6webenginecore6 (<< 6.8.2+dfsg-3) [i386]
+Breaks: nscd (<< 2.43), locales (<< 2.43), locales-all (<< 2.43), sysvinit-core (<< 3.09-2~), sysvinit (<< 3.09-2~), base-files (<< 13.3~), openssh-server (<< 1:9.9p1-3+hurd.1) [hurd-amd64], dhcpcd (<< 1:10.1.0-7~), pd-scaf (<< 1:0.14.1+darcs20180201-6+b4), postgresql-15-pllua (<< 1:2.0.12-4), postgresql-17-pllua (<< 1:2.0.12-3+b2), librccl1 (<< 5.4.3-3+b1), libamdhip64-5 (<< 5.7.1-5+b1), libhiprtc-builtins5 (<< 5.7.1-5+b1), lua-swupdate (<< 2024.12.1+dfsg-1+b3), libswupdate0.1 (<< 2024.12.1+dfsg-1+b3), uwsgi-plugin-pypy3 (<< 0.0.2+b1), python3-onnxruntime (<< 1.20.1+dfsg-2~), libde265-0 (<< 1.0.15-1+b3) [armel armhf], libmad0 (<< 0.15.1b-11+b1) [armel armhf], libx264-164 (<< 2:0.164.3108+git31e19f9-2+b1) [armel armhf], doublecmd-gtk (<< 1.1.22-1+b1) [armel armhf], doublecmd-plugins (<< 1.1.22-1+b1) [armel armhf], doublecmd-qt (<< 1.1.22-1+b1) [armel armhf], libmpeg2-4 (<<  0.5.1-9+b3) [armel armhf], libne10-10t64 (<< 1.2.1-5.1+b2) [armhf], libpdbg5 (<< 3.5-1+b1) [armel], libopenblas0-openmp (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas0-pthread (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas0-serial (<< 0.3.29+ds-2+b1) [armhf s390x], libopenblas64-0-openmp (<< 0.3.29+ds-2+b1) [s390x], libopenblas64-0-pthread (<< 0.3.29+ds-2+b1) [s390x], libopenblas64-0-serial (<< 0.3.29+ds-2+b1) [s390x], libfec0 (<< 1.0-26-gc5d935f-1+b3) [i386], python3-mrgingham (<< 1.25-1), linux-perf (<< 6.12.16-1) [armel], libqt6webenginecore6 (<< 6.8.2+dfsg-3) [i386]
 Replaces: libc6-amd64 [amd64],
           libc6-i386 [i386],
           libc0.3-i686 [hurd-i386],
@@ -341,7 +341,7 @@ Architecture: hurd-i386 hurd-amd64
 Section: libdevel
 Priority: optional
 Multi-Arch: same
-Depends: libc0.3 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any], ${rpcsvc-proto:Depends}
+Depends: libc0.3 (= ${binary:Version}) <!stage1>, libc-dev-bin (= ${binary:Version}), ${misc:Depends}, linux-libc-dev [linux-any], gnumach-dev [hurd-any], hurd-dev [hurd-any] | hurd-headers-dev [hurd-any]
 Suggests: glibc-doc, manpages-dev
 Provides: libc-dev (= ${binary:Version}), libc6-dev [alpha hurd-any]
 Breaks: ${libc-dev:Breaks}, check (<< 0.15.2-2+b1) [s390x], libmysqlclient-dev (<= 8.0.29-1), catch (<< 1.12.2-0.1), libdpkg-perl (<< 1.22.22) [amd64 i386 x32]
