@@ -1,4 +1,4 @@
-GIT update of https://sourceware.org/git/glibc.git/release/2.43/master from glibc-2.43 to bc95068f5f9d7f57d0f01757fed0900893b122b8
+GIT update of https://sourceware.org/git/glibc.git/release/2.43/master from glibc-2.43 to d6c6dd71c63411229e3a39cb4946546acd22a668
 
 diff --git a/ADVISORIES b/ADVISORIES
 new file mode 100644
@@ -9,10 +9,10 @@ index 0000000000..d4e33f2df3
 +For the GNU C Library Security Advisories, see the git master branch:
 +https://sourceware.org/git/?p=glibc.git;a=tree;f=advisories;hb=HEAD
 diff --git a/NEWS b/NEWS
-index e271fb2e4d..cec8b61f55 100644
+index e271fb2e4d..ac44b1828b 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -5,6 +5,16 @@ See the end for copying conditions.
+@@ -5,6 +5,20 @@ See the end for copying conditions.
  Please send GNU C library bug reports via <https://sourceware.org/bugzilla/>
  using `glibc' in the "product" field.
  
@@ -25,10 +25,30 @@ index e271fb2e4d..cec8b61f55 100644
 + [33848] build: Build fails at openat2.h, redefinition of 'struct
 +    open_how'
 + [33904] build: error: '__vasprintf_chk' undeclared here
++ [34507] nptl: Pretty-printer tests FAIL instead of UNSUPPORTED when
++   cross-testing without python3 on target
++ [34509] libc: [m68k] Regression: Perl locks up after upgrading glibc
++   to 2.43
 +
  Version 2.43
  
  Major new features:
+diff --git a/Rules b/Rules
+index b07400a979..785517b5c4 100644
+--- a/Rules
++++ b/Rules
+@@ -431,8 +431,9 @@ py-env := PYTHONPATH=$(py-const-dir):$(..)scripts:$${PYTHONPATH}
+ # The pretty printer files and test_common_printers.py must be present for all.
+ $(tests-printers-out): $(objpfx)%.out: $(objpfx)% %.py %.c $(pretty-printers) \
+ 		       $(..)scripts/test_printers_common.py
+-	$(test-wrapper-env) $(py-env) \
+-	    $(PYTHON) $*.py $*.c $(objpfx)$* $(pretty-printers) > $@; \
++	$(test-wrapper-env) $(py-env) sh -c \
++	    'command -v $(firstword $(PYTHON)) > /dev/null 2>&1 || exit 77; \
++	     exec $(PYTHON) $*.py $*.c $(objpfx)$* $(pretty-printers)' > $@; \
+ 	$(evaluate-test)
+ endif
+ 
 diff --git a/advisories/GLIBC-SA-2023-0001 b/advisories/GLIBC-SA-2023-0001
 deleted file mode 100644
 index 3d19c91b6a..0000000000
@@ -774,10 +794,15 @@ index bdff2b5ee2..63ce609024 100644
  #define RESOLVE_MAP(map, scope, sym, version, flags) map
  #include "dynamic-link.h"
 diff --git a/elf/dl-tunables.c b/elf/dl-tunables.c
-index 37ade374c6..bdb1de4ceb 100644
+index 37ade374c6..1440d3fa6a 100644
 --- a/elf/dl-tunables.c
 +++ b/elf/dl-tunables.c
-@@ -37,16 +37,6 @@
+@@ -33,20 +33,11 @@
+ #include <array_length.h>
+ #include <dl-minimal-malloc.h>
+ #include <dl-symbol-redir-ifunc.h>
++#include <malloc-hugepages.h>
+ 
  #define TUNABLES_INTERNAL 1
  #include "dl-tunables.h"
  
@@ -794,7 +819,18 @@ index 37ade374c6..bdb1de4ceb 100644
  static char **
  get_next_env (char **envp, char **name, char **val, char ***prev_envp)
  {
-@@ -335,10 +325,8 @@ __tunables_init (char **envp)
+@@ -306,6 +297,10 @@ __tunables_init (char **envp)
+   char *envval = NULL;
+   char **prev_envp = envp;
+ 
++  /* Default to glibc.malloc.hugetlb=1 if DEFAULT_THP_PAGESIZE is non-zero.  */
++  if (DEFAULT_THP_PAGESIZE > 0)
++    TUNABLE_SET (glibc, malloc, hugetlb, 1);
++
+   /* Ignore tunables for AT_SECURE programs.  */
+   if (__libc_enable_secure)
+     return;
+@@ -335,10 +330,8 @@ __tunables_init (char **envp)
  	  if (tunable_is_name (name, envname))
  	    {
  	      /* The environment variable is always null-terminated.  */
@@ -918,6 +954,61 @@ index 9f97b8b95a..4d04d37581 100644
          FAIL ("no ld.so gap found");
      }
    else
+diff --git a/elf/tst-rtld-list-tunables.sh b/elf/tst-rtld-list-tunables.sh
+index 669898d8c0..11b9b4597a 100755
+--- a/elf/tst-rtld-list-tunables.sh
++++ b/elf/tst-rtld-list-tunables.sh
+@@ -26,16 +26,8 @@ run_program_env=$3
+ LC_ALL=C
+ export LC_ALL
+ 
+-# Unset tunables and their aliases.
+-GLIBC_TUNABLES=
+-MALLOC_ARENA_MAX=
+-MALLOC_ARENA_TEST=
+-MALLOC_CHECK_=
+-MALLOC_MMAP_MAX_=
+-MALLOC_MMAP_THRESHOLD_=
+-MALLOC_PERTURB_=
+-MALLOC_TOP_PAD_=
+-MALLOC_TRIM_THRESHOLD_=
++# Unset tunables.
++export GLIBC_TUNABLES=glibc.malloc.hugetlb=0
+ 
+ ${test_wrapper_env} \
+ ${run_program_env} \
+diff --git a/hesiod/nss_hesiod/hesiod-proto.c b/hesiod/nss_hesiod/hesiod-proto.c
+index d47abca1fd..a85769a74f 100644
+--- a/hesiod/nss_hesiod/hesiod-proto.c
++++ b/hesiod/nss_hesiod/hesiod-proto.c
+@@ -39,8 +39,8 @@ struct protoent_data {};
+ #include <nss/nss_files/files-parse.c>
+ LINE_PARSER
+ ("#",
+- STRING_FIELD (result->p_name, isspace, 1);
+- INT_FIELD (result->p_proto, isspace, 1, 10,);
++ STRING_FIELD (result->p_name, isspace, true);
++ INT_FIELD (result->p_proto, isspace, true, 10,);
+  )
+ 
+ enum nss_status
+diff --git a/hesiod/nss_hesiod/hesiod-service.c b/hesiod/nss_hesiod/hesiod-service.c
+index 3b5c704660..205ba69f4b 100644
+--- a/hesiod/nss_hesiod/hesiod-service.c
++++ b/hesiod/nss_hesiod/hesiod-service.c
+@@ -39,9 +39,9 @@ struct servent_data {};
+ #define ISSC_OR_SPACE(c)	((c) ==  ';' || isspace (c))
+ LINE_PARSER
+ ("#",
+- STRING_FIELD (result->s_name, ISSC_OR_SPACE, 1);
+- STRING_FIELD (result->s_proto, ISSC_OR_SPACE, 1);
+- INT_FIELD (result->s_port, ISSC_OR_SPACE, 10, 0, htons);
++ STRING_FIELD (result->s_name, ISSC_OR_SPACE, true);
++ STRING_FIELD (result->s_proto, ISSC_OR_SPACE, true);
++ INT_FIELD (result->s_port, ISSC_OR_SPACE, false, 10, htons);
+  )
+ 
+ enum nss_status
 diff --git a/iconv/Makefile b/iconv/Makefile
 index 51ffab9efc..69555cbe57 100644
 --- a/iconv/Makefile
@@ -1005,27 +1096,44 @@ index f6c7c265a8..ab6e14c685 100644
 +run_program_env="$run_program_env LC_ALL=en_US.UTF-8"
 +run_test_array
 diff --git a/iconvdata/Makefile b/iconvdata/Makefile
-index 26e888b443..fbb0067302 100644
+index 26e888b443..ba2eec2b48 100644
 --- a/iconvdata/Makefile
 +++ b/iconvdata/Makefile
-@@ -76,7 +76,7 @@ tests = bug-iconv1 bug-iconv2 tst-loading tst-e2big tst-iconv4 bug-iconv4 \
+@@ -76,7 +76,8 @@ tests = bug-iconv1 bug-iconv2 tst-loading tst-e2big tst-iconv4 bug-iconv4 \
  	tst-iconv6 bug-iconv5 bug-iconv6 tst-iconv7 bug-iconv8 bug-iconv9 \
  	bug-iconv10 bug-iconv11 bug-iconv12 tst-iconv-big5-hkscs-to-2ucs4 \
  	bug-iconv13 bug-iconv14 bug-iconv15 \
 -	tst-iconv-iso-2022-cn-ext
-+	tst-iconv-iso-2022-cn-ext tst-bug33980
++	tst-iconv-iso-2022-cn-ext tst-bug33980 \
++	tst-jisx0213-progress
  ifeq ($(have-thread-library),yes)
  tests += bug-iconv3
  endif
-@@ -333,6 +333,8 @@ $(objpfx)bug-iconv15.out: $(addprefix $(objpfx), $(gconv-modules)) \
+@@ -333,6 +334,10 @@ $(objpfx)bug-iconv15.out: $(addprefix $(objpfx), $(gconv-modules)) \
  			  $(addprefix $(objpfx),$(modules.so))
  $(objpfx)tst-iconv-iso-2022-cn-ext.out: $(addprefix $(objpfx), $(gconv-modules)) \
  					$(addprefix $(objpfx),$(modules.so))
 +$(objpfx)tst-bug33980.out: $(addprefix $(objpfx), $(gconv-modules)) \
 +			   $(addprefix $(objpfx),$(modules.so))
++$(objpfx)tst-jisx0213-progress.out: \
++  $(addprefix $(objpfx), $(gconv-modules)) $(addprefix $(objpfx),$(modules.so))
  
  $(objpfx)iconv-test.out: run-iconv-test.sh \
  			 $(addprefix $(objpfx), $(gconv-modules)) \
+diff --git a/iconvdata/euc-jisx0213.c b/iconvdata/euc-jisx0213.c
+index 5572bbdb7b..61c22231e1 100644
+--- a/iconvdata/euc-jisx0213.c
++++ b/iconvdata/euc-jisx0213.c
+@@ -224,6 +224,9 @@
+ 	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
+ 	  }								      \
+       }									      \
++    else 								      \
++      /* There was a pending character.  Clear it.  */			      \
++      *statep = 0;							      \
+ 									      \
+     put32 (outptr, ch);							      \
+     outptr += 4;							      \
 diff --git a/iconvdata/ibm1364.c b/iconvdata/ibm1364.c
 index 4f41f22c12..8df66ea048 100644
 --- a/iconvdata/ibm1364.c
@@ -1140,6 +1248,20 @@ index 4f41f22c12..8df66ea048 100644
  									      \
      if (__builtin_expect (ch, 0) == SO)					      \
        {									      \
+diff --git a/iconvdata/shift_jisx0213.c b/iconvdata/shift_jisx0213.c
+index 61c9c3ce6d..e9179f605e 100644
+--- a/iconvdata/shift_jisx0213.c
++++ b/iconvdata/shift_jisx0213.c
+@@ -226,6 +226,9 @@
+ 	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
+ 	  }								      \
+       }									      \
++    else 								      \
++      /* There was a pending character.  Clear it.  */			      \
++      *statep = 0;							      \
+ 									      \
+     put32 (outptr, ch);							      \
+     outptr += 4;							      \
 diff --git a/iconvdata/tst-bug33980.c b/iconvdata/tst-bug33980.c
 new file mode 100644
 index 0000000000..c9693e0efe
@@ -1299,6 +1421,136 @@ index 0000000000..c9693e0efe
 +}
 +
 +#include <support/test-driver.c>
+diff --git a/iconvdata/tst-jisx0213-progress.c b/iconvdata/tst-jisx0213-progress.c
+new file mode 100644
+index 0000000000..7b2073be1f
+--- /dev/null
++++ b/iconvdata/tst-jisx0213-progress.c
+@@ -0,0 +1,124 @@
++/* Test JISX0213 combining character conversion progress (bug 34556, bug 34568).
++   Copyright (C) 2026 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++/* Certain JISX0213 byte sequences map to a combining sequence, for
++   example U+304B (HIRAGANA LETTER KA) followed by U+309A (COMBINING
++   SEMI-VOICED SOUND MARK).  When converting to internal encoding
++   (actually UTF-32) with a small output buffer, the first code point
++   is emitted and the second is queued in the converter state.  This
++   test verifies that the queued code point is consumed exactly once
++   on retry, so that the conversion makes progress and terminates.  */
++
++#include <errno.h>
++#include <iconv.h>
++#include <stdio.h>
++#include <string.h>
++
++#include <support/check.h>
++#include <support/support.h>
++
++static void
++test_one (const char *charset, const char *input, size_t outbufsize)
++{
++  printf ("info: %s: testing output buffer size %zu\n", charset, outbufsize);
++
++  /* Expected UTF-32 output.  */
++  static const wchar_t expected[] = { 0x304b, 0x309a, 'A' };
++
++  /* Use WCHAR_T encoding to avoid the BOM.  */
++  iconv_t cd = iconv_open ("WCHAR_T", charset);
++  TEST_VERIFY_EXIT (cd != (iconv_t) -1);
++
++  char result[64];
++  size_t result_len = 0;
++
++  char *inptr = (char *) input;
++  size_t inleft = strlen (input);
++
++  char outbuf[64];
++
++  int iterations = 0;
++  while (inleft > 0)
++    {
++      char *outptr = outbuf;
++      size_t outleft = outbufsize;
++      size_t inleft_before = inleft;
++
++      size_t ret = iconv (cd, &inptr, &inleft, &outptr, &outleft);
++      size_t produced = outptr - outbuf;
++
++      TEST_VERIFY_EXIT (result_len + produced <= sizeof (result));
++      memcpy (result + result_len, outbuf, produced);
++      result_len += produced;
++
++      if (ret == (size_t) -1 && errno == E2BIG)
++	{
++	  if (produced == 0 && inleft == inleft_before)
++	    {
++	      /* Output buffer too small for a single code point.  */
++	      TEST_VERIFY_EXIT (outbufsize < 4);
++	      break;
++	    }
++	  /* Bound iterations to detect non-progress bugs.  */
++	  if (++iterations < 10)
++	    continue;
++	  else
++	    {
++	      FAIL ("%s: no progress", charset);
++	      goto out;
++	    }
++	}
++      if (ret == (size_t) -1)
++	FAIL_EXIT1 ("outbufsize %zu: iconv: %m", outbufsize);
++      break;
++    }
++
++  /* Flush pending converter state.  */
++  {
++    char *outptr = outbuf;
++    size_t outleft = outbufsize;
++    size_t ret = iconv (cd, NULL, NULL, &outptr, &outleft);
++    TEST_VERIFY (ret == 0);
++    size_t produced = outptr - outbuf;
++    memcpy (result + result_len, outbuf, produced);
++    result_len += produced;
++  }
++
++  if (outbufsize >= 4)
++    {
++      TEST_COMPARE (inleft, 0);
++      TEST_COMPARE_BLOB (result, result_len,
++			 expected, sizeof (expected));
++    }
++
++ out:
++  TEST_VERIFY_EXIT (iconv_close (cd) == 0);
++}
++
++static int
++do_test (void)
++{
++  for (size_t outbufsize = 1; outbufsize <= 16; outbufsize++)
++    {
++      test_one ("EUC-JISX0213", "\244\367A", outbufsize);
++      test_one ("SHIFT_JISX0213", "\202\365A", outbufsize);
++    }
++  return 0;
++}
++
++#include <support/test-driver.c>
 diff --git a/include/bits/stdio2-decl.h b/include/bits/stdio2-decl.h
 index 9758bf4b55..97c2236f24 100644
 --- a/include/bits/stdio2-decl.h
@@ -1344,7 +1596,7 @@ index c13546e4fd..4fbc522624 100644
  int
  __fcntl (int fd, int cmd, ...)
 diff --git a/libio/Makefile b/libio/Makefile
-index 4f4dd9f275..5995adf5dd 100644
+index 4f4dd9f275..3fcccd2fa9 100644
 --- a/libio/Makefile
 +++ b/libio/Makefile
 @@ -84,6 +84,7 @@ tests = \
@@ -1355,6 +1607,14 @@ index 4f4dd9f275..5995adf5dd 100644
    bug-wmemstream1 \
    bug-wsetpos \
    test-fmemopen \
+@@ -107,6 +108,7 @@ tests = \
+   tst-fgetc-after-eof \
+   tst-fgetwc \
+   tst-fgetws \
++  tst-fopen-ccs-empty \
+   tst-fopenloc2 \
+   tst-fputws \
+   tst-freopen \
 diff --git a/libio/bug-wgenops-bz33998.c b/libio/bug-wgenops-bz33998.c
 new file mode 100644
 index 0000000000..cc4067da99
@@ -1415,6 +1675,98 @@ index 0000000000..cc4067da99
 +}
 +
 +#include <support/test-driver.c>
+diff --git a/libio/fileops.c b/libio/fileops.c
+index 1852c9ea12..160891c0f0 100644
+--- a/libio/fileops.c
++++ b/libio/fileops.c
+@@ -339,12 +339,14 @@ _IO_new_file_fopen (FILE *fp, const char *filename, const char *mode,
+ 	  *((char *) __mempcpy (ccs, cs + 5, endp - (cs + 5))) = '\0';
+ 	  strip (ccs, ccs);
+ 
+-	  if (__wcsmbs_named_conv (&fcts, ccs[2] == '\0'
+-				   ? upstr (ccs, cs + 5) : ccs) != 0)
++	  /* After stripping, ccs[2] == '\0' means the charset name is empty.
++	     This is not a valid charset and would cause problems downstream.
++	     Reject it with EINVAL (BZ #34574, CVE-2026-18374).  */
++	  if (ccs[2] == '\0' || __wcsmbs_named_conv (&fcts, ccs) != 0)
+ 	    {
+-	      /* Something went wrong, we cannot load the conversion modules.
+-		 This means we cannot proceed since the user explicitly asked
+-		 for these.  */
++	      /* Either the charset name is empty after strip(), or conversion
++		 modules cannot be loaded.  This means we cannot proceed since
++		 the user explicitly asked for character conversion.  */
+ 	      (void) _IO_file_close_it (fp);
+ 	      free (ccs);
+ 	      __set_errno (EINVAL);
+diff --git a/libio/tst-fopen-ccs-empty.c b/libio/tst-fopen-ccs-empty.c
+new file mode 100644
+index 0000000000..64723965e1
+--- /dev/null
++++ b/libio/tst-fopen-ccs-empty.c
+@@ -0,0 +1,62 @@
++/* Test fopen with an empty ",ccs=" value in the mode string (bug 34574).
++   Copyright (C) 2026 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <errno.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <support/check.h>
++#include <support/support.h>
++#include <support/temp_file.h>
++#include <support/xunistd.h>
++
++static void
++check_fopen_fails (const char *path, const char *mode)
++{
++  errno = 0;
++  FILE *fp = fopen (path, mode);
++  TEST_VERIFY (fp == NULL);
++  TEST_COMPARE (errno, EINVAL);
++  if (fp != NULL)
++    fclose (fp);
++}
++
++static int
++do_test (void)
++{
++  char *path;
++  xclose (create_temp_file ("tst-fopen-ccs-empty", &path));
++
++  /* The value is blank and the mode string continues well past it.  */
++  enum { size = 1024 * 1024 };
++  char *mode = xmalloc (size);
++  memset (mode, 'X', size);
++  mode[size - 1] = '\0';
++  static const char prefix[] = "w,ccs=                     ,";
++  memcpy (mode, prefix, sizeof (prefix) - 1);
++  check_fopen_fails (path, mode);
++  free (mode);
++
++  check_fopen_fails (path, "w,ccs=");
++  check_fopen_fails (path, "w,ccs=,");
++
++  free (path);
++  return 0;
++}
++
++#include <support/test-driver.c>
 diff --git a/libio/wgenops.c b/libio/wgenops.c
 index 7a8466ea44..7c47459828 100644
 --- a/libio/wgenops.c
@@ -1430,28 +1782,8 @@ index 7a8466ea44..7c47459828 100644
    else
      {
        /* Need to handle a filebuf in write mode (switch to read mode). FIXME!*/
-diff --git a/malloc/arena.c b/malloc/arena.c
-index 5bfcd7f972..d83b4db068 100644
---- a/malloc/arena.c
-+++ b/malloc/arena.c
-@@ -276,6 +276,15 @@ __ptmalloc_init (void)
-     __always_fail_morecore = true;
- #endif
- 
-+  /* Enable THP if DEFAULT_THP_PAGESIZE is non-zero.  Avoid quering the THP
-+     page size or mode since accessing /sys/kernel/mm is relatively slow and
-+     might not be accessible in containers.  */
-+  if (DEFAULT_THP_PAGESIZE > 0)
-+    {
-+      mp_.thp_mode = malloc_thp_mode_madvise;
-+      mp_.thp_pagesize = DEFAULT_THP_PAGESIZE;
-+    }
-+
-   thread_arena = &main_arena;
- 
-   malloc_init_state (&main_arena);
 diff --git a/malloc/malloc.c b/malloc/malloc.c
-index a49e211925..771e7d40b7 100644
+index a49e211925..af6b4fe580 100644
 --- a/malloc/malloc.c
 +++ b/malloc/malloc.c
 @@ -1902,26 +1902,11 @@ free_perturb (char *p, size_t n)
@@ -1491,6 +1823,34 @@ index a49e211925..771e7d40b7 100644
        if (__glibc_unlikely (mp_.thp_pagesize != 0))
  	{
  	  uintptr_t lastbrk = (uintptr_t) MORECORE (0);
+@@ -5132,10 +5114,26 @@ do_set_mxfast (size_t value)
+ static __always_inline int
+ do_set_hugetlb (size_t value)
+ {
++  /* Enable THP if DEFAULT_THP_PAGESIZE is non-zero.  */
++  if (DEFAULT_THP_PAGESIZE > 0)
++    {
++      mp_.thp_mode = malloc_thp_mode_madvise;
++      mp_.thp_pagesize = DEFAULT_THP_PAGESIZE;
++    }
++
+   if (value == 0)
+-    mp_.thp_mode = malloc_thp_mode_never;
++    {
++      /* Turn off THP support completely.  */
++      mp_.thp_mode = malloc_thp_mode_never;
++      mp_.thp_pagesize = 0;
++    }
+   else if (value == 1)
+     {
++      /* Avoid querying the THP page size/mode since accessing /sys/kernel/mm
++        is relatively slow and might not be accessible in containers.  */
++      if (DEFAULT_THP_PAGESIZE > 0)
++       return 0;
++
+       mp_.thp_mode = __malloc_thp_mode ();
+       if (mp_.thp_mode == malloc_thp_mode_madvise
+           || mp_.thp_mode == malloc_thp_mode_always)
 diff --git a/math/auto-libm-test-in b/math/auto-libm-test-in
 index 2001baa605..82f0aface8 100644
 --- a/math/auto-libm-test-in
@@ -1598,6 +1958,84 @@ index 7df741f3ba..5d69cd4b5b 100644
      /* The result can only be represented in long double.  */
      TEST_f_f (trunc, 4503599627370495.5L, 4503599627370495.0L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
      TEST_f_f (trunc, 4503599627370496.25L, 4503599627370496.0L, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+diff --git a/misc/tsearch.c b/misc/tsearch.c
+index 9b2eb34b25..e517dfa712 100644
+--- a/misc/tsearch.c
++++ b/misc/tsearch.c
+@@ -85,6 +85,7 @@
+ #include <assert.h>
+ #include <stdalign.h>
+ #include <stddef.h>
++#include <stdint.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <search.h>
+@@ -406,12 +407,13 @@ __tdelete (const void *key, void **vrootp, __compar_fn_t compar)
+   int cmp;
+   node *rootp = (node *) vrootp;
+   node root, unchained;
+-  /* Stack of nodes so we remember the parents without recursion.  It's
+-     _very_ unlikely that there are paths longer than 40 nodes.  The tree
+-     would need to have around 250.000 nodes.  */
+-  int stacksize = 40;
++  /* Stack of nodes so we remember the parents without recursion.  The
++     stack size is a conservative approximation of the maximum height
++     of a red-black tree, based on size of the address space.
++     Actual numbers are closer to 57 (32 bit) and 117 (63 bit).  */
++  enum { stacksize = 2 * UINTPTR_WIDTH };
+   int sp = 0;
+-  node **nodestack = alloca (sizeof (node *) * stacksize);
++  node *nodestack[stacksize];
+ 
+   if (rootp == NULL)
+     return NULL;
+@@ -424,14 +426,7 @@ __tdelete (const void *key, void **vrootp, __compar_fn_t compar)
+   root = DEREFNODEPTR(rootp);
+   while ((cmp = (*compar) (key, root->key)) != 0)
+     {
+-      if (sp == stacksize)
+-	{
+-	  node **newstack;
+-	  stacksize += 20;
+-	  newstack = alloca (sizeof (node *) * stacksize);
+-	  nodestack = memcpy (newstack, nodestack, sp * sizeof (node *));
+-	}
+-
++      assert (sp < stacksize);
+       nodestack[sp++] = rootp;
+       p = DEREFNODEPTR(rootp);
+       if (cmp < 0)
+@@ -470,13 +465,7 @@ __tdelete (const void *key, void **vrootp, __compar_fn_t compar)
+       node upn;
+       for (;;)
+ 	{
+-	  if (sp == stacksize)
+-	    {
+-	      node **newstack;
+-	      stacksize += 20;
+-	      newstack = alloca (sizeof (node *) * stacksize);
+-	      nodestack = memcpy (newstack, nodestack, sp * sizeof (node *));
+-	    }
++	  assert (sp < stacksize);
+ 	  nodestack[sp++] = parentp;
+ 	  parentp = up;
+ 	  upn = DEREFNODEPTR(up);
+@@ -541,6 +530,7 @@ __tdelete (const void *key, void **vrootp, __compar_fn_t compar)
+ 		  SETNODEPTR(pp,q);
+ 		  /* Make sure pp is right if the case below tries to use
+ 		     it.  */
++		  assert (sp < stacksize);
+ 		  nodestack[sp++] = pp = LEFTPTR(q);
+ 		  q = RIGHT(p);
+ 		}
+@@ -625,6 +615,7 @@ __tdelete (const void *key, void **vrootp, __compar_fn_t compar)
+ 		  SETLEFT(p,RIGHT(q));
+ 		  SETRIGHT(q,p);
+ 		  SETNODEPTR(pp,q);
++		  assert (sp < stacksize);
+ 		  nodestack[sp++] = pp = RIGHTPTR(q);
+ 		  q = LEFT(p);
+ 		}
 diff --git a/nss/Makefile b/nss/Makefile
 index b0d80bd642..1c48bd0876 100644
 --- a/nss/Makefile
@@ -1719,6 +2157,127 @@ index 1f2ff1639a..a4f3369eb0 100644
    attribute_hidden;
  
  #endif /* _NSS_DATABASE_H */
+diff --git a/nss/nss_files/files-ethers.c b/nss/nss_files/files-ethers.c
+index a689b1a5b4..bdbb64d699 100644
+--- a/nss/nss_files/files-ethers.c
++++ b/nss/nss_files/files-ethers.c
+@@ -36,16 +36,16 @@ LINE_PARSER
+        unsigned int number;
+ 
+        if (cnt < 5)
+-	 INT_FIELD (number, ISCOLON , 0, 16, (unsigned int))
++	 INT_FIELD (number, ISCOLON , false, 16, (unsigned int))
+        else
+-	 INT_FIELD (number, isspace, 1, 16, (unsigned int))
++	 INT_FIELD (number, isspace, true, 16, (unsigned int))
+ 
+        if (number > 0xff)
+ 	 return 0;
+        result->e_addr.ether_addr_octet[cnt] = number;
+      }
+  };
+- STRING_FIELD (result->e_name, isspace, 1);
++ STRING_FIELD (result->e_name, isspace, true);
+  )
+ 
+ 
+diff --git a/nss/nss_files/files-hosts.c b/nss/nss_files/files-hosts.c
+index bfbffa3b54..8d7c90945a 100644
+--- a/nss/nss_files/files-hosts.c
++++ b/nss/nss_files/files-hosts.c
+@@ -53,7 +53,7 @@ LINE_PARSER
+  {
+    char *addr;
+ 
+-   STRING_FIELD (addr, isspace, 1);
++   STRING_FIELD (addr, isspace, true);
+ 
+    /* Parse address.  */
+    if (__inet_pton (af == AF_UNSPEC ? AF_INET : af, addr, entdata->host_addr)
+@@ -96,7 +96,7 @@ LINE_PARSER
+    entdata->h_addr_ptrs[1] = NULL;
+    result->h_addr_list = entdata->h_addr_ptrs;
+ 
+-   STRING_FIELD (result->h_name, isspace, 1);
++   STRING_FIELD (result->h_name, isspace, true);
+  })
+ 
+ #define EXTRA_ARGS_VALUE , AF_INET, 0
+diff --git a/nss/nss_files/files-network.c b/nss/nss_files/files-network.c
+index 86cab9e4e9..b5d6f536f9 100644
+--- a/nss/nss_files/files-network.c
++++ b/nss/nss_files/files-network.c
+@@ -38,9 +38,9 @@ LINE_PARSER
+    char *cp;
+    int n = 1;
+ 
+-   STRING_FIELD (result->n_name, isspace, 1);
++   STRING_FIELD (result->n_name, isspace, true);
+ 
+-   STRING_FIELD (addr, isspace, 1);
++   STRING_FIELD (addr, isspace, true);
+    /* 'inet_network' does not add zeroes at the end if the network number
+       does not contain four byte values.  We shift result ourselves if
+       necessary.  */
+diff --git a/nss/nss_files/files-parse.c b/nss/nss_files/files-parse.c
+index 016b0965e4..f9fcb64c01 100644
+--- a/nss/nss_files/files-parse.c
++++ b/nss/nss_files/files-parse.c
+@@ -20,6 +20,7 @@
+ #include <errno.h>
+ #include <string.h>
+ #include <stdlib.h>
++#include <stdbool.h>
+ #include <stdint.h>
+ #include <nss_files.h>
+ 
+diff --git a/nss/nss_files/files-proto.c b/nss/nss_files/files-proto.c
+index 59dc134fe6..398ba85519 100644
+--- a/nss/nss_files/files-proto.c
++++ b/nss/nss_files/files-proto.c
+@@ -29,8 +29,8 @@ struct protoent_data {};
+ #include "files-parse.c"
+ LINE_PARSER
+ ("#",
+- STRING_FIELD (result->p_name, isspace, 1);
+- INT_FIELD (result->p_proto, isspace, 1, 10,);
++ STRING_FIELD (result->p_name, isspace, true);
++ INT_FIELD (result->p_proto, isspace, true, 10,);
+  )
+ 
+ #include GENERIC
+diff --git a/nss/nss_files/files-rpc.c b/nss/nss_files/files-rpc.c
+index 76056c04e8..f159f04686 100644
+--- a/nss/nss_files/files-rpc.c
++++ b/nss/nss_files/files-rpc.c
+@@ -29,8 +29,8 @@ struct rpcent_data {};
+ #include "files-parse.c"
+ LINE_PARSER
+ ("#",
+- STRING_FIELD (result->r_name, isspace, 1);
+- INT_FIELD (result->r_number, isspace, 1, 10,);
++ STRING_FIELD (result->r_name, isspace, true);
++ INT_FIELD (result->r_number, isspace, true, 10,);
+  )
+ 
+ #include GENERIC
+diff --git a/nss/nss_files/files-service.c b/nss/nss_files/files-service.c
+index 1bff1a2ab6..ba141438c4 100644
+--- a/nss/nss_files/files-service.c
++++ b/nss/nss_files/files-service.c
+@@ -31,9 +31,9 @@ struct servent_data {};
+ #define ISSLASH(c) ((c) == '/')
+ LINE_PARSER
+ ("#",
+- STRING_FIELD (result->s_name, isspace, 1);
+- INT_FIELD (result->s_port, ISSLASH, 10, 0, htons);
+- STRING_FIELD (result->s_proto, isspace, 1);
++ STRING_FIELD (result->s_name, isspace, true);
++ INT_FIELD (result->s_port, ISSLASH, false, 10, htons);
++ STRING_FIELD (result->s_proto, isspace, true);
+  )
+ 
+ #include GENERIC
 diff --git a/nss/tst-nss-malloc-failure-getlogin_r.c b/nss/tst-nss-malloc-failure-getlogin_r.c
 new file mode 100644
 index 0000000000..0e2985ad57
@@ -9395,10 +9954,18 @@ index 4bec5f448e..4d2a856496 100644
  #, c-format
  msgid "%s: pre-%d clients may mishandle distant timestamps"
 diff --git a/posix/Makefile b/posix/Makefile
-index 71a1906168..b6fb54364a 100644
+index 71a1906168..8b0be876a3 100644
 --- a/posix/Makefile
 +++ b/posix/Makefile
-@@ -357,6 +357,7 @@ tests-internal := \
+@@ -327,6 +327,7 @@ tests := \
+   tst-wait3 \
+   tst-wait4 \
+   tst-waitid \
++  tst-wordexp-append \
+   tst-wordexp-nocmd \
+   tst-wordexp-reuse \
+   tstgetopt \
+@@ -357,6 +358,7 @@ tests-internal := \
  tests-container := \
    bug-ga2 \
    tst-vfork3 \
@@ -9406,7 +9973,7 @@ index 71a1906168..b6fb54364a 100644
    # tests-container
  
  tests-time64 := \
-@@ -499,7 +500,7 @@ tests-special += \
+@@ -499,7 +501,7 @@ tests-special += \
    $(objpfx)tst-pcre-mem.out \
    $(objpfx)tst-rxspencer-no-utf8-mem.out \
    $(objpfx)tst-vfork3-mem.out \
@@ -9428,6 +9995,405 @@ index 8e541ff985..933ac6fee7 100644
  
    /* If we are not running multiple threads, we do not have to
       preserve lock state.  If fork runs from a signal handler, only
+diff --git a/posix/tst-wordexp-append.c b/posix/tst-wordexp-append.c
+new file mode 100644
+index 0000000000..87f388f0a7
+--- /dev/null
++++ b/posix/tst-wordexp-append.c
+@@ -0,0 +1,393 @@
++/* Test for wordexp with WRDE_APPEND flag.
++   Copyright (C) 2026 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <wordexp.h>
++#include <string.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <malloc.h>
++
++#include <support/check.h>
++#include <support/support.h>
++
++static unsigned int relocating_reallocs;
++
++/* w_addword grows we_wordv with realloc, make every call guaranteed to
++   relocate the block.  This makes BZ 34090 regression more deterministic.  */
++void *
++realloc (void *ptr, size_t size)
++{
++  if (ptr == NULL)
++    return malloc (size);
++  if (size == 0)
++    {
++      free (ptr);
++      return NULL;
++    }
++
++  void *new = malloc (size);
++  if (new == NULL)
++    return NULL;
++
++  /* Copy only what is valid in the old block to avoid reading past it.  */
++  size_t old = malloc_usable_size (ptr);
++  memcpy (new, ptr, old < size ? old : size);
++  /* Clobber the old block so that a stale we_wordv pointer restored on the
++     error path reads garbage instead of the old contents, which might
++     otherwise survive intact and mask the bug.  */
++  memset (ptr, 0x5a, old);
++  free (ptr);
++  relocating_reallocs++;
++  return new;
++}
++
++/* Verify that all words in we match the expected NULL-terminated
++   array.  */
++static void
++check_words (const wordexp_t *we, const char *const *expected)
++{
++  size_t i;
++  for (i = 0; expected[i] != NULL; i++)
++    {
++      TEST_VERIFY (i < we->we_wordc);
++      TEST_COMPARE_STRING (we->we_wordv[we->we_offs + i], expected[i]);
++    }
++  TEST_COMPARE (we->we_wordc, i);
++}
++
++#define CHECK_WORDS(we, ...) \
++  do {								\
++    const char *const expected_[] = { __VA_ARGS__, NULL };	\
++    check_words (we, expected_);				\
++  } while (0)
++
++/* Test 1: WRDE_APPEND + WRDE_BADCHAR preserves we_wordc.  */
++static void
++test_append_badchar_preserves_count (void)
++{
++  printf ("info: test_append_badchar_preserves_count\n");
++  wordexp_t we = { 0 };
++
++  TEST_COMPARE (wordexp ("one two three", &we, 0), 0);
++  TEST_COMPARE (we.we_wordc, 3);
++
++  size_t saved_count = we.we_wordc;
++
++  /* ')' triggers WRDE_BADCHAR and  "extra" would be a new word if the
++     expansion succeeded, exercising the w_addword path before the error
++     is detected.  */
++  TEST_COMPARE (wordexp ("extra )", &we, WRDE_APPEND), WRDE_BADCHAR);
++  TEST_COMPARE (we.we_wordc, saved_count);
++
++  wordfree (&we);
++}
++
++/* Test 2: WRDE_APPEND + WRDE_BADCHAR preserves the we_wordv pointer even
++   when internal realloc would move the buffer.  */
++static void
++test_append_badchar_preserves_pointer (void)
++{
++  printf ("info: test_append_badchar_preserves_pointer\n");
++  wordexp_t we = { 0 };
++
++  /* Use many words so that the initial we_wordv allocation is
++     non-trivial and a later realloc is more likely to move it.  */
++  TEST_COMPARE (wordexp ("a b c d e f g h", &we, 0), 0);
++  TEST_COMPARE (we.we_wordc, 8);
++
++  char **saved_wordv = we.we_wordv;
++  size_t saved_count = we.we_wordc;
++  unsigned int saved_reallocs = relocating_reallocs;
++
++  /* The interposed realloc guarantees the internal we_wordv buffer moves
++     during parsing, so the pointer-stability check below is meaningful.  */
++  TEST_COMPARE (wordexp ("append )", &we, WRDE_APPEND), WRDE_BADCHAR);
++  /* Verify that a relocating realloc actually happened during the failed
++     call, otherwise the pointer-stability check is vacuous.  */
++  TEST_VERIFY (relocating_reallocs > saved_reallocs);
++  TEST_COMPARE (we.we_wordc, saved_count);
++  TEST_VERIFY (we.we_wordv == saved_wordv);
++
++  wordfree (&we);
++}
++
++/* Test 3: After a failed WRDE_APPEND the original words are still accessible
++   and correct.  */
++static void
++test_append_badchar_words_intact (void)
++{
++  printf ("info: test_append_badchar_words_intact\n");
++  wordexp_t we = { 0 };
++
++  TEST_COMPARE (wordexp ("alpha beta gamma", &we, 0), 0);
++  CHECK_WORDS (&we, "alpha", "beta", "gamma");
++
++  TEST_COMPARE (wordexp ("delta )", &we, WRDE_APPEND), WRDE_BADCHAR);
++
++  /* Words must still be intact.  */
++  CHECK_WORDS (&we, "alpha", "beta", "gamma");
++  /* The NULL terminator must still be present.  */
++  TEST_VERIFY (we.we_wordv[we.we_offs + we.we_wordc] == NULL);
++
++  wordfree (&we);
++}
++
++/* Test 4: Successful WRDE_APPEND still works (regression test).  */
++static void
++test_append_success (void)
++{
++  printf ("info: test_append_success\n");
++  wordexp_t we = { 0 };
++
++  TEST_COMPARE (wordexp ("hello", &we, 0), 0);
++  TEST_COMPARE (we.we_wordc, 1);
++
++  char **saved_wordv = we.we_wordv;
++
++  TEST_COMPARE (wordexp ("world", &we, WRDE_APPEND), 0);
++  TEST_COMPARE (we.we_wordc, 2);
++  /* A successful append works on a fresh copy of the array, so the
++     caller-visible pointer must have changed.  */
++  TEST_VERIFY (we.we_wordv != saved_wordv);
++  CHECK_WORDS (&we, "hello", "world");
++
++  wordfree (&we);
++}
++
++/* Test 5: Successful append after a failed append — the implementation must
++   recover and allow further use of the wordexp_t.  */
++static void
++test_append_success_after_failure (void)
++{
++  printf ("info: test_append_success_after_failure\n");
++  wordexp_t we = { 0 };
++
++  TEST_COMPARE (wordexp ("first", &we, 0), 0);
++  CHECK_WORDS (&we, "first");
++
++  TEST_COMPARE (wordexp ("bad |", &we, WRDE_APPEND), WRDE_BADCHAR);
++
++  /* State must be exactly as before the failed call.  */
++  CHECK_WORDS (&we, "first");
++
++  /* A subsequent successful append must work.  */
++  TEST_COMPARE (wordexp ("second third", &we, WRDE_APPEND), 0);
++  CHECK_WORDS (&we, "first", "second", "third");
++
++  wordfree (&we);
++}
++
++/* Test 6: Multiple consecutive failed appends do not corrupt state.  */
++static void
++test_append_multiple_failures (void)
++{
++  printf ("info: test_append_multiple_failures\n");
++  wordexp_t we = { 0 };
++
++  TEST_COMPARE (wordexp ("keep this", &we, 0), 0);
++  CHECK_WORDS (&we, "keep", "this");
++
++  size_t saved_count = we.we_wordc;
++  char **saved_wordv = we.we_wordv;
++
++  /* Each of these bad characters must leave the state unchanged.  */
++  TEST_COMPARE (wordexp ("x )", &we, WRDE_APPEND), WRDE_BADCHAR);
++  TEST_COMPARE (wordexp ("x |", &we, WRDE_APPEND), WRDE_BADCHAR);
++  TEST_COMPARE (wordexp ("x ;", &we, WRDE_APPEND), WRDE_BADCHAR);
++  TEST_COMPARE (wordexp ("x &", &we, WRDE_APPEND), WRDE_BADCHAR);
++  TEST_COMPARE (wordexp ("x <", &we, WRDE_APPEND), WRDE_BADCHAR);
++  TEST_COMPARE (wordexp ("x >", &we, WRDE_APPEND), WRDE_BADCHAR);
++
++  TEST_COMPARE (we.we_wordc, saved_count);
++  TEST_VERIFY (we.we_wordv == saved_wordv);
++  CHECK_WORDS (&we, "keep", "this");
++
++  wordfree (&we);
++}
++
++/* Test 7: WRDE_APPEND with WRDE_SYNTAX error (unterminated quote) also
++   preserves state.  */
++static void
++test_append_syntax_error (void)
++{
++  printf ("info: test_append_syntax_error\n");
++  wordexp_t we = { 0 };
++
++  TEST_COMPARE (wordexp ("original", &we, 0), 0);
++  CHECK_WORDS (&we, "original");
++
++  char **saved_wordv = we.we_wordv;
++  size_t saved_count = we.we_wordc;
++
++  /* Unterminated double quote triggers WRDE_SYNTAX.  */
++  TEST_COMPARE (wordexp ("\"unterminated", &we, WRDE_APPEND), WRDE_SYNTAX);
++
++  TEST_COMPARE (we.we_wordc, saved_count);
++  TEST_VERIFY (we.we_wordv == saved_wordv);
++  CHECK_WORDS (&we, "original");
++
++  wordfree (&we);
++}
++
++/* Test 8: Error without WRDE_APPEND still works (regression test for the
++   non-APPEND code path in do_error).  */
++static void
++test_no_append_error (void)
++{
++  printf ("info: test_no_append_error\n");
++  wordexp_t we = { 0 };
++
++  /* Simple failure without WRDE_APPEND.  */
++  TEST_COMPARE (wordexp ("bad |", &we, 0), WRDE_BADCHAR);
++
++  /* After failure without WRDE_APPEND the struct should be safe to
++     reuse — start fresh.  */
++  TEST_COMPARE (wordexp ("ok", &we, 0), 0);
++  CHECK_WORDS (&we, "ok");
++
++  wordfree (&we);
++}
++
++/* Test 9: WRDE_BADCHAR on the very first character (no partial words added
++   before the error).  */
++static void
++test_append_badchar_immediate (void)
++{
++  printf ("info: test_append_badchar_immediate\n");
++  wordexp_t we = { 0 };
++
++  TEST_COMPARE (wordexp ("hello world", &we, 0), 0);
++  CHECK_WORDS (&we, "hello", "world");
++
++  char **saved_wordv = we.we_wordv;
++  size_t saved_count = we.we_wordc;
++
++  /* The bad character is the very first byte — no w_addword call happens
++     before the error.  */
++  TEST_COMPARE (wordexp ("|", &we, WRDE_APPEND), WRDE_BADCHAR);
++  TEST_COMPARE (we.we_wordc, saved_count);
++  TEST_VERIFY (we.we_wordv == saved_wordv);
++
++  wordfree (&we);
++}
++
++/* Test 10: WRDE_APPEND into an empty wordexp_t (initial call uses WRDE_APPEND
++   with a zeroed struct — unusual but allowed).  */
++static void
++test_append_into_empty (void)
++{
++  printf ("info: test_append_into_empty\n");
++  wordexp_t we = { 0 };
++
++  /* First call with WRDE_APPEND on a zeroed struct.  The implementation
++     must handle we_wordv == NULL gracefully.  */
++  TEST_COMPARE (wordexp ("solo", &we, WRDE_APPEND), 0);
++  TEST_COMPARE (we.we_wordc, 1);
++  CHECK_WORDS (&we, "solo");
++
++  wordfree (&we);
++}
++
++/* Verify that the leading we_offs slots are all NULL.  */
++static void
++check_offs_null (const wordexp_t *we)
++{
++  for (size_t i = 0; i < we->we_offs; i++)
++    TEST_VERIFY (we->we_wordv[i] == NULL);
++}
++
++/* Test 11: successful WRDE_APPEND with WRDE_DOOFFS and a non-zero we_offs.
++   The leading offset slots must stay NULL and words must land at
++   we_wordv[we_offs + i] across both the initial and the appended call.  */
++static void
++test_dooffs_append_success (void)
++{
++  printf ("info: test_dooffs_append_success\n");
++  wordexp_t we = { 0 };
++  we.we_offs = 2;
++
++  TEST_COMPARE (wordexp ("one two", &we, WRDE_DOOFFS), 0);
++  TEST_COMPARE (we.we_offs, 2);
++  check_offs_null (&we);
++  CHECK_WORDS (&we, "one", "two");
++
++  TEST_COMPARE (wordexp ("three", &we, WRDE_APPEND | WRDE_DOOFFS), 0);
++  TEST_COMPARE (we.we_offs, 2);
++  check_offs_null (&we);
++  CHECK_WORDS (&we, "one", "two", "three");
++  /* The NULL terminator must sit right after the last word.  */
++  TEST_VERIFY (we.we_wordv[we.we_offs + we.we_wordc] == NULL);
++
++  wordfree (&we);
++}
++
++/* Test 12: failed WRDE_APPEND with WRDE_DOOFFS preserves we_wordc, the
++   we_wordv pointer, the words and the leading NULL offset slots.  This
++   exercises the we_offs arithmetic in the array duplication and in the
++   error-path cleanup (we_wordv[we_offs + --we_wordc]).  */
++static void
++test_dooffs_append_error_preserves_state (void)
++{
++  printf ("info: test_dooffs_append_error_preserves_state\n");
++  wordexp_t we = { 0 };
++  we.we_offs = 3;
++
++  TEST_COMPARE (wordexp ("alpha beta", &we, WRDE_DOOFFS), 0);
++  check_offs_null (&we);
++  CHECK_WORDS (&we, "alpha", "beta");
++
++  char **saved_wordv = we.we_wordv;
++  size_t saved_count = we.we_wordc;
++  unsigned int saved_reallocs = relocating_reallocs;
++
++  /* "gamma" is a partial word added via w_addword (forcing a relocating
++     realloc of we_wordv) before ')' triggers WRDE_BADCHAR.  */
++  TEST_COMPARE (wordexp ("gamma )", &we, WRDE_APPEND | WRDE_DOOFFS),
++		WRDE_BADCHAR);
++  TEST_VERIFY (relocating_reallocs > saved_reallocs);
++
++  TEST_COMPARE (we.we_offs, 3);
++  TEST_COMPARE (we.we_wordc, saved_count);
++  TEST_VERIFY (we.we_wordv == saved_wordv);
++  check_offs_null (&we);
++  CHECK_WORDS (&we, "alpha", "beta");
++  TEST_VERIFY (we.we_wordv[we.we_offs + we.we_wordc] == NULL);
++
++  wordfree (&we);
++}
++
++static int
++do_test (void)
++{
++  test_append_badchar_preserves_count ();
++  test_append_badchar_preserves_pointer ();
++  test_append_badchar_words_intact ();
++  test_append_success ();
++  test_append_success_after_failure ();
++  test_append_multiple_failures ();
++  test_append_syntax_error ();
++  test_no_append_error ();
++  test_append_badchar_immediate ();
++  test_append_into_empty ();
++  test_dooffs_append_success ();
++  test_dooffs_append_error_preserves_state ();
++
++  return 0;
++}
++
++#include <support/test-driver.c>
 diff --git a/posix/tst-wordexp-tilde.c b/posix/tst-wordexp-tilde.c
 new file mode 100644
 index 0000000000..1661603681
@@ -9702,7 +10668,7 @@ index 0000000000..eb85a552ad
 @@ -0,0 +1 @@
 +root:x:0:0:root:/root:/bin/sh
 diff --git a/posix/wordexp.c b/posix/wordexp.c
-index 4a8541add4..f0f69ee85d 100644
+index 4a8541add4..9a49e102ee 100644
 --- a/posix/wordexp.c
 +++ b/posix/wordexp.c
 @@ -335,17 +335,29 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
@@ -9741,6 +10707,116 @@ index 4a8541add4..f0f69ee85d 100644
  
        if (result == 0 && tpwd != NULL && pwd.pw_dir)
  	*word = w_addstr (*word, word_length, max_length, pwd.pw_dir);
+@@ -2212,6 +2224,12 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
+   char ifs_white[4];
+   wordexp_t old_word = *pwordexp;
+ 
++  /* When WRDE_APPEND is set we work on a copy of the we_wordv array so that
++     the caller's original pointer is never invalidated by realloc inside
++     w_addword.  The saved_wordv keeps the original; on success we free it,
++     on non-NOSPACE error we free the working copy and restore the original.  */
++  char **saved_wordv = NULL;
++
+   if (flags & WRDE_REUSE)
+     {
+       /* Minimal implementation of WRDE_REUSE for now */
+@@ -2246,6 +2264,21 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
+ 	  pwordexp->we_offs = 0;
+ 	}
+     }
++  else if (pwordexp->we_wordv != NULL)
++    {
++      /* WRDE_APPEND with an existing word list: duplicate the array so that
++	 realloc during parsing does not invalidate the caller's pointer.  The
++	 strings themselves are shared an the array already holds
++	 'we_offs + we_wordc + 1 pointers' (so the size computation cannot
++	 overflow).  */
++      size_t num_p = pwordexp->we_offs + pwordexp->we_wordc + 1;
++      char **dup = malloc (num_p * sizeof (char *));
++      if (dup == NULL)
++	return WRDE_NOSPACE;
++      memcpy (dup, pwordexp->we_wordv, num_p * sizeof (char *));
++      saved_wordv = pwordexp->we_wordv;
++      pwordexp->we_wordv = dup;
++    }
+ 
+   /* Find out what the field separators are.
+    * There are two types: whitespace and non-whitespace.
+@@ -2326,7 +2359,7 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
+ 	    error = w_addword (pwordexp, NULL);
+ 
+ 	    if (error)
+-	      return error;
++	      goto do_error;
+ 	  }
+ 
+ 	break;
+@@ -2344,7 +2377,7 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
+ 	    error = w_addword (pwordexp, NULL);
+ 
+ 	    if (error)
+-	      return error;
++	      goto do_error;
+ 	  }
+ 
+ 	break;
+@@ -2410,10 +2443,18 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
+ 
+   /* There was a word separator at the end */
+   if (word == NULL) /* i.e. w_newword */
+-    return 0;
++    {
++      free (saved_wordv);
++      return 0;
++    }
+ 
+-  /* There was no field separator at the end */
+-  return w_addword (pwordexp, word);
++  /* There was no field separator at the end.  The only possible error
++     from w_addword is WRDE_NOSPACE.  */
++  error = w_addword (pwordexp, word);
++  if (error != 0)
++    goto do_error;
++  free (saved_wordv);
++  return 0;
+ 
+ do_error:
+   /* Error:
+@@ -2424,11 +2465,30 @@ do_error:
+   free (word);
+ 
+   if (error == WRDE_NOSPACE)
+-    return WRDE_NOSPACE;
++    {
++      /* we_wordc and we_wordv are updated to reflect any words that were
++	 successfully expanded.  The old array is obsolete.  */
++      free (saved_wordv);
++      return WRDE_NOSPACE;
++    }
+ 
+-  if ((flags & WRDE_APPEND) == 0)
+-    wordfree (pwordexp);
++  if (flags & WRDE_APPEND)
++    {
++      /* POSIX 2024 states that for in other error cases, if the WRDE_APPEND
++	 flag was specified, we_wordc and we_wordv shall not be modified.
++
++	 Free strings appended during this call, discard the working copy of
++	 we_wordv, and restore the caller's original pointer.  */
++      while (pwordexp->we_wordc > old_word.we_wordc)
++	free (pwordexp->we_wordv[pwordexp->we_offs + --pwordexp->we_wordc]);
++      free (pwordexp->we_wordv);
++      pwordexp->we_wordv = saved_wordv;
++    }
++  else
++    {
++      wordfree (pwordexp);
++      *pwordexp = old_word;
++    }
+ 
+-  *pwordexp = old_word;
+   return error;
+ }
 diff --git a/resolv/Makefile b/resolv/Makefile
 index b74c8f325e..130d8b51e0 100644
 --- a/resolv/Makefile
@@ -10094,6 +11170,43 @@ index 73af0c72fe..6bf9962916 100644
  const struct res_sym __p_type_syms[] = {
    {ns_t_a,      (char *) "A",     (char *) "address"},
    {ns_t_ns,     (char *) "NS",    (char *) "name server"},
+diff --git a/resolv/resolv_conf.c b/resolv/resolv_conf.c
+index d33f32ac1a..a688d4223b 100644
+--- a/resolv/resolv_conf.c
++++ b/resolv/resolv_conf.c
+@@ -281,8 +281,12 @@ resolv_conf_matches (const struct __res_state *resp,
+   {
+     if (resp->dnsrch[0] == NULL)
+       {
+-        /* Empty search list.  No default domain name.  */
+-        return conf->search_list_size == 0 && resp->defdname[0] == '\0';
++        /* Empty search list, or the first entry does not fit in
++           resp->defdname.  No default domain name.  */
++        return resp->defdname[0] == '\0'
++          && (conf->search_list_size == 0
++              || (strlen (conf->search_list[0]) + 1
++                  > sizeof (resp->defdname)));
+       }
+ 
+     if (resp->dnsrch[0] != resp->defdname)
+@@ -309,11 +313,12 @@ resolv_conf_matches (const struct __res_state *resp,
+           }
+         else
+           {
+-            /* resp->dnsrch is truncated if the number of elements
+-               exceeds MAXDNSRCH, or if the combined storage space for
+-               the search list exceeds what can be stored in
+-               resp->defdname.  */
+-            if (i == MAXDNSRCH || search_list_size > sizeof (resp->dnsrch))
++            /* resp->dnsrch is truncated if the number of elements exceeds
++               MAXDNSRCH, or if conf->search_list[i] does not fit in the
++               remaining space of resp->defdname.  */
++            if (i == MAXDNSRCH
++                || (search_list_size + strlen (conf->search_list[i]) + 1
++                    > sizeof (resp->defdname)))
+               break;
+             /* Otherwise, a mismatch indicates a match failure.  */
+             return false;
 diff --git a/resolv/tst-ns_sprintrr.c b/resolv/tst-ns_sprintrr.c
 new file mode 100644
 index 0000000000..34739b5924
@@ -10858,6 +11971,52 @@ index 0000000000..0c802ab967
 +}
 +
 +#include <support/test-driver.c>
+diff --git a/resolv/tst-resolv-res_init-skeleton.c b/resolv/tst-resolv-res_init-skeleton.c
+index 1e4c59dac9..e51a532c7e 100644
+--- a/resolv/tst-resolv-res_init-skeleton.c
++++ b/resolv/tst-resolv-res_init-skeleton.c
+@@ -724,6 +724,41 @@ struct test_case test_cases[] =
+      "nameserver 192.0.2.1\n"
+      "; nameserver[0]: [192.0.2.1]:53\n"
+     },
++/* Search list entries which do not fit in the legacy 256-byte
++   resp->defdname buffer (bug 31026).  LONG244 is 244 characters long,
++   so it does not fit after "example.com\0" (12 bytes).  LONG256 is 256
++   characters long, so it does not fit even as the first entry.  */
++#define LBL63 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++#define LONG244 LBL63 "." LBL63 "." LBL63 "." \
++  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
++#define LONG256 LBL63 "." LBL63 "." LBL63 "." LBL63 "a"
++    {.name = "search list truncated at long entry after short entry",
++     .conf = "nameserver 192.0.2.1\n"
++     "search example.com " LONG244 "\n",
++     .expected = "search example.com\n"
++     "; search[0]: example.com\n"
++     "; search[1]: " LONG244 "\n"
++     "nameserver 192.0.2.1\n"
++     "; nameserver[0]: [192.0.2.1]:53\n"
++    },
++    {.name = "search list truncated at long first entry",
++     .conf = "nameserver 192.0.2.1\n"
++     "search " LONG256 " example.com\n",
++     .expected = "; search[0]: " LONG256 "\n"
++     "; search[1]: example.com\n"
++     "nameserver 192.0.2.1\n"
++     "; nameserver[0]: [192.0.2.1]:53\n"
++    },
++    {.name = "long first entry from the domain directive",
++     .conf = "nameserver 192.0.2.1\n"
++     "domain " LONG256 "\n",
++     .expected = "; search[0]: " LONG256 "\n"
++     "nameserver 192.0.2.1\n"
++     "; nameserver[0]: [192.0.2.1]:53\n"
++    },
++#undef LONG256
++#undef LONG244
++#undef LBL63
+     {.name = "trust-ad flag",
+      .conf = "options trust-ad\n"
+      "nameserver 192.0.2.1\n",
 diff --git a/scripts/abilist.awk b/scripts/abilist.awk
 index 6cc7af6ac8..7ea1edf8c0 100644
 --- a/scripts/abilist.awk
@@ -10979,6 +12138,80 @@ index 63b9246e47..8687150dff 100644
  		    /* Enlarge the buffer.  */
  		    wstr = (wchar_t *) realloc (*strptr,
  						newsize * sizeof (wchar_t));
+diff --git a/stdlib/Makefile b/stdlib/Makefile
+index 04596b53b1..43a12f24ff 100644
+--- a/stdlib/Makefile
++++ b/stdlib/Makefile
+@@ -347,6 +347,7 @@ tests := \
+   tst-stdc_leading_zeros \
+   tst-stdc_trailing_ones \
+   tst-stdc_trailing_zeros \
++  tst-strfmon-bug34510 \
+   tst-strfmon_l \
+   tst-strfrom \
+   tst-strfrom-locale \
+diff --git a/stdlib/strfmon_l.c b/stdlib/strfmon_l.c
+index f864289480..c39babaeae 100644
+--- a/stdlib/strfmon_l.c
++++ b/stdlib/strfmon_l.c
+@@ -549,7 +549,8 @@ __vstrfmon_l_buffer (struct __printf_buffer *buf, locale_t loc,
+       /* Now test whether the output width is filled.  */
+       if (buf->write_ptr - startp < width)
+ 	{
+-	  size_t pad_width = width - (buf->write_ptr - startp);
++	  size_t written_width = buf->write_ptr - startp;
++	  size_t pad_width = width - written_width;
+ 	  __printf_buffer_pad (buf, ' ', pad_width);
+ 	  if (__printf_buffer_has_failed (buf))
+ 	    /* Implies length check.  */
+@@ -558,7 +559,7 @@ __vstrfmon_l_buffer (struct __printf_buffer *buf, locale_t loc,
+ 	     Otherwise move the field contents in place.  */
+ 	  if (!left)
+ 	    {
+-	      memmove (startp + pad_width, startp, buf->write_ptr - startp);
++	      memmove (startp + pad_width, startp, written_width);
+ 	      memset (startp, ' ', pad_width);
+ 	    }
+ 	}
+diff --git a/stdlib/tst-strfmon-bug34510.c b/stdlib/tst-strfmon-bug34510.c
+new file mode 100644
+index 0000000000..b187bde1f4
+--- /dev/null
++++ b/stdlib/tst-strfmon-bug34510.c
+@@ -0,0 +1,33 @@
++/* Test handling of right-padding in strfmon (bug 34510, CVE-2026-19499).
++   Copyright (C) 2026 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <monetary.h>
++#include <errno.h>
++#include <support/check.h>
++#include <support/next_to_fault.h>
++
++static int
++do_test (void)
++{
++  struct support_next_to_fault ntf = support_next_to_fault_allocate (100);
++  TEST_COMPARE (strfmon (ntf.buffer, ntf.length, "%100n", 1.23), -1);
++  TEST_COMPARE (errno, E2BIG);
++  return 0;
++}
++
++#include <support/test-driver.c>
 diff --git a/string/Makefile b/string/Makefile
 index c4423c0437..aa0b0c2f57 100644
 --- a/string/Makefile
@@ -11093,6 +12326,44 @@ index cb9d5759ac..a362328142 100644
 +#if IS_IN (rtld)
 +strong_alias (strlen, __strlen_generic)
 +#endif
+diff --git a/sysdeps/alpha/Makefile b/sysdeps/alpha/Makefile
+index 60a369e255..faa59ab27a 100644
+--- a/sysdeps/alpha/Makefile
++++ b/sysdeps/alpha/Makefile
+@@ -53,6 +53,20 @@ CFLAGS-s_lrint.c += -mieee-with-inexact
+ CFLAGS-test-misc.c += -mieee-with-inexact
+ # Avoid "conflicting types for built-in function" warnings
+ CFLAGS-s_isnan.c += -fno-builtin-isnanf
++
++# _Float32x and _Float64 are both binary64 on Alpha, so this narrowing
++# divide is a plain divide and the hardware alone decides whether to
++# signal underflow.  IEEE 754 determines tininess after rounding from the
++# result rounded as if the exponent range were unbounded, but Alpha
++# determines it from the delivered result.  For a quotient that is tiny
++# but rounds up to the smallest normal -- DBL_MIN / (1 + 2^-52) under a
++# rounding mode that rounds away from zero -- the unbounded rounding
++# stays below DBL_MIN, because that binade has a finer spacing than the
++# subnormals, while the delivered result is DBL_MIN and looks normal.
++# Alpha raises no underflow for it.  No trap is taken, so the kernel
++# emulation cannot correct this, and the operation has no wider
++# intermediate for libm to examine.
++test-xfail-test-float32x-float64-div = yes
+ endif
+ 
+ # Build everything with full IEEE math support, and with dynamic rounding;
+diff --git a/sysdeps/alpha/fpu/bits/fenv.h b/sysdeps/alpha/fpu/bits/fenv.h
+index b1135f1f0a..530f298914 100644
+--- a/sysdeps/alpha/fpu/bits/fenv.h
++++ b/sysdeps/alpha/fpu/bits/fenv.h
+@@ -121,7 +121,7 @@ typedef unsigned long int fenv_t;
+ 
+ #ifdef __USE_GNU
+ /* Floating-point environment where none of the exceptions are masked.  */
+-# define FE_NOMASK_ENV	((const fenv_t *) 0x880000000000003eUL)
++# define FE_NOMASK_ENV	((const fenv_t *) 0x880000000000007eUL)
+ 
+ /* Floating-point environment with (processor-dependent) non-IEEE floating
+    point.  In this case, mapping denormals to zero.  */
 diff --git a/sysdeps/arm/Makefile b/sysdeps/arm/Makefile
 index d08dade3c5..0bb1b6e05b 100644
 --- a/sysdeps/arm/Makefile
@@ -11550,6 +12821,53 @@ index 9fdd039da0..8af00d2846 100644
  #endif
  
  #endif
+diff --git a/sysdeps/m68k/m680x0/fpu/e_fmod.c b/sysdeps/m68k/m680x0/fpu/e_fmod.c
+index 9ad6924422..faac7c79e3 100644
+--- a/sysdeps/m68k/m680x0/fpu/e_fmod.c
++++ b/sysdeps/m68k/m680x0/fpu/e_fmod.c
+@@ -33,7 +33,7 @@ __fmod (double x, double y)
+ 			&& !is_nan (hx)))
+     return __math_invalid (x);
+ 
+-  return __m81_u(fmod)(x, y);
++  return __m81_u(__ieee754_fmod)(x, y);
+ }
+ strong_alias (__fmod, __ieee754_fmod)
+ libm_alias_finite (__ieee754_fmod, __fmod)
+diff --git a/sysdeps/m68k/m680x0/fpu/e_fmodf.c b/sysdeps/m68k/m680x0/fpu/e_fmodf.c
+index a3bd24b71f..98797e0887 100644
+--- a/sysdeps/m68k/m680x0/fpu/e_fmodf.c
++++ b/sysdeps/m68k/m680x0/fpu/e_fmodf.c
+@@ -34,7 +34,7 @@ __fmodf (float x, float y)
+ 			&& !is_nan (hx)))
+     return __math_invalidf (x);
+ 
+-  return __m81_u(fmodf)(x, y);
++  return __m81_u(__ieee754_fmodf)(x, y);
+ }
+ strong_alias (__fmodf, __ieee754_fmodf)
+ versioned_symbol (libm, __fmodf, fmodf, GLIBC_2_43);
+diff --git a/sysdeps/m68k/m680x0/fpu/w_fmod_compat.c b/sysdeps/m68k/m680x0/fpu/w_fmod_compat.c
+deleted file mode 100644
+index 57f38091e6..0000000000
+--- a/sysdeps/m68k/m680x0/fpu/w_fmod_compat.c
++++ /dev/null
+@@ -1,15 +0,0 @@
+-/* m68k provides an optimized __ieee752_fmod.  */
+-#include <math-svid-compat.h>
+-#ifdef SHARED
+-# undef SHLIB_COMPAT
+-# define SHLIB_COMPAT(a, b, c) 1
+-# undef LIBM_SVID_COMPAT
+-# define LIBM_SVID_COMPAT 1
+-# undef compat_symbol
+-# define compat_symbol(a, b, c, d)
+-#include <math/w_fmod_compat.c>
+-libm_alias_double (__fmod_compat, fmod)
+-#else
+-#include <math-type-macros-double.h>
+-#include <w_fmod_template.c>
+-#endif
 diff --git a/sysdeps/mach/hurd/bits/ioctls.h b/sysdeps/mach/hurd/bits/ioctls.h
 index 151761ef66..162a815082 100644
 --- a/sysdeps/mach/hurd/bits/ioctls.h
@@ -12638,6 +13956,38 @@ index 0000000000..f381f28a53
 +++ b/sysdeps/unix/sysv/linux/alpha/bits/cloexec.h
 @@ -0,0 +1 @@
 +#define __O_CLOEXEC 010000000
+diff --git a/sysdeps/unix/sysv/linux/alpha/makecontext.S b/sysdeps/unix/sysv/linux/alpha/makecontext.S
+index b0479315d5..1de0dd2653 100644
+--- a/sysdeps/unix/sysv/linux/alpha/makecontext.S
++++ b/sysdeps/unix/sysv/linux/alpha/makecontext.S
+@@ -38,6 +38,9 @@ ENTRY(__makecontext)
+ 	s8addq	$1, 0, $2
+ 	subq	$8, $2, $8
+ 
++	/* The Alpha ABI requires a 16-byte-aligned stack pointer.  */
++	bic	$8, 15, $8
++
+ 	/* Copy all parameters.  Switch statement header here.  */
+ 	ldah	$3, $jumptable($29)	!gprelhigh
+ 	cmple	$18, 6, $1
+diff --git a/sysdeps/unix/sysv/linux/alpha/setrlimit64.c b/sysdeps/unix/sysv/linux/alpha/setrlimit64.c
+index 512aaf2042..d8cb04fa5e 100644
+--- a/sysdeps/unix/sysv/linux/alpha/setrlimit64.c
++++ b/sysdeps/unix/sysv/linux/alpha/setrlimit64.c
+@@ -35,11 +35,11 @@ __old_setrlimit64 (enum __rlimit_resource resource,
+ {
+   struct rlimit64 krlimits;
+ 
+-  if (rlimits->rlim_cur == OLD_RLIM64_INFINITY)
++  if (rlimits->rlim_cur >= OLD_RLIM64_INFINITY)
+     krlimits.rlim_cur = RLIM64_INFINITY;
+   else
+     krlimits.rlim_cur = rlimits->rlim_cur;
+-  if (rlimits->rlim_max == OLD_RLIM64_INFINITY)
++  if (rlimits->rlim_max >= OLD_RLIM64_INFINITY)
+     krlimits.rlim_max = RLIM64_INFINITY;
+   else
+     krlimits.rlim_max = rlimits->rlim_max;
 diff --git a/sysdeps/unix/sysv/linux/bits/cloexec.h b/sysdeps/unix/sysv/linux/bits/cloexec.h
 new file mode 100644
 index 0000000000..3059fb6473
@@ -13071,3 +14421,16 @@ index 04b6c1e6a3..b607e525f2 100644
  #endif /* SHARED */
  
  #endif
+diff --git a/timezone/zic.c b/timezone/zic.c
+index d5d30163b0..17c6f906b2 100644
+--- a/timezone/zic.c
++++ b/timezone/zic.c
+@@ -3234,7 +3234,7 @@ outzone(const struct zone *zpfirst, ptrdiff_t zonecount)
+ 				startttisut);
+ 			if (usestart) {
+ 				addtt(starttime, type);
+-				if (useuntil && nonTZlimtime < starttime) {
++				if (nonTZlimtime < starttime) {
+ 				  nonTZlimtime = starttime;
+ 				  nonTZlimtype = type;
+ 				}
