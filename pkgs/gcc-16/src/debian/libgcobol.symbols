@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 16 amd64 arm64 ppc64el riscv64
+# SymbolsHelper-Confirmed: 16.1 amd64 arm64 ppc64el riscv64
 libgcobol.so.2 libgcobol2 #MINVER#
  _Z11__gg__abortPKc@Base 15
  _Z12__gg__mabortv@Base 15
@@ -31,6 +31,7 @@ libgcobol.so.2 libgcobol2 #MINVER#
  _ZN24cbl_enabled_exceptions_t6decodeERKSt6vectorImSaImEE@Base 15
  _ZN24cbl_enabled_exceptions_tD1Ev@Base 15
  _ZN24cbl_enabled_exceptions_tD2Ev@Base 15
+ _ZN9charmap_t16mapped_characterEj@Base 16.1
  _ZN9charmap_t18figconst_characterE14cbl_figconst_t@Base 16
  _ZN9charmap_t6memsetEPvjm@Base 16
  _ZN9charmap_tC1E14cbl_encoding_t@Base 16
@@ -115,8 +116,6 @@ libgcobol.so.2 libgcobol2 #MINVER#
  (optional=templinst)_ZNSt6vectorImSaImEED2Ev@Base 15
  (optional=templinst)_ZNSt7__cxx1112basic_stringIDiSt11char_traitsIDiESaIDiEE10_M_disposeEv@Base 16
  (optional=templinst)_ZNSt7__cxx1112basic_stringIDiSt11char_traitsIDiESaIDiEE9push_backEDi@Base 16
- (optional=templinst)_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE10_M_disposeEv@Base 16
- (optional=templinst)_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE9push_backEc@Base 16
  (optional=templinst)_ZNSt8_Rb_treeISt6vectorIhSaIhEESt4pairIKS2_lESt10_Select1stIS5_ESt4lessIS2_ESaIS5_EE11equal_rangeERS4_@Base 15
  (optional=templinst)_ZNSt8_Rb_treeImmSt9_IdentityImESt4lessImESaImEE16_M_insert_uniqueIRKmEESt4pairISt17_Rb_tree_iteratorImEbEOT_@Base 15
  (optional=templinst)_ZNSt8__detail9_Map_baseINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESt4pairIKS6_PvESaISA_ENS_10_Select1stESt8equal_toIS6_ESt4hashIS6_ENS_18_Mod_range_hashingENS_20_Default_ranged_hashENS_20_Prime_rehash_policyENS_17_Hashtable_traitsILb1ELb0ELb1EEELb1EEixEOS6_@Base 15
@@ -188,13 +187,10 @@ libgcobol.so.2 libgcobol2 #MINVER#
  __gg__data__file_status@Base 15
  __gg__data_argi@Base 16
  __gg__data_high_values@Base 15
- __gg__data_linage_counter@Base 15
  __gg__data_low_values@Base 15
  __gg__data_nulls@Base 15
  __gg__data_quotes@Base 15
- __gg__data_return_code@Base 15
  __gg__data_space@Base 15
- __gg__data_tally@Base 16
  __gg__data_upsi_0@Base 15
  __gg__data_zeros@Base 15
  __gg__date_of_integer@Base 15
@@ -222,7 +218,7 @@ libgcobol.so.2 libgcobol2 #MINVER#
  __gg__double_to_target@Base 15
  __gg__e@Base 15
  __gg__ebcdic_to_cp1252_collation@Base 15
- __gg__entry_label@Base 16
+ __gg__entry_index@Base 16.1
  __gg__entry_location@Base 15
  __gg__exception_code@Base 15
  __gg__exception_file_name@Base 15
@@ -313,6 +309,7 @@ libgcobol.so.2 libgcobol2 #MINVER#
  __gg__initialize_variable@Base 15
  __gg__initialize_variable_clean@Base 15
  __gg__inspect_format_1@Base 15
+ __gg__inspect_format_1_sbc@Base 16.1
  __gg__inspect_format_2@Base 15
  __gg__inspect_format_4@Base 15
  __gg__int128_to_field@Base 15
@@ -405,6 +402,7 @@ libgcobol.so.2 libgcobol2 #MINVER#
  __gg__seconds_from_formatted_time@Base 15
  __gg__seconds_past_midnight@Base 15
  __gg__set_arg_num@Base 15
+ __gg__set_data_member@Base 16.1
  __gg__set_env_name@Base 15
  __gg__set_env_value@Base 15
  __gg__set_envar@Base 15
@@ -467,13 +465,11 @@ libgcobol.so.2 libgcobol2 #MINVER#
  __gg__xml_parse@Base 16
  __gg__xml_parse_done@Base 16
  __gg__year_to_yyyy@Base 15
- __ggsr___14_linage_counter6@Base 16
  __ggsr___dev_null@Base 16
  __ggsr___dev_stderr@Base 16
  __ggsr___dev_stdin@Base 16
  __ggsr___dev_stdout@Base 16
  __ggsr___file_status@Base 16
- __ggsr___tally@Base 16
  __ggsr__argi@Base 16
  __ggsr__debug_contents@Base 16
  __ggsr__debug_filler_1@Base 16
@@ -491,19 +487,9 @@ libgcobol.so.2 libgcobol2 #MINVER#
  __ggsr__low_values@Base 16
  __ggsr__nulls@Base 16
  __ggsr__quotes@Base 16
- __ggsr__return_code@Base 16
  __ggsr__space@Base 16
  __ggsr__spaces@Base 16
  __ggsr__upsi_0@Base 16
- __ggsr__xml_code@Base 16
- __ggsr__xml_event@Base 16
- __ggsr__xml_information@Base 16
- __ggsr__xml_namespace@Base 16
- __ggsr__xml_namespace_prefix@Base 16
- __ggsr__xml_nnamespace@Base 16
- __ggsr__xml_nnamespace_prefix@Base 16
- __ggsr__xml_ntext@Base 16
- __ggsr__xml_text@Base 16
  __ggsr__zeros@Base 16
  eoxml_ec_values@Base 16
  posix_errno@Base 16
