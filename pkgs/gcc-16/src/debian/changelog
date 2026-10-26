@@ -1,3 +1,59 @@
+gcc-16 (16.2.0-3) unstable; urgency=medium
+
+  * Update to git 20260918 from the gcc-16 branch.
+    - Fix PR target/127306 (RISCV), PR target/127318 (RISCV),
+      PR target/127153 (loongarch), PR target/126932 (RISCV),
+      PR middle-end/127256, PR target/126463 (AArch64),
+      PR target/126196 (RISCV), PR rtl-optimization/125683, PR debug/125421,
+      PR target/127188 (RISCV), PR c++/125642, PR c++/127207, PR c++/123495,
+      PR c++/126860, PR c++/124983, PR fortran/127128, PR libstdc++/124121,
+      PR libstdc++/127220, PR libstdc++/127219, PR libstdc++/126949,
+      PR libstdc++/127325, PR libstdc++/126800, PR target/122535 (PPC),
+      PR tree-optimization/127390, PR tree-optimization/127377,
+      PR tree-optimization/127262, PR tree-optimization/127130,
+      PR tree-optimization/127049, PR tree-optimization/127000,
+      PR tree-optimization/127000, PR tree-optimization/126760,
+      PR tree-optimization/127391, PR tree-optimization/126658, PR ipa/126153,
+      PR tree-optimization/126153, PR ipa/126153, PR libstdc++/127430.
+  * Strip compiler executables for release builds. Closes: #1147241.
+  * Bootstrap using gnat-14, to be able to remove GCC 15.
+  * Add comment why libstdc++.so in the gcc_lib_dir needs to be copy
+    of the library, not a symlink.
+  * Apply PR target/120165 (m68k only), taken from the trunk.
+
+ -- Matthias Klose <doko@debian.org>  Fri, 18 Sep 2026 09:35:21 +0200
+
+gcc-16 (16.2.0-2) unstable; urgency=medium
+
+  * Update to git 20260902 from the gcc-16 branch.
+    - Fix PR middle-end/127098, PR tree-optimization/127105,
+      PR tree-optimization/127100, PR target/120681 (PPC),
+      PR target/120528 (PPC), PR target/99293 (PPC), PR target/117487 (PPC),
+      PR ada/125984, PR ipa/127023, PR target/126873 (RISCV),
+      PR rtl-optimization/126426, PR target/127004 (AVR), PR middle-end/126939,
+      PR target/126787 (x86), PR target/126513 (PPC),
+      PR target/124629 (AArch64), PR tree-optimization/126925,
+      PR tree-optimization/126650, PR tree-optimization/126926,
+      PR tree-optimization/126534, PR target/126454 (RISCV),
+      PR target/126334 (RISCV), PR target/126550 (RISCV),
+      PR target/126676 (x86), PR target/126320 (x86), PR target/126450 (x86),
+      PR target/126529 (x86), PR ada/127026, PR ada/127026, PR ada/126928,
+      PR ada/126907, PR c++/127046, PR c++/124888, PR c++/126335,
+      PR c++/124794, PR c++/126546, PR c++/124811, PR c++/126918,
+      PR c++/126867, PR c++/126752, PR c++/126093, PR c++/126483,
+      PR c++/126754, PR c++/126783, PR c++/124794, PR c++/125069,
+      PR c++/124806, PR fortran/98573, PR fortran/105594, PR fortran/88632,
+      PR fortran/104630, PR fortran/126872, PR fortran/110626,
+      PR fortran/104048, PR target/125803 (PPC), PR libstdc++/118665,
+      PR libstdc++/123510, PR libstdc++/122981, PR libstdc++/127006,
+      PR libstdc++/126731, PR libstdc++/125981, PR libstdc++/126452,
+      PR libstdc++/126849.
+  * Only enable LRA by default on m68k for snapshot builds. Closes: #1143971.
+  * Don't apply the SH LRA patches for snapshot builds. Closes: #1146439.
+  * Disable usage stats for the build.
+
+ -- Matthias Klose <doko@debian.org>  Wed, 02 Sep 2026 11:07:42 +0200
+
 gcc-16 (16.2.0-1) unstable; urgency=medium
 
   * GCC 16.2.0 release.

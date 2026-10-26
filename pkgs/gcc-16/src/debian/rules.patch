@@ -19,6 +19,7 @@ debian_patches += \
 
 ifneq ($(GFDL_INVARIANT_FREE),yes)
   debian_patches += \
+	git-doc-updates \
 	rename-info-files \
 
 #	git-doc-updates \
@@ -73,6 +74,11 @@ debian_patches += \
 # see https://bugs.debian.org/1108322
 ifneq (,$(filter $(DEB_TARGET_ARCH),hppa m68k powerpc))
   debian_patches += ada-tv_nsec-size
+endif
+
+# not yet backported, m68k only
+ifneq (,$(filter $(DEB_TARGET_ARCH),m68k))
+  debian_patches += pr120165
 endif
 
 ifneq (,$(newlib_tarball))
@@ -174,6 +180,7 @@ ifeq ($(DEB_TARGET_ARCH),sh4)
     debian_patches += sh-lra-support-doc
   endif
 endif
+
 debian_patches += sh-bootstrap-compare
 
 # all patches below this line are applied for gcc-snapshot builds as well
