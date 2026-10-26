@@ -460,7 +460,7 @@ ifeq ($(build_type),build-native)
     usage_stats =
   endif
 endif
-#usage_stats = disabled for release builds
+usage_stats = disabled for release builds
 
 # -------------------------------------------------------------------
 # stage options
@@ -609,9 +609,9 @@ ppc64el_ibm128_distreleases = jessie stretch buster bullseye bookworm trixie \
 
 # allows to write backtraces for ICEs
 #unstripped_exe = yes
-ifneq (,$(filter $(DEB_TARGET_ARCH), alpha amd64 armhf arm64 i386 loong64 ppc64el riscv64 s390x sparc64))
-  unstripped_exe = yes
-endif
+#ifneq (,$(filter $(DEB_TARGET_ARCH), alpha amd64 armhf arm64 i386 loong64 ppc64el riscv64 s390x sparc64))
+#  unstripped_exe = yes
+#endif
 
 # common things ---------------
 # build common packages, where package names don't differ in different
