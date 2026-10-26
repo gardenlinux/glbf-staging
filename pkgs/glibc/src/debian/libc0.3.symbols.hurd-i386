@@ -5,6 +5,9 @@ libc.so.0.3 #PACKAGE# #MINVER#
  (symver|optional)HURD_CTHREADS_0.3 2.11
  __errno_location@GLIBC_2.2.6 2.29-8~
  __h_errno_location@GLIBC_2.2.6 2.29-8~
+ _IO_flockfile@GLIBC_2.2.6 2.13-38~
+ _IO_ftrylockfile@GLIBC_2.2.6 2.13-38~
+ _IO_funlockfile@GLIBC_2.2.6 2.13-38~
 ### sysconf(_SC_MINSIGSTKSZ) and sysconf(_SC_SIGSTKSZ) added in glibc 2.34
  __sysconf@GLIBC_2.2.6 2.34
  sysconf@GLIBC_2.2.6 2.34
@@ -1150,6 +1153,3 @@ libmachuser.so.1 #PACKAGE# #MINVER#
  vm_write@Base 2.11
 libpthread.so.0.3 #PACKAGE# #MINVER#
 #include "symbols.wildcards"
- *@GLIBC_2.2.6 2.13-38~
- __errno_location@GLIBC_2.2.6 2.29-8~
- __h_errno_location@GLIBC_2.2.6 2.29-8~

@@ -2,10 +2,10 @@ TODO:
 make the Makefile part newns-support-specific
 make the main Makefile put tests-container in unsupported tests when newns is not supported.
 
-Index: glibc-2.36/nss/tst-nss-test3.c
+Index: glibc-2.43/nss/tst-nss-test3.c
 ===================================================================
---- glibc-2.36.orig/nss/tst-nss-test3.c
-+++ glibc-2.36/nss/tst-nss-test3.c
+--- glibc-2.43.orig/nss/tst-nss-test3.c
++++ glibc-2.43/nss/tst-nss-test3.c
 @@ -16,6 +16,7 @@
     License along with the GNU C Library; if not, see
     <https://www.gnu.org/licenses/>.  */
@@ -30,11 +30,11 @@ Index: glibc-2.36/nss/tst-nss-test3.c
  
    setgrent ();
  
-Index: glibc-2.36/nss/Makefile
+Index: glibc-2.43/nss/Makefile
 ===================================================================
---- glibc-2.36.orig/nss/Makefile
-+++ glibc-2.36/nss/Makefile
-@@ -72,7 +72,7 @@ tests := \
+--- glibc-2.43.orig/nss/Makefile
++++ glibc-2.43/nss/Makefile
+@@ -345,7 +345,7 @@ xtests := \
    tst-getaddrinfo5 \
    # xtests
  
@@ -42,4 +42,4 @@ Index: glibc-2.36/nss/Makefile
 +tests := \
    tst-initgroups1 \
    tst-initgroups2 \
-   tst-nss-compat1 \
+   tst-nss-action-parse \

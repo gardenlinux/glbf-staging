@@ -2,7 +2,7 @@
 +++ b/sysdeps/x86/readelflib.c
 @@ -46,8 +46,11 @@
  	break;
-       /* Fall through.  */
+       [[fallthrough]];
      default:
 -      error (0, 0, _("%s is for unknown machine %d.\n"),
 -	     file_name, elf_header->e_machine);
