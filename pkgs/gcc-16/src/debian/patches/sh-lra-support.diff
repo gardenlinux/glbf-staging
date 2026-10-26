@@ -135,8 +135,6 @@ gcc/ChangeLog:
  gcc/target.def               |  21 ++-
  12 files changed, 464 insertions(+), 118 deletions(-)
 
-diff --git a/src/gcc/config/sh/constraints.md b/gcc/config/sh/constraints.md
-index 51569cdfd2d..7b476dc6c38 100644
 --- a/src/gcc/config/sh/constraints.md
 +++ b/src/gcc/config/sh/constraints.md
 @@ -45,8 +45,10 @@
@@ -256,8 +254,6 @@ index 51569cdfd2d..7b476dc6c38 100644
 +       (match_test "satisfies_constraint_Rab (XEXP (XEXP (op, 0), 0))")
         (match_code "const_int" "01")
         (match_test "REGNO (XEXP (XEXP (op, 0), 0)) != SP_REG")))
-diff --git a/src/gcc/config/sh/predicates.md b/src/gcc/config/sh/predicates.md
-index f7051087213..868fdb9d57f 100644
 --- a/src/gcc/config/sh/predicates.md
 +++ b/src/gcc/config/sh/predicates.md
 @@ -208,8 +208,7 @@
@@ -327,8 +323,6 @@ index f7051087213..868fdb9d57f 100644
 +{
 +  return REGNO (op) == R6_REG;
 +})
-diff --git a/src/gcc/config/sh/sh-mem.cc b/src/gcc/config/sh/sh-mem.cc
-index 980b55a3a6c..bda7ff3d9da 100644
 --- a/src/gcc/config/sh/sh-mem.cc
 +++ b/src/gcc/config/sh/sh-mem.cc
 @@ -134,7 +134,7 @@ expand_block_move (rtx *operands)
@@ -349,11 +343,9 @@ index 980b55a3a6c..bda7ff3d9da 100644
        return true;
      }
  
-diff --git a/src/gcc/config/sh/sh-protos.h b/src/gcc/config/sh/sh-protos.h
-index 41ab6101ae1..a2a374f5f31 100644
 --- a/src/gcc/config/sh/sh-protos.h
 +++ b/src/gcc/config/sh/sh-protos.h
-@@ -61,6 +61,7 @@ extern rtx legitimize_pic_address (rtx, machine_mode, rtx);
+@@ -61,6 +61,7 @@ extern rtx legitimize_pic_address (rtx,
  extern bool nonpic_symbol_mentioned_p (rtx);
  extern void output_pic_addr_const (FILE *, rtx);
  extern bool expand_block_move (rtx *);
@@ -361,7 +353,7 @@ index 41ab6101ae1..a2a374f5f31 100644
  extern void prepare_move_operands (rtx[], machine_mode mode);
  extern bool sh_expand_cmpstr (rtx *);
  extern bool sh_expand_cmpnstr (rtx *);
-@@ -102,7 +103,8 @@ extern rtx sh_find_equiv_gbr_addr (rtx_insn* cur_insn, rtx mem);
+@@ -102,7 +103,8 @@ extern rtx sh_find_equiv_gbr_addr (rtx_i
  extern int sh_eval_treg_value (rtx op);
  extern HOST_WIDE_INT sh_disp_addr_displacement (rtx mem_op);
  extern int sh_max_mov_insn_displacement (machine_mode mode, bool consider_sh2a);
@@ -371,11 +363,9 @@ index 41ab6101ae1..a2a374f5f31 100644
  extern void sh_expand_sym_label2reg (rtx, rtx, rtx, bool);
  
  /* Result value of sh_find_set_of_reg.  */
-diff --git a/src/gcc/config/sh/sh.cc b/src/gcc/config/sh/sh.cc
-index d9b319c2377..4c42abe21d3 100644
 --- a/src/gcc/config/sh/sh.cc
 +++ b/src/gcc/config/sh/sh.cc
-@@ -271,6 +271,7 @@ static bool sh_legitimate_address_p (machine_mode, rtx, bool,
+@@ -271,6 +271,7 @@ static bool sh_legitimate_address_p (mac
  static rtx sh_legitimize_address (rtx, rtx, machine_mode);
  static rtx sh_delegitimize_address (rtx);
  static bool sh_cannot_substitute_mem_equiv_p (rtx);
@@ -383,7 +373,7 @@ index d9b319c2377..4c42abe21d3 100644
  static bool sh_legitimize_address_displacement (rtx *, rtx *,
  						poly_int64, machine_mode);
  static int scavenge_reg (HARD_REG_SET *s);
-@@ -612,6 +613,9 @@ TARGET_GNU_ATTRIBUTES (sh_attribute_table,
+@@ -610,6 +611,9 @@ TARGET_GNU_ATTRIBUTES (sh_attribute_tabl
  #undef TARGET_CANNOT_SUBSTITUTE_MEM_EQUIV_P
  #define TARGET_CANNOT_SUBSTITUTE_MEM_EQUIV_P sh_cannot_substitute_mem_equiv_p
  
@@ -393,7 +383,7 @@ index d9b319c2377..4c42abe21d3 100644
  #undef TARGET_LEGITIMIZE_ADDRESS_DISPLACEMENT
  #define TARGET_LEGITIMIZE_ADDRESS_DISPLACEMENT \
    sh_legitimize_address_displacement
-@@ -1580,6 +1584,18 @@ sh_encode_section_info (tree decl, rtx rtl, int first)
+@@ -1578,6 +1582,18 @@ sh_encode_section_info (tree decl, rtx r
      SYMBOL_REF_FLAGS (XEXP (rtl, 0)) |= SYMBOL_FLAG_FUNCVEC_FUNCTION;
  }
  
@@ -412,7 +402,7 @@ index d9b319c2377..4c42abe21d3 100644
  /* Prepare operands for a move define_expand; specifically, one of the
     operands must be in a register.  */
  void
-@@ -4829,6 +4845,7 @@ broken_move (rtx_insn *insn)
+@@ -4827,6 +4843,7 @@ broken_move (rtx_insn *insn)
  		   we changed this to do a constant load.  In that case
  		   we don't have an r0 clobber, hence we must use fldi.  */
  		&& (TARGET_FMOVD
@@ -420,7 +410,7 @@ index d9b319c2377..4c42abe21d3 100644
  		    || (GET_CODE (XEXP (XVECEXP (PATTERN (insn), 0, 2), 0))
  			== SCRATCH))
  		&& REG_P (SET_DEST (pat))
-@@ -11431,6 +11448,19 @@ sh_cannot_substitute_mem_equiv_p (rtx)
+@@ -11430,6 +11447,19 @@ sh_cannot_substitute_mem_equiv_p (rtx)
    return true;
  }
  
@@ -440,7 +430,7 @@ index d9b319c2377..4c42abe21d3 100644
  /* Implement TARGET_LEGITIMIZE_ADDRESS_DISPLACEMENT.  */
  static bool
  sh_legitimize_address_displacement (rtx *offset1, rtx *offset2,
-@@ -11452,30 +11482,41 @@ sh_legitimize_address_displacement (rtx *offset1, rtx *offset2,
+@@ -11451,30 +11481,41 @@ sh_legitimize_address_displacement (rtx
    return false;
  }
  
@@ -501,11 +491,9 @@ index d9b319c2377..4c42abe21d3 100644
      return true;
  
    return false;
-diff --git a/src/gcc/config/sh/sh.md b/src/gcc/config/sh/sh.md
-index 75ec87b8851..6d311f7a426 100644
 --- a/src/gcc/config/sh/sh.md
 +++ b/src/gcc/config/sh/sh.md
-@@ -2194,13 +2194,24 @@
+@@ -2197,13 +2197,24 @@
  ;; there is nothing to prevent reload from using r0 to reload the address.
  ;; This reload would clobber the value in r0 we are trying to store.
  ;; If we let reload allocate r0, then this problem can never happen.
@@ -532,7 +520,7 @@ index 75ec87b8851..6d311f7a426 100644
     (use (match_operand:SI 1 "arith_reg_operand" "r,r"))
     (use (match_operand 2 "" "Z,Ccl"))]
    "TARGET_SH1 && TARGET_DIVIDE_CALL_DIV1"
-@@ -2212,7 +2223,8 @@
+@@ -2215,7 +2226,8 @@
  
  (define_insn "udivsi3_i4"
    [(set (match_operand:SI 0 "register_operand" "=y,y")
@@ -542,7 +530,7 @@ index 75ec87b8851..6d311f7a426 100644
     (clobber (reg:SI T_REG))
     (clobber (reg:SI PR_REG))
     (clobber (reg:DF DR0_REG))
-@@ -2220,9 +2232,11 @@
+@@ -2223,9 +2235,11 @@
     (clobber (reg:DF DR4_REG))
     (clobber (reg:SI R0_REG))
     (clobber (reg:SI R1_REG))
@@ -556,7 +544,7 @@ index 75ec87b8851..6d311f7a426 100644
     (use (match_operand:SI 1 "arith_reg_operand" "r,r"))
     (use (match_operand 2 "" "Z,Ccl"))
     (use (reg:SI FPSCR_MODES_REG))]
-@@ -2236,7 +2250,8 @@
+@@ -2239,7 +2253,8 @@
  
  (define_insn "udivsi3_i4_single"
    [(set (match_operand:SI 0 "register_operand" "=y,y")
@@ -566,7 +554,7 @@ index 75ec87b8851..6d311f7a426 100644
     (clobber (reg:SI T_REG))
     (clobber (reg:SI PR_REG))
     (clobber (reg:DF DR0_REG))
-@@ -2244,8 +2259,10 @@
+@@ -2247,8 +2262,10 @@
     (clobber (reg:DF DR4_REG))
     (clobber (reg:SI R0_REG))
     (clobber (reg:SI R1_REG))
@@ -579,7 +567,7 @@ index 75ec87b8851..6d311f7a426 100644
     (use (match_operand:SI 1 "arith_reg_operand" "r,r"))
     (use (match_operand 2 "" "Z,Ccl"))]
    "TARGET_FPU_ANY && TARGET_FPU_SINGLE"
-@@ -2278,6 +2295,8 @@
+@@ -2281,6 +2298,8 @@
  {
    rtx last;
    rtx func_ptr = gen_reg_rtx (Pmode);
@@ -588,7 +576,7 @@ index 75ec87b8851..6d311f7a426 100644
  
    /* Emit the move of the address to a pseudo outside of the libcall.  */
    if (TARGET_DIVIDE_CALL_TABLE)
-@@ -2305,9 +2324,9 @@
+@@ -2308,9 +2327,9 @@
      {
        rtx lab = function_symbol (func_ptr, "__udivsi3_i4", SFUNC_STATIC).lab;
        if (TARGET_FPU_SINGLE)
@@ -600,7 +588,7 @@ index 75ec87b8851..6d311f7a426 100644
      }
    else if (TARGET_SH2A)
      {
-@@ -2319,10 +2338,10 @@
+@@ -2322,10 +2341,10 @@
    else
      {
        rtx lab = function_symbol (func_ptr, "__udivsi3", SFUNC_STATIC).lab;
@@ -614,7 +602,7 @@ index 75ec87b8851..6d311f7a426 100644
    emit_insn (last);
    DONE;
  })
-@@ -4820,7 +4839,38 @@
+@@ -4823,7 +4842,38 @@
  
  (define_expand "extend<mode>si2"
    [(set (match_operand:SI 0 "arith_reg_dest")
@@ -654,7 +642,7 @@ index 75ec87b8851..6d311f7a426 100644
  
  (define_insn_and_split "*extend<mode>si2_compact_reg"
    [(set (match_operand:SI 0 "arith_reg_dest" "=r")
-@@ -5362,9 +5412,50 @@
+@@ -5365,9 +5415,50 @@
          operands[1] = gen_lowpart (<MODE>mode, reg);
      }
  
@@ -705,7 +693,7 @@ index 75ec87b8851..6d311f7a426 100644
  ;; The pre-dec and post-inc mems must be captured by the '<' and '>'
  ;; constraints, otherwise wrong code might get generated.
  (define_insn "*mov<mode>_load_predec"
-@@ -5650,6 +5741,22 @@
+@@ -5653,6 +5744,22 @@
  					   (const_string "double")
  					   (const_string "none")))])
  
@@ -728,7 +716,7 @@ index 75ec87b8851..6d311f7a426 100644
  ;; Moving DFmode between fp/general registers through memory
  ;; (the top of the stack) is faster than moving through fpul even for
  ;; little endian.  Because the type of an instruction is important for its
-@@ -5789,6 +5896,15 @@
+@@ -5792,6 +5899,15 @@
    [(set (match_dup 0) (match_dup 0))]
    "")
  
@@ -744,7 +732,7 @@ index 75ec87b8851..6d311f7a426 100644
  ;; fmovd substitute post-reload splits
  (define_split
    [(set (match_operand:DF 0 "register_operand" "")
-@@ -6033,6 +6149,14 @@
+@@ -6036,6 +6152,14 @@
    prepare_move_operands (operands, DFmode);
    if (TARGET_FPU_DOUBLE)
      {
@@ -759,7 +747,7 @@ index 75ec87b8851..6d311f7a426 100644
        emit_insn (gen_movdf_i4 (operands[0], operands[1]));
        DONE;
      }
-@@ -6158,15 +6282,17 @@
+@@ -6161,15 +6285,17 @@
        (const_string "none")
        (const_string "none")])])
  
@@ -784,7 +772,7 @@ index 75ec87b8851..6d311f7a426 100644
     && (arith_reg_operand (operands[0], SFmode)
         || fpul_operand (operands[0], SFmode)
         || arith_reg_operand (operands[1], SFmode)
-@@ -6176,7 +6302,6 @@
+@@ -6179,7 +6305,6 @@
  	mov	%1,%0
  	fldi0	%0
  	fldi1	%0
@@ -792,7 +780,7 @@ index 75ec87b8851..6d311f7a426 100644
  	fmov.s	%1,%0
  	fmov.s	%1,%0
  	mov.l	%1,%0
-@@ -6185,31 +6310,19 @@
+@@ -6188,31 +6313,19 @@
  	fsts	fpul,%0
  	flds	%1,fpul
  	lds.l	%1,%0
@@ -827,7 +815,7 @@ index 75ec87b8851..6d311f7a426 100644
        (if_then_else (match_operand 1 "displacement_mem_operand")
  		    (const_int 4) (const_int 2))
        (if_then_else (match_operand 0 "displacement_mem_operand")
-@@ -6222,7 +6335,6 @@
+@@ -6225,7 +6338,6 @@
        (const_int 2)
        (const_int 2)
        (const_int 2)
@@ -835,7 +823,7 @@ index 75ec87b8851..6d311f7a426 100644
        (const_int 2)
        (const_int 2)
        (const_int 2)
-@@ -6234,7 +6346,6 @@
+@@ -6237,7 +6349,6 @@
        (const_string "none")
        (const_string "single")
        (const_string "single")
@@ -843,7 +831,7 @@ index 75ec87b8851..6d311f7a426 100644
        (if_then_else (eq_attr "fmovd" "yes")
  		    (const_string "single") (const_string "none"))
        (if_then_else (eq_attr "fmovd" "yes")
-@@ -6249,15 +6360,75 @@
+@@ -6252,15 +6363,75 @@
        (const_string "none")
        (const_string "none")
        (const_string "none")
@@ -920,7 +908,7 @@ index 75ec87b8851..6d311f7a426 100644
    [(parallel [(set (reg:SF FPUL_REG) (match_dup 1))
  	      (use (reg:SI FPSCR_MODES_REG))
  	      (clobber (scratch:SI))])
-@@ -6274,11 +6445,37 @@
+@@ -6277,11 +6448,37 @@
    prepare_move_operands (operands, SFmode);
    if (TARGET_SH2E)
      {
@@ -960,7 +948,7 @@ index 75ec87b8851..6d311f7a426 100644
  	  DONE;
  	}
  
-@@ -8970,17 +9167,20 @@
+@@ -8973,17 +9170,20 @@
     (set_attr "needs_delay_slot" "yes")])
  
  (define_insn "block_lump_real"
@@ -992,7 +980,7 @@ index 75ec87b8851..6d311f7a426 100644
    "TARGET_SH1 && ! TARGET_HARD_SH4"
    "@
  	jsr	@%0%#
-@@ -9005,20 +9205,23 @@
+@@ -9008,20 +9208,23 @@
     (set_attr "needs_delay_slot" "yes")])
  
  (define_insn "block_lump_real_i4"
@@ -1030,8 +1018,6 @@ index 75ec87b8851..6d311f7a426 100644
    "TARGET_HARD_SH4"
    "@
  	jsr	@%0%#
-diff --git a/src/gcc/config/sh/sh.opt b/src/gcc/config/sh/sh.opt
-index 1ef494d4df4..e5ab6c42a0c 100644
 --- a/src/gcc/config/sh/sh.opt
 +++ b/src/gcc/config/sh/sh.opt
 @@ -299,5 +299,5 @@ Target Var(TARGET_FSRRA)
@@ -1041,8 +1027,6 @@ index 1ef494d4df4..e5ab6c42a0c 100644
 -Target Var(sh_lra_flag) Init(0) Save
 +Target Var(sh_lra_flag) Init(1) Save
  Use LRA instead of reload (transitional).
-diff --git a/src/gcc/config/sh/sync.md b/src/gcc/config/sh/sync.md
-index 2eca3accbc8..c89e6e919bb 100644
 --- a/src/gcc/config/sh/sync.md
 +++ b/src/gcc/config/sh/sync.md
 @@ -217,7 +217,9 @@
@@ -1067,11 +1051,9 @@ index 2eca3accbc8..c89e6e919bb 100644
  
  (define_expand "atomic_fetch_<fetchop_name><mode>"
    [(set (match_operand:QIHISI 0 "arith_reg_dest")
-diff --git a/src/gcc/lra-constraints.cc b/src/gcc/lra-constraints.cc
-index a25487be299..e1ff662c1d5 100644
 --- a/src/gcc/lra-constraints.cc
 +++ b/src/gcc/lra-constraints.cc
-@@ -554,7 +554,11 @@ get_equiv (rtx x)
+@@ -580,7 +580,11 @@ get_equiv (rtx x)
        return res;
      }
    if ((res = ira_reg_equiv[regno].constant) != NULL_RTX)
@@ -1084,11 +1066,9 @@ index a25487be299..e1ff662c1d5 100644
    if ((res = ira_reg_equiv[regno].invariant) != NULL_RTX)
      return res;
    gcc_unreachable ();
-diff --git a/src/gcc/target.def b/src/gcc/target.def
-index 206c94f8749..4411d4f810a 100644
 --- a/src/gcc/target.def
 +++ b/src/gcc/target.def
-@@ -6240,9 +6240,24 @@ DEFHOOK
+@@ -6241,9 +6241,24 @@ DEFHOOK
  substitute safely pseudos with equivalent memory values during\n\
  register allocation.\n\
  The default version of this target hook returns @code{false}.\n\
@@ -1116,6 +1096,3 @@ index 206c94f8749..4411d4f810a 100644
   bool, (rtx subst),
   hook_bool_rtx_false)
  
--- 
-2.51.0
-

@@ -257,6 +257,17 @@ define __do_libstdcxx_dbg
 	trap '' 1 2 3 15; touch $@; mv $(install_stamp)-tmp $(install_stamp)
 endef
 
+# libstdc++.so needs to be copy of the library, not a symlink
+
+# the way we package the .so link for GCCs shared libs results in wrong symbols
+# being pulled in when using older GCC with new installed runtime PR103382
+# introduced a backward compat symbol (the first and only relevant I know), and
+# that's not picked up by say, GCC 7 when libstdc++ from GCC 14 is installed.
+# mitigation going forward will be to place copies of the full shared lib in
+# /usr/lib/gcc/$target/$version/libstdc++.so (and also for all other .so links
+# therein) previously those .so were links to /usr/lib/*/libstdc++.so.6, so to
+# the shared lib of the newest GCC
+
 define __do_libstdcxx_dev
 	dh_testdir
 	dh_testroot
