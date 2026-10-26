@@ -1,0 +1,41 @@
+			     BASH PATCH REPORT
+			     =================
+
+Bash-Release:	5.3
+Patch-ID:	bash53-013
+
+Bug-Reported-by:	Florian Schmaus <flo@geekplace.eu>
+Bug-Reference-ID:
+Bug-Reference-URL:	https://savannah.gnu.org/bugs/?67586
+
+Bug-Description:
+
+Comparing the value of a pointer returned from realloc/xrealloc to the
+original pointer passed is technically undefined behavior, which matters
+under some circumstances.
+
+--- a/builtins/read.def
++++ b/builtins/read.def
+@@ -788,8 +788,11 @@ read_builtin (WORD_LIST *list)
+ 	  char *x;
+ 	  x = (char *)xrealloc (input_string, size += 128);
+ 
+-	  /* Only need to change unwind-protect if input_string changes */
++#if 0
++	  /* This is, in theory, undefined behavior, since input_string may
++	     have been freed. */
+ 	  if (x != input_string)
++#endif
+ 	    {
+ 	      input_string = x;
+ 	      remove_unwind_protect ();
+--- a/patchlevel.h
++++ b/patchlevel.h
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 12
++#define PATCHLEVEL 13
+ 
+ #endif /* _PATCHLEVEL_H_ */
