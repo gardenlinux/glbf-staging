@@ -1,0 +1,2 @@
+# The multiarch-path never appears in pcre2-config output
+libpcre2-dev binary: old-style-config-script-multiarch-path
