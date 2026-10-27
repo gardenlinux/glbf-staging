@@ -1,9 +1,14 @@
 name: build-node
 
-# Reusable: build exactly one graph node with recursion inhibited (its
-# dependencies must already be cache hits published by earlier node jobs) and
-# publish that node's output to ghcr. The caller holds the node's needs: edges
-# and the already-built skip guard; this holds the per-node logic.
+# Reusable: build one graph node and verify it reproduces. Two jobs run in
+# sequence on separate runners: `build` builds exactly this node with recursion
+# inhibited (its dependencies must already be cache hits published by earlier
+# node jobs) and publishes the output to ghcr; `check-reprod` then rebuilds the
+# same node and checks it reproduces that published output. check-reprod needs
+# build and carries no if: of its own, so the default success() gate runs it only
+# when build actually ran — when the caller skipped this node as already-built,
+# both jobs skip. The caller holds the node's needs: edges and the already-built
+# skip guard; this holds the per-node logic.
 on:
   workflow_call:
     inputs:
@@ -26,8 +31,8 @@ env:
   GLBX_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  build-node:
-    name: ${{ inputs.node-key }}
+  build:
+    name: build ${{ inputs.node-key }}
     runs-on: ubuntu-latest
     env:
       NODE_KEY: ${{ inputs.node-key }}
@@ -44,4 +49,22 @@ jobs:
       - name: Publish ${{ inputs.node-key }} to ghcr
         run: |
           bin/glbx publish --target "$NODE_KEY" \
+            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+
+  check-reprod:
+    name: check reproducibility ${{ inputs.node-key }}
+    needs: [build]
+    runs-on: ubuntu-latest
+    env:
+      NODE_KEY: ${{ inputs.node-key }}
+    steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: Check out the config repo
+        uses: actions/checkout@v5
+      - uses: ./.github/actions/glbx-bin
+      - name: Check ${{ inputs.node-key }} reproduces
+        run: |
+          bin/glbx build --check-reproducible --target "$NODE_KEY" \
+            --report /tmp/reprod-report.json \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"

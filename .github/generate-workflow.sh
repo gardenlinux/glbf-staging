@@ -20,9 +20,13 @@ set -euo pipefail
 # already-built skip guard, which are structural and so must stay in the
 # committed file for check-graph to validate.
 #
-# One graph node becomes one job: it builds exactly that node with recursion
-# inhibited (every dependency must already be a cache hit from an earlier job's
-# publish) and then publishes that node to ghcr. Graph edges become job needs:.
+# One graph node becomes one caller job of build-node.yml, which internally runs
+# two jobs: `build` builds exactly that node with recursion inhibited (every
+# dependency must already be a cache hit from an earlier node's publish) and
+# publishes it to ghcr, then `check-reprod` re-verifies the node reproduces that
+# output. Graph edges become the caller job's needs:; when the node is an
+# already-built cache hit the caller job skips, so both inner jobs skip and
+# reproducibility is re-checked only for nodes actually rebuilt.
 #
 # Usage: .github/generate-workflow.sh [output-yml]
 #   output-yml  default .github/workflows/build.yml
