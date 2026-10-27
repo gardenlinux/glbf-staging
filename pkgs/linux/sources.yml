@@ -1,0 +1,6 @@
+sources:
+    - file: linux_7.2.12.orig.tar.xz
+      sha256: f348e721511f17dc41343b147ab0252382a62d3c4633ff88007b025bd99ce71d
+      urls:
+        - https://deb.debian.org/debian/pool/main/l/linux/linux_7.2.12.orig.tar.xz
+        - https://snapshot.debian.org/file/ae243032a23f2faa6366c328986756ed3b356d68/linux_7.2.12.orig.tar.xz
