@@ -19,6 +19,9 @@ on:
       arch:
         default: amd64
         type: string
+      id-seed-override:
+        default: ""
+        type: string
 
 permissions:
   contents: read
@@ -29,6 +32,11 @@ env:
   GLBX_REGISTRY: ghcr.io/${{ github.repository }}/objstore
   GLBX_REGISTRY_USER: ${{ github.actor }}
   GLBX_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # Empty leaves the committed identity seed in force; glbx reads an empty
+  # GLBX_ID_SEED_OVERRIDE as no override. A non-empty value reseeds every
+  # identity, forcing a full rebuild of both the build and the reproducibility
+  # check.
+  GLBX_ID_SEED_OVERRIDE: ${{ inputs.id-seed-override }}
 
 jobs:
   build:
