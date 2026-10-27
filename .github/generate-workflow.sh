@@ -62,6 +62,12 @@ on:
         description: glbx ref (branch, tag, or full SHA) to build the executor from
         default: main
         type: string
+      id-seed-override:
+        description: >-
+          Override the global identity seed to force a full rebuild (leave empty
+          for a normal cache-honoring build)
+        default: ""
+        type: string
   push:
   # A pull_request build runs against the PR's merge ref, so the gate reflects the
   # merged state rather than the branch tip. A branch pushed by the automatic
@@ -95,6 +101,7 @@ jobs:
     uses: ./.github/workflows/plan.yml
     with:
       arch: amd64
+      id-seed-override: ${{ inputs.id-seed-override }}
 EOF
 
 	# One caller job per graph node. glbx emits the graph; jq turns it into YAML
@@ -130,7 +137,8 @@ EOF
     uses: ./.github/workflows/build-node.yml
     with:
       node-key: \"\($key)\"
-      arch: amd64"
+      arch: amd64
+      id-seed-override: \"${{ inputs.id-seed-override }}\""
 		'
 } >"$OUT"
 

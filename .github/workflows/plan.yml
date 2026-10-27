@@ -9,6 +9,9 @@ on:
       arch:
         default: amd64
         type: string
+      id-seed-override:
+        default: ""
+        type: string
     outputs:
       built:
         description: JSON object mapping each node Key to whether its output is already in the registry.
@@ -23,6 +26,10 @@ env:
   GLBX_REGISTRY: ghcr.io/${{ github.repository }}/objstore
   GLBX_REGISTRY_USER: ${{ github.actor }}
   GLBX_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # Must match the seed the node jobs build under: a non-empty override reseeds
+  # every identity so --check-built finds none in the registry and every node
+  # rebuilds. Empty leaves the committed seed in force.
+  GLBX_ID_SEED_OVERRIDE: ${{ inputs.id-seed-override }}
 
 jobs:
   plan:

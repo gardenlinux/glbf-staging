@@ -10,6 +10,12 @@ on:
         description: glbx ref (branch, tag, or full SHA) to build the executor from
         default: main
         type: string
+      id-seed-override:
+        description: >-
+          Override the global identity seed to force a full rebuild (leave empty
+          for a normal cache-honoring build)
+        default: ""
+        type: string
   push:
   # A pull_request build runs against the PR's merge ref, so the gate reflects the
   # merged state rather than the branch tip. A branch pushed by the automatic
@@ -43,6 +49,7 @@ jobs:
     uses: ./.github/workflows/plan.yml
     with:
       arch: amd64
+      id-seed-override: ${{ inputs.id-seed-override }}
 
   node-0:
     name: "acl"
@@ -58,6 +65,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:acl:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-1:
     name: "attr"
@@ -73,6 +81,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:attr:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-2:
     name: "base-files"
@@ -88,6 +97,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:base-files:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-3:
     name: "base-passwd"
@@ -103,6 +113,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:base-passwd:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-4:
     name: "bash"
@@ -118,6 +129,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:bash:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-5:
     name: "bzip2"
@@ -133,6 +145,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:bzip2:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-6:
     name: "cdebconf"
@@ -148,6 +161,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:cdebconf:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-7:
     name: "coreutils"
@@ -163,6 +177,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:coreutils:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-8:
     name: "debianutils"
@@ -178,6 +193,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:debianutils:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-9:
     name: "dpkg"
@@ -193,6 +209,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:dpkg:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-10:
     name: "gcc-16"
@@ -208,6 +225,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:gcc-16:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-11:
     name: "gcc-16-base"
@@ -223,6 +241,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:gcc-16:gcc-16-base:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-12:
     name: "libgcc-s1"
@@ -238,6 +257,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:gcc-16:libgcc-s1:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-13:
     name: "glibc"
@@ -253,6 +273,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:glibc:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-14:
     name: "libc-gconv-modules-extra"
@@ -268,6 +289,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:glibc:libc-gconv-modules-extra:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-15:
     name: "libc6"
@@ -283,6 +305,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:glibc:libc6:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-16:
     name: "libattr1"
@@ -298,6 +321,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:attr:libattr1:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-17:
     name: "libacl1"
@@ -313,6 +337,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:acl:libacl1:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-18:
     name: "libbz2-1.0"
@@ -328,6 +353,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:bzip2:libbz2-1.0:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-19:
     name: "libdebconfclient0"
@@ -343,6 +369,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:cdebconf:libdebconfclient0:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-20:
     name: "debianutils"
@@ -358,6 +385,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:debianutils:debianutils:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-21:
     name: "gmp"
@@ -373,6 +401,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:gmp:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-22:
     name: "libgmp10"
@@ -388,6 +417,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:gmp:libgmp10:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-23:
     name: "libcap2"
@@ -403,6 +433,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:libcap2:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-24:
     name: "libcap2"
@@ -418,6 +449,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:libcap2:libcap2:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-25:
     name: "libmd"
@@ -433,6 +465,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:libmd:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-26:
     name: "libmd0"
@@ -448,6 +481,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:libmd:libmd0:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-27:
     name: "libselinux"
@@ -463,6 +497,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:libselinux:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-28:
     name: "libzstd"
@@ -478,6 +513,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:libzstd:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-29:
     name: "libzstd1"
@@ -493,6 +529,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:libzstd:libzstd1:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-30:
     name: "mawk"
@@ -508,6 +545,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:mawk:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-31:
     name: "mawk"
@@ -523,6 +561,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:mawk:mawk:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-32:
     name: "base-files"
@@ -538,6 +577,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:base-files:base-files:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-33:
     name: "ncurses"
@@ -553,6 +593,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:ncurses:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-34:
     name: "libtinfo6"
@@ -568,6 +609,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:ncurses:libtinfo6:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-35:
     name: "bash"
@@ -583,6 +625,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:bash:bash:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-36:
     name: "openssl"
@@ -598,6 +641,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:openssl:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-37:
     name: "pcre2"
@@ -613,6 +657,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:pcre2:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-38:
     name: "libpcre2-8-0"
@@ -628,6 +673,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:pcre2:libpcre2-8-0:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-39:
     name: "libselinux1"
@@ -643,6 +689,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:libselinux:libselinux1:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-40:
     name: "base-passwd"
@@ -658,6 +705,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:base-passwd:base-passwd:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-41:
     name: "systemd"
@@ -673,6 +721,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:systemd:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-42:
     name: "libsystemd0"
@@ -688,6 +737,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:systemd:libsystemd0:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-43:
     name: "tar"
@@ -703,6 +753,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:tar:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-44:
     name: "tar"
@@ -718,6 +769,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:tar:tar:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-45:
     name: "xz-utils"
@@ -733,6 +785,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:xz-utils:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-46:
     name: "liblzma5"
@@ -748,6 +801,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:xz-utils:liblzma5:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-47:
     name: "zlib"
@@ -763,6 +817,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:zlib:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-48:
     name: "zlib1g"
@@ -778,6 +833,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:zlib:zlib1g:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-49:
     name: "dpkg"
@@ -793,6 +849,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:dpkg:dpkg:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-50:
     name: "libssl3t64"
@@ -808,6 +865,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:openssl:libssl3t64:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-51:
     name: "openssl-provider-legacy"
@@ -823,6 +881,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:openssl:openssl-provider-legacy:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-52:
     name: "coreutils"
@@ -838,6 +897,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:coreutils:coreutils:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-53:
     name: "rootfs"
@@ -853,3 +913,4 @@ jobs:
     with:
       node-key: "rootfs:amd64"
       arch: amd64
+      id-seed-override: "${{ inputs.id-seed-override }}"
