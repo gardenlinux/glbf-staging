@@ -1,0 +1,509 @@
+kmod (34.2-2) unstable; urgency=medium
+
+  * kmod.initramfs-hook: if compressed modules have been copied to the
+    initramfs and CONFIG_MODULE_DECOMPRESS=n (which is not the default
+    in Debian kernels) then also copy the compression libraries needed
+    by kmod to load them. (Closes: #1099801)
+
+ -- Marco d'Itri <md@linux.it>  Fri, 25 Apr 2025 11:50:41 +0200
+
+kmod (34.2-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Marco d'Itri <md@linux.it>  Sun, 30 Mar 2025 03:59:19 +0200
+
+kmod (34.1-2) unstable; urgency=medium
+
+  * Do not delete the init script symlinks if some other package is providing
+    that init script. (Closes: #1100035)
+
+ -- Marco d'Itri <md@linux.it>  Wed, 12 Mar 2025 14:33:48 +0100
+
+kmod (34.1-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Load the decompression libraries on demand with dlopen(3).
+
+ -- Marco d'Itri <md@linux.it>  Thu, 06 Mar 2025 07:42:03 +0100
+
+kmod (34-3) unstable; urgency=medium
+
+  * Breaks/Replaces bash-completion. (Closes: #1098953)
+  * Delete /etc/rcS.d/[SK]*kmod too on upgrades. (Closes: #1098941)
+
+ -- Marco d'Itri <md@linux.it>  Fri, 28 Feb 2025 02:39:04 +0100
+
+kmod (34-2) unstable; urgency=medium
+
+  * Added Debian patch fix_riscv64_tests to wrap riscv_hwprobe(2) on
+    riscv64 systems, which caused the tests to fail.
+  * Do not Build-Depend on the missing linux-headers-generic package on sh4
+    and x32.
+
+ -- Marco d'Itri <md@linux.it>  Tue, 25 Feb 2025 21:21:39 +0100
+
+kmod (34-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Marco d'Itri <md@linux.it>  Tue, 25 Feb 2025 12:40:52 +0100
+
+kmod (33+20241031-1) experimental; urgency=medium
+
+  * New upstream snapshot.
+
+ -- Marco d'Itri <md@linux.it>  Sun, 03 Nov 2024 18:31:39 +0100
+
+kmod (33+20241024-1) experimental; urgency=medium
+
+  * New upstream snapshot.
+  * Build the package with Meson.
+
+ -- Marco d'Itri <md@linux.it>  Sun, 27 Oct 2024 00:14:55 +0200
+
+kmod (33+20240816-3) unstable; urgency=medium
+
+  * Avoid a cosmetic postinst error message on new installs.
+    (Closes: #1079307)
+  * Merge some packaging improvements courtesy of Guillem Jover.
+    (Closes: #1079627)
+
+ -- Marco d'Itri <md@linux.it>  Mon, 26 Aug 2024 08:16:59 +0200
+
+kmod (33+20240816-2) unstable; urgency=medium
+
+  * Make libkmod2 Conflict with dracut-install (<= 103-1), because it
+    uses a @LIBKMOD_5 symbol which was mistakely introduced in 32+20240327-1
+    and then removed again in 33+20240816-1. (Closes: #1079022)
+  * Make libkmod-dev Break/Replace kmod (<< 33+20240816-2), because kmod.pc
+    was moved from kmod to libkmod-dev. (Closes: #1079103)
+
+ -- Marco d'Itri <md@linux.it>  Tue, 20 Aug 2024 12:14:18 +0200
+
+kmod (33+20240816-1) unstable; urgency=medium
+
+  * New upstream snapshot.
+
+ -- Marco d'Itri <md@linux.it>  Sun, 18 Aug 2024 23:23:48 +0200
+
+kmod (32+20240611-1) unstable; urgency=medium
+
+  * New upstream snapshot.
+  * Enable again the test suite on non-i386 32 bit architectures.
+    (Closes: #1065973)
+
+ -- Marco d'Itri <md@linux.it>  Wed, 12 Jun 2024 18:06:46 +0200
+
+kmod (32+20240327-1) unstable; urgency=medium
+
+  * New upstream snapshot.
+  * Disable the test suite on non-i386 32 bit architectures. (See #1065973.)
+
+ -- Marco d'Itri <md@linux.it>  Sun, 26 May 2024 05:23:33 +0200
+
+kmod (32-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Remove the new upstream symlinks in /usr/bin/. (Closes: #1064798)
+
+ -- Marco d'Itri <md@linux.it>  Sat, 09 Mar 2024 04:56:40 +0100
+
+kmod (31+20240202-2) unstable; urgency=medium
+
+  * Stop using /usr/lib/modules/ because it requires coordination with other
+    packages. (Closes: #1063749)
+
+ -- Marco d'Itri <md@linux.it>  Tue, 13 Feb 2024 17:33:24 +0100
+
+kmod (31+20240202-1) unstable; urgency=medium
+
+  * New upstream snapshot.
+
+ -- Marco d'Itri <md@linux.it>  Sat, 10 Feb 2024 20:10:16 +0100
+
+kmod (31-1) unstable; urgency=medium
+
+  [ Marco d'Itri ]
+  * New upstream release.
+
+  [ Helmut Grohne ]
+  * DEP17: Move all files to /usr/. (Closes: #1059920)
+
+ -- Marco d'Itri <md@linux.it>  Thu, 04 Jan 2024 20:10:38 +0100
+
+kmod (30+20230601-2.1) unstable; urgency=medium
+
+  * Non-maintainer upload with maintainer approval.
+  * Enable xz support in the udeb. This is needed since linux 6.6.8-1 hit
+    unstable, as its binary packages now ship compressed modules.
+  * Declare minimal version for the liblzma-dev build-dep accordingly.
+
+ -- Cyril Brulebois <kibi@debian.org>  Sun, 24 Dec 2023 00:08:19 +0100
+
+kmod (30+20230601-2) unstable; urgency=medium
+
+  * kmod.postinst: run restorecon after creating /etc/modules.
+
+ -- Marco d'Itri <md@linux.it>  Sat, 23 Sep 2023 00:39:17 +0200
+
+kmod (30+20230601-1) unstable; urgency=medium
+
+  * New upstream snapshot.
+  * On new systems and if /etc/modules was not been modified locally then
+    replace it with a comment which explains that it is obsolete.
+  * Remove the related modules(5) man pages.
+  * Make the init script ignore /lib/modules-load.d/. (Closes: #1050427)
+
+ -- Marco d'Itri <md@linux.it>  Sat, 26 Aug 2023 02:38:18 +0200
+
+kmod (30+20230519-1) unstable; urgency=medium
+
+  * New upstream snapshot.
+
+ -- Marco d'Itri <md@linux.it>  Sun, 11 Jun 2023 00:34:33 +0200
+
+kmod (30+20221128-1) unstable; urgency=medium
+
+  * New upstream snapshot.
+  * Add a dependency on pkg-config | pkgconf. (Closes: #1023895)
+
+ -- Marco d'Itri <md@linux.it>  Sat, 10 Dec 2022 01:02:24 +0100
+
+kmod (30+20220905-1) unstable; urgency=medium
+
+  * New upstream snapshot.
+  * Remove the dependency on lsb-base. (Closes: #1020605)
+  * Update the copyright file. (Closes: #1021033)
+
+ -- Marco d'Itri <md@linux.it>  Sat, 08 Oct 2022 05:07:42 +0200
+
+kmod (30+20220630-3) unstable; urgency=high
+
+  * Make test suite failures non-fatal on mipsel, because some tests
+    have been broken on it for years but since no tests were actually
+    being run before version 30+20220630-1 then nobody noticed.
+
+ -- Marco d'Itri <md@linux.it>  Sat, 30 Jul 2022 02:25:29 +0200
+
+kmod (30+20220630-2) unstable; urgency=medium
+
+  [ Marco d'Itri ]
+  * Implemented the generation of a less strict shlibs file to benefit
+    udebs.
+
+  [ Helmut Grohne ]
+  * Annotated the zstd dependency with <!nocheck>. (Closes: #1014437)
+
+  [ Witold Baryluk ]
+  * Allow USB audio devices to be the first sound device, because nowadays
+    they are more common and this is what the other distributions do.
+
+ -- Marco d'Itri <md@linux.it>  Tue, 12 Jul 2022 01:58:34 +0200
+
+kmod (30+20220630-1) unstable; urgency=medium
+
+  * New upstream snapshot.
+  * Enabled support for zstd. (Closes: #990092)
+  * kmod.postinst: removed code to handle upgrades from Debian <= 8.
+    (Closes: #1009349, #1000659)
+  * Changed the $PATH in the init script to include /usr/. (Closes: #993297)
+  * Enabled the test suite.
+
+ -- Marco d'Itri <md@linux.it>  Sun, 03 Jul 2022 13:28:18 +0200
+
+kmod (29-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Marco d'Itri <md@linux.it>  Tue, 17 Aug 2021 09:04:37 +0200
+
+kmod (28-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Fixed modinfo -F for built-in modules. (Closes: #970871)
+
+ -- Marco d'Itri <md@linux.it>  Fri, 08 Jan 2021 02:37:04 +0100
+
+kmod (27+20200310-2) unstable; urgency=medium
+
+  * Re-upload to unstable.
+
+ -- Marco d'Itri <md@linux.it>  Sat, 18 Apr 2020 17:53:55 +0200
+
+kmod (27+20200310-1) experimental; urgency=medium
+
+  * New upstream snapshot.
+  * Split kmod-udeb off of libkmod2-udeb and actually ship the libraries
+    in libkmod2-udeb. (Closes: #953952)
+
+ -- Marco d'Itri <md@linux.it>  Sun, 12 Apr 2020 00:59:25 +0200
+
+kmod (27-2) unstable; urgency=medium
+
+  * Drop the verbose_missing_bin patch, which became too much noisy after
+    new files were introduced by 5.3 kernels. (Closes: #949444)
+
+ -- Marco d'Itri <md@linux.it>  Fri, 13 Mar 2020 22:53:37 +0100
+
+kmod (27-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Reset the SELinux file attributes in the initramfs. (Closes: #948366)
+
+ -- Marco d'Itri <md@linux.it>  Wed, 19 Feb 2020 04:56:30 +0100
+
+kmod (26+20191223-1) unstable; urgency=medium
+
+  [ Debian Janitor ]
+  * Trim trailing whitespace.
+  * Use secure URI in debian/watch.
+  * Rely on pre-initialized dpkg-architecture variables.
+  * Set upstream metadata fields: Repository.
+
+  [ Marco d'Itri ]
+  * New upstream snapshot.
+
+ -- Marco d'Itri <md@linux.it>  Mon, 06 Jan 2020 01:59:49 +0100
+
+kmod (26-3) unstable; urgency=medium
+
+  * Create again /etc/modprobe.d/. (Closes: #940221)
+  * Do not reference removed options support in modules(5). (Closes: #931136)
+
+ -- Marco d'Itri <md@linux.it>  Tue, 17 Sep 2019 21:40:12 +0200
+
+kmod (26-2) unstable; urgency=medium
+
+  * Removed --add-udeb from dh_makeshlibs, since libkmod2-udeb does not
+    actually contain a library. (Closes: #939779)
+  * Switched to dh.
+
+ -- Marco d'Itri <md@linux.it>  Wed, 11 Sep 2019 09:29:57 +0200
+
+kmod (26-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Removed patch check_builtin_kver, which was needed to support 2.6.32
+    kernels.
+  * Link with OpenSSL to support parsing modules signatures.
+
+ -- Marco d'Itri <md@linux.it>  Sun, 10 Feb 2019 00:00:31 +0100
+
+kmod (25-2) unstable; urgency=medium
+
+  * Moved the libraries to /usr/lib/. (Closes: #894566)
+
+ -- Marco d'Itri <md@linux.it>  Sat, 17 Nov 2018 01:56:00 +0100
+
+kmod (25-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Enabled support for xz-compressed modules. (Closes: #772628)
+
+ -- Marco d'Itri <md@linux.it>  Sun, 21 Jan 2018 01:02:46 +0100
+
+kmod (24-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Marco d'Itri <md@linux.it>  Mon, 27 Feb 2017 02:50:32 +0100
+
+kmod (23-2) unstable; urgency=medium
+
+  * Backported upstream commit 6b77f18 to stop depmod crashing after
+    detecting a dependency cycle. (Closes: #846888)
+  * Enabled hardening=+bindnow.
+
+ -- Marco d'Itri <md@linux.it>  Mon, 26 Dec 2016 03:42:54 +0100
+
+kmod (23-1) unstable; urgency=medium
+
+  * New upstream release. (Closes: #837626)
+
+ -- Marco d'Itri <md@linux.it>  Tue, 27 Sep 2016 01:40:32 +0200
+
+kmod (22-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Set $SOURCE_DATE_EPOCH in debian/rules for reproducibility.
+    (Closes: #783152)
+  * Remove the module-init-tools transitional package.
+
+ -- Marco d'Itri <md@linux.it>  Sun, 20 Dec 2015 17:04:10 +0100
+
+kmod (21-1) unstable; urgency=medium
+
+  * New upstream release. Fixes:
+    + spurious spaces in lsmod output. (Closes: #782692)
+    + a missing comman in rmmod(8). (Closes: #787548)
+  * kmod.init: support the modules-load.d directories in /usr.
+    (Closes: #673747)
+  * Build the developers' documentation with gtk-doc. (Closes: #789462)
+
+ -- Marco d'Itri <md@linux.it>  Sun, 05 Jul 2015 21:18:24 +0200
+
+kmod (20-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Marco d'Itri <md@linux.it>  Sun, 08 Mar 2015 19:10:08 +0100
+
+kmod (18-3) unstable; urgency=high
+
+  * postinst: do not use autodie. (Closes: #762974)
+  * postinst: do not create an empty etc-modules-parameters.conf.
+
+ -- Marco d'Itri <md@linux.it>  Sat, 27 Sep 2014 08:01:49 +0200
+
+kmod (18-2) unstable; urgency=medium
+
+  * postinst: move any modules parameters from /etc/modules to a new
+    /etc/modprobe.d/etc-modules-parameters.conf file. (Closes: #627949)
+  * initramfs-hook: do not fail if /lib/modprobe.d/ is empty.
+  * Add the man page for kmod(8). (Closes: #665873)
+  * Document depmod --show in depmod(8). (Closes: #687435)
+
+ -- Marco d'Itri <md@linux.it>  Wed, 17 Sep 2014 03:50:34 +0200
+
+kmod (18-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Marco d'Itri <md@linux.it>  Sat, 21 Jun 2014 04:27:39 +0200
+
+kmod (17-2) unstable; urgency=medium
+
+  * Build-Depend on gtk-doc-tools. (Closes: #747005)
+
+ -- Marco d'Itri <md@linux.it>  Sun, 04 May 2014 20:38:42 +0200
+
+kmod (17-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Declared that kmod Breaks oss-compat 4. (Closes: #736748)
+  * Merged the few useful directives from the alsa-base package and added
+    a versioned Breaks to force it to be unistalled.
+
+ -- Marco d'Itri <md@linux.it>  Thu, 01 May 2014 21:10:36 +0200
+
+kmod (16-2) unstable; urgency=medium
+
+  * Always Build-Depend on xsltproc. (Closes: #733760)
+
+ -- Marco d'Itri <md@linux.it>  Thu, 02 Jan 2014 04:04:26 +0100
+
+kmod (16-1) unstable; urgency=low
+
+  * New upstream release. (Closes: #716739)
+    + Improves error messages. (Closes: #676387)
+    + Fixes modprobe -f. (Closes: #720599)
+  * Added an example to modules(5), patch by Regid Ichira. (Closes: #711468)
+
+ -- Marco d'Itri <md@linux.it>  Tue, 31 Dec 2013 03:56:44 +0100
+
+kmod (9-3) unstable; urgency=low
+
+  * Added backported patch dot_kcmdline: correctly parse kcmdline parameters
+    containing a dot. (Closes: #689872)
+  * Added backported patch bad_alias_assertion: stop modprobe from aborting
+    from an assertion because of some invalid but common configuration
+    directives. (Closes: #674110)
+  * Removed the nfs4 alias from aliases.conf as requested by the kernel
+    team. (Closes: #683972)
+  * Removed the unnecessary build-dependency on perl. (Closes: #697750)
+
+ -- Marco d'Itri <md@linux.it>  Sun, 07 Apr 2013 18:19:01 +0200
+
+kmod (9-2) unstable; urgency=low
+
+  * Backported upstream fixes to make modprobe work like in module-init-tools
+    and not load a blacklisted module even if modprobe is invoked with one of
+    its aliases.
+  * Report an error when some .bin files do not exist. (Closes: #684901)
+  * Really build the udeb with -Os -fomit-frame-pointer.
+
+ -- Marco d'Itri <md@linux.it>  Mon, 27 Aug 2012 00:40:18 +0200
+
+kmod (9-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Marco d'Itri <md@linux.it>  Mon, 25 Jun 2012 02:48:38 +0200
+
+kmod (8-2) unstable; urgency=medium
+
+  * Implemented systemd-compatible processing of modules-load.d directories,
+    courtesy of Josh Triplett. (Closes: #672960)
+  * Properly fix kmod on ia64 with backported patch commit-d30319e.
+
+ -- Marco d'Itri <md@linux.it>  Sun, 20 May 2012 23:19:47 +0200
+
+kmod (8-1) unstable; urgency=medium
+
+  * New upstream release. Fixes:
+    + An unclear error message. (Closes: #668216)
+  * Moved libkmod.pc to the multiarch directory. (Closes: #670005)
+  * Do not warn about a missing modules.builtin file for kernel versions
+    < 2.6.33. (Closes: #670965)
+  * Removed patch work_around_linking_issues, which is properly fixed by
+    upstream patch commit-9625375.
+  * Made the init script exit without processing /etc/modules if the
+    /etc/modules-load.d/modules.conf symlink exists.
+
+ -- Marco d'Itri <md@linux.it>  Mon, 14 May 2012 02:45:06 +0200
+
+kmod (6-2) unstable; urgency=low
+
+  * Applied a few upstream changesets to fix:
+    + depmod correctly processing a kernel versions different from the
+      running one. (Closes: #662891)
+    + modprobe -q still too much verbose. (Closes: #662822)
+    + modprobe -r removing only the first argument. (Closes: #662984)
+  * Restored the code from the old module-init-tools package which deletes
+    obsolete conffiles. Abort upgrading from releases older than lenny.
+    (Closes: #663159)
+
+ -- Marco d'Itri <md@linux.it>  Fri, 16 Mar 2012 02:21:00 +0100
+
+kmod (6-1.1) unstable; urgency=low
+
+  * Non-maintainer upload with maintainer approval.
+  * Work around FTBFS on ia64 (probable toolchain bug) due to undefined
+    references to kmod_log when linking tools/kmod: Add libkmod-private.la
+    to kmod's LDADD variable to ensure that linking happens properly.
+    + Patch: work_around_linking_issues; tested on merulo.
+
+ -- Cyril Brulebois <kibi@debian.org>  Wed, 07 Mar 2012 01:40:37 +0000
+
+kmod (6-1) unstable; urgency=low
+
+  * New upstream release. Fixes:
+    + Documented the modprobe.blacklist parameter. (Closes: #630338)
+
+ -- Marco d'Itri <md@linux.it>  Sat, 03 Mar 2012 16:53:33 +0100
+
+kmod (5-2) experimental; urgency=high
+
+  * Added patch check_if_exists to fix loops caused by install directives.
+    (Closes: #659838)
+
+ -- Marco d'Itri <md@linux.it>  Sun, 19 Feb 2012 13:07:21 +0100
+
+kmod (5-1) experimental; urgency=low
+
+  * New upstream release. (Closes: #659195)
+
+ -- Marco d'Itri <md@linux.it>  Sun, 12 Feb 2012 04:48:24 +0100
+
+kmod (3-1) experimental; urgency=low
+
+  * Initial release. (Closes: #652284)
+  * When replacing module-init-tools:
+    - /etc/modules is preserved
+    - /etc/modprobe.d/aliases.conf is deleted if unmodified, otherwise it
+      is renamed to aliases-m-i-t.conf and will be used by kmod
+    - /etc/init.d/module-init-tools is deleted if unmodified, otherwise it
+      is renamed to /etc/init.d/module-init-tools.dpkg-bak
+
+ -- Marco d'Itri <md@linux.it>  Sun, 08 Jan 2012 20:47:12 +0100
