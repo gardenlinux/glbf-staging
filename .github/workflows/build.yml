@@ -65,6 +65,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:acl:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-1:
@@ -81,6 +82,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:attr:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-2:
@@ -97,6 +99,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:base-files:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-3:
@@ -113,6 +116,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:base-passwd:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-4:
@@ -129,6 +133,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:bash:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-5:
@@ -145,6 +150,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:bzip2:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-6:
@@ -161,6 +167,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:cdebconf:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-7:
@@ -177,6 +184,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:coreutils:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-8:
@@ -193,6 +201,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:debianutils:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-9:
@@ -209,6 +218,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:dpkg:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-10:
@@ -225,6 +235,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:gcc-16:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-11:
@@ -241,6 +252,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:gcc-16:gcc-16-base:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-12:
@@ -257,6 +269,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:gcc-16:libgcc-s1:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-13:
@@ -273,6 +286,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:glibc:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-14:
@@ -289,6 +303,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:glibc:libc-gconv-modules-extra:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-15:
@@ -305,6 +320,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:glibc:libc6:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-16:
@@ -321,6 +337,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:attr:libattr1:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-17:
@@ -337,6 +354,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:acl:libacl1:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-18:
@@ -353,6 +371,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:bzip2:libbz2-1.0:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-19:
@@ -369,6 +388,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:cdebconf:libdebconfclient0:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-20:
@@ -385,6 +405,7 @@ jobs:
     with:
       node-key: "debian-binary-pkg:debianutils:debianutils:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-21:
@@ -401,6 +422,7 @@ jobs:
     with:
       node-key: "debian-pkg-build:gmp:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-22:
@@ -417,9 +439,27 @@ jobs:
     with:
       node-key: "debian-binary-pkg:gmp:libgmp10:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-23:
+    name: "kmod"
+    needs: [build-glbx, check-graph, restore-inputs, plan]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:kmod:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:kmod:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-24:
     name: "libcap2"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -433,11 +473,12 @@ jobs:
     with:
       node-key: "debian-pkg-build:libcap2:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-24:
+  node-25:
     name: "libcap2"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-23]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-24]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -449,9 +490,10 @@ jobs:
     with:
       node-key: "debian-binary-pkg:libcap2:libcap2:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-25:
+  node-26:
     name: "libmd"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -465,11 +507,12 @@ jobs:
     with:
       node-key: "debian-pkg-build:libmd:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-26:
+  node-27:
     name: "libmd0"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-25]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-26]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -481,9 +524,10 @@ jobs:
     with:
       node-key: "debian-binary-pkg:libmd:libmd0:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-27:
+  node-28:
     name: "libselinux"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -497,9 +541,10 @@ jobs:
     with:
       node-key: "debian-pkg-build:libselinux:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-28:
+  node-29:
     name: "libzstd"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -513,11 +558,12 @@ jobs:
     with:
       node-key: "debian-pkg-build:libzstd:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-29:
+  node-30:
     name: "libzstd1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-28]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-29]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -529,9 +575,61 @@ jobs:
     with:
       node-key: "debian-binary-pkg:libzstd:libzstd1:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-30:
+  node-31:
+    name: "linux"
+    needs: [build-glbx, check-graph, restore-inputs, plan]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:linux:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:linux:amd64"
+      arch: amd64
+      runner: "ubuntu-latest-8core"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-32:
+    name: "linux-base-7.2+unreleased-cloud-amd64"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-31]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:linux:linux-base-7.2+unreleased-cloud-amd64:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:linux:linux-base-7.2+unreleased-cloud-amd64:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-33:
+    name: "linux-binary-7.2+unreleased-cloud-amd64"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-31]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:linux:linux-binary-7.2+unreleased-cloud-amd64:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:linux:linux-binary-7.2+unreleased-cloud-amd64:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-34:
     name: "mawk"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -545,11 +643,12 @@ jobs:
     with:
       node-key: "debian-pkg-build:mawk:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-31:
+  node-35:
     name: "mawk"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-30]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-34]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -561,11 +660,12 @@ jobs:
     with:
       node-key: "debian-binary-pkg:mawk:mawk:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-32:
+  node-36:
     name: "base-files"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-2, node-14, node-15, node-31]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-2, node-14, node-15, node-35]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -577,9 +677,10 @@ jobs:
     with:
       node-key: "debian-binary-pkg:base-files:base-files:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-33:
+  node-37:
     name: "ncurses"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -593,11 +694,12 @@ jobs:
     with:
       node-key: "debian-pkg-build:ncurses:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-34:
+  node-38:
     name: "libtinfo6"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-33]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-37]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -609,11 +711,12 @@ jobs:
     with:
       node-key: "debian-binary-pkg:ncurses:libtinfo6:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-35:
+  node-39:
     name: "bash"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-4, node-14, node-15, node-20, node-32, node-34]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-4, node-14, node-15, node-20, node-36, node-38]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -625,9 +728,10 @@ jobs:
     with:
       node-key: "debian-binary-pkg:bash:bash:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-36:
+  node-40:
     name: "openssl"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -641,9 +745,10 @@ jobs:
     with:
       node-key: "debian-pkg-build:openssl:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-37:
+  node-41:
     name: "pcre2"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -657,11 +762,12 @@ jobs:
     with:
       node-key: "debian-pkg-build:pcre2:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-38:
+  node-42:
     name: "libpcre2-8-0"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-37]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-41]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -673,11 +779,12 @@ jobs:
     with:
       node-key: "debian-binary-pkg:pcre2:libpcre2-8-0:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-39:
+  node-43:
     name: "libselinux1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-27, node-38]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-28, node-42]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -689,11 +796,12 @@ jobs:
     with:
       node-key: "debian-binary-pkg:libselinux:libselinux1:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-40:
+  node-44:
     name: "base-passwd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-3, node-14, node-15, node-19, node-39]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-3, node-14, node-15, node-19, node-43]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -705,9 +813,10 @@ jobs:
     with:
       node-key: "debian-binary-pkg:base-passwd:base-passwd:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-41:
+  node-45:
     name: "systemd"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -721,11 +830,12 @@ jobs:
     with:
       node-key: "debian-pkg-build:systemd:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-42:
+  node-46:
     name: "libsystemd0"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-24, node-29, node-39, node-41]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-25, node-30, node-43, node-45]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -737,9 +847,10 @@ jobs:
     with:
       node-key: "debian-binary-pkg:systemd:libsystemd0:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-43:
+  node-47:
     name: "tar"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -753,11 +864,12 @@ jobs:
     with:
       node-key: "debian-pkg-build:tar:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-44:
+  node-48:
     name: "tar"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-17, node-39, node-43]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-17, node-43, node-47]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -769,9 +881,10 @@ jobs:
     with:
       node-key: "debian-binary-pkg:tar:tar:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-45:
+  node-49:
     name: "xz-utils"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -785,11 +898,12 @@ jobs:
     with:
       node-key: "debian-pkg-build:xz-utils:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-46:
+  node-50:
     name: "liblzma5"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-45]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-49]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -801,9 +915,10 @@ jobs:
     with:
       node-key: "debian-binary-pkg:xz-utils:liblzma5:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-47:
+  node-51:
     name: "zlib"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -817,11 +932,12 @@ jobs:
     with:
       node-key: "debian-pkg-build:zlib:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-48:
+  node-52:
     name: "zlib1g"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-47]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-51]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -833,11 +949,12 @@ jobs:
     with:
       node-key: "debian-binary-pkg:zlib:zlib1g:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-49:
+  node-53:
     name: "dpkg"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-9, node-14, node-15, node-18, node-26, node-29, node-39, node-44, node-46, node-48]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-9, node-14, node-15, node-18, node-27, node-30, node-43, node-48, node-50, node-52]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -849,11 +966,12 @@ jobs:
     with:
       node-key: "debian-binary-pkg:dpkg:dpkg:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-50:
+  node-54:
     name: "libssl3t64"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-29, node-36, node-48]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-30, node-40, node-52]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -865,11 +983,12 @@ jobs:
     with:
       node-key: "debian-binary-pkg:openssl:libssl3t64:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-51:
+  node-55:
     name: "openssl-provider-legacy"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-29, node-36, node-48]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-30, node-40, node-52]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -881,11 +1000,12 @@ jobs:
     with:
       node-key: "debian-binary-pkg:openssl:openssl-provider-legacy:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-52:
+  node-56:
     name: "coreutils"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-7, node-14, node-15, node-16, node-17, node-22, node-24, node-39, node-42, node-50, node-51]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-7, node-14, node-15, node-16, node-17, node-22, node-25, node-43, node-46, node-54, node-55]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -897,11 +1017,80 @@ jobs:
     with:
       node-key: "debian-binary-pkg:coreutils:coreutils:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-53:
+  node-57:
+    name: "kmod"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-23, node-54, node-55]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:kmod:kmod:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:kmod:kmod:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-58:
+    name: "libkmod2"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14, node-15, node-23, node-54, node-55]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:kmod:libkmod2:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:kmod:libkmod2:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-59:
+    name: "linux-image-7.2+unreleased-cloud-amd64"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-31, node-57, node-58]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:linux:linux-image-7.2+unreleased-cloud-amd64:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:linux:linux-image-7.2+unreleased-cloud-amd64:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-60:
+    name: "linux-modules-7.2+unreleased-cloud-amd64"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-31, node-57, node-58]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:linux:linux-modules-7.2+unreleased-cloud-amd64:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:linux:linux-modules-7.2+unreleased-cloud-amd64:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-61:
     name: "rootfs"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-32, node-35, node-40, node-49, node-52]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-32, node-33, node-36, node-39, node-44, node-53, node-56, node-59, node-60]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -913,4 +1102,5 @@ jobs:
     with:
       node-key: "rootfs:amd64"
       arch: amd64
+      runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"

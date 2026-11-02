@@ -1,0 +1,6 @@
+{
+  "default": "ubuntu-latest",
+  "overrides": {
+    "debian-pkg-build:linux:amd64": "ubuntu-latest-8core"
+  }
+}

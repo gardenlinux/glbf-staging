@@ -43,6 +43,10 @@ GLBX="${GLBX:-glbx}"
 STUB="${STUB:-exec_env_stub}"
 ARCH="${ARCH:-amd64}"
 
+# Per-node runner map: {"default": <label>, "overrides": {<exact node Key>: <label>}}.
+# Read into the jq pass below; a node with no override gets the default.
+RUNNERS="$SCRIPT_DIR/runners.json"
+
 mkdir -p "$(dirname "$OUT")"
 
 {
@@ -113,9 +117,10 @@ EOF
 	# edges and the if: skip guard stay here because they are structural — they are
 	# exactly what check-graph validates.
 	"$GLBX" graph --format=json --conf-dir "$CONF_DIR" --stub "$STUB" --arch "$ARCH" 2>/dev/null \
-		| jq -r --arg q "'" '
+		| jq -r --arg q "'" --slurpfile r "$RUNNERS" '
 			(.nodes | to_entries | map({(.value.key): .key}) | add) as $id
 			| .edges as $edges
+			| ($r[0]) as $runners
 			| .nodes
 			| to_entries[]
 			| .key as $i
@@ -123,6 +128,7 @@ EOF
 			| .value.shortName as $short
 			| ([$edges[] | select(.to == $key) | $id[.from]] | sort) as $preds
 			| (["build-glbx", "check-graph", "restore-inputs", "plan"] + ($preds | map("node-\(.)"))) as $needs
+			| ($runners.overrides[$key] // $runners.default) as $runner
 			| "
   node-\($i):
     name: \"\($short)\"
@@ -138,6 +144,7 @@ EOF
     with:
       node-key: \"\($key)\"
       arch: amd64
+      runner: \"\($runner)\"
       id-seed-override: \"${{ inputs.id-seed-override }}\""
 		'
 } >"$OUT"
