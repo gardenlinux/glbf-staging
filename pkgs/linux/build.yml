@@ -1,0 +1,15 @@
+pkg_type: debian-kernel
+gen_control_pkgs: [python3, python3-dacite, python3-jinja2, dpkg-dev]
+build_profiles: [nocheck, nopython]
+build_options: [nocheck]
+runtime_depends:
+  linux-image-7.2+unreleased-cloud-amd64:
+    - linux:linux-base-7.2+unreleased-cloud-amd64
+    - linux:linux-binary-7.2+unreleased-cloud-amd64
+    - linux:linux-modules-7.2+unreleased-cloud-amd64
+    - kmod:kmod
+  linux-binary-7.2+unreleased-cloud-amd64:
+    - linux:linux-base-7.2+unreleased-cloud-amd64
+  linux-modules-7.2+unreleased-cloud-amd64:
+    - linux:linux-base-7.2+unreleased-cloud-amd64
+    - kmod:kmod

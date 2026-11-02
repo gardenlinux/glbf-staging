@@ -17,15 +17,6 @@ hardware = 'x86-64 cloud'
 hardware_long = 'cloud platforms including Amazon EC2, Microsoft Azure, and Google Compute Engine'
 
 [[flavour]]
-name = 'rt-amd64'
-[flavour.build]
-config = ['config.rt']
-[flavour.description]
-hardware = '64-bit PCs'
-hardware_long = 'PCs with AMD64, Intel 64 or VIA Nano processors'
-parts = ['rt']
-
-[[flavour]]
 name = 'test'
 [flavour.build]
 config = ['config.test', 'amd64/config.test']
@@ -42,7 +33,7 @@ name = 'none'
 
 [build]
 enable_rust = true
-enable_signed = true
+enable_signed = false
 kernel_file = 'arch/x86/boot/bzImage'
 kernel_stem = 'vmlinuz'
 
