@@ -847,6 +847,22 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/protobuf-c/libprotobuf-c1_1.5.1-1+b2_amd64.deb
             - https://snapshot.debian.org/file/d12ab795234ebe243d36bf561979f4fb8fb07c31/libprotobuf-c1_1.5.1-1+b2_amd64.deb
+    - name: libprotobuf32t64
+      version: 3.21.12-17
+      files:
+        - arch: amd64
+          sha256: b9bf3393bcb1d5f7141b7802f0affdae2053c000b4b73f82eb1f690d9a3301ae
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/protobuf/libprotobuf32t64_3.21.12-17_amd64.deb
+            - https://snapshot.debian.org/file/e9d19b51d408aee0a8d1aedb4319bfbeda4c2d5f/libprotobuf32t64_3.21.12-17_amd64.deb
+    - name: libprotoc32t64
+      version: 3.21.12-17
+      files:
+        - arch: amd64
+          sha256: 759466db6e8424cc0586538ca7609d04fdccbd46d523c45054e3a600a8bca1fc
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/protobuf/libprotoc32t64_3.21.12-17_amd64.deb
+            - https://snapshot.debian.org/file/f92ae7bfe3e08b8c6808ff174ab945603ac4a53c/libprotoc32t64_3.21.12-17_amd64.deb
     - name: libquadmath0
       version: 16.2.0-3
       files:
@@ -1103,6 +1119,14 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/po-debconf/po-debconf_1.0.22_all.deb
             - https://snapshot.debian.org/file/f95edb8b8c472f1363a7c5905ef25b0361e00d01/po-debconf_1.0.22_all.deb
+    - name: protobuf-c-compiler
+      version: 1.5.1-1+b2
+      files:
+        - arch: amd64
+          sha256: 9a9e9a21704d105f32d277506fa83cc19b8055cd538838e46cf0967ac0b82787
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/protobuf-c/protobuf-c-compiler_1.5.1-1+b2_amd64.deb
+            - https://snapshot.debian.org/file/015756deab022cffad0f604a59ab15d573c80428/protobuf-c-compiler_1.5.1-1+b2_amd64.deb
     - name: sed
       version: 4.9-3
       files:
