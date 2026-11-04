@@ -22,10 +22,13 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: stable
-      - name: Build glbx and the sandbox stub
+      - name: Install protobuf toolchain
         run: |
-          go build -o bin/glbx ./cmd/glbx
-          go build -o bin/exec_env_stub ./cmd/exec_env_stub
+          sudo apt-get update
+          sudo apt-get install -y protobuf-compiler
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+      - name: Build glbx and the sandbox stub
+        run: make build
       - name: Share the binaries with the node jobs
         uses: actions/upload-artifact@v6
         with:
