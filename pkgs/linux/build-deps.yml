@@ -1536,13 +1536,13 @@ tools:
             - https://deb.debian.org/debian/pool/main/n/node-jquery/libjs-jquery_3.7.1+dfsg+~3.5.33-1_all.deb
             - https://snapshot.debian.org/file/071c55d6b0e73cb521a0efbd0070c4345f9fc753/libjs-jquery_3.7.1+dfsg+~3.5.33-1_all.deb
     - name: libjs-sphinxdoc
-      version: 9.1.0-9
+      version: 9.2.0-1
       files:
         - arch: all
-          sha256: 4872e8c4069d908912123853d92b543bc3741234545912269f3890b73f69b62a
+          sha256: e575732adda03ea3a1026b4fcd4c16baf9f6bc7ff09d60d45606b674a710759b
           urls:
-            - https://deb.debian.org/debian/pool/main/s/sphinx/libjs-sphinxdoc_9.1.0-9_all.deb
-            - https://snapshot.debian.org/file/cd1710531fb255303035a55b72c49eba86781ae7/libjs-sphinxdoc_9.1.0-9_all.deb
+            - https://deb.debian.org/debian/pool/main/s/sphinx/libjs-sphinxdoc_9.2.0-1_all.deb
+            - https://snapshot.debian.org/file/1a45cf1b054b6941b7e4b557d3b27194967c928f/libjs-sphinxdoc_9.2.0-1_all.deb
     - name: libjson-perl
       version: 4.10000-1
       files:
@@ -1608,13 +1608,13 @@ tools:
             - https://deb.debian.org/debian/pool/main/l/lcms2/liblcms2-2_2.19.1-1_amd64.deb
             - https://snapshot.debian.org/file/ae70f295f6ad0847d089e7fda2099b4e0a6c9963/liblcms2-2_2.19.1-1_amd64.deb
     - name: liblerc4
-      version: 4.2.0+ds-1
+      version: 4.3.0+ds-1
       files:
         - arch: amd64
-          sha256: 6048745ecb91bfb44bc31ec24b951266923beb697f574694f006cb57c8eb0d09
+          sha256: 16b3da3727510d1ae3fe3c43d5c4f5ee9b84db07a2a62ad6afab5cab8f90909f
           urls:
-            - https://deb.debian.org/debian/pool/main/l/lerc/liblerc4_4.2.0+ds-1_amd64.deb
-            - https://snapshot.debian.org/file/3aa75808432b45c7c5705df11db2fe33ce7f5506/liblerc4_4.2.0+ds-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/l/lerc/liblerc4_4.3.0+ds-1_amd64.deb
+            - https://snapshot.debian.org/file/3df28b67b6756c5c47f5fe64d329bbb91f4d1ca2/liblerc4_4.3.0+ds-1_amd64.deb
     - name: libllvm21
       version: 1:21.1.8-13
       files:
@@ -1880,21 +1880,21 @@ tools:
             - https://deb.debian.org/debian/pool/main/p/pango1.0/libpangoft2-1.0-0_1.58.2-1_amd64.deb
             - https://snapshot.debian.org/file/0073c96ba8b14c8429cc943d2a4d032a1b6c6444/libpangoft2-1.0-0_1.58.2-1_amd64.deb
     - name: libpaper-utils
-      version: 2.2.5-0.4
+      version: 2.3.0-0.3
       files:
         - arch: amd64
-          sha256: 3cfbd8da1093e8daedfa9189ef56c7dc9337c9e55ab8b55eb3c9562bc833d0b6
+          sha256: 325a9a301d6679df5e91f473ad2434daa7f44760005270b96683d84849d1c48d
           urls:
-            - https://deb.debian.org/debian/pool/main/libp/libpaper/libpaper-utils_2.2.5-0.4_amd64.deb
-            - https://snapshot.debian.org/file/092295dfa52dfb0a7051707b03d024f8528cbb39/libpaper-utils_2.2.5-0.4_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libp/libpaper/libpaper-utils_2.3.0-0.3_amd64.deb
+            - https://snapshot.debian.org/file/23cfa4fef072acf9a3763636bcbbd57c3a007f36/libpaper-utils_2.3.0-0.3_amd64.deb
     - name: libpaper2
-      version: 2.2.5-0.4
+      version: 2.3.0-0.3
       files:
         - arch: amd64
-          sha256: 887b7ae97eb45c6984e392686d987ead8d88270453587575d7d57d1c9fbdcd5d
+          sha256: e03fa8b1ad29d4274c37fd9b58c7a9b24b4df92cc52ae040f25fb29377b481e7
           urls:
-            - https://deb.debian.org/debian/pool/main/libp/libpaper/libpaper2_2.2.5-0.4_amd64.deb
-            - https://snapshot.debian.org/file/f80c716c3a6d883e9e564feca666df785acf0ed2/libpaper2_2.2.5-0.4_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libp/libpaper/libpaper2_2.3.0-0.3_amd64.deb
+            - https://snapshot.debian.org/file/7ed6bc08c2fa22360b0361b2fe26e30d57145186/libpaper2_2.3.0-0.3_amd64.deb
     - name: libpathplan4
       version: 14.1.2-1+b4
       files:
@@ -2048,21 +2048,21 @@ tools:
             - https://deb.debian.org/debian/pool/main/p/python3-defaults/libpython3-stdlib_3.14.7-3_amd64.deb
             - https://snapshot.debian.org/file/6ea451d3ea1263cb502e72446e7432beb7585039/libpython3-stdlib_3.14.7-3_amd64.deb
     - name: libpython3.14-minimal
-      version: 3.14.8-1
+      version: 3.14.10-1
       files:
         - arch: amd64
-          sha256: 149d1ff143259f6a5a405522d40143595fdedbf6d8e01123ea798603f895c93d
+          sha256: a59bb22e16dde6f441b892cdfd058dd93d8149cf437a31d8985dcca3cf407367
           urls:
-            - https://deb.debian.org/debian/pool/main/p/python3.14/libpython3.14-minimal_3.14.8-1_amd64.deb
-            - https://snapshot.debian.org/file/421e2ceecba032850ea50c89b5e96c62660256bd/libpython3.14-minimal_3.14.8-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/python3.14/libpython3.14-minimal_3.14.10-1_amd64.deb
+            - https://snapshot.debian.org/file/e7e9442e72c867f1716ac5f8c647d9fc22b293f1/libpython3.14-minimal_3.14.10-1_amd64.deb
     - name: libpython3.14-stdlib
-      version: 3.14.8-1
+      version: 3.14.10-1
       files:
         - arch: amd64
-          sha256: abfa1b45e311461a4f8ee110d203efbc18808fada340af7036235b0d0c4cfd9a
+          sha256: 0af595928d7a49c12fe33d5667da95dc2fa9868e1a9a00625428074d3b3d458a
           urls:
-            - https://deb.debian.org/debian/pool/main/p/python3.14/libpython3.14-stdlib_3.14.8-1_amd64.deb
-            - https://snapshot.debian.org/file/ab788accb39b8a2def317af94405f78fce3309e4/libpython3.14-stdlib_3.14.8-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/python3.14/libpython3.14-stdlib_3.14.10-1_amd64.deb
+            - https://snapshot.debian.org/file/e213e017b72da94df1473c8f8ae4bd5dabce056d/libpython3.14-stdlib_3.14.10-1_amd64.deb
     - name: libquadmath0
       version: 16.2.0-3
       files:
@@ -2440,21 +2440,21 @@ tools:
             - https://deb.debian.org/debian/pool/main/t/tcp-wrappers/libwrap0-dev_7.6.q-37_amd64.deb
             - https://snapshot.debian.org/file/e1c4a2637fcaf0f6a1f7a5c639f29bde72fc20d3/libwrap0-dev_7.6.q-37_amd64.deb
     - name: libx11-6
-      version: 2:1.8.13-1
+      version: 2:1.8.14-1
       files:
         - arch: amd64
-          sha256: b2ac87f0581b3485a91a5cef4b189f0ad7373569214bf4bec41e169a0abfca73
+          sha256: 4db6a694864986c410275434c86bfb26f01ddfd471512cf7fa1eabdf09fc9312
           urls:
-            - https://deb.debian.org/debian/pool/main/libx/libx11/libx11-6_1.8.13-1_amd64.deb
-            - https://snapshot.debian.org/file/f14e6f64cf44149f80d2da7237d5fe547983c5f0/libx11-6_1.8.13-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libx/libx11/libx11-6_1.8.14-1_amd64.deb
+            - https://snapshot.debian.org/file/a355dc2e2c7b6af8b29a2145e96ba239b18f993a/libx11-6_1.8.14-1_amd64.deb
     - name: libx11-data
-      version: 2:1.8.13-1
+      version: 2:1.8.14-1
       files:
         - arch: all
-          sha256: e711ddf5a618b355953688a7b45050e0aef7b1effbe4a01c8ad0296695ab2e86
+          sha256: 4e9d56e61e5eca504179adf0fe32aed8bce39dc2d112049a80387f6c1e1cb66b
           urls:
-            - https://deb.debian.org/debian/pool/main/libx/libx11/libx11-data_1.8.13-1_all.deb
-            - https://snapshot.debian.org/file/3043ce71b5f681ebc692d1b622bb97585761680d/libx11-data_1.8.13-1_all.deb
+            - https://deb.debian.org/debian/pool/main/libx/libx11/libx11-data_1.8.14-1_all.deb
+            - https://snapshot.debian.org/file/4b093cb607dc33c2184d2fd0b3a19552bf71cb21/libx11-data_1.8.14-1_all.deb
     - name: libxau6
       version: 1:1.0.11-1+b2
       files:
@@ -2520,13 +2520,13 @@ tools:
             - https://deb.debian.org/debian/pool/main/libx/libxext/libxext6_1.3.4-1+b4_amd64.deb
             - https://snapshot.debian.org/file/f333da777e4416e96d6af690683203d6c9402c2e/libxext6_1.3.4-1+b4_amd64.deb
     - name: libxi6
-      version: 2:1.8.3-1
+      version: 2:1.8.4-1
       files:
         - arch: amd64
-          sha256: b1b0250d1f978409324f5120c6ecf7544c0400f8ca01513fe44d659eb9e95ab3
+          sha256: f62f837a7decfb7ad99f09e9ebac6ad3412e0b43e155a418b5de241f4cb10cc2
           urls:
-            - https://deb.debian.org/debian/pool/main/libx/libxi/libxi6_1.8.3-1_amd64.deb
-            - https://snapshot.debian.org/file/8b93325c820627bfcb79db30e0fb2b373749c4c6/libxi6_1.8.3-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libx/libxi/libxi6_1.8.4-1_amd64.deb
+            - https://snapshot.debian.org/file/5aa818e7cb70c24b8020fbefd64c0e3716faa742/libxi6_1.8.4-1_amd64.deb
     - name: libxml2-16
       version: 2.15.4+dfsg-1+b1
       files:
@@ -2544,21 +2544,21 @@ tools:
             - https://deb.debian.org/debian/pool/main/libx/libxmu/libxmu6_1.1.3-4+b1_amd64.deb
             - https://snapshot.debian.org/file/2d305fa330b4420c2aacd2ef5f974fac2033d122/libxmu6_1.1.3-4+b1_amd64.deb
     - name: libxpm4
-      version: 1:3.5.19-1
+      version: 1:3.5.20-1
       files:
         - arch: amd64
-          sha256: 852dc5f8d4e63c9408001667816d70261a320505f6cf97b248f7cfb0fac32696
+          sha256: 97af7c96b70a99211ccbd42923fe8244fcb7e157952f13d591db38660bc0dea5
           urls:
-            - https://deb.debian.org/debian/pool/main/libx/libxpm/libxpm4_3.5.19-1_amd64.deb
-            - https://snapshot.debian.org/file/90d5ebf9803ca753991098d60178299e2ec1fbd5/libxpm4_3.5.19-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libx/libxpm/libxpm4_3.5.20-1_amd64.deb
+            - https://snapshot.debian.org/file/60413ca3a71298e4f04c70d09ba2d47cec428d2b/libxpm4_3.5.20-1_amd64.deb
     - name: libxrender1
-      version: 1:0.9.12-1+b2
+      version: 1:0.9.13-1
       files:
         - arch: amd64
-          sha256: 6c86ec9ae1d915ed2847e63e84d1d41d38d7069563884e5ac8c195143e19f77a
+          sha256: bacedb593c07f09acb107397968a09c00a64a0b42c40774b1d9fe67a893ae052
           urls:
-            - https://deb.debian.org/debian/pool/main/libx/libxrender/libxrender1_0.9.12-1+b2_amd64.deb
-            - https://snapshot.debian.org/file/8c3d1487bb2335105e3f7d7e93d73221e83594a9/libxrender1_0.9.12-1+b2_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libx/libxrender/libxrender1_0.9.13-1_amd64.deb
+            - https://snapshot.debian.org/file/226d8222d8cc4c8be17b373bcb53bfdbba793357/libxrender1_0.9.13-1_amd64.deb
     - name: libxt6t64
       version: 1:1.2.1-1.3+b2
       files:
@@ -2783,6 +2783,14 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/perl/perl-modules-5.42_5.42.3-1_all.deb
             - https://snapshot.debian.org/file/d5d2b7ae5f7004f0ffa5ce683785d53c7493c63c/perl-modules-5.42_5.42.3-1_all.deb
+    - name: pkcs11-provider
+      version: 1.3.0-1
+      files:
+        - arch: amd64
+          sha256: cbae631c9ef6a600ff102cb17562ae38a673dea2db0c1bf523c07fe5840f981c
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/pkcs11-provider/pkcs11-provider_1.3.0-1_amd64.deb
+            - https://snapshot.debian.org/file/1240659aabb6ac5e8519a1fb7394d2ce21a57d42/pkcs11-provider_1.3.0-1_amd64.deb
     - name: pkgconf
       version: 2.5.1-4
       files:
@@ -2864,13 +2872,13 @@ tools:
             - https://deb.debian.org/debian/pool/main/p/python-babel/python3-babel_2.18.0+git2026-08-12-3_all.deb
             - https://snapshot.debian.org/file/245f3ba43ad89324e3b114e504179bcdad0fee15/python3-babel_2.18.0+git2026-08-12-3_all.deb
     - name: python3-certifi
-      version: 2026.10.19+ds-1
+      version: 2026.10.23+ds-1
       files:
         - arch: all
-          sha256: 0cac04b0db103ca8c2255a0da93ab839823180e8a6cc4a8632cb66a3dc519b88
+          sha256: 840b21b985f0d79db85f5f5fa80a96d6afa0c18fb8488560d218cd2e469f5c07
           urls:
-            - https://deb.debian.org/debian/pool/main/p/python-certifi/python3-certifi_2026.10.19+ds-1_all.deb
-            - https://snapshot.debian.org/file/79c8de62d9b80efe1b72c5607d903b7a1e59aacb/python3-certifi_2026.10.19+ds-1_all.deb
+            - https://deb.debian.org/debian/pool/main/p/python-certifi/python3-certifi_2026.10.23+ds-1_all.deb
+            - https://snapshot.debian.org/file/5f4be0021df8e24f85b1c844df38f0bd30d1a22f/python3-certifi_2026.10.23+ds-1_all.deb
     - name: python3-chardet
       version: 5.2.0+dfsg-2
       files:
@@ -2880,13 +2888,13 @@ tools:
             - https://deb.debian.org/debian/pool/main/c/chardet/python3-chardet_5.2.0+dfsg-2_all.deb
             - https://snapshot.debian.org/file/777db7400d16b92affe42fda3f016d2f19e4be4d/python3-chardet_5.2.0+dfsg-2_all.deb
     - name: python3-charset-normalizer
-      version: 3.4.7-2+b1
+      version: 3.4.7-2+b3
       files:
         - arch: amd64
-          sha256: b5f6d60cfed38174e03acd2872c7945305c0a24bc9c2ba4dab79d3fcda947e12
+          sha256: 509f10bfdfe39ae59dc1eeda9f95be20fdff508959d1cf7fb8e3e0f3a9339ffa
           urls:
-            - https://deb.debian.org/debian/pool/main/p/python-charset-normalizer/python3-charset-normalizer_3.4.7-2+b1_amd64.deb
-            - https://snapshot.debian.org/file/9a7ed4e8feb5d086665a050843b420d02c1f05e3/python3-charset-normalizer_3.4.7-2+b1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/python-charset-normalizer/python3-charset-normalizer_3.4.7-2+b3_amd64.deb
+            - https://snapshot.debian.org/file/e6e4175f69b047f9383ac744aa555317e8d5f064/python3-charset-normalizer_3.4.7-2+b3_amd64.deb
     - name: python3-dacite
       version: 1.9.2-4
       files:
@@ -2895,14 +2903,6 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/d/dacite/python3-dacite_1.9.2-4_all.deb
             - https://snapshot.debian.org/file/d2a8c732ebe525a38b9b5e1d292c5ed5d8751117/python3-dacite_1.9.2-4_all.deb
-    - name: python3-defusedxml
-      version: 0.7.1-3
-      files:
-        - arch: all
-          sha256: f77090e227c91bf1fe1485b42d74c833d0de0e4a737c8cd65c27bc25926bb35e
-          urls:
-            - https://deb.debian.org/debian/pool/main/d/defusedxml/python3-defusedxml_0.7.1-3_all.deb
-            - https://snapshot.debian.org/file/511b11014f06e2e2cedf83499711e3f639f403b5/python3-defusedxml_0.7.1-3_all.deb
     - name: python3-docutils
       version: 0.23+dfsg-2
       files:
@@ -2992,13 +2992,13 @@ tools:
             - https://deb.debian.org/debian/pool/main/s/snowball/python3-snowballstemmer_3.1.1-1_all.deb
             - https://snapshot.debian.org/file/4a46192e4cf3669f5591d7a1b0914d207f9d60ac/python3-snowballstemmer_3.1.1-1_all.deb
     - name: python3-sphinx
-      version: 9.1.0-9
+      version: 9.2.0-1
       files:
         - arch: all
-          sha256: 6236a1941a1c5785cef04887d1eb0907b4f4b5acb1bd1fa8cdb18ca4d018aa37
+          sha256: ff8f885a40e8b6a34cd08b63f487ee278729a02902f4057589f38b68d629fb24
           urls:
-            - https://deb.debian.org/debian/pool/main/s/sphinx/python3-sphinx_9.1.0-9_all.deb
-            - https://snapshot.debian.org/file/c704585fa44e6a36c39b5dfa3e9108f2385311e8/python3-sphinx_9.1.0-9_all.deb
+            - https://deb.debian.org/debian/pool/main/s/sphinx/python3-sphinx_9.2.0-1_all.deb
+            - https://snapshot.debian.org/file/c653e9b28159a1197fb3f9f1b1913f02b4a652a3/python3-sphinx_9.2.0-1_all.deb
     - name: python3-sphinx-rtd-theme
       version: 3.1.0+dfsg-3
       files:
@@ -3024,29 +3024,29 @@ tools:
             - https://deb.debian.org/debian/pool/main/p/python-urllib3/python3-urllib3_2.8.0-2_all.deb
             - https://snapshot.debian.org/file/55e5246d20f5fa2a083b13df6b19a4829bb47c8f/python3-urllib3_2.8.0-2_all.deb
     - name: python3-yaml
-      version: 6.0.3-1+b1
+      version: 6.0.3-1+b2
       files:
         - arch: amd64
-          sha256: 193e8b1e04f7fe855579b1025fda76e779485a4819c7722fc71d8d89700b420c
+          sha256: f9ff0bf16e9e6bfced516cc5dca25208a3b1e03fedb35457cee67a24572f1cd2
           urls:
-            - https://deb.debian.org/debian/pool/main/p/pyyaml/python3-yaml_6.0.3-1+b1_amd64.deb
-            - https://snapshot.debian.org/file/38b497e3edfcf98ee023e4003efec427c2d951b0/python3-yaml_6.0.3-1+b1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/pyyaml/python3-yaml_6.0.3-1+b2_amd64.deb
+            - https://snapshot.debian.org/file/67f78dfcd8e80e69be4efe99c0427525cc2c0878/python3-yaml_6.0.3-1+b2_amd64.deb
     - name: python3.14
-      version: 3.14.8-1
+      version: 3.14.10-1
       files:
         - arch: amd64
-          sha256: e5854629b8555d123537ca313d9d9ab4f40fe427e91406b38ef1c2c323581aaa
+          sha256: 96f4d045aeb704d72ed40c0c37099d5035b57d2095f3c9e42ab103344cad05f8
           urls:
-            - https://deb.debian.org/debian/pool/main/p/python3.14/python3.14_3.14.8-1_amd64.deb
-            - https://snapshot.debian.org/file/c99b3c9e5feb707bdfeb3176a448f8ec690692d9/python3.14_3.14.8-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/python3.14/python3.14_3.14.10-1_amd64.deb
+            - https://snapshot.debian.org/file/4cb601a2bbcb920274fbf83f7b89912a95b44aeb/python3.14_3.14.10-1_amd64.deb
     - name: python3.14-minimal
-      version: 3.14.8-1
+      version: 3.14.10-1
       files:
         - arch: amd64
-          sha256: 06e82c1b5c9d6f3ff6a25e0eb4c136fb10cedd93d51ec378ff163c9bee584270
+          sha256: a23204aa66be03a9ad427367e75ee2142c60685c8c229bcde0bdde8b421cefb8
           urls:
-            - https://deb.debian.org/debian/pool/main/p/python3.14/python3.14-minimal_3.14.8-1_amd64.deb
-            - https://snapshot.debian.org/file/0b1b2d38552cc71367dae0691a71165ca67bbb53/python3.14-minimal_3.14.8-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/python3.14/python3.14-minimal_3.14.10-1_amd64.deb
+            - https://snapshot.debian.org/file/0e1d78bfe1be9ef806fb828d81d7a06acd2aee90/python3.14-minimal_3.14.10-1_amd64.deb
     - name: quilt
       version: 0.69-1
       files:
@@ -3112,13 +3112,13 @@ tools:
             - https://deb.debian.org/debian/pool/main/s/sgml-base/sgml-base_1.31+nmu1_all.deb
             - https://snapshot.debian.org/file/1913c061c4bda862c5798c6290b2064939061b29/sgml-base_1.31+nmu1_all.deb
     - name: sphinx-common
-      version: 9.1.0-9
+      version: 9.2.0-1
       files:
         - arch: all
-          sha256: c58801cd0a680d2913bd4546024d7dc22261926ee36440aa892aba0a80cef426
+          sha256: d865db56af5ae8f509a4859005b79be63b43c80543a83b60b305b22d018ebc30
           urls:
-            - https://deb.debian.org/debian/pool/main/s/sphinx/sphinx-common_9.1.0-9_all.deb
-            - https://snapshot.debian.org/file/53cb42543c4ae9cc986fa2ac514567a20ed9d9d9/sphinx-common_9.1.0-9_all.deb
+            - https://deb.debian.org/debian/pool/main/s/sphinx/sphinx-common_9.2.0-1_all.deb
+            - https://snapshot.debian.org/file/29a275ecdea204eae519c6697c657b18e6e005e7/sphinx-common_9.2.0-1_all.deb
     - name: sphinx-rtd-theme-common
       version: 3.1.0+dfsg-3
       files:
@@ -3144,13 +3144,13 @@ tools:
             - https://deb.debian.org/debian/pool/main/t/t1utils/t1utils_1.41-4_amd64.deb
             - https://snapshot.debian.org/file/68a9dc46d4bfef309e00a271b75b53cc248d446d/t1utils_1.41-4_amd64.deb
     - name: tar
-      version: 1.35+dfsg-6
+      version: 1.35+dfsg-7
       files:
         - arch: amd64
-          sha256: e1019bbb6e60aefa0927ffd6b2b8ecdee3943ee72efd1a1ffb5e4528874437b8
+          sha256: e4aae649b837198cf8bbe1e1e9c457882ccf18e4ba1b440021d916fe425619b7
           urls:
-            - https://deb.debian.org/debian/pool/main/t/tar/tar_1.35+dfsg-6_amd64.deb
-            - https://snapshot.debian.org/file/2d2a970f413042321a110131b63ad575885643c7/tar_1.35+dfsg-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/t/tar/tar_1.35+dfsg-7_amd64.deb
+            - https://snapshot.debian.org/file/8d19aa927c0270353074b45bda04b2651d46dfe5/tar_1.35+dfsg-7_amd64.deb
     - name: tex-common
       version: "6.21"
       files:
@@ -3208,13 +3208,13 @@ tools:
             - https://deb.debian.org/debian/pool/main/t/texlive-base/texlive-pictures_2026.20260911-1_all.deb
             - https://snapshot.debian.org/file/ecd2b657b73d963631529009b94f3eac327425d3/texlive-pictures_2026.20260911-1_all.deb
     - name: tzdata
-      version: "2026e-1"
+      version: 2026f-1
       files:
         - arch: all
-          sha256: e04d96b6fd39854cba37dfbf35e28b375bace5eca688332540f41ab89602b568
+          sha256: 7ef210d4dfaca780b16cfbd307c4a38d0408b24e6774bde541a45b8ffe742b9f
           urls:
-            - https://deb.debian.org/debian/pool/main/t/tzdata/tzdata_2026e-1_all.deb
-            - https://snapshot.debian.org/file/5acd7f00e760b686c57a9289d5feb2b4f7f7e7b0/tzdata_2026e-1_all.deb
+            - https://deb.debian.org/debian/pool/main/t/tzdata/tzdata_2026f-1_all.deb
+            - https://snapshot.debian.org/file/037ac1ae2ee622d118e556d2cfbcc7037fdd0515/tzdata_2026f-1_all.deb
     - name: ucf
       version: "3.0056"
       files:

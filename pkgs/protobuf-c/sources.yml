@@ -1,0 +1,6 @@
+sources:
+    - file: protobuf-c_1.5.1.orig.tar.gz
+      sha256: 20d1dc257da96f8ddff8be4dd9779215bbd0a6069ed53bbe9de38fa7629be06b
+      urls:
+        - https://deb.debian.org/debian/pool/main/p/protobuf-c/protobuf-c_1.5.1.orig.tar.gz
+        - https://snapshot.debian.org/file/86aabf3836ff55f3abe866a0ffd1a6edd4318c58/protobuf-c_1.5.1.orig.tar.gz

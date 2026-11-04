@@ -14,6 +14,25 @@ SOURCE_DATE_UTC_ISO := $(shell date -u -d '@$(SOURCE_DATE_EPOCH)' +%Y-%m-%d)
 
 include debian/rules.defs
 
+# Out-of-container module signing. When GLBX_SIGN_SOCKET is set in the build
+# environment, the private signing key lives in a service outside this build,
+# reached through a PKCS#11 forwarding module over that socket. In that mode the
+# build does not generate its own key: it signs through the PKCS#11 token, and
+# the kernel's own certificate-extraction step reads the matching public
+# certificate from that same token. When the variable is unset the build behaves
+# as a stock Debian kernel build, which generates an ephemeral key.
+GLBX_SIGN_SOCKET ?=
+ifeq ($(GLBX_SIGN_SOCKET),)
+  MODULE_SIG_KEY = output/signing_key.pem
+else
+  MODULE_SIG_KEY = pkcs11:token=glbx
+endif
+
+# The forwarding PKCS#11 module's installed location, and an OpenSSL config that
+# activates the pkcs11 provider so sign-file and extract-cert load the module.
+# Both are only used under external signing.
+GLBX_PKCS11_MODULE = /usr/lib/$(DEB_HOST_MULTIARCH)/glbx/pkcs11-forward.so
+
 ifdef ARCH
   ifneq ($(DEB_HOST_ARCH),$(ARCH))
     $(error Attempting to build a $(ARCH) target but host architecture is $(DEB_HOST_ARCH).  Use dpkg-architecture to override the host architecture)
@@ -81,7 +100,7 @@ source: $(STAMPS_DIR)/source_$(FEATURESET)
 $(BUILD_DIR)/config.$(ARCH)_$(FEATURESET)_$(FLAVOUR): $(KCONFIG)
 	mkdir -p '$(dir $@)'
 	debian/bin/kconfig.py '$@' $(KCONFIG) $(KCONFIG_OPTIONS) \
-		-o MODULE_SIG_KEY=\"output/signing_key.pem\" \
+		-o MODULE_SIG_KEY=\"$(MODULE_SIG_KEY)\" \
 		$(call if_profile, pkg.linux.nokerneldbginfo pkg.linux.quick,-o DEBUG_INFO_NONE=y -o DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=n) \
 		$(call if_profile, pkg.linux.norust,-o RUST=n)
 
@@ -185,17 +204,45 @@ $(STAMPS_DIR)/build_$(ARCH)_$(FEATURESET)_$(FLAVOUR): OUTPUT_DIR_LIB=$(OUTPUT_DI
 $(STAMPS_DIR)/build_$(ARCH)_$(FEATURESET)_$(FLAVOUR): OUTPUT_DIR_DBG=$(DIR)/output/image-dbg
 $(STAMPS_DIR)/build_$(ARCH)_$(FEATURESET)_$(FLAVOUR): OUTPUT_DIR_DBG_LIB=$(OUTPUT_DIR_DBG)/lib/modules/$(REAL_VERSION)
 $(STAMPS_DIR)/build_$(ARCH)_$(FEATURESET)_$(FLAVOUR): export KBUILD_SIGN_PIN = $(shell dd if=/dev/random bs=16 count=1 status=none | base64)
+ifneq ($(GLBX_SIGN_SOCKET),)
+# Make sign-file (run during modules_install and image signing) load the
+# forwarding PKCS#11 module through the OpenSSL pkcs11 provider.
+$(STAMPS_DIR)/build_$(ARCH)_$(FEATURESET)_$(FLAVOUR): export OPENSSL_CONF = $(CURDIR)/$(DIR)/glbx-openssl.cnf
+$(STAMPS_DIR)/build_$(ARCH)_$(FEATURESET)_$(FLAVOUR): export PKCS11_PROVIDER_MODULE = $(GLBX_PKCS11_MODULE)
+endif
 $(STAMPS_DIR)/build_$(ARCH)_$(FEATURESET)_$(FLAVOUR): $(STAMPS_DIR)/setup_$(ARCH)_$(FEATURESET)_$(FLAVOUR)
 	rm -rf '$(DIR)/output'
 	install -d '$(DIR)/output'
 
-# Make sure the support for the used key type is built-in, CRYPTO_ECDSA for ecdsa keys.
+ifeq ($(GLBX_SIGN_SOCKET),)
+# Stock build: generate an ephemeral signing key. Make sure the support for the
+# used key type is built-in, CRYPTO_ECDSA for ecdsa keys.
 	openssl req -new -utf8 -sha256 -days 36500 \
 		-batch -x509 -config certs/default_x509.genkey \
 		-passout env:KBUILD_SIGN_PIN \
 		-outform PEM -out $(DIR)/output/signing_key.pem \
 		-keyout $(DIR)/output/signing_key.pem \
 		-newkey ec -pkeyopt ec_paramgen_curve:secp384r1 2>&1
+else
+# External signing: no key is generated here. The kernel signs modules through
+# the PKCS#11 token (MODULE_SIG_KEY), and its own certs/Makefile extracts the
+# matching certificate from that same token via the forwarding module.
+# Activate the OpenSSL pkcs11 provider so sign-file and extract-cert can reach
+# the forwarding module. The default provider must stay active for the rest of
+# OpenSSL's work.
+	printf '%s\n' \
+		'openssl_conf = glbx_init' \
+		'[glbx_init]' \
+		'providers = glbx_providers' \
+		'[glbx_providers]' \
+		'default = glbx_default' \
+		'pkcs11 = glbx_pkcs11' \
+		'[glbx_default]' \
+		'activate = 1' \
+		'[glbx_pkcs11]' \
+		'activate = 1' \
+		> $(DIR)/glbx-openssl.cnf
+endif
 
 	+$(MAKE_CLEAN) -C '$(DIR)'
 	debian/bin/buildcheck.py $(DIR) $(ARCH) $(FEATURESET) $(FLAVOUR) build
@@ -222,7 +269,7 @@ endif
 		INSTALL_MOD_PATH='$(CURDIR)/$(OUTPUT_DIR)' \
 		INSTALL_MOD_STRIP=1
 
-	rm $(DIR)/output/signing_key.pem
+	rm -f $(DIR)/output/signing_key.pem
 
 # cmd_depmod=: Don't run depmod to generate dependency files
 # cmd_sign=: Don't sign modules

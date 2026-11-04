@@ -1,0 +1,20 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/architecture.mk
+
+MODDIR = usr/lib/$(DEB_HOST_MULTIARCH)/glbx
+DESTDIR = debian/glbx-pkcs11-forward
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	$(CC) -Wall -O2 -fPIC -shared \
+		-I/usr/include/p11-kit-1 \
+		-o pkcs11-forward.so module.c sign.pb-c.c -lprotobuf-c
+
+override_dh_auto_install:
+	install -D -m644 pkcs11-forward.so $(DESTDIR)/$(MODDIR)/pkcs11-forward.so
+
+override_dh_auto_clean:
+	rm -f pkcs11-forward.so

@@ -1,0 +1,16 @@
+Source: glbx-pkcs11-forward
+Section: admin
+Priority: optional
+Maintainer: Garden Linux <contact@gardenlinux.io>
+Build-Depends: debhelper-compat (= 13), gcc, libprotobuf-c-dev, libp11-kit-dev
+Standards-Version: 4.6.2
+
+Package: glbx-pkcs11-forward
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: PKCS#11 module forwarding signing operations to a host service
+ A PKCS#11 provider module that holds no key and performs no cryptography.
+ It presents a single token and key to the loading application and forwards
+ every public-key query and signing operation over a Unix socket to a signing
+ service running outside the build, so signing can happen without the private
+ key ever being present where the module runs.

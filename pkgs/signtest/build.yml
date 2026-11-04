@@ -1,0 +1,9 @@
+pkg_type: debian
+build_profiles: [nocheck]
+build_options: [nocheck]
+signing:
+  - key_name: kernel
+    private_key_file: keys/kernel-sign.key
+    cert_file: keys/kernel-sign.crt
+lockfile_deps:
+  signtest: [libc6]
