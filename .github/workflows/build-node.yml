@@ -41,6 +41,9 @@ env:
   # identity, forcing a full rebuild of both the build and the reproducibility
   # check.
   GLBX_ID_SEED_OVERRIDE: ${{ inputs.id-seed-override }}
+  # Enable out-of-container signing diagnostics on both the host signing service
+  # and the in-container forwarding module, to trace a module-signing failure.
+  GLBX_SIGN_DEBUG: "1"
 
 jobs:
   build:
