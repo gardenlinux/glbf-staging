@@ -1,0 +1,6 @@
+sources:
+    - file: libxcrypt_4.5.2+20251210.orig.tar.xz
+      sha256: 86e09f99b5a55d922d9fbdd4107fbe8c9a9602022266b5f8bc5c50a86ff248d7
+      urls:
+        - https://deb.debian.org/debian/pool/main/libx/libxcrypt/libxcrypt_4.5.2+20251210.orig.tar.xz
+        - https://snapshot.debian.org/file/38ddca92f4846edebae11b01127e728ec8912ba3/libxcrypt_4.5.2+20251210.orig.tar.xz
