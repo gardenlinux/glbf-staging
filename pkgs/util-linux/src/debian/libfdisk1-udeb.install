@@ -1,0 +1,3 @@
+#!/usr/bin/dh-exec
+usr/lib/*/libfdisk*.so.*
+debian/libfdisk1-udeb.lintian-overrides => /usr/share/lintian/overrides/libfdisk1-udeb

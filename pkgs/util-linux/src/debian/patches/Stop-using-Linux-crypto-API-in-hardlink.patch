@@ -1,0 +1,310 @@
+From: Chris Hofstaedtler <zeha@debian.org>
+Date: Wed, 6 May 2026 20:40:32 +0200
+Subject: Stop using Linux crypto API in hardlink
+
+---
+ config.h.in           |   3 -
+ configure.ac          |   1 -
+ include/fileeq.h      |   4 --
+ lib/fileeq.c          | 155 +-------------------------------------------------
+ meson.build           |   1 -
+ misc-utils/hardlink.c |   7 ---
+ 6 files changed, 2 insertions(+), 169 deletions(-)
+
+diff --git a/config.h.in b/config.h.in
+index 97a5961..ad067ec 100644
+--- a/config.h.in
++++ b/config.h.in
+@@ -378,9 +378,6 @@
+ /* Define to 1 if you have the <linux/gsmmux.h> header file. */
+ #undef HAVE_LINUX_GSMMUX_H
+ 
+-/* Define to 1 if you have the <linux/if_alg.h> header file. */
+-#undef HAVE_LINUX_IF_ALG_H
+-
+ /* Define to 1 if you have the <linux/kcmp.h> header file. */
+ #undef HAVE_LINUX_KCMP_H
+ 
+diff --git a/configure.ac b/configure.ac
+index 13bed69..5ce4245 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -356,7 +356,6 @@ AC_CHECK_HEADERS([ \
+ 	linux/version.h \
+ 	linux/vm_sockets_diag.h \
+ 	linux/watchdog.h \
+-	linux/if_alg.h \
+ 	locale.h \
+ 	mntent.h \
+ 	mqueue.h \
+diff --git a/include/fileeq.h b/include/fileeq.h
+index 90b8d51..d3c2386 100644
+--- a/include/fileeq.h
++++ b/include/fileeq.h
+@@ -10,10 +10,6 @@
+ #include <stdint.h>
+ #include <stdbool.h>
+ 
+-#if defined(__linux__) && defined(HAVE_LINUX_IF_ALG_H)
+-# define USE_FILEEQ_CRYPTOAPI 1
+-#endif
+-
+ /* Number of bytes from the beginning of the file we always
+  * compare by memcmp() */
+ #define UL_FILEEQ_INTROSIZ	32
+diff --git a/lib/fileeq.c b/lib/fileeq.c
+index 5a56b47..1015474 100644
+--- a/lib/fileeq.c
++++ b/lib/fileeq.c
+@@ -20,9 +20,7 @@
+  *  * memcmp method: always read data to userspace, nothing is cached, directly
+  *  compare file contents; fast for small sets of small files.
+  *
+- *  * Linux crypto API: zero-copy method based on sendfile(), data blocks are
+- *  sent to the kernel hash functions (sha1, ...), and only hash digest is read
+- *  and cached in userspace. Fast for large set of (large) files.
++ *  * No other method is currently available.
+  *
+  *
+  * No copyright is claimed.  This code is in the public domain; do with
+@@ -37,14 +35,6 @@
+ #include <sys/stat.h>
+ #include <unistd.h>
+ 
+-/* Linux crypto */
+-#ifdef HAVE_LINUX_IF_ALG_H
+-# include <sys/socket.h>
+-# include <linux/if_alg.h>
+-# include <sys/param.h>
+-# include <sys/sendfile.h>
+-#endif
+-
+ #include "c.h"
+ #include "all-io.h"
+ #include "fileeq.h"
+@@ -72,10 +62,7 @@ static void ul_fileeq_init_debug(void)
+ }
+ 
+ enum {
+-	UL_FILEEQ_MEMCMP,
+-	UL_FILEEQ_SHA1,
+-	UL_FILEEQ_SHA256,
+-	UL_FILEEQ_CRC32
++	UL_FILEEQ_MEMCMP
+ };
+ 
+ struct ul_fileeq_method {
+@@ -89,70 +76,8 @@ static const struct ul_fileeq_method ul_eq_methods[] = {
+ 	[UL_FILEEQ_MEMCMP] = {
+ 		.id = UL_FILEEQ_MEMCMP, .name = "memcmp"
+ 	},
+-#ifdef USE_FILEEQ_CRYPTOAPI
+-	[UL_FILEEQ_SHA1] = {
+-		.id = UL_FILEEQ_SHA1, .name = "sha1",
+-		.digsiz = 20, .kname = "sha1"
+-	},
+-	[UL_FILEEQ_SHA256] = {
+-		.id = UL_FILEEQ_SHA256, .name = "sha256",
+-		.digsiz = 32, .kname = "sha256"
+-	},
+-
+-	[UL_FILEEQ_CRC32] = {
+-		.id = UL_FILEEQ_CRC32, .name = "crc32",
+-		.digsiz = 4, .kname = "crc32c"
+-	}
+-#endif
+ };
+ 
+-#ifdef USE_FILEEQ_CRYPTOAPI
+-static void deinit_crypto_api(struct ul_fileeq *eq)
+-{
+-	if (!eq)
+-		return;
+-
+-	DBG(CRYPTO, ul_debugobj(eq, "deinit"));
+-
+-	if (eq->fd_cip >= 0)
+-		close(eq->fd_cip);
+-	if (eq->fd_api >= 0)
+-		close(eq->fd_api);
+-
+-	eq->fd_cip = eq->fd_api = -1;
+-
+-}
+-
+-static int init_crypto_api(struct ul_fileeq *eq)
+-{
+-	struct sockaddr_alg sa = {
+-		.salg_family = AF_ALG,
+-		.salg_type   = "hash",
+-	};
+-
+-	assert(eq->method);
+-	assert(eq->method->kname);
+-	assert(eq->fd_api == -1);
+-	assert(eq->fd_cip == -1);
+-
+-	DBG(CRYPTO, ul_debugobj(eq, "init [%s]", eq->method->kname));
+-
+-	assert(sizeof(sa.salg_name) > strlen(eq->method->kname) + 1);
+-	memcpy(&sa.salg_name, eq->method->kname, strlen(eq->method->kname) + 1);
+-
+-	if ((eq->fd_api = socket(AF_ALG, SOCK_SEQPACKET, 0)) < 0)
+-		goto fail;
+-	if (bind(eq->fd_api, (struct sockaddr *) &sa, sizeof(sa)) != 0)
+-		goto fail;
+-	if ((eq->fd_cip = accept(eq->fd_api, NULL, 0)) < 0)
+-		goto fail;
+-	return 0;
+-fail:
+-	deinit_crypto_api(eq);
+-	return -1;
+-}
+-#endif
+-
+ int ul_fileeq_init(struct ul_fileeq *eq, const char *method)
+ {
+ 	size_t i;
+@@ -175,11 +100,6 @@ int ul_fileeq_init(struct ul_fileeq *eq, const char *method)
+ 
+ 	if (!eq->method)
+ 		return -1;
+-#ifdef USE_FILEEQ_CRYPTOAPI
+-	if (eq->method->id != UL_FILEEQ_MEMCMP
+-	    && init_crypto_api(eq) != 0)
+-		return -1;
+-#endif
+ 	return 0;
+ }
+ 
+@@ -196,9 +116,6 @@ void ul_fileeq_deinit(struct ul_fileeq *eq)
+ 		return;
+ 
+ 	DBG(EQ, ul_debugobj(eq, "deinit"));
+-#ifdef USE_FILEEQ_CRYPTOAPI
+-	deinit_crypto_api(eq);
+-#endif
+ 	reset_fileeq_bufs(eq);
+ }
+ 
+@@ -413,70 +330,6 @@ static ssize_t read_block(struct ul_fileeq *eq, struct ul_fileeq_data *data,
+ 	return rsz;
+ }
+ 
+-#ifdef USE_FILEEQ_CRYPTOAPI
+-static ssize_t get_digest(struct ul_fileeq *eq, struct ul_fileeq_data *data,
+-				uint64_t n, unsigned char **block)
+-{
+-	off_t off = 0;
+-	ssize_t rsz;
+-	size_t sz;
+-	int fd;
+-
+-	/* return already cached if available */
+-	if (n < get_cached_nblocks(data)) {
+-		DBG(DATA, ul_debugobj(data, " digest cached"));
+-		assert(data->blocks);
+-		*block = data->blocks + (n * eq->method->digsiz);
+-		return eq->method->digsiz;
+-	}
+-
+-	if (data->is_eof) {
+-		DBG(DATA, ul_debugobj(data, " file EOF"));
+-		return 0;
+-	}
+-
+-	if (n >= eq->blocksmax)
+-		return -EINVAL;
+-
+-	/* read new block */
+-	fd = get_fd(eq, data, &off);
+-	if (fd < 0)
+-		return fd;
+-
+-	DBG(DATA, ul_debugobj(data, " read digest off=%ju", (uintmax_t) off));
+-
+-	sz = eq->method->digsiz;
+-
+-	if (!data->blocks) {
+-		DBG(DATA, ul_debugobj(data, "  alloc cache %" PRIu64, eq->blocksmax * sz));
+-		data->blocks = malloc(eq->blocksmax * sz);
+-		if (!data->blocks)
+-			return -ENOMEM;
+-	}
+-
+-	rsz = sendfile(eq->fd_cip, data->fd, NULL, eq->readsiz);
+-	DBG(DATA, ul_debugobj(data, "  sent %zd [%zu wanted] to cipher", rsz, eq->readsiz));
+-
+-	if (rsz < 0)
+-		return rsz;
+-
+-	off += rsz;
+-
+-	/* get block digest (note 1st block is data->intro) */
+-	*block = data->blocks + (n * eq->method->digsiz);
+-	rsz = read_all(eq->fd_cip, (char *) *block, sz);
+-
+-	if (rsz > 0)
+-		data->nblocks++;
+-	if (rsz == 0 || (uint64_t) off >= eq->filesiz) {
+-		data->is_eof = 1;
+-		ul_fileeq_data_close_file(data);
+-	}
+-	DBG(DATA, ul_debugobj(data, "  get %zdB digest", rsz));
+-	return rsz;
+-}
+-#endif
+-
+ static ssize_t get_intro(struct ul_fileeq *eq, struct ul_fileeq_data *data,
+ 				unsigned char **block)
+ {
+@@ -512,11 +365,7 @@ static ssize_t get_cmp_data(struct ul_fileeq *eq, struct ul_fileeq_data *data,
+ 	default:
+ 		break;
+ 	}
+-#ifdef USE_FILEEQ_CRYPTOAPI
+-	return get_digest(eq, data, blockno, block);
+-#else
+ 	return -1;
+-#endif
+ }
+ 
+ #define CMP(a, b) ((a) > (b) ? 1 : ((a) < (b) ? -1 : 0))
+diff --git a/meson.build b/meson.build
+index 5e15333..8e9e4e5 100644
+--- a/meson.build
++++ b/meson.build
+@@ -221,7 +221,6 @@ headers = '''
+         linux/fs.h
+         linux/fiemap.h
+         linux/gsmmux.h
+-        linux/if_alg.h
+         linux/landlock.h
+         linux/kcmp.h
+         linux/net_namespace.h
+diff --git a/misc-utils/hardlink.c b/misc-utils/hardlink.c
+index 95c518b..5f4f0f7 100644
+--- a/misc-utils/hardlink.c
++++ b/misc-utils/hardlink.c
+@@ -205,11 +205,7 @@ static struct options {
+ 	size_t cache_size;
+ } opts = {
+ 	/* default setting */
+-#ifdef USE_FILEEQ_CRYPTOAPI
+-	.method = "sha256",
+-#else
+ 	.method = "memcmp",
+-#endif
+ 	.respect_mode = TRUE,
+ 	.respect_owner = TRUE,
+ 	.respect_time = TRUE,
+@@ -1408,9 +1404,6 @@ static int parse_options(int argc, char *argv[])
+ #ifdef USE_REFLINK
+ 				"reflink",
+ #endif
+-#ifdef USE_FILEEQ_CRYPTOAPI
+-				"cryptoapi",
+-#endif
+ #ifdef USE_SKIP_SUBTREE
+ 				"ftw_skip_subtree",
+ #endif

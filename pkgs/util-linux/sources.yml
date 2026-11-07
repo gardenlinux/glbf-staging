@@ -1,0 +1,6 @@
+sources:
+    - file: util-linux_2.42.4.orig.tar.xz
+      sha256: fbd62a100ab7bb8746ba0661255c3c48185b1e9021507c624da01fbc696330ec
+      urls:
+        - https://deb.debian.org/debian/pool/main/u/util-linux/util-linux_2.42.4.orig.tar.xz
+        - https://snapshot.debian.org/file/8394c4ff74a1683f32b44a14a697245ed7881a83/util-linux_2.42.4.orig.tar.xz

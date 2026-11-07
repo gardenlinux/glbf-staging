@@ -1,0 +1,4 @@
+#!/usr/bin/dh-exec
+sbin/fdisk.static => /usr/sbin/fdisk
+sbin/sfdisk.static => /usr/sbin/sfdisk
+debian/fdisk-udeb.lintian-overrides => /usr/share/lintian/overrides/fdisk-udeb

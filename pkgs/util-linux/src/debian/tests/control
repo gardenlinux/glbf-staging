@@ -1,0 +1,52 @@
+Tests:
+ libblkid-dev,
+Depends:
+ build-essential,
+ libblkid-dev,
+ pkgconf,
+Restrictions:
+ allow-stderr,
+ superficial,
+
+Tests:
+ libmount-dev,
+Depends:
+ build-essential,
+ libmount-dev,
+ pkgconf,
+Restrictions:
+ allow-stderr,
+ superficial,
+
+Tests:
+ libsmartcols-dev,
+Depends:
+ build-essential,
+ libsmartcols-dev,
+ pkgconf,
+Restrictions:
+ allow-stderr,
+ superficial,
+
+Tests:
+ uuid-dev,
+Depends:
+ build-essential,
+ pkgconf,
+ uuid-dev,
+Restrictions:
+ allow-stderr,
+ superficial,
+
+Tests:
+ login,
+Depends:
+ expect,
+ login,
+ passwd,
+ util-linux-extra,
+Restrictions:
+ allow-stderr,
+ breaks-testbed,
+ flaky,
+ needs-root,
