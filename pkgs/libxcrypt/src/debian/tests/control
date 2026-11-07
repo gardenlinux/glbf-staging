@@ -1,0 +1,7 @@
+Tests: testsuite
+Depends: build-essential, @builddeps@
+Restrictions: allow-stderr
+
+Tests: libcrypt-dev
+Depends: build-essential, libcrypt-dev, pkgconf
+Restrictions: allow-stderr, superficial

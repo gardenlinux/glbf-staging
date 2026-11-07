@@ -1,0 +1,77 @@
+Source: libxcrypt
+Section: admin
+Maintainer: Marco d'Itri <md@linux.it>
+Build-Depends: debhelper-compat (= 14),
+  autoconf, automake, libtool, pkgconf,
+Standards-Version: 4.7.4.1
+Vcs-Git: https://salsa.debian.org/md/libxcrypt.git
+Vcs-Browser: https://salsa.debian.org/md/libxcrypt
+
+Package: libcrypt1
+Section: libs
+Architecture: gnu-any-any
+Multi-Arch: same
+Conflicts: libpam0g (<< 1.4.0-10)
+Replaces:
+ libc6 (<< 2.29-4),
+ libc6.1 (<< 2.29-4) [alpha ia64],
+ libc0.3 (<< 2.29-4) [hurd-i386],
+Description: libcrypt shared library
+ libxcrypt is a modern library for one-way hashing of passwords.
+ It supports DES, MD5, NTHASH, SUNMD5, SHA-2-256, SHA-2-512, and
+ bcrypt-based password hashes
+ It provides the traditional Unix 'crypt' and 'crypt_r' interfaces,
+ as well as a set of extended interfaces like 'crypt_gensalt'.
+
+Package: libcrypt2
+Section: libs
+Architecture: musl-any-any
+Multi-Arch: same
+Breaks: musl (<< 1.2.2-2~)
+Replaces: musl (<< 1.2.2-2~)
+Description: libcrypt shared library
+ libxcrypt is a modern library for one-way hashing of passwords.
+ It supports DES, MD5, NTHASH, SUNMD5, SHA-2-256, SHA-2-512, and
+ bcrypt-based password hashes
+ It provides the traditional Unix 'crypt' and 'crypt_r' interfaces,
+ as well as a set of extended interfaces like 'crypt_gensalt'.
+
+Package: libcrypt-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: ${LIBPKG} (= ${binary:Version})
+Provides: ${LIBPKG}-dev
+Conflicts: libcrypt1-dev, libcrypt2-dev
+Breaks:
+ libc6-dev (<< 2.29-4),
+ libc6.1-dev (<< 2.29-4) [alpha ia64],
+ libc0.3-dev (<< 2.29-4) [hurd-i386],
+ musl-dev (<< 1.2.2-2~) [musl-any-any],
+ manpages-dev (<< 5.01-1),
+Replaces:
+ libcrypt1-dev, libcrypt2-dev,
+ libc6-dev (<< 2.29-4),
+ libc6.1-dev (<< 2.29-4) [alpha ia64],
+ libc0.3-dev (<< 2.29-4) [hurd-i386],
+ musl-dev (<< 1.2.2-2~) [musl-any-any],
+ manpages-dev (<< 5.01-1),
+Description: libcrypt development files
+ This package contains the files needed for developing applications that
+ use libcrypt.
+
+Package: libcrypt1-udeb
+Package-Type: udeb
+Section: debian-installer
+Architecture: gnu-any-any
+Description: libcrypt shared library
+ This is a minimal version of libcrypt, only for use in the installation
+ system.
+
+Package: libxcrypt-source
+Architecture: all
+Section: devel
+Multi-Arch: foreign
+Description: libcrypt shared library: sources
+ This package contains the sources and patches which are needed to
+ build libxcrypt.

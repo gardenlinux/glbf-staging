@@ -1,0 +1,7 @@
+---
+include:
+  - https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/recipes/debian.yml
+
+variables:
+  SALSA_CI_DISABLE_CROSSBUILD_ARM64: 0
+  SALSA_CI_DISABLE_USCAN: 1 # until me and uscan will agree about snapshots
