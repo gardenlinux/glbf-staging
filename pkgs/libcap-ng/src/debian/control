@@ -1,0 +1,81 @@
+Source: libcap-ng
+Section: libs
+Maintainer: Håvard F. Aasen <havard.f.aasen@pfft.no>
+Build-Depends:
+ debhelper-compat (= 14),
+ dh-sequence-python3 <!nopython>,
+ libbluetooth-dev <!pkg.libcap-ng.noutils>,
+ libpython3-all-dev <!nopython>,
+ linux-libc-dev,
+ pkgconf,
+ python3-all-dev:any <!nopython>,
+ swig <!nopython>,
+Standards-Version: 4.7.4
+Homepage: https://people.redhat.com/sgrubb/libcap-ng
+Vcs-Browser: https://salsa.debian.org/debian/libcap-ng
+Vcs-Git: https://salsa.debian.org/debian/libcap-ng.git
+
+Package: libcap-ng-dev
+Section: libdevel
+Architecture: linux-any
+Multi-Arch: same
+Depends:
+ libcap-ng0 (= ${binary:Version}),
+Description: Development and header files for libcap-ng
+ This library implements the user-space interfaces to the POSIX
+ 1003.1e capabilities available in Linux kernels.  These capabilities are
+ a partitioning of the all powerful root privilege into a set of distinct
+ privileges.
+ .
+ The libcap-ng library is intended to make programming with POSIX
+ capabilities much easier than the traditional libcap library.
+ .
+ This package contains header files and static libraries.
+
+Package: libcap-ng-utils
+Section: admin
+Architecture: linux-any
+Build-Profiles: <!pkg.libcap-ng.noutils>
+Depends:
+ libcap-ng0 (= ${binary:Version}),
+Description: Utilities for analysing and setting file capabilities
+ This library implements the user-space interfaces to the POSIX
+ 1003.1e capabilities available in Linux kernels.  These capabilities are
+ a partitioning of the all powerful root privilege into a set of distinct
+ privileges.
+ .
+ The libcap-ng library is intended to make programming with POSIX
+ capabilities much easier than the traditional libcap library.
+ .
+ This package contains utilities for analysing and setting file capabilities.
+
+Package: libcap-ng0
+Architecture: linux-any
+Multi-Arch: same
+Description: alternate POSIX capabilities library
+ This library implements the user-space interfaces to the POSIX
+ 1003.1e capabilities available in Linux kernels.  These capabilities are
+ a partitioning of the all powerful root privilege into a set of distinct
+ privileges.
+ .
+ The libcap-ng library is intended to make programming with POSIX
+ capabilities much easier than the traditional libcap library.
+ .
+ This package contains dynamic libraries for libcap-ng.
+
+Package: python3-cap-ng
+Section: python
+Architecture: linux-any
+Depends:
+ ${python3:Depends},
+Build-Profiles: <!nopython>
+Description: Python3 bindings for libcap-ng
+ This library implements the user-space interfaces to the POSIX
+ 1003.1e capabilities available in Linux kernels.  These capabilities are
+ a partitioning of the all powerful root privilege into a set of distinct
+ privileges.
+ .
+ The libcap-ng library is intended to make programming with POSIX
+ capabilities much easier than the traditional libcap library.
+ .
+ This package contains the Python3 bindings for libcap-ng.
