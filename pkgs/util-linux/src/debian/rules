@@ -1,0 +1,167 @@
+#!/usr/bin/make -f
+# for asciidoctor. C.UTF-8 should be guaranteed to work even in minimal envs.
+export LC_ALL=C.UTF-8
+
+include /usr/share/dpkg/architecture.mk
+include /usr/share/dpkg/pkg-info.mk
+include /usr/share/debhelper/dh_package_notes/package-notes.mk
+
+CONFOPTS_UDEB = --disable-all-programs --enable-libblkid --enable-libfdisk --enable-libmount --enable-libsmartcols --enable-libuuid
+
+CONFOPTS += --enable-usrdir-path
+CONFOPTS_UDEB += --enable-usrdir-path
+
+# Linux 7.1 switched the NTFS filesystem driver. See #1145441.
+CONFOPTS += --with-ntfs-mounttype=ntfs
+CONFOPTS_UDEB += --with-ntfs-mounttype=ntfs
+
+CONFOPTS += --disable-makeinstall-chown
+
+ifeq ($(DEB_HOST_ARCH_OS),linux)
+CONFOPTS += --with-selinux
+CONFOPTS += --with-smack
+CONFOPTS += --enable-partx
+CONFOPTS_UDEB += --enable-eject --enable-fallocate
+
+ifneq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
+	CONFOPTS += --without-systemd --without-udev --without-audit
+	CONFOPTS_UDEB += --without-systemd --without-udev --without-audit
+	CONFOPTS += --disable-newgrp --disable-login --disable-nologin
+else
+	CONFOPTS += --with-systemd --with-udev --with-audit
+	CONFOPTS_UDEB += --with-systemd --with-udev --with-audit
+	CONFOPTS += --enable-newgrp --enable-login --enable-nologin
+endif
+
+ifneq ($(filter pkg.util-linux.noverity,$(DEB_BUILD_PROFILES)),)
+	CONFOPTS += --without-cryptsetup
+	CONFOPTS_UDEB += --without-cryptsetup
+else
+	CONFOPTS += --with-cryptsetup=dlopen
+	CONFOPTS_UDEB += --with-cryptsetup=dlopen
+endif
+endif
+
+# As a result of CVE-2024-28085, we no longer install mesg/write.
+CONFOPTS += --disable-mesg
+CONFOPTS += --disable-write
+
+# build static versions of programs used in fdisk-udeb and util-linux-udeb
+CONFOPTS_UDEB += --enable-fdisks --enable-blkid
+CONFOPTS_UDEB += --enable-static-programs=fdisk,sfdisk,blkid
+# Disable libsystemd usage
+CONFOPTS_UDEB += --disable-libmount-udev-support
+
+# Help welcome packaging the (libmount) python bindings.
+# See http://bugs.debian.org/811361
+CONFOPTS += --without-python
+CONFOPTS_UDEB += --without-python
+
+# disable utilities shipped by other packages
+# => procps
+CONFOPTS += --disable-kill
+# => passwd
+CONFOPTS += --disable-chfn-chsh
+# => bsdmainutils
+CONFOPTS += --disable-cal
+# => wtmpdb
+CONFOPTS += --disable-last --disable-utmpdump
+
+# Keep hwclock as GPLv2 (and others)
+CONFOPTS += --disable-hwclock-gplv3
+
+ifeq ($(DEB_HOST_ARCH),hurd-i386)
+# hurd porters plan to drop 32bit before 2038
+	CONFOPTS += --disable-year2038
+	CONFOPTS_UDEB += --disable-year2038
+endif
+
+# hardening
+export DEB_BUILD_MAINT_OPTIONS = hardening=+bindnow
+
+%:
+	dh $@
+
+override_dh_autoreconf:
+	AM_OPTS=--copy LT_OPTS=--copy dh_autoreconf ./autogen.sh
+
+override_dh_auto_configure:
+	dh_auto_configure -- $(CONFOPTS)
+
+override_dh_auto_install:
+	dh_auto_install
+	#
+	# Avoid shipping static libraries.
+	# - libblkid.a is used by e2fsprogs.
+	find debian/tmp/usr/lib -name 'lib*.a' \! -name 'libuuid.a' \! -name 'libblkid.a' -delete -print
+	#
+	# show installed man pages
+	find debian/tmp/usr/share/man
+
+override_dh_auto_clean:
+	dh_auto_clean
+	# drop arch-overrides, generated in dh_install by dh-exec usage.
+	rm -f debian/uuid-runtime.install.$(DEB_HOST_ARCH) \
+		debian/util-linux.install.$(DEB_HOST_ARCH)
+
+override_dh_install:
+ifeq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
+	# generate arch-override, as dh-exec install-rename can only run once.
+	[ -f debian/util-linux.install.$(DEB_HOST_ARCH) ] || \
+		debian/util-linux.install > \
+		debian/util-linux.install.$(DEB_HOST_ARCH)
+	[ -f debian/uuid-runtime.install.$(DEB_HOST_ARCH) ] || \
+		debian/uuid-runtime.install > \
+		debian/uuid-runtime.install.$(DEB_HOST_ARCH)
+endif
+	#
+	dh_install \
+		-Neject-udeb \
+		-Nfdisk-udeb \
+		-Nlibblkid1-udeb \
+		-Nlibfdisk1-udeb \
+		-Nlibmount1-udeb \
+		-Nlibsmartcols1-udeb \
+		-Nlibuuid1-udeb \
+		-Nutil-linux-udeb
+	dh_auto_configure -- $(CONFOPTS_UDEB)
+	$(MAKE) clean install DESTDIR=$(CURDIR)/debian/tmp
+	dh_install --remaining-packages
+	#
+	rm -rf debian/*-udeb/usr/share/doc
+
+override_dh_installman:
+ifneq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
+	:
+else
+	dh_installman --language=C
+endif
+
+override_dh_missing:
+	dh_missing --list-missing
+
+override_dh_installpam:
+	dh_installpam --package=login
+	dh_installpam --package=login --name=remote
+	dh_installpam --package=util-linux --name=runuser
+	dh_installpam --package=util-linux --name=runuser-l
+	dh_installpam --package=util-linux --name=su
+	dh_installpam --package=util-linux --name=su-l
+
+ifeq (linux,$(DEB_HOST_ARCH_OS))
+override_dh_installsystemd:
+	dh_installsystemd -putil-linux fstrim.timer
+	dh_installsystemd -putil-linux fstrim.service
+	dh_installsystemd --remaining-packages
+endif
+
+override_dh_makeshlibs:
+	dh_makeshlibs -- -c4
+
+override_dh_auto_test:
+ifeq ($(DEB_HOST_ARCH_OS), linux)
+	dh_auto_test --max-parallel=1
+else
+	@echo "WARNING: non-linux detected, making tests non-fatal."
+	dh_auto_test --max-parallel=1 || true
+endif

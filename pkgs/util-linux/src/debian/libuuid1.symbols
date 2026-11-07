@@ -1,0 +1,13 @@
+libuuid.so.1 libuuid1 #MINVER#
+* Build-Depends-Package: uuid-dev
+ UUIDD_PRIVATE@UUIDD_PRIVATE 2.20.1
+ (symver)UUID_1.0 2.16
+ (symver)UUID_2.20 2.20.1
+ (symver)UUID_2.31 2.31.1
+ (symver)UUID_2.36 2.36
+ (symver)UUID_2.40 2.40
+ (symver)UUID_2.41 2.41
+ __uuid_generate_random@UUIDD_PRIVATE 2.20.1
+ __uuid_generate_time@UUIDD_PRIVATE 2.20.1
+ __uuid_generate_time_cont@UUIDD_PRIVATE 2.40
+ (arch=gnu-linux-any)uuid_time64@UUID_2.40 2.40

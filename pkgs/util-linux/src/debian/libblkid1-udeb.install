@@ -1,0 +1,3 @@
+#!/usr/bin/dh-exec
+usr/lib/*/libblkid*.so.*
+debian/libblkid1-udeb.lintian-overrides => /usr/share/lintian/overrides/libblkid1-udeb

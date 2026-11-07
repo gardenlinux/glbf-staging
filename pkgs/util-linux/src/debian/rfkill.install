@@ -1,0 +1,4 @@
+#!/usr/bin/dh-exec
+usr/sbin/rfkill
+<!nodoc> usr/share/man/man8/rfkill.8
+usr/share/bash-completion/completions/rfkill
