@@ -1,0 +1,10 @@
+libcrypt.so.1 libcrypt1 #MINVER#
+#include "libcrypt1.symbols.common"
+ GLIBC_2.36@GLIBC_2.36 1:4.4.30
+ crypt@GLIBC_2.36 1:4.4.30
+ crypt_r@GLIBC_2.36 1:4.4.30
+ encrypt@GLIBC_2.36 1:4.4.30
+ encrypt_r@GLIBC_2.36 1:4.4.30
+ fcrypt@GLIBC_2.36 1:4.4.30
+ setkey@GLIBC_2.36 1:4.4.30
+ setkey_r@GLIBC_2.36 1:4.4.30
