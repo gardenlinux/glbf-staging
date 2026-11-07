@@ -1,0 +1,6 @@
+sources:
+    - file: libcap-ng_0.9.6.orig.tar.gz
+      sha256: 63bb2e9c471b9b98514a7a86115d03aeb3d065c1666ca238f5f97156d09247c3
+      urls:
+        - https://deb.debian.org/debian/pool/main/libc/libcap-ng/libcap-ng_0.9.6.orig.tar.gz
+        - https://snapshot.debian.org/file/406bbd737d10a2dbe7d2ed63c48fb89b1c2fc669/libcap-ng_0.9.6.orig.tar.gz

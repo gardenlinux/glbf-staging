@@ -1,0 +1,11 @@
+Tests:
+ test-lib.sh test-thread.sh,
+Depends:
+ build-essential,
+ libcap-ng-dev,
+
+Tests:
+ test-python.sh,
+Depends:
+ python3-all,
+ python3-cap-ng,
