@@ -1,0 +1,8 @@
+# These are false positives because they don't use any functions that need
+# fortifying.  Since we know we have hardening turned on globally, suppress
+# them.  If we ever see this warning again for *other* modules, then we know
+# there's a real problem.
+libpam-modules: hardening-no-fortify-functions *usr/lib/*/security/pam_echo.so*
+libpam-modules: hardening-no-fortify-functions *usr/lib/*/security/pam_group.so*
+# pam_deny.so does not use any symbol from libc.
+libpam-modules: shared-library-lacks-prerequisites *usr/lib/*/security/pam_deny.so*
