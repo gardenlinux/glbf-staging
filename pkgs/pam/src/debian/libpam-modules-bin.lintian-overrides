@@ -1,0 +1,5 @@
+# yes, we know it's sgid, that's the whole point...
+libpam-modules-bin: elevated-privileges 2755 root/shadow [usr/sbin/unix_chkpwd]
+# The sysadmin manpages are now shipped in libpam-runtime.
+# See: <https://lists.debian.org/debian-devel/2025/01/msg00296.html>.
+libpam-modules-bin: no-manual-page [usr/sbin/*]

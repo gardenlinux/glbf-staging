@@ -1,0 +1,26 @@
+From: Sam Hartman <hartmans@debian.org>
+Date: Fri, 3 Jul 2026 15:18:49 -0600
+Subject: Warn when /usr/lib/pam.d is used
+
+---
+ libpam/pam_handlers.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/libpam/pam_handlers.c b/libpam/pam_handlers.c
+index d57198c..eb80b85 100644
+--- a/libpam/pam_handlers.c
++++ b/libpam/pam_handlers.c
+@@ -344,6 +344,13 @@ _pam_open_config_file(pam_handle_t *pamh
+ 	DIAG_POP_IGNORE_FORMAT_NONLITERAL
+ 
+ 	D(("opening %s", p));
++
++#ifndef SUPPORT_USR_LIB_PAM_D
++		if (i == 1 && access(p, F_OK) == 0) {
++		    pam_syslog(pamh, LOG_ERR, "(%s) /usr/lib/pam.d is not supported on this system; see /usr/share/doc/libpam0g/Debian-PAM-MiniPolicy.gz", service);
++		}
++#endif
++
+ 	f = fopen(p, "r");
+ 	if (f != NULL) {
+ 	    *path = p;
