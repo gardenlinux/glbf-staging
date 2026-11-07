@@ -1,0 +1,14 @@
+Tests:
+ upstream-test-suite,
+Depends:
+ fakeroot,
+ libpcre2-8-0,
+ locales-all,
+ @builddeps@,
+Restrictions:
+ allow-stderr,
+
+Tests:
+ dirfd,
+ egrep-fgrep,
+ stray-backlash-warn,
