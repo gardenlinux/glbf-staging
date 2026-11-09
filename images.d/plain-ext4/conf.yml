@@ -1,0 +1,13 @@
+# plain-ext4 assembles the rootfs tarball into a single unpartitioned ext4
+# filesystem image, using the locally built reproducible mke2fs and its runtime
+# closure: e2fsprogs siblings as local_tooling, the util-linux libraries from the
+# mirror as debian_tooling.
+debian_tooling:
+  - libblkid1
+  - libuuid1
+local_tooling:
+  - e2fsprogs:e2fsprogs
+  - e2fsprogs:logsave
+  - e2fsprogs:libext2fs2t64
+  - e2fsprogs:libcom-err2
+  - e2fsprogs:libss2

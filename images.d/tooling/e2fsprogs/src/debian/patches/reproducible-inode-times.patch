@@ -1,0 +1,38 @@
+Description: Pin all inode timestamps to the fake time, not just clamp them
+ When E2FSPROGS_FAKE_TIME / SOURCE_DATE_EPOCH is set, mke2fs -d previously only
+ clamped a source inode's a/c/m-time down to the fake time when it was newer,
+ keeping an older source time otherwise. Access time in particular is volatile
+ (reading the source tree mutates it, and extraction stamps it with wall-clock),
+ so the resulting image was not reproducible across runs. Under fake time, set
+ all three times to the fake time outright so the image is a pure function of the
+ declared timestamp. Normal (non-fake-time) builds keep the real source times.
+Author: Garden Linux
+Forwarded: no
+Last-Update: 2026-11-09
+--- a/misc/create_inode.c
++++ b/misc/create_inode.c
+@@ -112,9 +112,9 @@ errcode_t add_link(ext2_filsys fs, ext2_ino_t parent_ino,
+ 	return retval;
+ }
+ 
+-static time_t clamped_time(ext2_filsys fs, time_t t)
++static time_t fixed_time(ext2_filsys fs, time_t t)
+ {
+-	if ((fs->flags2 & EXT2_FLAG2_USE_FAKE_TIME) && t > fs->now)
++	if (fs->flags2 & EXT2_FLAG2_USE_FAKE_TIME)
+ 		return fs->now;
+ 	return t;
+ }
+@@ -137,9 +137,9 @@ errcode_t set_inode_extra(ext2_filsys fs, ext2_ino_t ino,
+ 	inode.i_gid = st->st_gid;
+ 	ext2fs_set_i_gid_high(inode, st->st_gid >> 16);
+ 	inode.i_mode = (LINUX_S_IFMT & inode.i_mode) | (~S_IFMT & st->st_mode);
+-	ext2fs_inode_xtime_set(&inode, i_atime, clamped_time(fs, st->st_atime));
+-	ext2fs_inode_xtime_set(&inode, i_ctime, clamped_time(fs, st->st_ctime));
+-	ext2fs_inode_xtime_set(&inode, i_mtime, clamped_time(fs, st->st_mtime));
++	ext2fs_inode_xtime_set(&inode, i_atime, fixed_time(fs, st->st_atime));
++	ext2fs_inode_xtime_set(&inode, i_ctime, fixed_time(fs, st->st_ctime));
++	ext2fs_inode_xtime_set(&inode, i_mtime, fixed_time(fs, st->st_mtime));
+ 
+ 	retval = ext2fs_write_inode(fs, ino, &inode);
+ 	if (retval)
