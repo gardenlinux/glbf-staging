@@ -1,0 +1,7 @@
+# mkfat32 as an image-assembly tool: a native Go source build (vendoring
+# go-diskfs) that formats a pre-allocated image file as a reproducible FAT32
+# filesystem. Never shipped in an image, so no runtime or lockfile dependencies.
+pkg_type: debian
+
+build_profiles:
+  - nocheck
