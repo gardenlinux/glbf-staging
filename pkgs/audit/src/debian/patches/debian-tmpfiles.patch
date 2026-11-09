@@ -1,0 +1,9 @@
+Description: Fix permissions of /var/log/audit
+Author: Laurent Bigonville <bigon@debian.org>
+Forwarded: not-needed
+
+--- a/init.d/audit-tmpfiles.conf
++++ b/init.d/audit-tmpfiles.conf
+@@ -1 +1 @@
+-d /var/log/audit 0700 root root - -
++d /var/log/audit 0750 root adm - -
