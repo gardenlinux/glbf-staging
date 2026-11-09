@@ -1,1 +1,10 @@
-packages: [base-files:base-files, base-passwd:base-passwd, coreutils:coreutils, bash:bash, dpkg:dpkg, linux:linux-image-7.2+unreleased-cloud-amd64]
+packages:
+  - base-files:base-files
+  - base-passwd:base-passwd
+  - coreutils:coreutils
+  - bash:bash
+  - dpkg:dpkg
+  - grep:grep
+  - util-linux:mount
+  - util-linux:util-linux
+  - linux:linux-image-7.2+unreleased-cloud-amd64

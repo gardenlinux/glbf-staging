@@ -1,0 +1,5 @@
+pkg_type: debian
+build_profiles: [nocheck]
+build_options: [nocheck]
+runtime_depends:
+  libaudit1: [audit:libaudit-common, libcap-ng:libcap-ng0, glibc:libc6]
