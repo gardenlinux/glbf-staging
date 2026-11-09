@@ -12,24 +12,37 @@
 # input mke2fs would otherwise invent is pinned here:
 #   - SOURCE_DATE_EPOCH  : the single timestamp stamped on the superblock and,
 #                          with the reproducible-inode-times patch, forced onto
-#                          every inode's a/c/m/crtime (not clamped).
-#   - -U <uuid>          : the filesystem UUID (also seeds every metadata csum).
-#   - hash_seed=<uuid>   : the directory HTREE hash seed.
+#                          every inode's a/c/m/crtime (not clamped). Fixed at 0.
+#   - -U <uuid>          : the filesystem UUID (also seeds every metadata csum),
+#                          derived from the image identity.
+#   - hash_seed=<uuid>   : the directory HTREE hash seed, derived from the image
+#                          identity.
 #   - hash_sign=unsigned : the directory-hash signedness, pinned independent of
 #                          the build host's architecture (the explicit-dirhash-
 #                          signedness patch); unsigned is the arm/aarch64 value
 #                          and is chosen unconditionally so every arch agrees.
-# The values below are fixed constants: the image's identity already folds the
-# rootfs and this script, so stable constants give a stable image.
+# Identifiers are derived from $GLBX_IMAGE_ID, which glbx sets to the image's
+# content identity; the image already folds the rootfs and this script, so
+# deriving from it makes every identifier a pure function of the same inputs.
 set -eu
 
 rootfs_tar="$1"
 out="$2"
 
-# Pinned reproducibility inputs.
-export SOURCE_DATE_EPOCH=1577836800   # 2020-01-01T00:00:00Z
-uuid=adb4b617-e61d-4fb9-802f-10cb3aa33798
-hash_seed=3a427c1d-e4f2-404c-98f2-c3781026a0ac
+: "${GLBX_IMAGE_ID:?GLBX_IMAGE_ID must be set by glbx}"
+
+# uuid_hash reads stdin, SHA-256s it, and formats the first 16 bytes (32 hex
+# chars) as a UUID — the same derivation Garden Linux uses for reproducible ids.
+uuid_hash() {
+	sha256sum \
+		| cut -d' ' -f1 \
+		| sed -E 's/^(.{8})(.{4})(.{4})(.{4})(.{12}).*/\1-\2-\3-\4-\5/'
+}
+
+export SOURCE_DATE_EPOCH=0
+
+uuid="$(printf '%s:fs_uuid' "$GLBX_IMAGE_ID" | uuid_hash)"
+hash_seed="$(printf '%s:hash_seed' "$GLBX_IMAGE_ID" | uuid_hash)"
 
 workdir="$(mktemp -d)"
 tar -xf "$rootfs_tar" -C "$workdir"

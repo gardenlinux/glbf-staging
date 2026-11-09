@@ -2,3 +2,6 @@ images:
   - name: base-ext4
     rootfs: base
     type: plain-ext4
+  - name: base-gpt
+    rootfs: base
+    type: gpt-ext4

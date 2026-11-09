@@ -1,0 +1,7 @@
+# mv_data as an image-assembly tool: a native Debian source build of the small
+# sparse data-mover used to place a filesystem image into a disk partition slot.
+# Never shipped in an image, so no runtime or lockfile dependencies.
+pkg_type: debian
+
+build_profiles:
+  - nocheck

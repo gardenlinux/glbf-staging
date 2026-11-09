@@ -1,0 +1,5 @@
+mv-data (1.0) unstable; urgency=medium
+
+  * Package mv_data for use as an image-assembly tool.
+
+ -- Garden Linux <contact@gardenlinux.io>  Mon, 01 Jan 2024 00:00:00 +0000

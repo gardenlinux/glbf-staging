@@ -1750,3 +1750,37 @@ jobs:
       arch: amd64
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-100:
+    name: "mv-data"
+    needs: [build-glbx, check-graph, restore-inputs, plan]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['tooling-pkg-build:mv-data:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "tooling-pkg-build:mv-data:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-101:
+    name: "base-gpt"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-96, node-98, node-100]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['image:base-gpt:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "image:base-gpt:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"

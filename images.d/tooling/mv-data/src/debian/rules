@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+# The upstream Makefile installs into $(DESTDIR)/bin with `install -t`, which
+# does not create the target directory; make it first and point DESTDIR at the
+# package's /usr so mv_data lands in /usr/bin.
+override_dh_auto_install:
+	mkdir -p $(CURDIR)/debian/mv-data/usr/bin
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/mv-data/usr
