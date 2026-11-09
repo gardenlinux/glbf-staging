@@ -1,0 +1,24 @@
+[Unit]
+Description=Update GNU locate database
+Documentation=man:updatedb.findutils(1) man:locate.findutils(1)
+ConditionACPower=true
+
+[Service]
+Type=oneshot
+ExecStart=/etc/cron.daily/locate systemd-timer
+Nice=19
+IOSchedulingClass=idle
+IOSchedulingPriority=7
+PrivateDevices=true
+PrivateTmp=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectProc=invisible
+ProtectSystem=strict
+ReadWritePaths=/var/cache/locate
+RestrictRealtime=true
+RestrictSUIDSGID=true
