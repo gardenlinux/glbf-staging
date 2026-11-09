@@ -1,0 +1,6 @@
+# ${RANDOM} is used if available, but not necessary.
+locate: bash-term-in-posix-shell *RANDOM* *usr/bin/updatedb.findutils*
+# Used by command-not-found extractor
+# https://git.launchpad.net/~mvo/command-not-found-extractor/
+# See #1036612
+locate: unknown-field Cnf-Ignore-Commands
