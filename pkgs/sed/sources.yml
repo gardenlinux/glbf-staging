@@ -1,0 +1,6 @@
+sources:
+    - file: sed_4.9.orig.tar.xz
+      sha256: 6e226b732e1cd739464ad6862bd1a1aba42d7982922da7a53519631d24975181
+      urls:
+        - https://deb.debian.org/debian/pool/main/s/sed/sed_4.9.orig.tar.xz
+        - https://snapshot.debian.org/file/8ded1b543f1f558cbd5d7b713602f6a8ee84bde4/sed_4.9.orig.tar.xz

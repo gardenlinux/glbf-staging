@@ -1,0 +1,5 @@
+---
+Bug-Database: https://debbugs.gnu.org/cgi/pkgreport.cgi?pkg=sed
+Bug-Submit: mailto:bug-sed@gnu.org
+Repository: https://git.savannah.gnu.org/git/sed.git
+Repository-Browse: https://git.savannah.gnu.org/gitweb/?p=sed.git

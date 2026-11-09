@@ -1,0 +1,13 @@
+#!/bin/sh
+
+newval=$(echo "abc" | sed 's/[bc]/d/g')
+
+case "${newval}" in
+  (add)
+  echo "sub: OK"
+  ;;
+  (*)
+  echo >&2 "unexpected result (${newval}): failure"
+  exit 1
+  ;;
+esac
