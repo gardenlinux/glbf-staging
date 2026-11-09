@@ -239,6 +239,23 @@ jobs:
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-11:
+    name: "diffutils"
+    needs: [build-glbx, check-graph, restore-inputs, plan]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:diffutils:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:diffutils:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-12:
     name: "dpkg"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -255,7 +272,24 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-12:
+  node-13:
+    name: "findutils"
+    needs: [build-glbx, check-graph, restore-inputs, plan]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:findutils:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:findutils:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-14:
     name: "gcc-16"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -272,9 +306,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-13:
+  node-15:
     name: "gcc-16-base"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-12]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -289,9 +323,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-14:
+  node-16:
     name: "libgcc-s1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-12]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-14]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -306,7 +340,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-15:
+  node-17:
     name: "glibc"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -323,9 +357,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-16:
+  node-18:
     name: "libc-gconv-modules-extra"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-13, node-14, node-15]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-15, node-16, node-17]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -340,9 +374,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-17:
+  node-19:
     name: "libc6"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-13, node-14, node-15]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-15, node-16, node-17]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -357,9 +391,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-18:
+  node-20:
     name: "libattr1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-1, node-16, node-17]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-1, node-18, node-19]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -374,9 +408,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-19:
+  node-21:
     name: "libacl1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-0, node-16, node-17, node-18]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-0, node-18, node-19, node-20]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -391,9 +425,26 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-20:
+  node-22:
+    name: "base-files"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-4, node-18, node-19]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:base-files:base-files:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:base-files:base-files:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-23:
     name: "libbz2-1.0"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-7, node-16, node-17]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-7, node-18, node-19]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -408,9 +459,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-21:
+  node-24:
     name: "libdebconfclient0"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-8, node-16, node-17]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-8, node-18, node-19]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -425,9 +476,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-22:
+  node-25:
     name: "debianutils"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-10, node-16, node-17]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-10, node-18, node-19]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -442,7 +493,24 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-23:
+  node-26:
+    name: "diffutils"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-11, node-18, node-19]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:diffutils:diffutils:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:diffutils:diffutils:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-27:
     name: "gmp"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -459,9 +527,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-24:
+  node-28:
     name: "libgmp10"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-23]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-27]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -476,7 +544,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-25:
+  node-29:
     name: "grep"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -493,7 +561,41 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-26:
+  node-30:
+    name: "hostname"
+    needs: [build-glbx, check-graph, restore-inputs, plan]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:hostname:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:hostname:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-31:
+    name: "hostname"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-30]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:hostname:hostname:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:hostname:hostname:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-32:
     name: "kmod"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -510,7 +612,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-27:
+  node-33:
     name: "libcap-ng"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -527,9 +629,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-28:
+  node-34:
     name: "libcap-ng0"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-27]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-33]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -544,9 +646,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-29:
+  node-35:
     name: "libaudit1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-2, node-16, node-17, node-28]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-2, node-18, node-19, node-34]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -561,7 +663,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-30:
+  node-36:
     name: "libcap2"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -578,9 +680,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-31:
+  node-37:
     name: "libcap2"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-30]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-36]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -595,7 +697,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-32:
+  node-38:
     name: "libmd"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -612,9 +714,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-33:
+  node-39:
     name: "libmd0"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-32]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-38]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -629,7 +731,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-34:
+  node-40:
     name: "libselinux"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -646,7 +748,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-35:
+  node-41:
     name: "libxcrypt"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -663,9 +765,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-36:
+  node-42:
     name: "libcrypt1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-35]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-41]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -680,7 +782,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-37:
+  node-43:
     name: "libzstd"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -697,9 +799,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-38:
+  node-44:
     name: "libzstd1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-37]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-43]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -714,7 +816,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-39:
+  node-45:
     name: "mawk"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -731,9 +833,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-40:
+  node-46:
     name: "mawk"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-39]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-45]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -748,24 +850,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-41:
-    name: "base-files"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-4, node-16, node-17, node-40]
-    # Build unless this node is already present in the registry. A skipped
-    # (already-built) dependency must not cascade-skip a dependent that does
-    # need rebuilding, so !cancelled() && !failure() replaces the implicit
-    # success() gate — which treats a skipped need as reason to skip. The skip
-    # fires only on an explicit true: an empty plan output or a missing key
-    # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:base-files:base-files:amd64'] != true) }}"
-    uses: ./.github/workflows/build-node.yml
-    with:
-      node-key: "debian-binary-pkg:base-files:base-files:amd64"
-      arch: amd64
-      runner: "ubuntu-latest"
-      id-seed-override: "${{ inputs.id-seed-override }}"
-
-  node-42:
+  node-47:
     name: "ncurses"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -782,9 +867,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-43:
+  node-48:
     name: "libtinfo6"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-42]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-47]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -799,9 +884,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-44:
+  node-49:
     name: "bash"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-6, node-16, node-17, node-22, node-41, node-43]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-6, node-18, node-19, node-22, node-25, node-48]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -816,7 +901,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-45:
+  node-50:
     name: "openssl"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -833,7 +918,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-46:
+  node-51:
     name: "pam"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -850,9 +935,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-47:
+  node-52:
     name: "libpam-runtime"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-46]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-51]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -867,9 +952,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-48:
+  node-53:
     name: "libpam0g"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-3, node-16, node-17, node-29, node-46]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-3, node-18, node-19, node-35, node-51]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -884,7 +969,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-49:
+  node-54:
     name: "pcre2"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -901,9 +986,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-50:
+  node-55:
     name: "libpcre2-8-0"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-49]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-54]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -918,9 +1003,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-51:
+  node-56:
     name: "grep"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-25, node-50]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-29, node-55]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -935,9 +1020,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-52:
+  node-57:
     name: "libselinux1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-34, node-50]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-40, node-55]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -952,9 +1037,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-53:
+  node-58:
     name: "base-passwd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-5, node-16, node-17, node-21, node-52]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-5, node-18, node-19, node-24, node-57]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -969,7 +1054,24 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-54:
+  node-59:
+    name: "findutils"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-13, node-18, node-19, node-57]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:findutils:findutils:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:findutils:findutils:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-60:
     name: "protobuf-c"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -986,9 +1088,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-55:
+  node-61:
     name: "libprotobuf-c-dev"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-54]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-60]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1003,9 +1105,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-56:
+  node-62:
     name: "libprotobuf-c1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-54]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-60]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1020,9 +1122,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-57:
+  node-63:
     name: "glbx-pkcs11-forward"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-55, node-56]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-61, node-62]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1037,9 +1139,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-58:
+  node-64:
     name: "glbx-pkcs11-forward"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-55, node-56, node-57]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-61, node-62, node-63]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1054,9 +1156,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-59:
+  node-65:
     name: "linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-58]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-64]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1071,9 +1173,9 @@ jobs:
       runner: "ubuntu-latest-8core"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-60:
+  node-66:
     name: "linux-base-7.2+unreleased-cloud-amd64"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-59]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-65]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1088,9 +1190,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-61:
+  node-67:
     name: "linux-binary-7.2+unreleased-cloud-amd64"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-59]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-65]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1105,7 +1207,41 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-62:
+  node-68:
+    name: "sed"
+    needs: [build-glbx, check-graph, restore-inputs, plan]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-pkg-build:sed:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-pkg-build:sed:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-69:
+    name: "sed"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-21, node-57, node-68]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['debian-binary-pkg:sed:sed:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:sed:sed:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-70:
     name: "systemd"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -1122,9 +1258,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-63:
+  node-71:
     name: "libsystemd0"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-31, node-38, node-52, node-62]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-37, node-44, node-57, node-70]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1139,9 +1275,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-64:
+  node-72:
     name: "libpam-modules-bin"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-3, node-16, node-17, node-29, node-36, node-46, node-52, node-63]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-3, node-18, node-19, node-35, node-42, node-51, node-57, node-71]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1156,9 +1292,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-65:
+  node-73:
     name: "libpam-modules"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-3, node-16, node-17, node-29, node-36, node-46, node-52, node-63]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-3, node-18, node-19, node-35, node-42, node-51, node-57, node-71]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1173,9 +1309,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-66:
+  node-74:
     name: "libudev1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-62]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-70]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1190,7 +1326,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-67:
+  node-75:
     name: "tar"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -1207,9 +1343,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-68:
+  node-76:
     name: "tar"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-19, node-52, node-67]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-21, node-57, node-75]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1224,7 +1360,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-69:
+  node-77:
     name: "util-linux"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -1241,9 +1377,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-70:
+  node-78:
     name: "libblkid1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-69]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-77]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1258,9 +1394,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-71:
+  node-79:
     name: "libmount1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-52, node-63, node-69]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-57, node-71, node-77]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1275,9 +1411,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-72:
+  node-80:
     name: "libsmartcols1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-69]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-77]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1292,9 +1428,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-73:
+  node-81:
     name: "libuuid1"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-69]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-77]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1309,9 +1445,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-74:
+  node-82:
     name: "mount"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-52, node-69]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-57, node-77]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1326,9 +1462,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-75:
+  node-83:
     name: "util-linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-28, node-36, node-43, node-47, node-48, node-52, node-63, node-64, node-65, node-66, node-69]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-34, node-42, node-48, node-52, node-53, node-57, node-71, node-72, node-73, node-74, node-77]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1343,7 +1479,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-76:
+  node-84:
     name: "xz-utils"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -1360,9 +1496,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-77:
+  node-85:
     name: "liblzma5"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-76]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-84]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1377,7 +1513,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-78:
+  node-86:
     name: "zlib"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -1394,9 +1530,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-79:
+  node-87:
     name: "zlib1g"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-78]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-86]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1411,9 +1547,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-80:
+  node-88:
     name: "dpkg"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-11, node-16, node-17, node-20, node-33, node-38, node-52, node-68, node-77, node-79]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-12, node-18, node-19, node-23, node-39, node-44, node-57, node-76, node-85, node-87]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1428,9 +1564,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-81:
+  node-89:
     name: "libssl3t64"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-38, node-45, node-79]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-44, node-50, node-87]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1445,9 +1581,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-82:
+  node-90:
     name: "openssl-provider-legacy"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-38, node-45, node-79]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-44, node-50, node-87]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1462,9 +1598,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-83:
+  node-91:
     name: "coreutils"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-9, node-16, node-17, node-18, node-19, node-24, node-31, node-52, node-63, node-81, node-82]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-9, node-18, node-19, node-20, node-21, node-28, node-37, node-57, node-71, node-89, node-90]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1479,9 +1615,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-84:
+  node-92:
     name: "kmod"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-26, node-81, node-82]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-32, node-89, node-90]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1496,9 +1632,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-85:
+  node-93:
     name: "libkmod2"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-16, node-17, node-26, node-81, node-82]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-32, node-89, node-90]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1513,9 +1649,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-86:
+  node-94:
     name: "linux-image-7.2+unreleased-cloud-amd64"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-59, node-84, node-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-65, node-92, node-93]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1530,9 +1666,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-87:
+  node-95:
     name: "linux-modules-7.2+unreleased-cloud-amd64"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-59, node-84, node-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-65, node-92, node-93]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1547,19 +1683,36 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-88:
-    name: "rootfs"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-41, node-44, node-51, node-53, node-60, node-61, node-70, node-71, node-72, node-73, node-74, node-75, node-80, node-83, node-86, node-87]
+  node-96:
+    name: "rootfs-base"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-22, node-26, node-31, node-46, node-49, node-56, node-58, node-59, node-66, node-67, node-69, node-78, node-79, node-80, node-81, node-82, node-83, node-88, node-91, node-94, node-95]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
     # success() gate — which treats a skipped need as reason to skip. The skip
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['rootfs:amd64'] != true) }}"
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['rootfs:base:amd64'] != true) }}"
     uses: ./.github/workflows/build-node.yml
     with:
-      node-key: "rootfs:amd64"
+      node-key: "rootfs:base:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-97:
+    name: "rootfs-min"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-22, node-49, node-58, node-91]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['rootfs:min:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "rootfs:min:amd64"
       arch: amd64
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
