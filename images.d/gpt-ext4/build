@@ -1,0 +1,189 @@
+#!/usr/bin/python3
+"""gpt-ext4 assembly script.
+
+Builds a minimized, reproducible ext4 root partition and lays it onto a GPT
+disk image.
+
+Usage (the contract glbx invokes):
+    build <rootfs-tarball> <output-disk-image>
+
+Every identifier a tool would otherwise randomize is derived from the image's
+content identity (GLBX_IMAGE_ID, set by glbx), so the disk is a pure function of
+the rootfs tarball. Timestamps are pinned to the Unix epoch.
+"""
+
+import hashlib
+import os
+import subprocess
+import sys
+import tempfile
+
+MIB = 1024 * 1024
+
+# Linux root (x86-64) partition type GUID — a fixed, well-known value.
+ROOT_TYPE_GUID = "4f68bce3-e8cd-4db1-96e7-fbcaf984b709"
+
+# Slack left in the filesystem after minimizing, in MiB.
+SIZE_PADDING_MIB = 16
+
+
+def run(*argv, capture=False, stdin=None):
+    """Run a command, failing hard on non-zero exit. Returns stdout if captured."""
+    result = subprocess.run(
+        argv,
+        check=True,
+        input=stdin,
+        stdout=subprocess.PIPE if capture else None,
+        text=True,
+    )
+    return result.stdout if capture else None
+
+
+def uuid_hash(seed):
+    """Derive a reproducible UUID from a seed string via SHA-256."""
+    h = hashlib.sha256(seed.encode()).hexdigest()
+    return f"{h[0:8]}-{h[8:12]}-{h[12:16]}-{h[16:20]}-{h[20:32]}"
+
+
+def ceil_mib(num_bytes):
+    """Round a byte count up to whole MiB."""
+    return (num_bytes + MIB - 1) // MIB
+
+
+def file_size(path):
+    return os.path.getsize(path)
+
+
+# --- tool wrappers -----------------------------------------------------------
+
+
+def dir_size(path):
+    """Total apparent size of a directory tree, in bytes (du -sb)."""
+    out = run("du", "-sb", path, capture=True)
+    return int(out.split()[0])
+
+
+def extract_tarball(tarball, dest):
+    run("tar", "-xf", tarball, "-C", dest)
+
+
+def make_ext4(image, source_dir, size_mib, *, fs_uuid, hash_seed):
+    """Create a reproducible ext4 filesystem populated from source_dir."""
+    run(
+        "mke2fs", "-q", "-F", "-t", "ext4", "-b", "4096", "-I", "256",
+        "-U", fs_uuid,
+        "-E", f"hash_seed={hash_seed},hash_sign=unsigned",
+        "-d", source_dir,
+        image, f"{size_mib}M",
+    )
+
+
+def shrink_ext4(image):
+    """Shrink the filesystem to its minimum."""
+    run("resize2fs", "-M", image)
+
+
+def grow_ext4(image, size_mib):
+    """Grow the filesystem (and the backing file) to an exact MiB size."""
+    truncate(image, size_mib)
+    run("resize2fs", image, f"{size_mib}M")
+
+
+def truncate(path, size_mib):
+    run("truncate", "-s", f"{size_mib}M", path)
+
+
+def write_gpt(disk, *, disk_uuid, partition):
+    """Write a GPT table with one partition from a pinned layout."""
+    script = (
+        "label: gpt\n"
+        f"label-id: {disk_uuid}\n"
+        f"uuid={partition['uuid']};type={partition['type']};"
+        f"size={partition['size_mib']}MiB;name={partition['name']}\n"
+    )
+    run("sfdisk", disk, stdin=script)
+
+
+def partition_extent(disk, part_uuid):
+    """Return the (byte offset, byte length) of a partition in the disk."""
+    dump = run("sfdisk", "-d", disk, capture=True)
+    sector_size = 512
+    entry = None
+    for line in dump.splitlines():
+        if line.startswith("sector-size:"):
+            sector_size = int(line.split(":")[1])
+        if f"uuid={part_uuid}".lower() in line.lower():
+            entry = line
+    if entry is None:
+        sys.exit(f"partition {part_uuid} not found in GPT table")
+    fields = dict(
+        kv.strip().split("=", 1)
+        for kv in entry.split(":", 1)[1].split(",")
+        if "=" in kv
+    )
+    start = int(fields["start"])
+    sectors = int(fields["size"])
+    return start * sector_size, sectors * sector_size
+
+
+def place_partition(src, disk, offset, length):
+    """Copy a partition image into the disk at a byte offset, sparsely."""
+    run(
+        "mv_data",
+        "--input", src,
+        "--output", disk,
+        "--output-offset", str(offset),
+        "--length", str(length),
+    )
+
+
+# --- main --------------------------------------------------------------------
+
+
+def main():
+    rootfs_tarball, out = sys.argv[1], sys.argv[2]
+
+    image_id = os.environ.get("GLBX_IMAGE_ID")
+    if not image_id:
+        sys.exit("GLBX_IMAGE_ID must be set by glbx")
+
+    # All on-disk identifiers derive from the image identity; timestamps are 0.
+    os.environ["SOURCE_DATE_EPOCH"] = "0"
+    fs_uuid = uuid_hash(f"{image_id}:fs_uuid")
+    hash_seed = uuid_hash(f"{image_id}:hash_seed")
+    disk_uuid = uuid_hash(f"{image_id}:disk_uuid")
+    part_uuid = uuid_hash(f"{image_id}:part_uuid:root")
+
+    workdir = tempfile.mkdtemp()
+    extract_tarball(rootfs_tarball, workdir)
+
+    part = tempfile.mkstemp()[1]
+
+    # Create the ext4, generously sized, then shrink it to the minimum and pad.
+    initial_mib = ceil_mib(dir_size(workdir)) + 128
+    make_ext4(part, workdir, initial_mib, fs_uuid=fs_uuid, hash_seed=hash_seed)
+    shrink_ext4(part)
+    grow_ext4(part, ceil_mib(file_size(part)) + SIZE_PADDING_MIB)
+
+    # The GPT disk holds the partition plus 2 MiB of GPT overhead.
+    part_mib = ceil_mib(file_size(part))
+    truncate(out, part_mib + 2)
+    write_gpt(
+        out,
+        disk_uuid=disk_uuid,
+        partition={
+            "uuid": part_uuid,
+            "type": ROOT_TYPE_GUID,
+            "size_mib": part_mib,
+            "name": "root",
+        },
+    )
+
+    # Copy the ext4 into its partition slot at the offset the GPT table assigned.
+    offset, length = partition_extent(out, part_uuid)
+    place_partition(part, out, offset, length)
+    os.remove(part)
+
+
+if __name__ == "__main__":
+    main()

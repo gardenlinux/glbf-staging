@@ -1,0 +1,7 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: mv_data
+Source: https://github.com/gardenlinux/mv_data
+
+Files: *
+Copyright: Garden Linux contributors
+License: MIT
