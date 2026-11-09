@@ -1,0 +1,5 @@
+packages:
+  - base-files:base-files
+  - base-passwd:base-passwd
+  - coreutils:coreutils
+  - bash:bash
