@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+include /usr/share/dpkg/pkg-info.mk
+MYVERSION := $(shell echo '$(DEB_VERSION)' | sed -e 's/\+.*//;s/ubuntu.*$$//;s/build.*$$//')
+PRGVERSION := $(shell sed -En '/^#define VERSION "(.*)"/ s//\1/p' hostname.c)
+
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+CFLAGS += -Wall
+
+%:
+	dh $@
+
+execute_before_dh_auto_build:
+	[ "$(MYVERSION)" = "$(PRGVERSION)" ] || exit 1
