@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """gpt-ext4 assembly script.
 
-Builds a minimized, reproducible ext4 root partition and lays it onto a GPT
-disk image.
+Builds a GPT disk image carrying a FAT32 EFI System Partition followed by a
+minimized, reproducible ext4 root partition.
 
 Usage (the contract glbx invokes):
     build <rootfs-tarball> <output-disk-image>
@@ -20,14 +20,18 @@ import tempfile
 
 MIB = 1024 * 1024
 
-# Linux root (x86-64) partition type GUID — a fixed, well-known value.
+# Well-known, fixed GPT partition type GUIDs.
+ESP_TYPE_GUID = "c12a7328-f81f-11d2-ba4b-00a0c93ec93b"
 ROOT_TYPE_GUID = "4f68bce3-e8cd-4db1-96e7-fbcaf984b709"
 
-# Slack left in the filesystem after minimizing, in MiB.
+# Fixed size of the EFI System Partition, in MiB.
+ESP_SIZE_MIB = 256
+
+# Slack left in the root filesystem after minimizing, in MiB.
 SIZE_PADDING_MIB = 16
 
 
-def run(*argv, capture=False, stdin=None):
+def run(*argv, capture=False, stdin=None, env=None):
     """Run a command, failing hard on non-zero exit. Returns stdout if captured."""
     result = subprocess.run(
         argv,
@@ -35,6 +39,7 @@ def run(*argv, capture=False, stdin=None):
         input=stdin,
         stdout=subprocess.PIPE if capture else None,
         text=True,
+        env=env,
     )
     return result.stdout if capture else None
 
@@ -67,6 +72,18 @@ def extract_tarball(tarball, dest):
     run("tar", "-xf", tarball, "-C", dest)
 
 
+def make_esp(image, source_dir):
+    """Create a reproducible FAT32 EFI System Partition populated from source_dir.
+
+    mkfat32 formats the pre-sized image in place; its volume serial is zeroed and
+    every directory-entry timestamp is pinned by MKFAT32_FAKE_TIME, so the output
+    is a pure function of source_dir.
+    """
+    truncate(image, ESP_SIZE_MIB)
+    env = dict(os.environ, MKFAT32_FAKE_TIME="0")
+    run("mkfat32", "-d", source_dir, image, env=env)
+
+
 def make_ext4(image, source_dir, size_mib, *, fs_uuid, hash_seed):
     """Create a reproducible ext4 filesystem populated from source_dir."""
     run(
@@ -93,15 +110,18 @@ def truncate(path, size_mib):
     run("truncate", "-s", f"{size_mib}M", path)
 
 
-def write_gpt(disk, *, disk_uuid, partition):
-    """Write a GPT table with one partition from a pinned layout."""
-    script = (
-        "label: gpt\n"
-        f"label-id: {disk_uuid}\n"
-        f"uuid={partition['uuid']};type={partition['type']};"
-        f"size={partition['size_mib']}MiB;name={partition['name']}\n"
-    )
-    run("sfdisk", disk, stdin=script)
+def write_gpt(disk, *, disk_uuid, partitions):
+    """Write a GPT table laying out partitions in order from a pinned layout."""
+    lines = [
+        "label: gpt",
+        f"label-id: {disk_uuid}",
+    ]
+    for part in partitions:
+        lines.append(
+            f"uuid={part['uuid']};type={part['type']};"
+            f"size={part['size_mib']}MiB;name={part['name']}"
+        )
+    run("sfdisk", disk, stdin="\n".join(lines) + "\n")
 
 
 def partition_extent(disk, part_uuid):
@@ -137,6 +157,14 @@ def place_partition(src, disk, offset, length):
     )
 
 
+def write_placeholder_boot(dest):
+    """Populate a placeholder boot tree for the ESP."""
+    efi_boot = os.path.join(dest, "EFI", "BOOT")
+    os.makedirs(efi_boot)
+    with open(os.path.join(efi_boot, "PLACEHOLDER"), "w") as f:
+        f.write("placeholder EFI boot partition\n")
+
+
 # --- main --------------------------------------------------------------------
 
 
@@ -152,37 +180,56 @@ def main():
     fs_uuid = uuid_hash(f"{image_id}:fs_uuid")
     hash_seed = uuid_hash(f"{image_id}:hash_seed")
     disk_uuid = uuid_hash(f"{image_id}:disk_uuid")
-    part_uuid = uuid_hash(f"{image_id}:part_uuid:root")
+    esp_part_uuid = uuid_hash(f"{image_id}:part_uuid:esp")
+    root_part_uuid = uuid_hash(f"{image_id}:part_uuid:root")
 
     workdir = tempfile.mkdtemp()
     extract_tarball(rootfs_tarball, workdir)
 
-    part = tempfile.mkstemp()[1]
+    # Build the ESP from a placeholder boot tree.
+    boot_dir = tempfile.mkdtemp()
+    write_placeholder_boot(boot_dir)
+    esp = tempfile.mkstemp()[1]
+    make_esp(esp, boot_dir)
 
-    # Create the ext4, generously sized, then shrink it to the minimum and pad.
+    # Build the ext4 root, generously sized, then shrink it to the minimum and pad.
+    root = tempfile.mkstemp()[1]
     initial_mib = ceil_mib(dir_size(workdir)) + 128
-    make_ext4(part, workdir, initial_mib, fs_uuid=fs_uuid, hash_seed=hash_seed)
-    shrink_ext4(part)
-    grow_ext4(part, ceil_mib(file_size(part)) + SIZE_PADDING_MIB)
+    make_ext4(root, workdir, initial_mib, fs_uuid=fs_uuid, hash_seed=hash_seed)
+    shrink_ext4(root)
+    grow_ext4(root, ceil_mib(file_size(root)) + SIZE_PADDING_MIB)
 
-    # The GPT disk holds the partition plus 2 MiB of GPT overhead.
-    part_mib = ceil_mib(file_size(part))
-    truncate(out, part_mib + 2)
+    esp_mib = ceil_mib(file_size(esp))
+    root_mib = ceil_mib(file_size(root))
+
+    # The GPT disk holds both partitions plus 2 MiB of GPT overhead.
+    truncate(out, esp_mib + root_mib + 2)
     write_gpt(
         out,
         disk_uuid=disk_uuid,
-        partition={
-            "uuid": part_uuid,
-            "type": ROOT_TYPE_GUID,
-            "size_mib": part_mib,
-            "name": "root",
-        },
+        partitions=[
+            {
+                "uuid": esp_part_uuid,
+                "type": ESP_TYPE_GUID,
+                "size_mib": esp_mib,
+                "name": "EFI",
+            },
+            {
+                "uuid": root_part_uuid,
+                "type": ROOT_TYPE_GUID,
+                "size_mib": root_mib,
+                "name": "root",
+            },
+        ],
     )
 
-    # Copy the ext4 into its partition slot at the offset the GPT table assigned.
-    offset, length = partition_extent(out, part_uuid)
-    place_partition(part, out, offset, length)
-    os.remove(part)
+    # Copy each partition image into the slot the GPT table assigned it.
+    for part_image, part_uuid in ((esp, esp_part_uuid), (root, root_part_uuid)):
+        offset, length = partition_extent(out, part_uuid)
+        place_partition(part_image, out, offset, length)
+
+    os.remove(esp)
+    os.remove(root)
 
 
 if __name__ == "__main__":

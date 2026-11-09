@@ -1,0 +1,5 @@
+mkfat32 (1.0) unstable; urgency=medium
+
+  * Package mkfat32 as a Debian package.
+
+ -- Garden Linux <contact@gardenlinux.io>  Mon, 09 Nov 2026 00:00:00 +0000
