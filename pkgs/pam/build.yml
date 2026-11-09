@@ -1,6 +1,6 @@
 pkg_type: debian
-build_profiles: [nocheck]
-build_options: [nocheck]
+build_profiles: [nocheck, nodoc]
+build_options: [nocheck, nodoc]
 runtime_depends:
   libpam0g: [audit:libaudit1, glibc:libc6]
   libpam-modules-bin: [pam:libpam0g, audit:libaudit1, libxcrypt:libcrypt1, libselinux:libselinux1, systemd:libsystemd0, glibc:libc6]
