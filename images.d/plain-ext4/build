@@ -1,0 +1,47 @@
+#!/bin/sh
+# plain-ext4 assembly script.
+#   $1  path to the rootfs tarball (read-only)
+#   $2  path to write the finished ext4 disk image to
+#
+# No loop device is available, so the filesystem is populated directly from an
+# extracted directory tree with `mke2fs -d`, which needs no mount.
+#
+# The image is reproducible: the patched mke2fs (from the e2fsprogs tooling
+# package, overlaid over the mirror copy) is driven entirely by explicit inputs
+# so the output is a pure function of the rootfs tarball. Every non-deterministic
+# input mke2fs would otherwise invent is pinned here:
+#   - SOURCE_DATE_EPOCH  : the single timestamp stamped on the superblock and,
+#                          with the reproducible-inode-times patch, forced onto
+#                          every inode's a/c/m/crtime (not clamped).
+#   - -U <uuid>          : the filesystem UUID (also seeds every metadata csum).
+#   - hash_seed=<uuid>   : the directory HTREE hash seed.
+#   - hash_sign=unsigned : the directory-hash signedness, pinned independent of
+#                          the build host's architecture (the explicit-dirhash-
+#                          signedness patch); unsigned is the arm/aarch64 value
+#                          and is chosen unconditionally so every arch agrees.
+# The values below are fixed constants: the image's identity already folds the
+# rootfs and this script, so stable constants give a stable image.
+set -eu
+
+rootfs_tar="$1"
+out="$2"
+
+# Pinned reproducibility inputs.
+export SOURCE_DATE_EPOCH=1577836800   # 2020-01-01T00:00:00Z
+uuid=adb4b617-e61d-4fb9-802f-10cb3aa33798
+hash_seed=3a427c1d-e4f2-404c-98f2-c3781026a0ac
+
+workdir="$(mktemp -d)"
+tar -xf "$rootfs_tar" -C "$workdir"
+
+# Size the image to the extracted tree plus generous slack, rounded to MiB.
+used_kib="$(du -sk "$workdir" | cut -f1)"
+size_mib=$(( (used_kib / 1024) + 64 ))
+
+mke2fs -q -F -t ext4 -b 4096 -I 256 \
+	-U "$uuid" \
+	-E "hash_seed=$hash_seed,hash_sign=unsigned" \
+	-d "$workdir" \
+	"$out" "${size_mib}M"
+
+rm -rf "$workdir"

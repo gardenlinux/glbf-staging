@@ -1,0 +1,13 @@
+# e2fsprogs as an image-assembly tool: a plain Debian source build, patched to
+# make mke2fs fully deterministic (reproducible inode times under a fixed epoch,
+# and an explicit directory-hash signedness independent of the build host's
+# architecture). It is never shipped in an image — only extracted into the
+# assembly container — so it carries no runtime or lockfile dependencies and no
+# validation phase.
+pkg_type: debian
+
+# Skip the test suite and the fuse2fs tool: the assembly container needs only
+# mke2fs and friends, not the check phase or the FUSE helper.
+build_profiles:
+  - nocheck
+  - pkg.e2fsprogs.no-fuse2fs

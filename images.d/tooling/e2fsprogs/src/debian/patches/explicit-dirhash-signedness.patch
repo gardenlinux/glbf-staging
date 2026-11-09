@@ -1,0 +1,109 @@
+Description: Allow pinning the directory-hash signedness flag explicitly
+ The ext4 superblock records whether the directory HTREE hash treated char as
+ signed or unsigned. mke2fs derived this solely from the signedness of char on
+ the host architecture (signed on x86, unsigned on arm), so the same tree built
+ on different architectures produced different superblocks. Add an
+ "-E hash_sign=signed|unsigned" extended option and honor a caller-set flag in
+ ext2fs_initialize, falling back to the compile-time default only when the caller
+ did not pin it. This lets a reproducible build fix the value by input rather than
+ by build-host architecture.
+Author: Garden Linux
+Forwarded: no
+Last-Update: 2026-11-09
+diff --git a/lib/ext2fs/initialize.c b/lib/ext2fs/initialize.c
+index b9cfd1b..8bd5e9a 100644
+--- a/lib/ext2fs/initialize.c
++++ b/lib/ext2fs/initialize.c
+@@ -165,6 +165,12 @@ errcode_t ext2fs_initialize(const char *name, int flags,
+ 	super->s_magic = EXT2_SUPER_MAGIC;
+ 	super->s_state = EXT2_VALID_FS;
+ 
++	/* Carry over a caller-chosen dirhash signedness so a reproducible
++	 * create can pin it to an explicit value instead of the host's
++	 * compile-time char signedness. */
++	super->s_flags |= param->s_flags &
++		(EXT2_FLAGS_SIGNED_HASH | EXT2_FLAGS_UNSIGNED_HASH);
++
+ 	bigalloc_flag = ext2fs_has_feature_bigalloc(param);
+ 
+ 	assign_field(s_log_block_size);
+@@ -574,11 +580,17 @@ ipg_retry:
+ 	free_blocks &= ~EXT2FS_CLUSTER_MASK(fs);
+ 	ext2fs_free_blocks_count_set(super, free_blocks);
+ 
+-	c = (char) 255;
+-	if (((int) c) == -1) {
+-		super->s_flags |= EXT2_FLAGS_SIGNED_HASH;
+-	} else {
+-		super->s_flags |= EXT2_FLAGS_UNSIGNED_HASH;
++	/* Unless the caller already pinned the dirhash signedness (see the
++	 * s_flags carry-over above), default it to the host's compile-time
++	 * char signedness. */
++	if (!(super->s_flags &
++	      (EXT2_FLAGS_SIGNED_HASH | EXT2_FLAGS_UNSIGNED_HASH))) {
++		c = (char) 255;
++		if (((int) c) == -1) {
++			super->s_flags |= EXT2_FLAGS_SIGNED_HASH;
++		} else {
++			super->s_flags |= EXT2_FLAGS_UNSIGNED_HASH;
++		}
+ 	}
+ 
+ 	ext2fs_mark_super_dirty(fs);
+diff --git a/misc/mke2fs.8.in b/misc/mke2fs.8.in
+index 7e32887..dd879b5 100644
+--- a/misc/mke2fs.8.in
++++ b/misc/mke2fs.8.in
+@@ -250,6 +250,15 @@ In the default configuration, the \fIstrict\fR flag is disabled.
+ Use the specified UUID as the seed for hashing, rather than generating a
+ random seed each time. Intended for use with reproducible builds.
+ .TP
++.BI hash_sign= signed | unsigned
++Pin the directory-hash signedness flag stored in the superblock to the given
++value, rather than deriving it from the signedness of the
++.B char
++type on the host architecture. Intended for use with reproducible builds that
++must be identical regardless of the architecture
++.B mke2fs
++runs on.
++.TP
+ .BR lazy_itable_init [ = < 0 " to disable | " 1 " to enable>]
+ If enabled and the \fBuninit_bg\fR feature is enabled, the inode table will
+ not be fully initialized by \fBmke2fs\fR. This speeds up file system
+diff --git a/misc/mke2fs.c b/misc/mke2fs.c
+index dd8c53d..e40b6e7 100644
+--- a/misc/mke2fs.c
++++ b/misc/mke2fs.c
+@@ -918,6 +918,24 @@ static void parse_extended_opts(struct ext2_super_block *param,
+ 				r_usage++;
+ 				continue;
+ 			}
++		} else if (strcmp(token, "hash_sign") == 0) {
++			if (!arg) {
++				r_usage++;
++				badopt = token;
++				continue;
++			}
++			param->s_flags &= ~(EXT2_FLAGS_SIGNED_HASH |
++					    EXT2_FLAGS_UNSIGNED_HASH);
++			if (strcmp(arg, "signed") == 0) {
++				param->s_flags |= EXT2_FLAGS_SIGNED_HASH;
++			} else if (strcmp(arg, "unsigned") == 0) {
++				param->s_flags |= EXT2_FLAGS_UNSIGNED_HASH;
++			} else {
++				fprintf(stderr,
++					_("Invalid hash_sign: %s\n"), arg);
++				r_usage++;
++				continue;
++			}
+ 		} else if (strcmp(token, "offset") == 0) {
+ 			if (!arg) {
+ 				r_usage++;
+@@ -1227,6 +1245,7 @@ static void parse_extended_opts(struct ext2_super_block *param,
+ 			"\tencoding=<encoding>\n"
+ 			"\tencoding_flags=<flags>\n"
+ 			"\thash_seed=<UUID for hash seed>\n"
++			"\thash_sign=<signed|unsigned dirhash flag>\n"
+ 			"\tquotatype=<quota type(s) to be enabled>\n"
+ 			"\tassume_storage_prezeroed=<0 to disable, 1 to enable>\n\n"),
+ 			badopt ? badopt : "");
