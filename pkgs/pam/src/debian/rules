@@ -43,6 +43,7 @@ override_dh_auto_configure:
 		-Disadir=/usr/lib/security \
 		-Dsystemdunitdir=/usr/lib/systemd/system \
 		-Dnis=disabled \
+		-Ddb=ndbm \
 		-Dusergroups=true \
 		$(meson_OPTS)
 
@@ -84,3 +85,14 @@ endif
 
 override_dh_installchangelogs:
 	dh_installchangelogs NEWS
+
+# debconf is part of the base system, so do not emit a dependency on it:
+# install the templates and let the maintainer scripts drive debconf as usual,
+# but drop the debconf entry dh_installdebconf adds to ${misc:Depends}. The
+# remove flag on addsubstvar strikes just that one value, structurally, leaving
+# the rest of misc:Depends intact.
+override_dh_installdebconf:
+	dh_installdebconf
+	perl -MDebian::Debhelper::Dh_Lib -e \
+		'addsubstvar($$_, "misc:Depends", "debconf (>= 0.5) | debconf-2.0", undef, 1) for @ARGV' \
+		$$(dh_listpackages)
