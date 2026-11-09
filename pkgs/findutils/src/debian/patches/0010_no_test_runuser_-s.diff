@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Andreas Metzler <ametzler@debian.org>
+Date: Sep, 25 2026 10:42:21 +0200
+Subject: [PATCH] runuser has always supported -s
+
+Avoid running a useless test that causes a write to syslog.
+
+Origin: vendor
+Forwarded: https://savannah.gnu.org/bugs/?68587
+
+--- a/locate/updatedb.sh
++++ b/locate/updatedb.sh
+@@ -123,11 +123,13 @@ getuid() {
+     id | cut -d'(' -f 1 | cut -d'=' -f2
+ }
+ 
+ # figure out if the switch-user tool supports the -s option
+ select_shell() {
+-    if $updatedbuserchange "$1" -s $SHELL -c false < /dev/null  ; then
++    if [ "$updatedbuserchange" = "runuser" ]  && [ "$(id -u)" = "0" ]; then
++	    echo "-s $SHELL"
++    elif $updatedbuserchange "$1" -s $SHELL -c false < /dev/null  ; then
+ 	# No.
+ 	echo ""
+     else
+ 	if $updatedbuserchange "$1" -s $SHELL -c true < /dev/null  ; then
+ 	    # Yes.
