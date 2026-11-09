@@ -5,6 +5,11 @@ packages:
   - bash:bash
   - dpkg:dpkg
   - grep:grep
+  - mawk:mawk
+  - sed:sed
+  - diffutils:diffutils
+  - findutils:findutils
+  - hostname:hostname
   - util-linux:mount
   - util-linux:util-linux
   - linux:linux-image-7.2+unreleased-cloud-amd64
