@@ -1,0 +1,6 @@
+sources:
+    - file: e2fsprogs_1.47.4.orig.tar.gz
+      sha256: 2cec05f39c20ee621f14926195664e66e6017190ac8e4bbdb16d86082e43c5da
+      urls:
+        - https://deb.debian.org/debian/pool/main/e/e2fsprogs/e2fsprogs_1.47.4.orig.tar.gz
+        - https://snapshot.debian.org/file/62689efed154b2c1b7599d93ba06bb40c7b7aae7/e2fsprogs_1.47.4.orig.tar.gz
