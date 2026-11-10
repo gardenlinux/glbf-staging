@@ -1,10 +1,11 @@
 # gpt-ext4 assembles the rootfs into a minimized ext4 partition and places it on
 # a GPT disk image behind a 256 MiB FAT32 EFI System Partition. It uses the
 # locally built reproducible mke2fs/resize2fs, mkfat32 and mv_data, with fdisk
-# (sfdisk) from the mirror for the partition table, and python3 to run the
-# assembly script.
+# (sfdisk) and mount from the mirror, and python3 to run the assembly script.
+# The assembly stages the extracted rootfs on a tmpfs it mounts itself.
 debian_tooling:
   - fdisk
+  - mount
   - python3-minimal
 local_tooling:
   - e2fsprogs:e2fsprogs

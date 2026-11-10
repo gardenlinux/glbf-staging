@@ -7,4 +7,5 @@ runtime_depends:
   libsmartcols1: [glibc:libc6]
   libmount1: [util-linux:libblkid1, libselinux:libselinux1, systemd:libsystemd0, glibc:libc6]
   mount: [util-linux:libblkid1, util-linux:libmount1, util-linux:libsmartcols1, libselinux:libselinux1, glibc:libc6]
+  login: [pam:libpam-modules, pam:libpam-runtime, audit:libaudit1, glibc:libc6, pam:libpam0g, shadow:login.defs]
   util-linux: [util-linux:libblkid1, util-linux:libmount1, util-linux:libsmartcols1, util-linux:libuuid1, libselinux:libselinux1, ncurses:libtinfo6, systemd:libsystemd0, systemd:libudev1, pam:libpam0g, pam:libpam-modules, pam:libpam-runtime, libcap-ng:libcap-ng0, libxcrypt:libcrypt1, glibc:libc6]

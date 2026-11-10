@@ -1,0 +1,38 @@
+#!/bin/bash
+set -e
+
+# Place the kernel on the ESP tree and write a single Boot Loader Spec entry.
+# Initrd-less: the kernel finds the root filesystem by GPT partition label, which
+# the image assembly sets to "ROOT".
+kver="$(cd /usr/lib/modules && ls -d */ | head -1)"
+kver="${kver%/}"
+install -D -m0644 "/usr/lib/modules/$kver/vmlinuz" /boot/vmlinuz
+
+mkdir -p /boot/loader/entries
+cat > /boot/loader/loader.conf <<'CONF'
+timeout 0
+CONF
+cat > /boot/loader/entries/default.conf <<'CONF'
+title   default
+linux   /vmlinuz
+options console=ttyS0 loglevel=7 root=PARTLABEL=ROOT rw
+CONF
+
+# Mount the ESP (GPT partlabel BOOT) at /boot at runtime. The unit file name must
+# match the mount point; enable it by linking into local-fs.target.wants.
+cat > /usr/lib/systemd/system/boot.mount <<'CONF'
+[Unit]
+Description=EFI System Partition
+
+[Mount]
+What=/dev/disk/by-partlabel/BOOT
+Where=/boot
+Type=vfat
+Options=umask=0077
+
+[Install]
+WantedBy=local-fs.target
+CONF
+mkdir -p /usr/lib/systemd/system/local-fs.target.wants
+ln -sf ../boot.mount /usr/lib/systemd/system/local-fs.target.wants/boot.mount
+
