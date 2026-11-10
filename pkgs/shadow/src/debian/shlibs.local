@@ -1,0 +1,1 @@
+deb: libsubid 6 libsubid6 (= ${binary:Version})
