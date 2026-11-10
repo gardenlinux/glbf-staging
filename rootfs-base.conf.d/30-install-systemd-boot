@@ -8,3 +8,7 @@ set -e
 mkdir -p /boot
 export SYSTEMD_RELAX_ESP_CHECKS=1 SYSTEMD_ESP_PATH=/boot
 bootctl install --esp-path=/boot --no-variables --graceful
+
+# The boot entropy seed must be unique per installed system and is refreshed on
+# every boot; a baked-in seed is both non-reproducible and a security hazard.
+rm -f /boot/loader/random-seed
