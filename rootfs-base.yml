@@ -18,4 +18,4 @@ packages:
   - systemd:systemd-sysv
   - systemd:systemd-boot
   - systemd:udev
-  - linux:linux-image-7.2+unreleased-cloud-amd64
+  - linux:linux-image-7.2+unreleased-cloud-%ARCH%
