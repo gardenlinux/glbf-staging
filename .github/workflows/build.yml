@@ -1888,6 +1888,40 @@ jobs:
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-108:
+    name: "rootfs-initrd"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-18, node-19, node-20, node-23, node-59, node-67, node-74, node-75, node-78, node-86, node-87, node-88, node-89, node-92, node-105, node-106]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['rootfs:initrd:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "rootfs:initrd:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-109:
+    name: "initrd"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-108]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs.plan.outputs.built == '' || fromJSON(needs.plan.outputs.built)['image:initrd:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "image:initrd:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-110:
     name: "rootfs-min"
     needs: [build-glbx, check-graph, restore-inputs, plan, node-23, node-50, node-59, node-101]
     # Build unless this node is already present in the registry. A skipped
@@ -1904,7 +1938,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-109:
+  node-111:
     name: "e2fsprogs"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -1921,9 +1955,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-110:
+  node-112:
     name: "base-ext4"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-107, node-109]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-107, node-111]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1938,7 +1972,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-111:
+  node-113:
     name: "mkfat32"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -1955,7 +1989,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-112:
+  node-114:
     name: "mv-data"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -1972,9 +2006,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-113:
+  node-115:
     name: "base-gpt"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-107, node-109, node-111, node-112]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-107, node-109, node-111, node-113, node-114]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit

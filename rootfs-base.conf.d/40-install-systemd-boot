@@ -12,3 +12,7 @@ bootctl install --esp-path=/boot --no-variables --graceful
 # The boot entropy seed must be unique per installed system and is refreshed on
 # every boot; a baked-in seed is both non-reproducible and a security hazard.
 rm -f /boot/loader/random-seed
+
+# The ESP is mounted at /boot/efi at runtime (by the mount unit the image
+# assembly writes). Leave the empty mount point behind.
+mkdir -p /boot/efi

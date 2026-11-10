@@ -5,3 +5,9 @@ images:
   - name: base-gpt
     rootfs: base
     type: gpt-ext4
+    inputs:
+      - label: initrd
+        image: initrd
+  - name: initrd
+    rootfs: initrd
+    type: cpio
