@@ -2,6 +2,7 @@ packages:
   - base-files:base-files
   - base-passwd:base-passwd
   - coreutils:coreutils
+  - glibc:libc-bin
   - bash:bash
   - dpkg:dpkg
   - grep:grep
@@ -12,4 +13,9 @@ packages:
   - hostname:hostname
   - util-linux:mount
   - util-linux:util-linux
+  - util-linux:login
+  - systemd:systemd
+  - systemd:systemd-sysv
+  - systemd:systemd-boot
+  - systemd:udev
   - linux:linux-image-7.2+unreleased-cloud-amd64

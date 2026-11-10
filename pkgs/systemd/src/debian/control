@@ -542,7 +542,6 @@ Architecture: amd64 i386 arm64 armhf loong64 riscv64
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          ${dlopen:Depends},
-         efibootmgr [amd64 arm64],
          systemd (= ${binary:Version}),
          systemd-boot-tools (= ${binary:Version}),
          systemd-boot-efi (= ${binary:Version}) [!amd64 !arm64],

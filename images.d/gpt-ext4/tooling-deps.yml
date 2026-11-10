@@ -431,6 +431,14 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/m/mawk/mawk_1.3.4.20260302-2_amd64.deb
             - https://snapshot.debian.org/file/d1151b2e774868cba67776374ac702d8223f0787/mawk_1.3.4.20260302-2_amd64.deb
+    - name: mount
+      version: 2.42.4-1
+      files:
+        - arch: amd64
+          sha256: 0c601d62ab5f0a4394dc3d57b190ec462b147f4d216b74fec80036d7e5f93829
+          urls:
+            - https://deb.debian.org/debian/pool/main/u/util-linux/mount_2.42.4-1_amd64.deb
+            - https://snapshot.debian.org/file/b803cc3931012ae969a2eeeee543aa24b2dd3504/mount_2.42.4-1_amd64.deb
     - name: ncurses-base
       version: 6.6+20260608-2
       files:

@@ -157,14 +157,6 @@ def place_partition(src, disk, offset, length):
     )
 
 
-def write_placeholder_boot(dest):
-    """Populate a placeholder boot tree for the ESP."""
-    efi_boot = os.path.join(dest, "EFI", "BOOT")
-    os.makedirs(efi_boot)
-    with open(os.path.join(efi_boot, "PLACEHOLDER"), "w") as f:
-        f.write("placeholder EFI boot partition\n")
-
-
 # --- main --------------------------------------------------------------------
 
 
@@ -184,18 +176,35 @@ def main():
     root_part_uuid = uuid_hash(f"{image_id}:part_uuid:root")
 
     workdir = tempfile.mkdtemp()
-    extract_tarball(rootfs_tarball, workdir)
+    # A tmpfs workspace keeps the (large) extracted tree and the partition images
+    # off any backing disk and gives a clean mount to tear down at the end.
+    run("mount", "-t", "tmpfs", "-o", "size=4G", "tmpfs", workdir)
 
-    # Build the ESP from a placeholder boot tree.
-    boot_dir = tempfile.mkdtemp()
-    write_placeholder_boot(boot_dir)
-    esp = tempfile.mkstemp()[1]
+    rootfs_dir = os.path.join(workdir, "rootfs")
+    os.makedirs(rootfs_dir)
+    extract_tarball(rootfs_tarball, rootfs_dir)
+
+    # Split the boot tree (systemd-boot loader + kernel + loader entries, placed
+    # by the rootfs conf.d scripts) out of the root filesystem: it becomes the
+    # FAT32 ESP, and the ext4 root is built from everything that remains.
+    boot_dir = os.path.join(workdir, "boot")
+    rootfs_boot = os.path.join(rootfs_dir, "boot")
+    if not os.path.isdir(rootfs_boot):
+        sys.exit("rootfs has no /boot tree — expected the conf.d scripts to populate it")
+    run("mv", rootfs_boot, boot_dir)
+    # Leave an empty /boot mount point behind so the shipped boot.mount unit can
+    # mount the ESP there at runtime.
+    os.mkdir(rootfs_boot)
+
+    # Build the ESP from the real boot tree.
+    esp = os.path.join(workdir, "esp.img")
     make_esp(esp, boot_dir)
 
-    # Build the ext4 root, generously sized, then shrink it to the minimum and pad.
-    root = tempfile.mkstemp()[1]
-    initial_mib = ceil_mib(dir_size(workdir)) + 128
-    make_ext4(root, workdir, initial_mib, fs_uuid=fs_uuid, hash_seed=hash_seed)
+    # Build the ext4 root (now without /boot), generously sized, then shrink it to
+    # the minimum and pad.
+    root = os.path.join(workdir, "root.img")
+    initial_mib = ceil_mib(dir_size(rootfs_dir)) + 128
+    make_ext4(root, rootfs_dir, initial_mib, fs_uuid=fs_uuid, hash_seed=hash_seed)
     shrink_ext4(root)
     grow_ext4(root, ceil_mib(file_size(root)) + SIZE_PADDING_MIB)
 
@@ -212,13 +221,13 @@ def main():
                 "uuid": esp_part_uuid,
                 "type": ESP_TYPE_GUID,
                 "size_mib": esp_mib,
-                "name": "EFI",
+                "name": "BOOT",
             },
             {
                 "uuid": root_part_uuid,
                 "type": ROOT_TYPE_GUID,
                 "size_mib": root_mib,
-                "name": "root",
+                "name": "ROOT",
             },
         ],
     )
@@ -230,6 +239,7 @@ def main():
 
     os.remove(esp)
     os.remove(root)
+    subprocess.run(["umount", workdir], check=False)
 
 
 if __name__ == "__main__":

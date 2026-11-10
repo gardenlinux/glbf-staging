@@ -1,6 +1,12 @@
 pkg_type: debian
-build_profiles: [nocheck, noudeb, stage1, noinsttest, nodoc]
+build_profiles: [nocheck, noudeb, nodoc]
 build_options: [nocheck]
 runtime_depends:
   libsystemd0: [libcap2:libcap2, libselinux:libselinux1, libzstd:libzstd1, glibc:libc6]
+  libsystemd-shared: [glibc:libc6]
   libudev1: [glibc:libc6]
+  systemd: [systemd:libsystemd0, systemd:libsystemd-shared, glibc:libc6, util-linux:libblkid1, util-linux:libmount1]
+  systemd-sysv: [systemd:systemd]
+  systemd-boot: [glibc:libc6, systemd:libsystemd-shared, systemd:systemd, systemd:systemd-boot-tools, systemd:systemd-boot-efi]
+  systemd-boot-tools: [glibc:libc6, systemd:libsystemd-shared]
+  udev: [glibc:libc6, systemd:libsystemd-shared, systemd:systemd, kmod:libkmod2, systemd:libudev1]

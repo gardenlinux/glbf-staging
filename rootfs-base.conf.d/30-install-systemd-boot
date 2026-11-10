@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+
+# Install systemd-boot into /boot as a plain directory tree. The EFI-variable
+# write is suppressed (--no-variables) and the ESP sanity checks are relaxed via
+# the environment, so bootctl treats /boot as the ESP without a real FAT mount or
+# GPT. The image assembly later splits this tree onto the FAT32 ESP.
+mkdir -p /boot
+export SYSTEMD_RELAX_ESP_CHECKS=1 SYSTEMD_ESP_PATH=/boot
+bootctl install --esp-path=/boot --no-variables --graceful
