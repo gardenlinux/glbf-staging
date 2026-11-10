@@ -1,3 +1,8 @@
+# cpio packs the rootfs into a zstd-compressed cpio initramfs, after stripping it
+# to initrd essentials and pruning the kernel module set to the wanted closure.
+# It uses 3cpio and zstd to build the archive and python3 to run the assembly
+# script.
 debian_tooling:
+  - python3-minimal
   - 3cpio
   - zstd

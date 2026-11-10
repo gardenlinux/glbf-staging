@@ -1,23 +1,190 @@
-#!/bin/bash
+#!/usr/bin/python3
+"""cpio (initrd) assembly script.
 
-set -eufo pipefail
+Packs a rootfs tree into a zstd-compressed cpio initramfs, after stripping it
+down to what an initrd needs: it drops payload with no part in finding and
+mounting the root (see strip_payload) and prunes the kernel module set to the
+wanted modules plus their dependency closure.
 
-export LC_ALL=C
-export SOURCE_DATE_EPOCH=0
+Usage (the contract glbx invokes):
+    build <rootfs-tarball> <output-cpio>
 
-rootfs_tar="$1"
-out="$2"
+The wanted kernel modules are a whitespace-separated list in the "modules" image
+input (at $GLBX_INPUTS_DIR/modules). modules.dep already records the fully
+transitive dependency paths per module, so the closure is the union of the
+wanted modules' dep lines.
 
-rootfs_dir="$(mktemp -d)"
-tar -xf "$rootfs_tar" -C "$rootfs_dir"
+Determinism: entries are packed in sorted order and every timestamp is pinned to
+the Unix epoch, so the output is a pure function of the rootfs tarball.
+"""
 
-pushd "$rootfs_dir" &> /dev/null
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
 
-find . -print \
-| sort \
-| 3cpio --create \
-| zstd > "$out"
 
-popd &> /dev/null
+def run(*argv, stdin=None, stdout=None):
+    """Run a command, failing hard on non-zero exit."""
+    subprocess.run(argv, check=True, stdin=stdin, stdout=stdout)
 
-rm -rf "$rootfs_dir"
+
+def module_dir(rootfs_dir):
+    """Return the single kernel-version directory under /usr/lib/modules, or None."""
+    base = os.path.join(rootfs_dir, "usr/lib/modules")
+    try:
+        versions = [d for d in os.scandir(base) if d.is_dir()]
+    except FileNotFoundError:
+        return None
+    return versions[0].path if versions else None
+
+
+def module_name(path):
+    """Module name from a modules.dep path: basename without .ko* and '-'→'_'."""
+    name = os.path.basename(path).split(".ko", 1)[0]
+    return name.replace("-", "_")
+
+
+def wanted_module_closure(dep_path, wanted):
+    """Resolve wanted module names to the set of module paths to keep.
+
+    modules.dep lines are "<path>: <dep-path> <dep-path> ...". The dep list is
+    already fully transitive, so the closure is each wanted module's path plus
+    its dep-line paths. Built-in or unknown names resolve to nothing and are
+    skipped.
+    """
+    name_to_path = {}
+    deps = {}
+    with open(dep_path) as f:
+        for line in f:
+            head, _, rest = line.partition(":")
+            path = head.strip()
+            name_to_path[module_name(path)] = path
+            deps[path] = rest.split()
+
+    keep = set()
+    for want in wanted:
+        path = name_to_path.get(module_name(want))
+        if path is None:
+            continue
+        keep.add(path)
+        keep.update(deps.get(path, ()))
+    return keep
+
+
+def strip_payload(rootfs_dir):
+    """Remove files the initrd never uses. The initrd only finds the root device,
+    mounts it, and switch-roots, so none of these play a part:
+
+    - /usr/share and /var (docs, locale data, dpkg database, caches, logs);
+      /var is left as a single empty directory.
+    - the udev hardware database (vendor/product name tables).
+    - the gconv charset converters — everything runs under LC_ALL=C.
+    - the per-locale data under /usr/lib/locale, same reason.
+    - ldconfig — the linker cache is not rebuilt in a throwaway initrd.
+    """
+    rm_tree = lambda *p: shutil.rmtree(os.path.join(rootfs_dir, *p), ignore_errors=True)
+    rm_file = lambda *p: _remove_quiet(os.path.join(rootfs_dir, *p))
+
+    rm_tree("usr/share")
+    rm_tree("var")
+    os.makedirs(os.path.join(rootfs_dir, "var"))
+
+    rm_file("usr/lib/udev/hwdb.bin")
+    rm_tree("usr/lib/udev/hwdb.d")
+    rm_tree("usr/lib/locale")
+    rm_file("usr/sbin/ldconfig")
+
+    # gconv lives under the arch-triplet library dir, which varies by arch.
+    for triplet in os.scandir(os.path.join(rootfs_dir, "usr/lib")):
+        if triplet.is_dir():
+            rm_tree("usr/lib", triplet.name, "gconv")
+
+
+def _remove_quiet(path):
+    """Remove a file, ignoring its absence."""
+    try:
+        os.remove(path)
+    except FileNotFoundError:
+        pass
+
+
+def prune_modules(rootfs_dir, inputs_dir):
+    """Delete every shipped kernel module not in the wanted closure."""
+    moddir = module_dir(rootfs_dir)
+    if moddir is None:
+        return
+    dep_path = os.path.join(moddir, "modules.dep")
+    if not os.path.isfile(dep_path):
+        return
+
+    with open(os.path.join(inputs_dir, "modules")) as f:
+        wanted = f.read().split()
+    keep = wanted_module_closure(dep_path, wanted)
+
+    for root, _, files in os.walk(moddir):
+        for name in files:
+            if ".ko" not in name:
+                continue
+            full = os.path.join(root, name)
+            rel = os.path.relpath(full, moddir)
+            if rel not in keep:
+                os.remove(full)
+
+    # Drop directories left empty by the pruning.
+    for root, dirs, files in os.walk(moddir, topdown=False):
+        if root != moddir and not dirs and not files:
+            os.rmdir(root)
+
+
+def pack_cpio(rootfs_dir, out):
+    """Pack rootfs_dir into a zstd-compressed cpio at out, deterministically.
+
+    Entries are listed sorted (and rooted at ".") and fed to `3cpio --create`,
+    whose output is piped through `zstd` into the output file.
+    """
+    names = sorted(
+        "./" + os.path.relpath(os.path.join(root, n), rootfs_dir)
+        for root, dirs, files in os.walk(rootfs_dir)
+        for n in dirs + files
+    )
+    listing = ("\n".join(["."] + names) + "\n").encode()
+
+    with open(out, "wb") as outf:
+        cpio = subprocess.Popen(
+            ["3cpio", "--create"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            cwd=rootfs_dir,
+        )
+        zstd = subprocess.Popen(["zstd"], stdin=cpio.stdout, stdout=outf)
+        cpio.stdout.close()  # let zstd own the read end
+        cpio.stdin.write(listing)
+        cpio.stdin.close()
+        if zstd.wait() != 0 or cpio.wait() != 0:
+            sys.exit("cpio/zstd pipeline failed")
+
+
+def main():
+    rootfs_tarball, out = sys.argv[1], sys.argv[2]
+
+    inputs_dir = os.environ.get("GLBX_INPUTS_DIR")
+    if not inputs_dir:
+        sys.exit("GLBX_INPUTS_DIR must be set by glbx")
+
+    os.environ["LC_ALL"] = "C"
+    os.environ["SOURCE_DATE_EPOCH"] = "0"
+
+    rootfs_dir = tempfile.mkdtemp(prefix="glbx-cpio-")
+    run("tar", "-xf", rootfs_tarball, "-C", rootfs_dir)
+
+    strip_payload(rootfs_dir)
+    prune_modules(rootfs_dir, inputs_dir)
+
+    pack_cpio(rootfs_dir, out)
+    shutil.rmtree(rootfs_dir)
+
+
+if __name__ == "__main__":
+    main()
