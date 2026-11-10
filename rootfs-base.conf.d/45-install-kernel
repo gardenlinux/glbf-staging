@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+
+# Place the kernel on the ESP tree. The loader entry and the ESP mount unit are
+# written by the image assembly, which knows the partition UUIDs.
+kver="$(cd /usr/lib/modules && ls -d */ | head -1)"
+kver="${kver%/}"
+install -D -m0644 "/usr/lib/modules/$kver/vmlinuz" /boot/vmlinuz
+

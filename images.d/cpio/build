@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -eufo pipefail
+
+export LC_ALL=C
+export SOURCE_DATE_EPOCH=0
+
+rootfs_tar="$1"
+out="$2"
+
+rootfs_dir="$(mktemp -d)"
+tar -xf "$rootfs_tar" -C "$rootfs_dir"
+
+pushd "$rootfs_dir" &> /dev/null
+
+find . -print \
+| sort \
+| 3cpio --create \
+| zstd > "$out"
+
+popd &> /dev/null
+
+rm -rf "$rootfs_dir"

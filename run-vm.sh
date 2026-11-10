@@ -28,5 +28,7 @@ qemu-system-x86_64 \
 	-nographic \
 	-serial mon:stdio \
 	-drive if=pflash,format=raw,unit=0,file=/usr/share/OVMF/OVMF_CODE_4M.fd,readonly=on \
-	-drive if=none,id=nvme0,format=qcow2,file="$disk" \
-	-device nvme,drive=nvme0,serial=root
+	-drive if=virtio,format=qcow2,file="$disk"
+	
+	# -drive if=none,id=nvme0,format=qcow2,file="$disk" \
+	# -device nvme,drive=nvme0,serial=root

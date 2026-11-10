@@ -7,6 +7,11 @@ minimized, reproducible ext4 root partition.
 Usage (the contract glbx invokes):
     build <rootfs-tarball> <output-disk-image>
 
+The `initrd` image input (at $GLBX_INPUTS_DIR/initrd) is placed on the ESP next
+to the kernel. The loader entry (root by partition UUID) and the ESP mount unit
+(ESP by partition UUID, mounted at /boot/efi) are written here, where those
+partition UUIDs are known.
+
 Every identifier a tool would otherwise randomize is derived from the image's
 content identity (GLBX_IMAGE_ID, set by glbx), so the disk is a pure function of
 the rootfs tarball. Timestamps are pinned to the Unix epoch.
@@ -88,6 +93,7 @@ def make_ext4(image, source_dir, size_mib, *, fs_uuid, hash_seed):
     """Create a reproducible ext4 filesystem populated from source_dir."""
     run(
         "mke2fs", "-q", "-F", "-t", "ext4", "-b", "4096", "-I", "256",
+        "-L", "ROOT",
         "-U", fs_uuid,
         "-E", f"hash_seed={hash_seed},hash_sign=unsigned",
         "-d", source_dir,
@@ -157,7 +163,51 @@ def place_partition(src, disk, offset, length):
     )
 
 
+def write_loader(boot_dir, *, root_part_uuid):
+    """Write the systemd-boot loader config and the single boot entry.
+
+    The entry selects the root filesystem by partition UUID (deterministically
+    derived here), not by filesystem label or partlabel.
+    """
+    loader = os.path.join(boot_dir, "loader")
+    entries = os.path.join(loader, "entries")
+    os.makedirs(entries, exist_ok=True)
+    with open(os.path.join(loader, "loader.conf"), "w") as f:
+        f.write("timeout 0\n")
+    with open(os.path.join(entries, "default.conf"), "w") as f:
+        f.write(
+            "title   default\n"
+            "linux   /vmlinuz\n"
+            "initrd  /initrd\n"
+            f"options console=ttyS0 loglevel=7 root=PARTUUID={root_part_uuid} rw systemd.gpt_auto=0\n"
+        )
+
+
+def write_boot_mount(rootfs_dir, *, esp_part_uuid):
+    """Write the unit that mounts the ESP at /boot/efi, keyed by partition UUID."""
+    unit_dir = os.path.join(rootfs_dir, "usr/lib/systemd/system")
+    os.makedirs(unit_dir, exist_ok=True)
+    with open(os.path.join(unit_dir, "boot-efi.mount"), "w") as f:
+        f.write(
+            "[Unit]\n"
+            "Description=EFI System Partition\n\n"
+            "[Mount]\n"
+            f"What=/dev/disk/by-partuuid/{esp_part_uuid}\n"
+            "Where=/boot/efi\n"
+            "Type=vfat\n"
+            "Options=dmask=0022,fmask=0133\n\n"
+            "[Install]\n"
+            "WantedBy=local-fs.target\n"
+        )
+    wants = os.path.join(unit_dir, "local-fs.target.wants")
+    os.makedirs(wants, exist_ok=True)
+    link = os.path.join(wants, "boot-efi.mount")
+    if not os.path.lexists(link):
+        os.symlink("../boot-efi.mount", link)
+
+
 # --- main --------------------------------------------------------------------
+
 
 
 def main():
@@ -184,17 +234,33 @@ def main():
     os.makedirs(rootfs_dir)
     extract_tarball(rootfs_tarball, rootfs_dir)
 
-    # Split the boot tree (systemd-boot loader + kernel + loader entries, placed
-    # by the rootfs conf.d scripts) out of the root filesystem: it becomes the
-    # FAT32 ESP, and the ext4 root is built from everything that remains.
+    # Split the boot tree (systemd-boot loader + kernel, placed by the rootfs
+    # conf.d scripts) out of the root filesystem: it becomes the FAT32 ESP, and
+    # the ext4 root is built from everything that remains.
     boot_dir = os.path.join(workdir, "boot")
     rootfs_boot = os.path.join(rootfs_dir, "boot")
     if not os.path.isdir(rootfs_boot):
         sys.exit("rootfs has no /boot tree — expected the conf.d scripts to populate it")
     run("mv", rootfs_boot, boot_dir)
-    # Leave an empty /boot mount point behind so the shipped boot.mount unit can
-    # mount the ESP there at runtime.
-    os.mkdir(rootfs_boot)
+    # Leave an empty /boot behind with an empty /boot/efi mount point, where the
+    # boot-efi.mount unit mounts the ESP at runtime. The ESP itself carries no
+    # efi/ directory, so drop the one that rode along in the split.
+    os.makedirs(os.path.join(rootfs_boot, "efi"))
+    efi_on_esp = os.path.join(boot_dir, "efi")
+    if os.path.isdir(efi_on_esp):
+        os.rmdir(efi_on_esp)
+
+    # Place the initrd (an image input) onto the boot tree alongside the kernel.
+    inputs_dir = os.environ.get("GLBX_INPUTS_DIR")
+    if not inputs_dir:
+        sys.exit("GLBX_INPUTS_DIR must be set by glbx")
+    run("cp", os.path.join(inputs_dir, "initrd"), os.path.join(boot_dir, "initrd"))
+
+    # Write the loader entry (root by partition UUID) onto the ESP tree and the
+    # ESP mount unit into the root filesystem — both keyed by the deterministic
+    # partition UUIDs computed above.
+    write_loader(boot_dir, root_part_uuid=root_part_uuid)
+    write_boot_mount(rootfs_dir, esp_part_uuid=esp_part_uuid)
 
     # Build the ESP from the real boot tree.
     esp = os.path.join(workdir, "esp.img")

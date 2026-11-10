@@ -1,0 +1,3 @@
+debian_tooling:
+  - 3cpio
+  - zstd
