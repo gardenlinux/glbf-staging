@@ -239,6 +239,14 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/c/cdebconf/libdebconfclient0_0.283_amd64.deb
             - https://snapshot.debian.org/file/8361c7cd69b5a099d87515ddd84c8ccbe9973713/libdebconfclient0_0.283_amd64.deb
+    - name: libexpat1
+      version: 2.10.0-1
+      files:
+        - arch: amd64
+          sha256: 9a333cf590099569f577c1a1d47ac1f439eab14c1faff09b7e81ce3802938003
+          urls:
+            - https://deb.debian.org/debian/pool/main/e/expat/libexpat1_2.10.0-1_amd64.deb
+            - https://snapshot.debian.org/file/c8bb5af7743992db09252066ac59d55370ca3435/libexpat1_2.10.0-1_amd64.deb
     - name: libgcc-s1
       version: 16.2.0-4
       files:
@@ -327,6 +335,14 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-8-0_10.49-1_amd64.deb
             - https://snapshot.debian.org/file/4209bf1cad51327d70c9b0be634febda14e8470b/libpcre2-8-0_10.49-1_amd64.deb
+    - name: libpython3.14-minimal
+      version: 3.14.10-1
+      files:
+        - arch: amd64
+          sha256: a59bb22e16dde6f441b892cdfd058dd93d8149cf437a31d8985dcca3cf407367
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/python3.14/libpython3.14-minimal_3.14.10-1_amd64.deb
+            - https://snapshot.debian.org/file/e7e9442e72c867f1716ac5f8c647d9fc22b293f1/libpython3.14-minimal_3.14.10-1_amd64.deb
     - name: libselinux1
       version: 3.11-2.1+b1
       files:
@@ -447,6 +463,22 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/perl/perl-base_5.42.3-1_amd64.deb
             - https://snapshot.debian.org/file/a01642c4b773f185388aa4a0a61b3cf19b80a3b9/perl-base_5.42.3-1_amd64.deb
+    - name: python3-minimal
+      version: 3.14.7-3
+      files:
+        - arch: amd64
+          sha256: 0f7001b63a3dd44d65e57c49ebd6edae16d3026fb3689e3e65fb45af0adf1f05
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/python3-defaults/python3-minimal_3.14.7-3_amd64.deb
+            - https://snapshot.debian.org/file/8efe1530d8e6137fa809782ef73ef93e25203286/python3-minimal_3.14.7-3_amd64.deb
+    - name: python3.14-minimal
+      version: 3.14.10-1
+      files:
+        - arch: amd64
+          sha256: a23204aa66be03a9ad427367e75ee2142c60685c8c229bcde0bdde8b421cefb8
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/python3.14/python3.14-minimal_3.14.10-1_amd64.deb
+            - https://snapshot.debian.org/file/0e1d78bfe1be9ef806fb828d81d7a06acd2aee90/python3.14-minimal_3.14.10-1_amd64.deb
     - name: sed
       version: 4.9-3
       files:

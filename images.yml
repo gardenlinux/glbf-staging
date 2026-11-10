@@ -8,3 +8,6 @@ images:
   - name: initrd
     rootfs: initrd
     type: cpio
+    inputs:
+      - label: modules
+        value: virtio_blk
