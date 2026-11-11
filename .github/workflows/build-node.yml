@@ -1,14 +1,19 @@
 name: build-node
 
-# Reusable: build one graph node and verify it reproduces. Two jobs run in
-# sequence on separate runners: `build` builds exactly this node with recursion
-# inhibited (its dependencies must already be cache hits published by earlier
-# node jobs) and publishes the output to ghcr; `check-reprod` then rebuilds the
-# same node and checks it reproduces that published output. check-reprod needs
-# build and carries no if: of its own, so the default success() gate runs it only
-# when build actually ran — when the caller skipped this node as already-built,
-# both jobs skip. The caller holds the node's needs: edges and the already-built
-# skip guard; this holds the per-node logic.
+# Reusable: build one graph node, verify it reproduces, then publish its map
+# alias. Three jobs run in sequence on separate runners. `build` builds exactly
+# this node with recursion inhibited (its dependencies must already be cache hits
+# published by earlier node jobs) and publishes its output BLOBS to ghcr, but
+# withholds the map alias — it emits the alias as JSON on a job output instead of
+# setting the map-<id> tag. `check-reprod` seeds that alias into its local map and
+# rebuilds the node to check it reproduces the published output. `publish` runs
+# only after both succeed and sets the withheld map alias on ghcr. Because the
+# alias is what graph --check-built probes, a node that fails reproducibility
+# never gets its alias set, so the next run sees it not-built and rebuilds +
+# rechecks it rather than latching the unverified output as built. Each job needs
+# the previous and carries no if: of its own, so the default success() gate runs
+# them only when build actually ran — when the caller skipped this node as
+# already-built, all three skip.
 on:
   workflow_call:
     inputs:
@@ -51,6 +56,8 @@ jobs:
     runs-on: ${{ inputs.runner }}
     env:
       NODE_KEY: ${{ inputs.node-key }}
+    outputs:
+      aliases: ${{ steps.publish-blobs.outputs.aliases }}
     steps:
       - name: Allow unprivileged user namespaces
         run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
@@ -63,10 +70,15 @@ jobs:
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
-      - name: Publish ${{ inputs.node-key }} to ghcr
+      - name: Publish ${{ inputs.node-key }} blobs to ghcr
+        id: publish-blobs
         run: |
-          bin/glbx publish --target "$NODE_KEY" \
+          bin/glbx publish --target "$NODE_KEY" --aliases-to /tmp/aliases.json \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+          # Pass the withheld aliases on as a job output. base64 (single line, no
+          # wrapping) keeps it a plain key=value output — no multiline-delimiter
+          # rules, no chance a value line collides with a heredoc marker.
+          echo "aliases=$(base64 -w0 /tmp/aliases.json)" >> "$GITHUB_OUTPUT"
 
   check-reprod:
     name: check reproducibility ${{ inputs.node-key }}
@@ -74,6 +86,7 @@ jobs:
     runs-on: ${{ inputs.runner }}
     env:
       NODE_KEY: ${{ inputs.node-key }}
+      ALIASES: ${{ needs.build.outputs.aliases }}
     steps:
       - name: Allow unprivileged user namespaces
         run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
@@ -82,8 +95,30 @@ jobs:
       - uses: ./.github/actions/glbx-bin
         with:
           arch: ${{ inputs.arch }}
+      - name: Seed the withheld map alias into the local store
+        run: |
+          echo "$ALIASES" | base64 -d > /tmp/aliases.json
+          bin/glbx cache map set --from /tmp/aliases.json
       - name: Check ${{ inputs.node-key }} reproduces
         run: |
           bin/glbx build --check-reproducible --target "$NODE_KEY" \
             --report /tmp/reprod-report.json --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+
+  publish:
+    name: publish ${{ inputs.node-key }}
+    needs: [build, check-reprod]
+    runs-on: ${{ inputs.runner }}
+    env:
+      NODE_KEY: ${{ inputs.node-key }}
+      ALIASES: ${{ needs.build.outputs.aliases }}
+    steps:
+      - name: Check out the config repo
+        uses: actions/checkout@v5
+      - uses: ./.github/actions/glbx-bin
+        with:
+          arch: ${{ inputs.arch }}
+      - name: Publish ${{ inputs.node-key }} map alias to ghcr
+        run: |
+          echo "$ALIASES" | base64 -d > /tmp/aliases.json
+          bin/glbx publish --aliases-from /tmp/aliases.json --arch "$GLBX_ARCH"
