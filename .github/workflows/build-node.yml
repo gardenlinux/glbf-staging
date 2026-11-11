@@ -57,6 +57,8 @@ jobs:
       - name: Check out the config repo
         uses: actions/checkout@v5
       - uses: ./.github/actions/glbx-bin
+        with:
+          arch: ${{ inputs.arch }}
       - name: Build ${{ inputs.node-key }}
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
@@ -78,6 +80,8 @@ jobs:
       - name: Check out the config repo
         uses: actions/checkout@v5
       - uses: ./.github/actions/glbx-bin
+        with:
+          arch: ${{ inputs.arch }}
       - name: Check ${{ inputs.node-key }} reproduces
         run: |
           bin/glbx build --check-reproducible --target "$NODE_KEY" \

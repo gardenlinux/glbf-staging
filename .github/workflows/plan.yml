@@ -40,6 +40,8 @@ jobs:
       - name: Check out the config repo
         uses: actions/checkout@v5
       - uses: ./.github/actions/glbx-bin
+        with:
+          arch: ${{ inputs.arch }}
       - name: Determine which nodes already exist in the registry
         id: check
         run: |

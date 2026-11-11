@@ -48,6 +48,8 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
       - uses: ./.github/actions/glbx-bin
+        with:
+          arch: amd64
 
       - name: Resolve the bot user id for the commit identity
         id: bot-id

@@ -13,6 +13,8 @@ jobs:
       - name: Check out the config repo
         uses: actions/checkout@v5
       - uses: ./.github/actions/glbx-bin
+        with:
+          arch: amd64
       - name: Regenerate the workflow from the current sources and compare
         env:
           GLBX: bin/glbx

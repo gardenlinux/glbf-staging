@@ -1,7 +1,10 @@
 name: build-glbx
 
-# Reusable: compile glbx and the sandbox stub from a glbx ref and share the two
-# binaries with the jobs that need them as a run-scoped artifact (glbx-bin).
+# Reusable: compile glbx and the sandbox stub from a glbx ref for every shipped
+# architecture and share each pair of binaries with the jobs that need them as
+# run-scoped artifacts (glbx-bin-amd64, glbx-bin-arm64). glbx is pure Go, so one
+# runner cross-compiles both arches via `make cross`; only the native per-node
+# image build runs on its own architecture (handled by the node runner map).
 on:
   workflow_call:
     inputs:
@@ -27,11 +30,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y protobuf-compiler
           go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-      - name: Build glbx and the sandbox stub
-        run: make build
-      - name: Share the binaries with the node jobs
+      - name: Cross-compile glbx and the sandbox stub for every arch
+        run: make cross
+      - name: Share the amd64 binaries with the node jobs
         uses: actions/upload-artifact@v6
         with:
-          name: glbx-bin
-          path: bin/
+          name: glbx-bin-amd64
+          path: bin-amd64/
+          retention-days: 1
+      - name: Share the arm64 binaries with the node jobs
+        uses: actions/upload-artifact@v6
+        with:
+          name: glbx-bin-arm64
+          path: bin-arm64/
           retention-days: 1
