@@ -84,6 +84,8 @@ jobs:
           ref: ${{ github.sha }}
           path: .wf
       - uses: ./.wf/.github/actions/glbx-bin
+        with:
+          arch: amd64
       - name: Resolve which packages have a newer version
         id: check
         run: |

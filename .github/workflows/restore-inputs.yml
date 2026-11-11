@@ -27,6 +27,8 @@ jobs:
       - name: Check out the config repo
         uses: actions/checkout@v5
       - uses: ./.github/actions/glbx-bin
+        with:
+          arch: ${{ inputs.arch }}
       - name: Download the recorded inputs (source archives and tooling .debs)
         run: bin/glbx restore-cache --conf-dir . --arch "$GLBX_ARCH"
       - name: Publish the inputs to ghcr for the node jobs to pull
