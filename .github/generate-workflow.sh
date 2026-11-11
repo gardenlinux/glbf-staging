@@ -14,12 +14,14 @@ set -euo pipefail
 # from the current sources and fails the run if it has drifted.
 #
 # The pipeline builds every architecture in ARCHES. glbx is pure Go, so a single
-# build-glbx job cross-compiles all arches (one glbx-bin-<arch> artifact each);
-# but a node's actual build runs native code in the sandbox, so each arch gets
-# its own restore-inputs/plan preamble and its own copy of every node job,
-# pinned to a runner of that architecture. Graph node Keys already embed the
-# arch (e.g. debian-pkg-build:bash:arm64), so the two arches' node sets are
-# disjoint and never collide.
+# build-glbx job cross-compiles all arches (one glbx-bin-<arch> artifact each).
+# The restore-inputs and plan preamble jobs only move bytes / compute identities
+# keyed by arch — they never run native target code — so each is a single
+# arch-neutral job that loops over every arch on one x86 runner. Only a node's
+# actual build runs native code in the sandbox, so each arch gets its own copy of
+# every node job, pinned to a runner of that architecture. Graph node Keys
+# already embed the arch (e.g. debian-pkg-build:bash:arm64), so the two arches'
+# node sets are disjoint and never collide.
 #
 # The generated file is thin: all build logic lives in hand-authored reusable
 # workflows (.github/workflows/{build-glbx,check-graph,restore-inputs,plan,
@@ -107,28 +109,17 @@ jobs:
   check-graph:
     needs: [build-glbx]
     uses: ./.github/workflows/check-graph.yml
-EOF
 
-	# Per-arch preamble: restore-inputs and plan, one copy per architecture.
-	# Suffixed job ids keep them distinct; each node job of that arch needs: its
-	# own arch's plan/restore-inputs.
-	for a in $ARCHES; do
-		cat <<EOF
-
-  restore-inputs-$a:
+  restore-inputs:
     needs: [build-glbx]
     uses: ./.github/workflows/restore-inputs.yml
-    with:
-      arch: $a
 
-  plan-$a:
+  plan:
     needs: [build-glbx, check-graph]
     uses: ./.github/workflows/plan.yml
     with:
-      arch: $a
-      id-seed-override: \${{ inputs.id-seed-override }}
+      id-seed-override: ${{ inputs.id-seed-override }}
 EOF
-	done
 
 	# One caller job per (graph node, arch). glbx emits the per-arch graph; jq
 	# turns it into YAML in a single pass: node index becomes a stable, GHA-safe
@@ -153,7 +144,7 @@ EOF
 				| .value.key as $key
 				| .value.groupKey as $short
 				| ([$edges[] | select(.to == $key) | "node-\($arch)-\($id[.from])"] | sort) as $preds
-				| (["build-glbx", "check-graph", "restore-inputs-\($arch)", "plan-\($arch)"] + $preds) as $needs
+				| (["build-glbx", "check-graph", "restore-inputs", "plan"] + $preds) as $needs
 				| ($runners.overrides[$key] // $runners.default[$arch]) as $runner
 				| "
   node-\($arch)-\($i):
@@ -165,7 +156,7 @@ EOF
     # success() gate — which treats a skipped need as reason to skip. The skip
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
-    if: \"${{ !cancelled() && !failure() && (needs[\($q)plan-\($arch)\($q)].outputs.built == \($q)\($q) || fromJSON(needs[\($q)plan-\($arch)\($q)].outputs.built)[\($q)\($key)\($q)] != true) }}\"
+    if: \"${{ !cancelled() && !failure() && (needs[\($q)plan\($q)].outputs[\($q)built-\($arch)\($q)] == \($q)\($q) || fromJSON(needs[\($q)plan\($q)].outputs[\($q)built-\($arch)\($q)])[\($q)\($key)\($q)] != true) }}\"
     uses: ./.github/workflows/build-node.yml
     with:
       node-key: \"\($key)\"
