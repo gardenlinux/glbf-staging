@@ -8,13 +8,13 @@ tools:
             - https://deb.debian.org/debian/pool/main/a/autoconf/autoconf_2.73-2_all.deb
             - https://snapshot.debian.org/file/ef3f93c3f43d95f83d7d0cbd80a4840c377e5559/autoconf_2.73-2_all.deb
     - name: automake
-      version: 1:1.18.1-4
+      version: 1:1.19-3
       files:
         - arch: all
-          sha256: 0eb4b8287b0d70f28b1ef962820d5ef3d9b04be66e61f52ea5ec3979f87b14fd
+          sha256: 06045171f581ef2e31967b7ea1aa0400545ed60960043df881f384f0d991447a
           urls:
-            - https://deb.debian.org/debian/pool/main/a/automake/automake_1.18.1-4_all.deb
-            - https://snapshot.debian.org/file/0b1e67acd713cd7707d121b2a935544d7a958a59/automake_1.18.1-4_all.deb
+            - https://deb.debian.org/debian/pool/main/a/automake/automake_1.19-3_all.deb
+            - https://snapshot.debian.org/file/4ad41710082368bf1ec30fe667fae6d908c10c62/automake_1.19-3_all.deb
     - name: autopoint
       version: 1.0-5
       files:
@@ -39,54 +39,92 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/b/base-files/base-files_14.2_amd64.deb
             - https://snapshot.debian.org/file/32a409f16c4bd5a34ab3f59d83cc102345d4123e/base-files_14.2_amd64.deb
+        - arch: arm64
+          sha256: 507d871e4bf46a9d2020de6cfcea26d4625b67e124ad236769502e88546415d9
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/base-files/base-files_14.2_arm64.deb
+            - https://snapshot.debian.org/file/ac7179a6dd83593b2255b90d4f21587b75c3678b/base-files_14.2_arm64.deb
     - name: base-passwd
-      version: 3.6.8
+      version: 3.6.8+b1
       files:
         - arch: amd64
           sha256: bbebf5418ec31b14825a47c313f969f43714e9e069e5beea8811db2fe946eff3
           urls:
             - https://deb.debian.org/debian/pool/main/b/base-passwd/base-passwd_3.6.8_amd64.deb
             - https://snapshot.debian.org/file/0bc46522e8f73e9d129d7dfa3d1863f358f1a886/base-passwd_3.6.8_amd64.deb
+        - arch: arm64
+          sha256: 49d364984cc6cedaa905803a8da3756d9ed73779663e8d0b2324e5122fea0b4e
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/base-passwd/base-passwd_3.6.8+b1_arm64.deb
+            - https://snapshot.debian.org/file/429899ee6d487ab431656a0120bf98cc5d85a29f/base-passwd_3.6.8+b1_arm64.deb
     - name: bash
-      version: 5.3-4
+      version: 5.3-4+b1
       files:
         - arch: amd64
-          sha256: b13159b47393a3f7be817e2590feefa3678257f919b6271c39710f1d2e2e4d37
+          sha256: bb61e2fdccf5dfb4955e21dc670172e858eebe4659bb9073e3020dbf74fb165e
           urls:
-            - https://deb.debian.org/debian/pool/main/b/bash/bash_5.3-4_amd64.deb
-            - https://snapshot.debian.org/file/e14879af551949c8e6af355ff22750ba4470e9ed/bash_5.3-4_amd64.deb
+            - https://deb.debian.org/debian/pool/main/b/bash/bash_5.3-4+b1_amd64.deb
+            - https://snapshot.debian.org/file/b94fa801acc4d7511107ce4bad6fa90f766fbe71/bash_5.3-4+b1_amd64.deb
+        - arch: arm64
+          sha256: e26268decd1b2451d93598f9c4e27d72286c48cc87313c151da2d1a820eae782
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/bash/bash_5.3-4+b1_arm64.deb
+            - https://snapshot.debian.org/file/656d2a24e290fc38a40f6c69f7a84d8472ce39f0/bash_5.3-4+b1_arm64.deb
     - name: binutils
-      version: 2.47-6
+      version: 2.47.50.20261021-1
       files:
         - arch: amd64
-          sha256: 67939b3141df50584241c74b0040fbf5590de75e5f815cf34e33691d166aa035
+          sha256: e349a0c148b1a2b52e42ba1253091abab612371eef68ddb2e18682c748344564
           urls:
-            - https://deb.debian.org/debian/pool/main/b/binutils/binutils_2.47-6_amd64.deb
-            - https://snapshot.debian.org/file/6fd1c6a62c544a8aec44ef87ca9ebfd8c60cec19/binutils_2.47-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/b/binutils/binutils_2.47.50.20261021-1_amd64.deb
+            - https://snapshot.debian.org/file/886584501080808d7f00a8d08a424149335e0ef2/binutils_2.47.50.20261021-1_amd64.deb
+        - arch: arm64
+          sha256: 613cc39559827ec416861f0419c2e2366907d4d0ddd77438d503f07771832dd3
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/binutils/binutils_2.47.50.20261021-1_arm64.deb
+            - https://snapshot.debian.org/file/e1981fff15f725c71c8404312abf8003fbf99a58/binutils_2.47.50.20261021-1_arm64.deb
+    - name: binutils-aarch64-linux-gnu
+      version: 2.47.50.20261021-1
+      files:
+        - arch: arm64
+          sha256: e3ec51f4558122437ec203d44fb1707291e39251f261f1e60a4ddf3d6c0d6689
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/binutils/binutils-aarch64-linux-gnu_2.47.50.20261021-1_arm64.deb
+            - https://snapshot.debian.org/file/15ca1848a9021529bb2b765554aa362fc1b48f54/binutils-aarch64-linux-gnu_2.47.50.20261021-1_arm64.deb
     - name: binutils-common
-      version: 2.47-6
+      version: 2.47.50.20261021-1
       files:
         - arch: amd64
-          sha256: 7021cadc57e5498e1a5f60b5faa0ef1e3f646eee1160cbdb911b85f957583d69
+          sha256: 8d7f938a084869cef41a7ceace108f35102edde95686a1040619c606cfa55013
           urls:
-            - https://deb.debian.org/debian/pool/main/b/binutils/binutils-common_2.47-6_amd64.deb
-            - https://snapshot.debian.org/file/faefd8a97b07a5861f633c5c3772250c41c97be4/binutils-common_2.47-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/b/binutils/binutils-common_2.47.50.20261021-1_amd64.deb
+            - https://snapshot.debian.org/file/48f365df97bbd92eb55bf7eebeaa9d870afe2ad4/binutils-common_2.47.50.20261021-1_amd64.deb
+        - arch: arm64
+          sha256: 52c1c3135c996f707e2045d7c80f0e1175f32e32c08555d0c9096d22530f9762
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/binutils/binutils-common_2.47.50.20261021-1_arm64.deb
+            - https://snapshot.debian.org/file/386c2e269764be73b9d98a7abc9e336ee26681bb/binutils-common_2.47.50.20261021-1_arm64.deb
     - name: binutils-for-host
-      version: 2.47-6
+      version: 2.47.50.20261021-1
       files:
         - arch: amd64
-          sha256: dfbc2ab437df5fa9b3626f893b30fba0c9f2d6e022e8bf7f9d70843da645166e
+          sha256: 4e25007d5aaaea1dd3c565ed49845f9304f064ed44c417de32a579fdeee25a54
           urls:
-            - https://deb.debian.org/debian/pool/main/b/binutils/binutils-for-host_2.47-6_amd64.deb
-            - https://snapshot.debian.org/file/8ad25d9a08502ea876f3ce3dc3e7ef65eee1f281/binutils-for-host_2.47-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/b/binutils/binutils-for-host_2.47.50.20261021-1_amd64.deb
+            - https://snapshot.debian.org/file/a3331a00e104ebc71ca0dc957a4d0076a5571ff8/binutils-for-host_2.47.50.20261021-1_amd64.deb
+        - arch: arm64
+          sha256: a5a800190a17f4c0a773111a7c7e1fedb0d91cf770b7f4945eed29db1a3596ea
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/binutils/binutils-for-host_2.47.50.20261021-1_arm64.deb
+            - https://snapshot.debian.org/file/e9a5d4909bcb0894c23a446fb161f1819c802047/binutils-for-host_2.47.50.20261021-1_arm64.deb
     - name: binutils-x86-64-linux-gnu
-      version: 2.47-6
+      version: 2.47.50.20261021-1
       files:
         - arch: amd64
-          sha256: d0f8cbbd9f4e97ef64f449744fa3fb2ecf22265d4af1af6a2c97d033d2f9084a
+          sha256: cac67ac00da7704d721c7cc199bda1ba395b1d782cce21b2e14a4b351cc3cac6
           urls:
-            - https://deb.debian.org/debian/pool/main/b/binutils/binutils-x86-64-linux-gnu_2.47-6_amd64.deb
-            - https://snapshot.debian.org/file/dcf0918f38764af1ccbe1e2054eb32f86741ce0e/binutils-x86-64-linux-gnu_2.47-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/b/binutils/binutils-x86-64-linux-gnu_2.47.50.20261021-1_amd64.deb
+            - https://snapshot.debian.org/file/34a397541191aeb50d770939198035612316acda/binutils-x86-64-linux-gnu_2.47.50.20261021-1_amd64.deb
     - name: bison
       version: 2:3.8.2+dfsg-1+b3
       files:
@@ -95,6 +133,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/b/bison/bison_3.8.2+dfsg-1+b3_amd64.deb
             - https://snapshot.debian.org/file/14232dbf13f822b0d4ee72674fcf4db647c5b45b/bison_3.8.2+dfsg-1+b3_amd64.deb
+        - arch: arm64
+          sha256: 382d7a82feed3de8d3df84762f0d1c8c4f2fc69ebb0a5211e93bb79df290d377
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/bison/bison_3.8.2+dfsg-1+b3_arm64.deb
+            - https://snapshot.debian.org/file/bf30f503ff068bcb718f1b68f475a5e2a3bfc13c/bison_3.8.2+dfsg-1+b3_arm64.deb
     - name: bsdextrautils
       version: 2.42.4-1
       files:
@@ -103,6 +146,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/u/util-linux/bsdextrautils_2.42.4-1_amd64.deb
             - https://snapshot.debian.org/file/d4747c5b2acd53f25d5b58300cc7dbcad070cdec/bsdextrautils_2.42.4-1_amd64.deb
+        - arch: arm64
+          sha256: 186c1f42e552305959b2feb55c8a5603cd0457a2bee9faf52dd86d952c7ffca6
+          urls:
+            - https://deb.debian.org/debian/pool/main/u/util-linux/bsdextrautils_2.42.4-1_arm64.deb
+            - https://snapshot.debian.org/file/c674b281e538fb4ddf03456f50bf018f7d29dbfd/bsdextrautils_2.42.4-1_arm64.deb
     - name: build-essential
       version: "12.12"
       files:
@@ -111,6 +159,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/b/build-essential/build-essential_12.12_amd64.deb
             - https://snapshot.debian.org/file/a1f3edfc9367fa57d0bb09f81b86853ece2d5d15/build-essential_12.12_amd64.deb
+        - arch: arm64
+          sha256: 3278c93c699f9c12b6f7fe8e03393aa50d1c6b1c4b35da8f15b1c7bae67dc961
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/build-essential/build-essential_12.12_arm64.deb
+            - https://snapshot.debian.org/file/04578ab5347a0145ff8727c6a29d4c528cc89393/build-essential_12.12_arm64.deb
     - name: bzip2
       version: 1.0.8-6+b2
       files:
@@ -119,14 +172,24 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/b/bzip2/bzip2_1.0.8-6+b2_amd64.deb
             - https://snapshot.debian.org/file/3ba767b514c16108b9684a11a8ca298d01ded1e5/bzip2_1.0.8-6+b2_amd64.deb
+        - arch: arm64
+          sha256: fb0fc2e5848883cdc6beb131bddce7ab464b1658642b2a0f95b9bc473a30b0bd
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/bzip2/bzip2_1.0.8-6+b2_arm64.deb
+            - https://snapshot.debian.org/file/519a9e67759a46705ec762824a9c66fa117e2f68/bzip2_1.0.8-6+b2_arm64.deb
     - name: coreutils
-      version: 9.10-1
+      version: 9.12-0.3
       files:
         - arch: amd64
-          sha256: 6e39a854a50bdfb912f5afc7ffa920d83093b33a2394fa5ece4771adf9b40dbc
+          sha256: 47ee4bf20f08cf0e8e8e67784b87f9c92c77553d259dec575c7bbbea85fb9851
           urls:
-            - https://deb.debian.org/debian/pool/main/c/coreutils/coreutils_9.10-1_amd64.deb
-            - https://snapshot.debian.org/file/b677c45d652a938a5257ffeec0b74650962d8648/coreutils_9.10-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/c/coreutils/coreutils_9.12-0.3_amd64.deb
+            - https://snapshot.debian.org/file/4076db14bd75ac5ca29273ae10fd80eb14ebde6a/coreutils_9.12-0.3_amd64.deb
+        - arch: arm64
+          sha256: 1f81be0a06e645af36567860bd66f9460ec11b8061ae1a4b3bfc0b7388b9450b
+          urls:
+            - https://deb.debian.org/debian/pool/main/c/coreutils/coreutils_9.12-0.3_arm64.deb
+            - https://snapshot.debian.org/file/bfb0fffa45bc85baa33ae887aa6b180d9ba6dcfb/coreutils_9.12-0.3_arm64.deb
     - name: cpp
       version: 4:16.1.0-3
       files:
@@ -135,38 +198,77 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/g/gcc-defaults/cpp_16.1.0-3_amd64.deb
             - https://snapshot.debian.org/file/d0d19278bca9b0b5f299428ff8b4f975aeba2199/cpp_16.1.0-3_amd64.deb
+        - arch: arm64
+          sha256: ef3e147b012c588398adec94702e404214a64560d979f18878c6e82074fd29c6
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-defaults/cpp_16.1.0-3_arm64.deb
+            - https://snapshot.debian.org/file/eebb5440830390eb0762bf946d47d02964e315f3/cpp_16.1.0-3_arm64.deb
+    - name: cpp-15-aarch64-linux-gnu
+      version: 15.3.0-5
+      files:
+        - arch: arm64
+          sha256: db2d84eba53f46864d33d334d0560e6b93ddd243b3e2de2bf9a3ca00ac1b2c71
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-15/cpp-15-aarch64-linux-gnu_15.3.0-5_arm64.deb
+            - https://snapshot.debian.org/file/31b6f4c3c17c6f81a9241796e17eb24b5fa4f474/cpp-15-aarch64-linux-gnu_15.3.0-5_arm64.deb
     - name: cpp-15-for-host
-      version: 15.3.0-4
+      version: 15.3.0-5
       files:
         - arch: amd64
-          sha256: 3392bd3053f924d09df788ccabef5be4d0c9d3983eecd43259f0101fda586705
+          sha256: 9eed347ab7a604aa0368b000bd279235426cea8cc33a75ec5643067ec1751220
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-15/cpp-15-for-host_15.3.0-4_amd64.deb
-            - https://snapshot.debian.org/file/150d4e022e0c51a61bb15e71172782358ad4fcf0/cpp-15-for-host_15.3.0-4_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-15/cpp-15-for-host_15.3.0-5_amd64.deb
+            - https://snapshot.debian.org/file/7bc6e1f7ed65d1831683a6e3d4ff798e797db190/cpp-15-for-host_15.3.0-5_amd64.deb
+        - arch: arm64
+          sha256: 02d0d56d59d6100a082caef0a45af5cc4c32053abd662401eb1f1bfa7281ec49
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-15/cpp-15-for-host_15.3.0-5_arm64.deb
+            - https://snapshot.debian.org/file/7d2593eddb4bd28f39890730751a74a1fb5b838f/cpp-15-for-host_15.3.0-5_arm64.deb
     - name: cpp-15-x86-64-linux-gnu
-      version: 15.3.0-4
+      version: 15.3.0-5
       files:
         - arch: amd64
-          sha256: 1312ebf63b2157c66ed1551837329168176d49fa3153a1529f509a46e2514b3f
+          sha256: c5285fef4d137b24144a681dfec103370a28d884df58867d52f4ccee6775fdaf
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-15/cpp-15-x86-64-linux-gnu_15.3.0-4_amd64.deb
-            - https://snapshot.debian.org/file/130619e92700ee9add9473fc2988512273544964/cpp-15-x86-64-linux-gnu_15.3.0-4_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-15/cpp-15-x86-64-linux-gnu_15.3.0-5_amd64.deb
+            - https://snapshot.debian.org/file/883e743f2cf3dec1697bd17d589178e307a7f10a/cpp-15-x86-64-linux-gnu_15.3.0-5_amd64.deb
     - name: cpp-16
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: 1ee6d2ddd2514faf6d4de70eaf3de1a4df903ef305407d113a4a7078f4603d27
+          sha256: b3e91a02238520ad6c50cbd089de073d3ee2f0a06c496bc54177e03def27ca54
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/cpp-16_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/f605bec621f4627153d4775d3a3ea7dfec71f176/cpp-16_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/cpp-16_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/b06c1225baf032a42e35b223973e50eadda40737/cpp-16_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: 895f91e46050a56fc2bf3708706193a9684ff1538ca4d4dff9f3506bf0d4c540
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/cpp-16_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/9a77bd3e809aa48f813b3ef9a6e3fd02fe2fef52/cpp-16_16.2.0-4_arm64.deb
+    - name: cpp-16-aarch64-linux-gnu
+      version: 16.2.0-4
+      files:
+        - arch: arm64
+          sha256: 03325e804d32b911ca83ba50b64b201cc7e7105b78466dbbc14e2934a6fbfb86
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/cpp-16-aarch64-linux-gnu_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/7b5faeda5665f428e3611cf76c4d0ad73cc90e64/cpp-16-aarch64-linux-gnu_16.2.0-4_arm64.deb
     - name: cpp-16-x86-64-linux-gnu
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: 92e6be944ffb73d903f2250634b93c0b7833b78aaa9d0bf2eaddfb35c76823f0
+          sha256: fc7300ad48450b863d934f602f6817b4f09104e95ccf45d6a0af13c657c901b4
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/cpp-16-x86-64-linux-gnu_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/dc27b27f1422370f9992ead6ffea744d11f93acb/cpp-16-x86-64-linux-gnu_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/cpp-16-x86-64-linux-gnu_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/12caf6609af7bb835b3bcbcebd2d81ed7f5be8f2/cpp-16-x86-64-linux-gnu_16.2.0-4_amd64.deb
+    - name: cpp-aarch64-linux-gnu
+      version: 4:16.1.0-3
+      files:
+        - arch: arm64
+          sha256: f19d5749d4003689dede4690588b0d6b90fd8b4aa866ae3959d02811098c84ba
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-defaults/cpp-aarch64-linux-gnu_16.1.0-3_arm64.deb
+            - https://snapshot.debian.org/file/1facdb51c099c5b055107ed30d619c284e61f28e/cpp-aarch64-linux-gnu_16.1.0-3_arm64.deb
     - name: cpp-x86-64-linux-gnu
       version: 4:16.1.0-3
       files:
@@ -176,13 +278,18 @@ tools:
             - https://deb.debian.org/debian/pool/main/g/gcc-defaults/cpp-x86-64-linux-gnu_16.1.0-3_amd64.deb
             - https://snapshot.debian.org/file/9d1aca96baf13ee7a475ce6af7b377088da3b6ed/cpp-x86-64-linux-gnu_16.1.0-3_amd64.deb
     - name: dash
-      version: 0.5.12-12
+      version: 0.5.12-12+b1
       files:
         - arch: amd64
           sha256: a8902cb6d8650134764a25fb80aec8589d858ef71ece1680a62e84816c37bb04
           urls:
             - https://deb.debian.org/debian/pool/main/d/dash/dash_0.5.12-12_amd64.deb
             - https://snapshot.debian.org/file/624913997e172c9a330940051c719c832d9517ac/dash_0.5.12-12_amd64.deb
+        - arch: arm64
+          sha256: 162f2e04e74793fd1512e426b7d5f03b202fc8069959143f0bd8e55c61b90128
+          urls:
+            - https://deb.debian.org/debian/pool/main/d/dash/dash_0.5.12-12+b1_arm64.deb
+            - https://snapshot.debian.org/file/cf9678df9c89d3891c78473ac03baa10d5f5f3f9/dash_0.5.12-12+b1_arm64.deb
     - name: debconf
       version: 1.5.92
       files:
@@ -207,6 +314,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/d/debianutils/debianutils_5.24_amd64.deb
             - https://snapshot.debian.org/file/9edc433344199a23c740c60324e2c190395d125b/debianutils_5.24_amd64.deb
+        - arch: arm64
+          sha256: 5b437cca5b7413ea8b281b4e250e48a5f650f1b2ee4ab662d4cc5cebd439490a
+          urls:
+            - https://deb.debian.org/debian/pool/main/d/debianutils/debianutils_5.24_arm64.deb
+            - https://snapshot.debian.org/file/1c1a829d84ca5f7aedd6c445745893519bb650d4/debianutils_5.24_arm64.deb
     - name: dh-autoreconf
       version: "23"
       files:
@@ -224,21 +336,31 @@ tools:
             - https://deb.debian.org/debian/pool/main/s/strip-nondeterminism/dh-strip-nondeterminism_1.15.1-1_all.deb
             - https://snapshot.debian.org/file/db5ecd0c8d4170a64d2ffc806b7bac862a0a8888/dh-strip-nondeterminism_1.15.1-1_all.deb
     - name: diffstat
-      version: 1.69-1
+      version: 1.69-2
       files:
         - arch: amd64
-          sha256: d93e731e47fe9a478e0a44280517e37505af2ea7e425a9c16cb895b5564705d9
+          sha256: 8b83d38baaf37a0609901ddac64285bdf2b87c904cf4871862bc897c1cad51cf
           urls:
-            - https://deb.debian.org/debian/pool/main/d/diffstat/diffstat_1.69-1_amd64.deb
-            - https://snapshot.debian.org/file/7125d5cb52e2b86bfd3c9c4de55cda356c34730a/diffstat_1.69-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/d/diffstat/diffstat_1.69-2_amd64.deb
+            - https://snapshot.debian.org/file/13f45fb0138fbc59c09c418e298908ae95ef77c2/diffstat_1.69-2_amd64.deb
+        - arch: arm64
+          sha256: 59d65158b989f0cbd206d50e41a22d3a8c05fcbc11d03d21fa19ca7596349543
+          urls:
+            - https://deb.debian.org/debian/pool/main/d/diffstat/diffstat_1.69-2_arm64.deb
+            - https://snapshot.debian.org/file/9e467524687f729c00f4c38567e43a02d3911c0c/diffstat_1.69-2_arm64.deb
     - name: diffutils
-      version: 1:3.12-1
+      version: 1:3.12-1+b1
       files:
         - arch: amd64
           sha256: 681796e743a07d6eac76eb05f0862dc2f7bc5061c7cd46c1e2cb595c8d9cf6c2
           urls:
             - https://deb.debian.org/debian/pool/main/d/diffutils/diffutils_3.12-1_amd64.deb
             - https://snapshot.debian.org/file/349bda0fb5df1c0fbb47cba6167393d4c89c3dd9/diffutils_3.12-1_amd64.deb
+        - arch: arm64
+          sha256: fdb09c89f7a618de193404389058cb4aa2f96ff2483bca87f4aa7b9cdb0c1bc3
+          urls:
+            - https://deb.debian.org/debian/pool/main/d/diffutils/diffutils_3.12-1+b1_arm64.deb
+            - https://snapshot.debian.org/file/55410563c704f421181f8adf9e8fd681756119ae/diffutils_3.12-1+b1_arm64.deb
     - name: dpkg
       version: 1.23.11
       files:
@@ -247,6 +369,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/d/dpkg/dpkg_1.23.11_amd64.deb
             - https://snapshot.debian.org/file/e0e0fbdaa747f5ff114b1e0f70ccd6f52579216f/dpkg_1.23.11_amd64.deb
+        - arch: arm64
+          sha256: 4ed40fc92f0197a6c9fbbb020d2adef07640acbc43d7ea04831de3d6caab697f
+          urls:
+            - https://deb.debian.org/debian/pool/main/d/dpkg/dpkg_1.23.11_arm64.deb
+            - https://snapshot.debian.org/file/0e4ef7e43d4aad46e10ee5e79a96c3810c5c13bd/dpkg_1.23.11_arm64.deb
     - name: dpkg-dev
       version: 1.23.11
       files:
@@ -263,6 +390,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/d/dwz/dwz_0.17-1_amd64.deb
             - https://snapshot.debian.org/file/5a1ab05ae5aa18646a41ca61a696f6a4764ce1d2/dwz_0.17-1_amd64.deb
+        - arch: arm64
+          sha256: 6256fb2706782fe8e3d2a579198c3f38034f187cd08e7b443386eeb6ae04a849
+          urls:
+            - https://deb.debian.org/debian/pool/main/d/dwz/dwz_0.17-1_arm64.deb
+            - https://snapshot.debian.org/file/88f2aeccab74426150230c56c1884cf3f524d6d4/dwz_0.17-1_arm64.deb
     - name: ed
       version: 1.22.5-1
       files:
@@ -271,6 +403,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/e/ed/ed_1.22.5-1_amd64.deb
             - https://snapshot.debian.org/file/e538f49d1a6c52cee7744dcb0f398e076e195000/ed_1.22.5-1_amd64.deb
+        - arch: arm64
+          sha256: de5cb00ae28d48024934e6b0754c05da4505acbfcc4c6ab462990fc62beef72e
+          urls:
+            - https://deb.debian.org/debian/pool/main/e/ed/ed_1.22.5-1_arm64.deb
+            - https://snapshot.debian.org/file/573ccc926524ece592395c9e4b64479d39f4180f/ed_1.22.5-1_arm64.deb
     - name: fakeroot
       version: 2.1.4-1
       files:
@@ -279,6 +416,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/f/fakeroot/fakeroot_2.1.4-1_amd64.deb
             - https://snapshot.debian.org/file/61d2f9578fe39cb06f1c57773a6a76002b05b2fa/fakeroot_2.1.4-1_amd64.deb
+        - arch: arm64
+          sha256: 255bbf99add070c34e785884ef9dc76200d824540bdf98a5c6e8ae18e7722999
+          urls:
+            - https://deb.debian.org/debian/pool/main/f/fakeroot/fakeroot_2.1.4-1_arm64.deb
+            - https://snapshot.debian.org/file/4ebae28269ea20a20e9ca259f9e8cfb65f7f1f99/fakeroot_2.1.4-1_arm64.deb
     - name: file
       version: 1:5.47-4
       files:
@@ -287,14 +429,24 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/f/file/file_5.47-4_amd64.deb
             - https://snapshot.debian.org/file/5684623adacac6221e39c6eae3aaae5750fe353e/file_5.47-4_amd64.deb
+        - arch: arm64
+          sha256: 7f5c32df1e16fcd3b4b9ca55baa8c6ddafde92523d85cefa8e2544aae358db6e
+          urls:
+            - https://deb.debian.org/debian/pool/main/f/file/file_5.47-4_arm64.deb
+            - https://snapshot.debian.org/file/bf3a5f2308992da7490dc9b9bfae78afab819978/file_5.47-4_arm64.deb
     - name: findutils
-      version: 4.11.0-2
+      version: 4.11.0-3
       files:
         - arch: amd64
-          sha256: ce85071103bbf0ba03dcab219cd09279dcf063b8a3f1757f4214501e245ff6fb
+          sha256: 6c7485b63dca915cbe0e89c0b4dd7f5ff47f329c08ce59925b2bba47d6e5968d
           urls:
-            - https://deb.debian.org/debian/pool/main/f/findutils/findutils_4.11.0-2_amd64.deb
-            - https://snapshot.debian.org/file/d5004808bcdada84debba0fae1cf18b49fee10b3/findutils_4.11.0-2_amd64.deb
+            - https://deb.debian.org/debian/pool/main/f/findutils/findutils_4.11.0-3_amd64.deb
+            - https://snapshot.debian.org/file/fb784e9f0539d5f98f8434db7226f8ff78d3a81a/findutils_4.11.0-3_amd64.deb
+        - arch: arm64
+          sha256: ee14007d1f5756cc8df4f229559d018ddd4c53d2f9b09a050d731d47690763b0
+          urls:
+            - https://deb.debian.org/debian/pool/main/f/findutils/findutils_4.11.0-3_arm64.deb
+            - https://snapshot.debian.org/file/a24369ccacee3c56318e7f458277937d3045ad70/findutils_4.11.0-3_arm64.deb
     - name: fontconfig-config
       version: 2.17.1-5
       files:
@@ -303,6 +455,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/f/fontconfig/fontconfig-config_2.17.1-5_amd64.deb
             - https://snapshot.debian.org/file/4e56ca020361a48eb9e086fa1ceaeaf7ee06faa9/fontconfig-config_2.17.1-5_amd64.deb
+        - arch: arm64
+          sha256: 8950a4836c8be844decd41a356015bd2ad8fcc91d30dd5f98c09959a8269f84e
+          urls:
+            - https://deb.debian.org/debian/pool/main/f/fontconfig/fontconfig-config_2.17.1-5_arm64.deb
+            - https://snapshot.debian.org/file/6fe2c249e73d48127530e612e2694aa82f631bbc/fontconfig-config_2.17.1-5_arm64.deb
     - name: fonts-croscore
       version: 20201225-6
       files:
@@ -319,22 +476,48 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/g/gcc-defaults/g++_16.1.0-3_amd64.deb
             - https://snapshot.debian.org/file/d8d88e75b09617c595a0efc05e09a5f87f23b61b/g++_16.1.0-3_amd64.deb
+        - arch: arm64
+          sha256: 4f3b195004d1614c3351805a2aa401b1ae3b8d1424023deb96deb87476a19dea
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-defaults/g++_16.1.0-3_arm64.deb
+            - https://snapshot.debian.org/file/643136a904585750e9283a5b91f2ae4fb6c67039/g++_16.1.0-3_arm64.deb
     - name: g++-16
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: 24051febd23251a1498c080a5fa13d179d83a17b3da9e9dce6a51892f577b45a
+          sha256: ab6651399356f18fbe009ea13f6d30057acc5bece4b182639ebd0356a0e9beb7
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/g++-16_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/b8a42514b3d6fcc47c3cc9c2846cfa7e41dfce48/g++-16_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/g++-16_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/b25d835be3f59307b49f1c97cdc0b2c775c23823/g++-16_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: ab69e2f4c6bc00e1db2f76711106cb62b8565aff148ca72d36b869c7d5b9b775
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/g++-16_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/b0ce8a9e6c05937a047ebc984cc61f52224b97fd/g++-16_16.2.0-4_arm64.deb
+    - name: g++-16-aarch64-linux-gnu
+      version: 16.2.0-4
+      files:
+        - arch: arm64
+          sha256: fde48beb1e93273fe7983f79803bfe2e274f14544e4266ee4a2264574d376fdd
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/g++-16-aarch64-linux-gnu_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/d6f7f83b6175a52c5160db5d7502e767a68e7331/g++-16-aarch64-linux-gnu_16.2.0-4_arm64.deb
     - name: g++-16-x86-64-linux-gnu
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: 06db597f0ad4218fc86d26d65f42e7d0a547d1658ddbdb33bd1be467f08898ce
+          sha256: 9c2ad0a1367c9f97ae486ac2bdd87ff9494af4ac1f2b854bc520ddb2b12687a7
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/g++-16-x86-64-linux-gnu_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/4d83bb49c7ac95049e29827fd0c682494a37a523/g++-16-x86-64-linux-gnu_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/g++-16-x86-64-linux-gnu_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/e4fd0acceea1a8f58cc3b477ffe05f0640a8a375/g++-16-x86-64-linux-gnu_16.2.0-4_amd64.deb
+    - name: g++-aarch64-linux-gnu
+      version: 4:16.1.0-3
+      files:
+        - arch: arm64
+          sha256: 914d3736723af5d12e06c5ad59598ca7237881f28f91050b1fe16fbed3644d25
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-defaults/g++-aarch64-linux-gnu_16.1.0-3_arm64.deb
+            - https://snapshot.debian.org/file/f55aa0f006afc1ffecfdaa84988af57c1759e333/g++-aarch64-linux-gnu_16.1.0-3_arm64.deb
     - name: g++-x86-64-linux-gnu
       version: 4:16.1.0-3
       files:
@@ -344,13 +527,18 @@ tools:
             - https://deb.debian.org/debian/pool/main/g/gcc-defaults/g++-x86-64-linux-gnu_16.1.0-3_amd64.deb
             - https://snapshot.debian.org/file/6114d5d2325b1c6ad8f6c99fc4d2c509637d0b4c/g++-x86-64-linux-gnu_16.1.0-3_amd64.deb
     - name: gawk
-      version: 1:5.3.2-1
+      version: 1:5.3.2-1+b1
       files:
         - arch: amd64
           sha256: 40f40d768e028b15598b84de036e884cd0b33f83f7658178407c6751eda297f4
           urls:
             - https://deb.debian.org/debian/pool/main/g/gawk/gawk_5.3.2-1_amd64.deb
             - https://snapshot.debian.org/file/a59c46e8d9b61af112c1f3e1c8633f51826301d9/gawk_5.3.2-1_amd64.deb
+        - arch: arm64
+          sha256: d1b81754ff379ddbb0c9021755680c37b89e62c7b1c86a4ce6208334dc915339
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gawk/gawk_5.3.2-1+b1_arm64.deb
+            - https://snapshot.debian.org/file/6d38d0a74187d3956c0413dabc86a78c7474865f/gawk_5.3.2-1+b1_arm64.deb
     - name: gcc
       version: 4:16.1.0-3
       files:
@@ -359,54 +547,103 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/g/gcc-defaults/gcc_16.1.0-3_amd64.deb
             - https://snapshot.debian.org/file/5dc8c9354eb5a49052ff5509726d0e4cb51d698c/gcc_16.1.0-3_amd64.deb
+        - arch: arm64
+          sha256: 67597a51b7b04601ec7c1aa30a50d4aeca9feb80886e3e108c268b539a1adde0
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-defaults/gcc_16.1.0-3_arm64.deb
+            - https://snapshot.debian.org/file/0109679cabc003bcd5e9b29a85825d51bafc7367/gcc_16.1.0-3_arm64.deb
+    - name: gcc-15-aarch64-linux-gnu
+      version: 15.3.0-5
+      files:
+        - arch: arm64
+          sha256: 28be11e57ab530c65d9c00b0cdde8a15076a3288d8070ae6734fc709e8ddaaad
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-15/gcc-15-aarch64-linux-gnu_15.3.0-5_arm64.deb
+            - https://snapshot.debian.org/file/54031a6cfd3238fa173c1301d3e9461fc24382d5/gcc-15-aarch64-linux-gnu_15.3.0-5_arm64.deb
     - name: gcc-15-base
-      version: 15.3.0-4
+      version: 15.3.0-5
       files:
         - arch: amd64
-          sha256: 9ba6cc41c2b8e064e265c27aa6ca0c102a923caa4258a8f3ea5627ae990f725b
+          sha256: 66d71574cba17981c798fe3e401da797b40b643054db101878dd7dcb862158b3
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-15/gcc-15-base_15.3.0-4_amd64.deb
-            - https://snapshot.debian.org/file/ce0546f917ed2a931ac524d01a46e6ae415f493b/gcc-15-base_15.3.0-4_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-15/gcc-15-base_15.3.0-5_amd64.deb
+            - https://snapshot.debian.org/file/dc1daf1d39c354f7ad5cc5403dc00cf96480fb43/gcc-15-base_15.3.0-5_amd64.deb
+        - arch: arm64
+          sha256: 5bb0ab090c91e12c0c85436538db89fa885160f0356bb759177ceccafd585656
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-15/gcc-15-base_15.3.0-5_arm64.deb
+            - https://snapshot.debian.org/file/9ab8768c311804305d400eceea206acfdc81c938/gcc-15-base_15.3.0-5_arm64.deb
     - name: gcc-15-for-host
-      version: 15.3.0-4
+      version: 15.3.0-5
       files:
         - arch: amd64
-          sha256: fcd45a2c994e3ee13df57adf02a070c3078e53d8d076c1f077da47e569963276
+          sha256: 1c9923a8a3a1b36766d0effe3967ab9b6131d1c5ffecd9b0154154f7e13b102f
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-15/gcc-15-for-host_15.3.0-4_amd64.deb
-            - https://snapshot.debian.org/file/f3956e273f94db1bf3b83de3687b72b87e12b2c4/gcc-15-for-host_15.3.0-4_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-15/gcc-15-for-host_15.3.0-5_amd64.deb
+            - https://snapshot.debian.org/file/1c7e6795f46a9505c9b8a4ea709a73a3931b2601/gcc-15-for-host_15.3.0-5_amd64.deb
+        - arch: arm64
+          sha256: 39f02cacea8cb62c6d95e88de1542dca7b11c9e9aac70d9929b2b6633119a516
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-15/gcc-15-for-host_15.3.0-5_arm64.deb
+            - https://snapshot.debian.org/file/39b0fb1d704a6efe6f8b9ea521812f5c112832b7/gcc-15-for-host_15.3.0-5_arm64.deb
     - name: gcc-15-x86-64-linux-gnu
-      version: 15.3.0-4
+      version: 15.3.0-5
       files:
         - arch: amd64
-          sha256: a60ed90e99181322f7834522c9768b007638429dfc4b85ae07817dd20b4e9732
+          sha256: b16d88b414795aa0bd0e3a106857082fe85c80a5b9fcf8d81a5b64377b4ff6e0
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-15/gcc-15-x86-64-linux-gnu_15.3.0-4_amd64.deb
-            - https://snapshot.debian.org/file/4075c323dcad67e2fde6065fe5039634e2619f6b/gcc-15-x86-64-linux-gnu_15.3.0-4_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-15/gcc-15-x86-64-linux-gnu_15.3.0-5_amd64.deb
+            - https://snapshot.debian.org/file/fb27e768ee9e09e80710fb9b943de88934ccf181/gcc-15-x86-64-linux-gnu_15.3.0-5_amd64.deb
     - name: gcc-16
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: 6dcf1ec3ad5f8ffe6c5168abfe449f508a85c2907f01628e36935b994ba7417d
+          sha256: c489d9d9c120e469f58d056945b3a91e49d6a5441fc556963229783e6ab6d819
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/gcc-16_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/00876d9a8c671dd0792e817cd629670c6d8b387b/gcc-16_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/gcc-16_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/78c1887b2a993aba5b6170debcbcd719530d6711/gcc-16_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: ca692c9510d4126fc4cca24b0df80e79e36aa3a9848184c3e37f4dd892300b48
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/gcc-16_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/ee1d3d50ba0823303bca8f0e99bebc35d0683ecf/gcc-16_16.2.0-4_arm64.deb
+    - name: gcc-16-aarch64-linux-gnu
+      version: 16.2.0-4
+      files:
+        - arch: arm64
+          sha256: d6cbe710c0e5dd98ef56b57b97bd7614c695ab521e17de5f50539b623936867e
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/gcc-16-aarch64-linux-gnu_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/b3ae2c160c0cacc6f4fd396a773e71a27f296e78/gcc-16-aarch64-linux-gnu_16.2.0-4_arm64.deb
     - name: gcc-16-base
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: 7dcc6404b44ad8a9d58e83c1e987eecb4d6a24623a92438eeb11829ed1129635
+          sha256: b81ebc677d1e2c4c0db8b3968f29addc18839d173a35366958fa815f3c5d1184
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/gcc-16-base_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/552ef9dbbf8c5a84653fcf47b4f55dd01b421def/gcc-16-base_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/gcc-16-base_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/61d647e8e0dca0d545d314185019120343d71376/gcc-16-base_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: 4e4a72005f1fb7eaec947f98890cde9d02247ef33454aa6e90e29a31bcc680a4
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/gcc-16-base_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/a26c74516737847707a8edec40044f7cb413d932/gcc-16-base_16.2.0-4_arm64.deb
     - name: gcc-16-x86-64-linux-gnu
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: 25fe5f6f35efd488c544aed90f7328aeeb8692d2cbdda19c90566bd05872fe99
+          sha256: 72d548f99d3245559954fc0dfb47015002e6217d78be0249c74ad50653a4d73f
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/gcc-16-x86-64-linux-gnu_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/2ad1dd3633756392917eef6283090ca14b88193f/gcc-16-x86-64-linux-gnu_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/gcc-16-x86-64-linux-gnu_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/ee55830c5198ecb65325fda071450a881a5473e5/gcc-16-x86-64-linux-gnu_16.2.0-4_amd64.deb
+    - name: gcc-aarch64-linux-gnu
+      version: 4:16.1.0-3
+      files:
+        - arch: arm64
+          sha256: e379cb0b81ddbde9a543b954b52934413ff1a62154ff621ac523c08bf45007eb
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-defaults/gcc-aarch64-linux-gnu_16.1.0-3_arm64.deb
+            - https://snapshot.debian.org/file/d25ed5f3293ffdbf704dcab64cf278ce2b9a23ed/gcc-aarch64-linux-gnu_16.1.0-3_arm64.deb
     - name: gcc-x86-64-linux-gnu
       version: 4:16.1.0-3
       files:
@@ -423,6 +660,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/g/gettext/gettext_1.0-5_amd64.deb
             - https://snapshot.debian.org/file/3fd9a8ec3790d27fae951b4ace091bc4c5f0c7f6/gettext_1.0-5_amd64.deb
+        - arch: arm64
+          sha256: 84a6c4475ab7dbd72a9899c26f9f642a90dfa5c98990ad9cd77bba57548c331e
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gettext/gettext_1.0-5_arm64.deb
+            - https://snapshot.debian.org/file/4c3e5063cdf808bc6fc3a623cd4079870771d668/gettext_1.0-5_arm64.deb
     - name: gettext-base
       version: 1.0-5
       files:
@@ -431,6 +673,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/g/gettext/gettext-base_1.0-5_amd64.deb
             - https://snapshot.debian.org/file/513f0e8d66c1ebf6fbb2fa0c3e00e442d063fd3a/gettext-base_1.0-5_amd64.deb
+        - arch: arm64
+          sha256: 9b1d23f69415e838404b1894850e9c36b024c733a5a44890bb2c526392f8d3aa
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gettext/gettext-base_1.0-5_arm64.deb
+            - https://snapshot.debian.org/file/17524f87926a55ef7801b72b05194b2d3536b7d9/gettext-base_1.0-5_arm64.deb
     - name: gperf
       version: 3.3-1
       files:
@@ -439,14 +686,24 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/g/gperf/gperf_3.3-1_amd64.deb
             - https://snapshot.debian.org/file/15bdd4cc7e833041957e53cf76e40a4969f6b878/gperf_3.3-1_amd64.deb
+        - arch: arm64
+          sha256: c65c0f637c03337af17624ea0b248233f59ed06e955fe39d3a331fdb1c0276de
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gperf/gperf_3.3-1_arm64.deb
+            - https://snapshot.debian.org/file/dec80782001bf7909519f017b05d10fd137b7ca1/gperf_3.3-1_arm64.deb
     - name: grep
-      version: 3.12-1
+      version: 3.12-1+b1
       files:
         - arch: amd64
           sha256: f118247556ec1e8958c9abf2b9164713201bf74b83787cc23b94b88115dcc7a2
           urls:
             - https://deb.debian.org/debian/pool/main/g/grep/grep_3.12-1_amd64.deb
             - https://snapshot.debian.org/file/8babd6d9dd93f3402d62e9c61d5ce665b141ab31/grep_3.12-1_amd64.deb
+        - arch: arm64
+          sha256: 34f9a489d4cb19698521af3ebffc39da74da14ae9ba3feccde64e4868d301999
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/grep/grep_3.12-1+b1_arm64.deb
+            - https://snapshot.debian.org/file/2e782f3581fed71f55b272cfad024d011ab127d0/grep_3.12-1+b1_arm64.deb
     - name: groff-base
       version: 1.24.2-2
       files:
@@ -455,6 +712,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/g/groff/groff-base_1.24.2-2_amd64.deb
             - https://snapshot.debian.org/file/d2a8c3ac0eec055bfb2e4ad6f75b82060e6402a1/groff-base_1.24.2-2_amd64.deb
+        - arch: arm64
+          sha256: a01dc407fadf0389f1a94c48eb84523bf9030774a1d9185ab53a1f18ac30fdb5
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/groff/groff-base_1.24.2-2_arm64.deb
+            - https://snapshot.debian.org/file/df9c0f3e300d75412ad5f1ee4bd5d784fbd97861/groff-base_1.24.2-2_arm64.deb
     - name: gzip
       version: 1.14-1
       files:
@@ -463,14 +725,24 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/g/gzip/gzip_1.14-1_amd64.deb
             - https://snapshot.debian.org/file/ecb19c04d92e68532ba7c5de2779c5146c259cfe/gzip_1.14-1_amd64.deb
+        - arch: arm64
+          sha256: 3098d587ff64a18d52ada47cd38bcd4b834f9c4c8fe9f5178c734ea9931e9240
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gzip/gzip_1.14-1_arm64.deb
+            - https://snapshot.debian.org/file/3a7a66f32a0d964ea2e8e2aebfbebe1486f2f1e1/gzip_1.14-1_arm64.deb
     - name: hostname
-      version: "3.25"
+      version: 3.25+b1
       files:
         - arch: amd64
           sha256: 9c2a27e5d4d87137211fe46631b05b2ee8892ec76aae926304e4485ba02e1015
           urls:
             - https://deb.debian.org/debian/pool/main/h/hostname/hostname_3.25_amd64.deb
             - https://snapshot.debian.org/file/537c47a3d6cda3b7d09e534a3304b4c7501893c3/hostname_3.25_amd64.deb
+        - arch: arm64
+          sha256: 4ae87145db8532e31a54eb8057e406a73ee41f9e575aeff8d1043cc91439689c
+          urls:
+            - https://deb.debian.org/debian/pool/main/h/hostname/hostname_3.25+b1_arm64.deb
+            - https://snapshot.debian.org/file/96b256cac45207dd6519d761fadeb5c45693d880/hostname_3.25+b1_arm64.deb
     - name: init-system-helpers
       version: 1.69+nmu3
       files:
@@ -495,6 +767,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/a/abseil/libabsl20260526_20260526.0-2+b1_amd64.deb
             - https://snapshot.debian.org/file/11e97ec6ae1309fb717e0f8cdb882c81dd1b8995/libabsl20260526_20260526.0-2+b1_amd64.deb
+        - arch: arm64
+          sha256: e0c517dcc7de766f370348a01f5216bf994f8c84dc4b625c17aba5c1bbacd608
+          urls:
+            - https://deb.debian.org/debian/pool/main/a/abseil/libabsl20260526_20260526.0-2+b1_arm64.deb
+            - https://snapshot.debian.org/file/66df1d70e92a180aa98b352525b15d11a27a8440/libabsl20260526_20260526.0-2+b1_arm64.deb
     - name: libacl1
       version: 2.4.0-1
       files:
@@ -503,6 +780,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/a/acl/libacl1_2.4.0-1_amd64.deb
             - https://snapshot.debian.org/file/cac68da1686850467acf8085541b4308219cdd74/libacl1_2.4.0-1_amd64.deb
+        - arch: arm64
+          sha256: cb7ad26438a5429d93742107c8bef6efcbf3aa05bdd723c17913658ae4d2be26
+          urls:
+            - https://deb.debian.org/debian/pool/main/a/acl/libacl1_2.4.0-1_arm64.deb
+            - https://snapshot.debian.org/file/20d31553e3a59211727490d5d3d3c5647907f74a/libacl1_2.4.0-1_arm64.deb
     - name: libaom-dev
       version: 3.14.1-1
       files:
@@ -511,6 +793,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/a/aom/libaom-dev_3.14.1-1_amd64.deb
             - https://snapshot.debian.org/file/0c326dfacfc25446c0e34c38b4ce26543ccf616d/libaom-dev_3.14.1-1_amd64.deb
+        - arch: arm64
+          sha256: 359ad19650a95b2880bf8f9f5ca94af59ade02f9a0841b4c4e4143b7b18ab8d8
+          urls:
+            - https://deb.debian.org/debian/pool/main/a/aom/libaom-dev_3.14.1-1_arm64.deb
+            - https://snapshot.debian.org/file/cb7e6e674e4aa68ad76e4c61c126ed42dfd1427c/libaom-dev_3.14.1-1_arm64.deb
     - name: libaom3
       version: 3.14.1-1
       files:
@@ -519,6 +806,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/a/aom/libaom3_3.14.1-1_amd64.deb
             - https://snapshot.debian.org/file/953c04effa484c7308e1f660b73ef8bc644d7aa5/libaom3_3.14.1-1_amd64.deb
+        - arch: arm64
+          sha256: 819c12668b350aeaa407afc5a3dabf412be25ca27135c8dd7a2ed1658d25e591
+          urls:
+            - https://deb.debian.org/debian/pool/main/a/aom/libaom3_3.14.1-1_arm64.deb
+            - https://snapshot.debian.org/file/a125e68ca3dfb4b01ac2c7c676de2bcbd7ebc009/libaom3_3.14.1-1_arm64.deb
     - name: libarchive-zip-perl
       version: 1.68-1
       files:
@@ -528,21 +820,31 @@ tools:
             - https://deb.debian.org/debian/pool/main/liba/libarchive-zip-perl/libarchive-zip-perl_1.68-1_all.deb
             - https://snapshot.debian.org/file/69db96c0518c282551e49d67e29819941fa4f7c4/libarchive-zip-perl_1.68-1_all.deb
     - name: libasan8
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: c58ab5826bb190b4178d5767430b70317d28d3f39bfeab3623b11935301f8765
+          sha256: abed8389d22b86825c804d3eec680dd55e86d47729825c76a2475e64b0152c2c
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/libasan8_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/beeb8038c60a1d13212d148887336af0d0c6d559/libasan8_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libasan8_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/e798aabf8893ebf86f8b6e6f477bba547c28a5aa/libasan8_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: 88d05c6c4d29bbef495adacde3867216a027f3374e49311f55d964953d981005
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libasan8_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/1a430152b51db0f1db3f5d305f8deee9313c77ff/libasan8_16.2.0-4_arm64.deb
     - name: libatomic1
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: 45ee39ca0d41dc7fb29e635fb1232e85d1aadb0914d79dd3585d77c832c493d3
+          sha256: dbdb5dc514ef881926ff4958d2c312d4fd29f0cc68c8ecb763e9138de338030e
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/libatomic1_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/4588ef2dfa162ab287e9de160299d080ad207a11/libatomic1_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libatomic1_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/922e2747d448bba8dd2b6ccb6b6bf4a6ba572199/libatomic1_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: 9e4514b0e566aee4f08ba62b156f979b3bcefd849312aa441907e7ab66e0b102
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libatomic1_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/c0fab0b2857dc8ebcd737787a44818319a97a319/libatomic1_16.2.0-4_arm64.deb
     - name: libattr1
       version: 1:2.6.0-1
       files:
@@ -551,6 +853,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/a/attr/libattr1_2.6.0-1_amd64.deb
             - https://snapshot.debian.org/file/535c158b6f80f7ad24b824f4198485d45c26f277/libattr1_2.6.0-1_amd64.deb
+        - arch: arm64
+          sha256: 9071102e4368251506d1fd7e7c342314a7a1e2515970f1255b1447fa37cdf3da
+          urls:
+            - https://deb.debian.org/debian/pool/main/a/attr/libattr1_2.6.0-1_arm64.deb
+            - https://snapshot.debian.org/file/583a12d4fe81e2d51b164696849dbaf725adf153/libattr1_2.6.0-1_arm64.deb
     - name: libaudit-common
       version: 1:4.1.2-1
       files:
@@ -567,6 +874,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/a/audit/libaudit-dev_4.1.2-1+b2_amd64.deb
             - https://snapshot.debian.org/file/6bb0668abf3ba81bf85b88933565e1f316c4fb96/libaudit-dev_4.1.2-1+b2_amd64.deb
+        - arch: arm64
+          sha256: c5131c576f9f162412f46a7c3fff96b7d6768328fa710723718a2f3dcbfb9dd4
+          urls:
+            - https://deb.debian.org/debian/pool/main/a/audit/libaudit-dev_4.1.2-1+b2_arm64.deb
+            - https://snapshot.debian.org/file/e2f2d3ef907b80aaad01de885ddc4c68dc82c595/libaudit-dev_4.1.2-1+b2_arm64.deb
     - name: libaudit1
       version: 1:4.1.2-1+b2
       files:
@@ -575,6 +887,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/a/audit/libaudit1_4.1.2-1+b2_amd64.deb
             - https://snapshot.debian.org/file/d5dd10c858b4dc402024423b3b0f374ba3ec407d/libaudit1_4.1.2-1+b2_amd64.deb
+        - arch: arm64
+          sha256: 3015bbc1bfd5088ef33967e6c6fa9921f2ac994b82ebc6a2c93dc3ed1aaf3a9e
+          urls:
+            - https://deb.debian.org/debian/pool/main/a/audit/libaudit1_4.1.2-1+b2_arm64.deb
+            - https://snapshot.debian.org/file/66bca770868e521d50f6205c48ddda239452b2ab/libaudit1_4.1.2-1+b2_arm64.deb
     - name: libavif-dev
       version: 1.4.2-1
       files:
@@ -583,6 +900,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/liba/libavif/libavif-dev_1.4.2-1_amd64.deb
             - https://snapshot.debian.org/file/b56e3b9ed93e4bd31af15e5c6df9f5fc6091490f/libavif-dev_1.4.2-1_amd64.deb
+        - arch: arm64
+          sha256: a91b51f4d18e925f41290ce5158140ed303a5f6a05b4e62c3d16e2645c98e65f
+          urls:
+            - https://deb.debian.org/debian/pool/main/liba/libavif/libavif-dev_1.4.2-1_arm64.deb
+            - https://snapshot.debian.org/file/47483f2daec191f2aa37179733594a523026236d/libavif-dev_1.4.2-1_arm64.deb
     - name: libavif16
       version: 1.4.2-1
       files:
@@ -591,14 +913,24 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/liba/libavif/libavif16_1.4.2-1_amd64.deb
             - https://snapshot.debian.org/file/849611cced8adcf79c1422d69ce109405c204b3b/libavif16_1.4.2-1_amd64.deb
+        - arch: arm64
+          sha256: 71ed1b1d7bc2baea13422f8bb7fc183367995d1377ee8a40810f1df4cb914116
+          urls:
+            - https://deb.debian.org/debian/pool/main/liba/libavif/libavif16_1.4.2-1_arm64.deb
+            - https://snapshot.debian.org/file/84f7bc737495149bb654e76d686c33d0dfcf186f/libavif16_1.4.2-1_arm64.deb
     - name: libbinutils
-      version: 2.47-6
+      version: 2.47.50.20261021-1
       files:
         - arch: amd64
-          sha256: f8fe0302786b835fbc362ec7cd6486a2472b68279d2e4f5b95cc8ce5a0656235
+          sha256: 6596c37c3a42cec82f4c4303a94ed2a9df26dbc25d01fd86418506948f13a3b4
           urls:
-            - https://deb.debian.org/debian/pool/main/b/binutils/libbinutils_2.47-6_amd64.deb
-            - https://snapshot.debian.org/file/ff2c7617ec8d5aef0567bc567c697e9e864b7902/libbinutils_2.47-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/b/binutils/libbinutils_2.47.50.20261021-1_amd64.deb
+            - https://snapshot.debian.org/file/affe75da5b026da63d46145aa76fa3de26e76d08/libbinutils_2.47.50.20261021-1_amd64.deb
+        - arch: arm64
+          sha256: 446aba436b266769097ec8151c2f073a79b60f36e3f1c351cc5d5ec7544af58d
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/binutils/libbinutils_2.47.50.20261021-1_arm64.deb
+            - https://snapshot.debian.org/file/ceb3901e1c037f51f05cd6c88d0f29faa515568e/libbinutils_2.47.50.20261021-1_arm64.deb
     - name: libblkid1
       version: 2.42.4-1
       files:
@@ -607,22 +939,37 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/u/util-linux/libblkid1_2.42.4-1_amd64.deb
             - https://snapshot.debian.org/file/701a6580ba4391f2e287c6c0a09ae2ca7c923e45/libblkid1_2.42.4-1_amd64.deb
+        - arch: arm64
+          sha256: 53ee740e15f0435ddfefc5a532208d0e984fcf1dcc6d19197211470c1ce32a61
+          urls:
+            - https://deb.debian.org/debian/pool/main/u/util-linux/libblkid1_2.42.4-1_arm64.deb
+            - https://snapshot.debian.org/file/0c9d624f33c89673bc536934d8bca041272fb634/libblkid1_2.42.4-1_arm64.deb
     - name: libbrotli-dev
-      version: 1.2.0-4+b1
+      version: 1.2.0-4.1
       files:
         - arch: amd64
-          sha256: 2988a3862eb3d81c845e3a2deb09e4276dad0d74c8673c15fadccdadf92c61be
+          sha256: 2bfc5c1dd9c9cfcd45f619756e18fdcab6ae7e7ff3a289d54824cd4f7310c39f
           urls:
-            - https://deb.debian.org/debian/pool/main/b/brotli/libbrotli-dev_1.2.0-4+b1_amd64.deb
-            - https://snapshot.debian.org/file/ef8d764d29bbc0471f54807d7dc4050c43ba87d5/libbrotli-dev_1.2.0-4+b1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/b/brotli/libbrotli-dev_1.2.0-4.1_amd64.deb
+            - https://snapshot.debian.org/file/0af201ae0cc641fda7dc0ca8a27c3b47680ccd6e/libbrotli-dev_1.2.0-4.1_amd64.deb
+        - arch: arm64
+          sha256: d9c3e1fc125d3dd4a018cbc957286ec4776a9206de2484c1acb2504b02166516
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/brotli/libbrotli-dev_1.2.0-4.1_arm64.deb
+            - https://snapshot.debian.org/file/1e48a056c09dbfa1a0db50c53e4b0ffe1263c42a/libbrotli-dev_1.2.0-4.1_arm64.deb
     - name: libbrotli1
-      version: 1.2.0-4+b1
+      version: 1.2.0-4.1
       files:
         - arch: amd64
-          sha256: 044986c4bf70b62971f888685f11683123a326feb0295bf555e5346ede7f861a
+          sha256: 2d58db32250aa535e27c62e98451debd43b539aa026066806432e842d5b56c00
           urls:
-            - https://deb.debian.org/debian/pool/main/b/brotli/libbrotli1_1.2.0-4+b1_amd64.deb
-            - https://snapshot.debian.org/file/21bba8bb31e5505fb874c405306dd725e70dab3e/libbrotli1_1.2.0-4+b1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/b/brotli/libbrotli1_1.2.0-4.1_amd64.deb
+            - https://snapshot.debian.org/file/95715cd3d5bf32b9f9e76b60cbb74ed0b4a557ef/libbrotli1_1.2.0-4.1_amd64.deb
+        - arch: arm64
+          sha256: ff90055f0c42dc39fdf8f12d7f68c7da32da2ec90d0a49eb39e80b764988ee02
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/brotli/libbrotli1_1.2.0-4.1_arm64.deb
+            - https://snapshot.debian.org/file/7133b7c0af2c04da069e4937110e164a4b75a54f/libbrotli1_1.2.0-4.1_arm64.deb
     - name: libbz2-1.0
       version: 1.0.8-6+b2
       files:
@@ -631,6 +978,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/b/bzip2/libbz2-1.0_1.0.8-6+b2_amd64.deb
             - https://snapshot.debian.org/file/fc73bdb6788edbe91332929ceef4509cc88a54dc/libbz2-1.0_1.0.8-6+b2_amd64.deb
+        - arch: arm64
+          sha256: cca22caf6bcf0a547ee3d866aad175c88aab979065c179aa845b77724911c4bd
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/bzip2/libbz2-1.0_1.0.8-6+b2_arm64.deb
+            - https://snapshot.debian.org/file/00da0c90a61cc704496c56b18c433beb2e3f593d/libbz2-1.0_1.0.8-6+b2_arm64.deb
     - name: libbz2-dev
       version: 1.0.8-6+b2
       files:
@@ -639,86 +991,141 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/b/bzip2/libbz2-dev_1.0.8-6+b2_amd64.deb
             - https://snapshot.debian.org/file/8c991365c419a012fcecff2466f522d714214ade/libbz2-dev_1.0.8-6+b2_amd64.deb
+        - arch: arm64
+          sha256: 3397140f8e7dd0b5f07703e7fc2f2f7e06593c97bb6e91ef1cdfc9a6ec9ba5c9
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/bzip2/libbz2-dev_1.0.8-6+b2_arm64.deb
+            - https://snapshot.debian.org/file/bb5a9fed88ac2e173b324f72a03e7d5d044fbe15/libbz2-dev_1.0.8-6+b2_arm64.deb
     - name: libc-bin
-      version: 2.43-6
+      version: 2.43-7
       files:
         - arch: amd64
-          sha256: 446f850b2ae1e970827a8012743d6a566495d7665e5b274fa0dc2f4c19d60c19
+          sha256: 159e07254924fdec81a7677c983a2ace1fb7aa05933abfb9aa6aa037844da18a
           urls:
-            - https://deb.debian.org/debian/pool/main/g/glibc/libc-bin_2.43-6_amd64.deb
-            - https://snapshot.debian.org/file/1f0f49563667da32fda57bd487f2b39103cd9c10/libc-bin_2.43-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/glibc/libc-bin_2.43-7_amd64.deb
+            - https://snapshot.debian.org/file/4b9783095c969660f4b1ada51268eb0ab2cbbb17/libc-bin_2.43-7_amd64.deb
+        - arch: arm64
+          sha256: b38dff2bf08857153314c693506debbafef4ea3dec921335e22cc14c59456563
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/glibc/libc-bin_2.43-7_arm64.deb
+            - https://snapshot.debian.org/file/4cf292761b00447e0edfcb25572544292f2a2cb3/libc-bin_2.43-7_arm64.deb
     - name: libc-dev-bin
-      version: 2.43-6
+      version: 2.43-7
       files:
         - arch: amd64
-          sha256: 37399db19c0fc7cfdbf452c6aeaab4906cea398812f7c81adda1e73e0b3ca774
+          sha256: 7894b2551803ed43b7b657cc67c63cb56562ab4b9eb298511958c8be435dd8f9
           urls:
-            - https://deb.debian.org/debian/pool/main/g/glibc/libc-dev-bin_2.43-6_amd64.deb
-            - https://snapshot.debian.org/file/d2c7210a5493494bc00c04a32a40760a7dee9255/libc-dev-bin_2.43-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/glibc/libc-dev-bin_2.43-7_amd64.deb
+            - https://snapshot.debian.org/file/5cd1d076f044460ab14b80adf430221f5a143dfb/libc-dev-bin_2.43-7_amd64.deb
+        - arch: arm64
+          sha256: 0a1679e4be4068e6de6265da52329146142bb07303b4ea4eccaebb1db6f2c09f
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/glibc/libc-dev-bin_2.43-7_arm64.deb
+            - https://snapshot.debian.org/file/35d0bb7a494110e5e4a5316d283a6dbd1a44c209/libc-dev-bin_2.43-7_arm64.deb
     - name: libc-gconv-modules-extra
-      version: 2.43-6
+      version: 2.43-7
       files:
         - arch: amd64
-          sha256: f2377e9e3a598aab443c62494c8ce4b01294c7e15bfe2d2565af78fca48ba885
+          sha256: 8abae40b5e2bfca58fbc838329b48f525c98463e930b8d3ed075d0c9e960a57a
           urls:
-            - https://deb.debian.org/debian/pool/main/g/glibc/libc-gconv-modules-extra_2.43-6_amd64.deb
-            - https://snapshot.debian.org/file/6b3d82ca5d61a4afcdd6cb1d345712a2f139f444/libc-gconv-modules-extra_2.43-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/glibc/libc-gconv-modules-extra_2.43-7_amd64.deb
+            - https://snapshot.debian.org/file/f7353c567e8d0af7a69e8c3773ca112730c61e88/libc-gconv-modules-extra_2.43-7_amd64.deb
+        - arch: arm64
+          sha256: e6193371b9722624aa46ed45bca12ee219d092cf70b464f037645dfeb92bedd9
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/glibc/libc-gconv-modules-extra_2.43-7_arm64.deb
+            - https://snapshot.debian.org/file/e663042868a73a7617ec7a1a5369be41ec540041/libc-gconv-modules-extra_2.43-7_arm64.deb
     - name: libc6
-      version: 2.43-6
+      version: 2.43-7
       files:
         - arch: amd64
-          sha256: 07a20587504e8804396fdc8eb7c4301463c45ff122567d7bd74b4686f93f9a10
+          sha256: 5c71715c51103beb4fbba9fe9f8dff604af6610dfa71c70bff342f54a7860803
           urls:
-            - https://deb.debian.org/debian/pool/main/g/glibc/libc6_2.43-6_amd64.deb
-            - https://snapshot.debian.org/file/cc9fe615e73156e0df9bf5d6b394a7541fed179f/libc6_2.43-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/glibc/libc6_2.43-7_amd64.deb
+            - https://snapshot.debian.org/file/d3b47ff25250d1e0065ca0b39417fc55b4e8e341/libc6_2.43-7_amd64.deb
+        - arch: arm64
+          sha256: 2315e75157bf67622bb435724de8be3c4c6f5bb33f3f26e8310842ea66093c74
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/glibc/libc6_2.43-7_arm64.deb
+            - https://snapshot.debian.org/file/e9825987202de3cc76613ba24d0d377ac6e29443/libc6_2.43-7_arm64.deb
     - name: libc6-dev
-      version: 2.43-6
+      version: 2.43-7
       files:
         - arch: amd64
-          sha256: 43b89cc954948aa58c09d951e5b6eec7b53269f67dd6a4b613274d7f7913fe56
+          sha256: 7095b6c9cd209aac9bb54a03edf9f3544589f553f649b71eec29968ca8ea13ce
           urls:
-            - https://deb.debian.org/debian/pool/main/g/glibc/libc6-dev_2.43-6_amd64.deb
-            - https://snapshot.debian.org/file/9bcf003cc9240ab90b19ca49c0c55d2dff9fba5d/libc6-dev_2.43-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/glibc/libc6-dev_2.43-7_amd64.deb
+            - https://snapshot.debian.org/file/b964127db5004298c1755584571a0608fe3c045b/libc6-dev_2.43-7_amd64.deb
+        - arch: arm64
+          sha256: 2fe4fa9f4d59caf63afd5098ce143a63ed8933cec60c5b4cb4485aebbdfa6dce
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/glibc/libc6-dev_2.43-7_arm64.deb
+            - https://snapshot.debian.org/file/2c6268f191c5fe1045800185368e823538da7a4f/libc6-dev_2.43-7_arm64.deb
     - name: libcap-dev
-      version: 1:2.78-1+b1
+      version: 1:2.78-1+b2
       files:
         - arch: amd64
-          sha256: be8e159c25237d3bece064ec981a2d9faac2a2d4ee43208ebc671ddf7162b561
+          sha256: 5af75c43f36159a183f54f46bbf64d1a6173be041f05f088057df020f4bede42
           urls:
-            - https://deb.debian.org/debian/pool/main/libc/libcap2/libcap-dev_2.78-1+b1_amd64.deb
-            - https://snapshot.debian.org/file/84923c224f0b76d899af2e8e7d63ad7c79287230/libcap-dev_2.78-1+b1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libc/libcap2/libcap-dev_2.78-1+b2_amd64.deb
+            - https://snapshot.debian.org/file/bde2452293ad4f3e078fcd6659160bc2d0ac9097/libcap-dev_2.78-1+b2_amd64.deb
+        - arch: arm64
+          sha256: e3c1debf423af393076c3c776bed0f9051912377a514bde832cd256b49a1acb1
+          urls:
+            - https://deb.debian.org/debian/pool/main/libc/libcap2/libcap-dev_2.78-1+b2_arm64.deb
+            - https://snapshot.debian.org/file/9001d1fd42c27c5e8d12d87c045431dda9ade606/libcap-dev_2.78-1+b2_arm64.deb
     - name: libcap-ng-dev
-      version: 0.9.6-1
+      version: 0.9.6-1+b1
       files:
         - arch: amd64
-          sha256: 3da17791577b9ac037a4739ac91c83660e6b648647c6d1b0f2bf60b28af13361
+          sha256: f8353dba38a49241a08d546be3af49d8c4b4a243afdebed08effeb678e012bb9
           urls:
-            - https://deb.debian.org/debian/pool/main/libc/libcap-ng/libcap-ng-dev_0.9.6-1_amd64.deb
-            - https://snapshot.debian.org/file/e5a1b843bac41be3438ea06f90926a41688f2b85/libcap-ng-dev_0.9.6-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libc/libcap-ng/libcap-ng-dev_0.9.6-1+b1_amd64.deb
+            - https://snapshot.debian.org/file/93f632ec6188e001c0a25614e45590e26976cd76/libcap-ng-dev_0.9.6-1+b1_amd64.deb
+        - arch: arm64
+          sha256: b55b5eaf5272b8c9ebe6bcd6355458718b0fc2e6206b433c22517a0dc142b3dd
+          urls:
+            - https://deb.debian.org/debian/pool/main/libc/libcap-ng/libcap-ng-dev_0.9.6-1+b1_arm64.deb
+            - https://snapshot.debian.org/file/355ffeebade1a730ba21b3dfe3725ba09c365b97/libcap-ng-dev_0.9.6-1+b1_arm64.deb
     - name: libcap-ng0
-      version: 0.9.6-1
+      version: 0.9.6-1+b1
       files:
         - arch: amd64
-          sha256: eb2bf5de7323241b985b07b3352d319d033133e4168590c9d48b80db2491a762
+          sha256: e9aa6dd94b6773fea96e405a0e2c7b7f29da33838901ec686935706d39a42e85
           urls:
-            - https://deb.debian.org/debian/pool/main/libc/libcap-ng/libcap-ng0_0.9.6-1_amd64.deb
-            - https://snapshot.debian.org/file/162ade85d0f53664f8e097772eb83485efb71e5c/libcap-ng0_0.9.6-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libc/libcap-ng/libcap-ng0_0.9.6-1+b1_amd64.deb
+            - https://snapshot.debian.org/file/3fa15bdfe695e17a4f4c34eac092eacc9965327e/libcap-ng0_0.9.6-1+b1_amd64.deb
+        - arch: arm64
+          sha256: 7307bb77a0edf4c170942ff2cf8d4c68cd32e87ed898b304c21d2bf6edfe71e7
+          urls:
+            - https://deb.debian.org/debian/pool/main/libc/libcap-ng/libcap-ng0_0.9.6-1+b1_arm64.deb
+            - https://snapshot.debian.org/file/675df0dfda766231c3f6687c91b7945a15b4f9f8/libcap-ng0_0.9.6-1+b1_arm64.deb
     - name: libcap2
-      version: 1:2.78-1+b1
+      version: 1:2.78-1+b2
       files:
         - arch: amd64
-          sha256: ded957f0dd933e80a3cbbc3a920cb66a3d683f7e2ba2ddd77008f9f02744dcd9
+          sha256: a7145898072352a79cf49671bd58ee436157bf83129b56b862c36f3cb7444d01
           urls:
-            - https://deb.debian.org/debian/pool/main/libc/libcap2/libcap2_2.78-1+b1_amd64.deb
-            - https://snapshot.debian.org/file/218cab68644fe6f539338238452f62e2e549207e/libcap2_2.78-1+b1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libc/libcap2/libcap2_2.78-1+b2_amd64.deb
+            - https://snapshot.debian.org/file/fb6a4e4d4d5c52e6a8aa1091d3ddd58096e641e2/libcap2_2.78-1+b2_amd64.deb
+        - arch: arm64
+          sha256: 017d414e0918d42605fe29b6d7004308560430a01413f566862219eaa4a761cf
+          urls:
+            - https://deb.debian.org/debian/pool/main/libc/libcap2/libcap2_2.78-1+b2_arm64.deb
+            - https://snapshot.debian.org/file/ef12e261174053d8341ae62b42be5ce1fd20e770/libcap2_2.78-1+b2_arm64.deb
     - name: libcc1-0
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: aae43d7e1a8feccd61f4d9e432c69f96826a44d8df0b6c7bbe192f16b42e51fb
+          sha256: be1e05b606c2cbc9d2d33a649642038b04f9749b06b32c002022698eceb31734
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/libcc1-0_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/fa56d0109a3891bbe34876e260e7158cf33dfa47/libcc1-0_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libcc1-0_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/f3a1ca8542881817303ff9508f7124c9936c01d3/libcc1-0_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: 8ae90caa78320798ab394df28e6e3d4f2bdd8dd54189482525225ca2b1de333e
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libcc1-0_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/ae5b5b835bbb9120f6cbc32e9569330a3ae239cd/libcc1-0_16.2.0-4_arm64.deb
     - name: libcrypt1
       version: 1:4.5.2+20251210-1
       files:
@@ -727,22 +1134,37 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libx/libxcrypt/libcrypt1_4.5.2+20251210-1_amd64.deb
             - https://snapshot.debian.org/file/6abcbfa7ded80e10b270dfe0944017378eaf9808/libcrypt1_4.5.2+20251210-1_amd64.deb
+        - arch: arm64
+          sha256: e4fa1fc3309a0aba140512467ddc487310444f8a2024f4bcc350c1851c1b053e
+          urls:
+            - https://deb.debian.org/debian/pool/main/libx/libxcrypt/libcrypt1_4.5.2+20251210-1_arm64.deb
+            - https://snapshot.debian.org/file/a1eb4d3d95ea14ad8d8376c70bec8a719339ec9b/libcrypt1_4.5.2+20251210-1_arm64.deb
     - name: libctf-nobfd0
-      version: 2.47-6
+      version: 2.47.50.20261021-1
       files:
         - arch: amd64
-          sha256: d5b43ce4fb0846ee63222d36cd4473adbcce5fb12e5be9ef682797a09231a841
+          sha256: 1e1f029aea866487c16fd69a31f8b9a9f175c26208fedf44969a930e110c8a00
           urls:
-            - https://deb.debian.org/debian/pool/main/b/binutils/libctf-nobfd0_2.47-6_amd64.deb
-            - https://snapshot.debian.org/file/d480faaaa7ae6400387509a86d140f2586379dd1/libctf-nobfd0_2.47-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/b/binutils/libctf-nobfd0_2.47.50.20261021-1_amd64.deb
+            - https://snapshot.debian.org/file/2f51306781db4962dc51e3a6d851403dea7b4c04/libctf-nobfd0_2.47.50.20261021-1_amd64.deb
+        - arch: arm64
+          sha256: 14942ed4e3e36d0720f662c18eab2e09cc7377dc7556fd623a75f32d0a46a17f
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/binutils/libctf-nobfd0_2.47.50.20261021-1_arm64.deb
+            - https://snapshot.debian.org/file/2ac7b590b59cbb2ff112cf201dc9699282201504/libctf-nobfd0_2.47.50.20261021-1_arm64.deb
     - name: libctf0
-      version: 2.47-6
+      version: 2.47.50.20261021-1
       files:
         - arch: amd64
-          sha256: fba2c384caefce9ebe3ba84a7f6714d9e1f1e4c963cf9cd070773e6f009c743e
+          sha256: c1c135a95317cb4fb77aea3a73d9f87a1d79f17bc61fa3572d08f8671f5efaa5
           urls:
-            - https://deb.debian.org/debian/pool/main/b/binutils/libctf0_2.47-6_amd64.deb
-            - https://snapshot.debian.org/file/ca1b8f90e489a97f2b3846ad51a097c460207ed4/libctf0_2.47-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/b/binutils/libctf0_2.47.50.20261021-1_amd64.deb
+            - https://snapshot.debian.org/file/d1c8241c8c4bdb12f2e906affd8df29072facea1/libctf0_2.47.50.20261021-1_amd64.deb
+        - arch: arm64
+          sha256: 0e497e2b29661bd3bd447070ddb667ef7317a04c2366c3c90d025b114f507d61
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/binutils/libctf0_2.47.50.20261021-1_arm64.deb
+            - https://snapshot.debian.org/file/d8f21f76060c750cc9a122325009fb036d8a1c74/libctf0_2.47.50.20261021-1_arm64.deb
     - name: libdav1d-dev
       version: 1.5.4-1
       files:
@@ -751,6 +1173,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/d/dav1d/libdav1d-dev_1.5.4-1_amd64.deb
             - https://snapshot.debian.org/file/921d2f6cb6e0d18b4390c080fb5a7da86f2b603b/libdav1d-dev_1.5.4-1_amd64.deb
+        - arch: arm64
+          sha256: df3ee63284101e418f1a3bdc1c4a6f99e2b13318ed7658692afeba73f1c297fe
+          urls:
+            - https://deb.debian.org/debian/pool/main/d/dav1d/libdav1d-dev_1.5.4-1_arm64.deb
+            - https://snapshot.debian.org/file/9eb16e44619c4f11ae3fd0ec5c69c508e26f9ac4/libdav1d-dev_1.5.4-1_arm64.deb
     - name: libdav1d7
       version: 1.5.4-1
       files:
@@ -759,14 +1186,24 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/d/dav1d/libdav1d7_1.5.4-1_amd64.deb
             - https://snapshot.debian.org/file/1a9b3d2d3a9989755d91c98d9559207be0388f68/libdav1d7_1.5.4-1_amd64.deb
+        - arch: arm64
+          sha256: e19de2b1fbda93e7a93e44cf0c783eef1f5d309aa034c53d15c79819c7a611d9
+          urls:
+            - https://deb.debian.org/debian/pool/main/d/dav1d/libdav1d7_1.5.4-1_arm64.deb
+            - https://snapshot.debian.org/file/22c3d7bca35e61803ba449dd4a3861bbf3f1ce8b/libdav1d7_1.5.4-1_arm64.deb
     - name: libdb5.3t64
-      version: 5.3.28+dfsg2-11+b1
+      version: 5.3.28+dfsg2-12
       files:
         - arch: amd64
-          sha256: d263910f67130b11763a0164bac9ee94dafa482cc5ed7301703bbb6520183985
+          sha256: df02a1eecdf7e976dbd9b7dfd6b6b14ec74b8fe8f66a2580ea5ef0c73b070d04
           urls:
-            - https://deb.debian.org/debian/pool/main/d/db5.3/libdb5.3t64_5.3.28+dfsg2-11+b1_amd64.deb
-            - https://snapshot.debian.org/file/1bde3c1bc5aea013571da287788f00deebada2d2/libdb5.3t64_5.3.28+dfsg2-11+b1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/d/db5.3/libdb5.3t64_5.3.28+dfsg2-12_amd64.deb
+            - https://snapshot.debian.org/file/8b3b5185864d39b1079bda147c8c3f07bedf1a50/libdb5.3t64_5.3.28+dfsg2-12_amd64.deb
+        - arch: arm64
+          sha256: abb52d66b9875c65a25f4b5c011e87c571cbe9be302000d124ee9b8f89dab352
+          urls:
+            - https://deb.debian.org/debian/pool/main/d/db5.3/libdb5.3t64_5.3.28+dfsg2-12_arm64.deb
+            - https://snapshot.debian.org/file/09521bf14e6bc108ed93b0729e6330e6d06c48c2/libdb5.3t64_5.3.28+dfsg2-12_arm64.deb
     - name: libde265-0
       version: 1.1.3-1+b1
       files:
@@ -775,6 +1212,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libd/libde265/libde265-0_1.1.3-1+b1_amd64.deb
             - https://snapshot.debian.org/file/0b4ec601c92f80b1cb1cba55be0121e8cffd0a16/libde265-0_1.1.3-1+b1_amd64.deb
+        - arch: arm64
+          sha256: cac60078299b8fee2a43bcfc043026d5f6ecdd0a681bdbbe4b3e913523bb0a06
+          urls:
+            - https://deb.debian.org/debian/pool/main/libd/libde265/libde265-0_1.1.3-1+b1_arm64.deb
+            - https://snapshot.debian.org/file/632ab3e94c0ac7f5687b9728db6913a25b601350/libde265-0_1.1.3-1+b1_arm64.deb
     - name: libdebconfclient0
       version: "0.283"
       files:
@@ -783,6 +1225,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/c/cdebconf/libdebconfclient0_0.283_amd64.deb
             - https://snapshot.debian.org/file/8361c7cd69b5a099d87515ddd84c8ccbe9973713/libdebconfclient0_0.283_amd64.deb
+        - arch: arm64
+          sha256: 9aa3de348b42d7409ea53cd500fddca2321f8c27f9b37b16eeff2653438017fc
+          urls:
+            - https://deb.debian.org/debian/pool/main/c/cdebconf/libdebconfclient0_0.283_arm64.deb
+            - https://snapshot.debian.org/file/1c1a8f5cb2cd719ae08043cc1e324be0e5f2dbe3/libdebconfclient0_0.283_arm64.deb
     - name: libdebhelper-perl
       version: "14.5"
       files:
@@ -799,6 +1246,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libd/libdeflate/libdeflate-dev_1.25-1_amd64.deb
             - https://snapshot.debian.org/file/7a74397b595eaa1ba75456108e8174f2055b3f64/libdeflate-dev_1.25-1_amd64.deb
+        - arch: arm64
+          sha256: 523020fc66aa55e6bec8908b1810d67a2a5977af10a0bf673e329b15800ae04a
+          urls:
+            - https://deb.debian.org/debian/pool/main/libd/libdeflate/libdeflate-dev_1.25-1_arm64.deb
+            - https://snapshot.debian.org/file/dd8a9fc12203624a0471a24e1d4ca73bb3fd3f90/libdeflate-dev_1.25-1_arm64.deb
     - name: libdeflate0
       version: 1.25-1
       files:
@@ -807,6 +1259,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libd/libdeflate/libdeflate0_1.25-1_amd64.deb
             - https://snapshot.debian.org/file/57c28f082764099aed1f40d317208fa8f650d121/libdeflate0_1.25-1_amd64.deb
+        - arch: arm64
+          sha256: 787599d06707e3fc7fc18b5e4cfc24c34afe6433762f0fe740bb15414f4faf15
+          urls:
+            - https://deb.debian.org/debian/pool/main/libd/libdeflate/libdeflate0_1.25-1_arm64.deb
+            - https://snapshot.debian.org/file/7d0eb8de0ae12c17d481b0216a42b9a10f9452ba/libdeflate0_1.25-1_arm64.deb
     - name: libdpkg-perl
       version: 1.23.11
       files:
@@ -823,22 +1280,37 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/e/elfutils/libelf1t64_0.196-1_amd64.deb
             - https://snapshot.debian.org/file/52bb9f0e061110762495d52d6bfa07ba0aafc505/libelf1t64_0.196-1_amd64.deb
+        - arch: arm64
+          sha256: ead8a1244824d982ce51fb82be4904312d5dc44ddc157e589def58c257738476
+          urls:
+            - https://deb.debian.org/debian/pool/main/e/elfutils/libelf1t64_0.196-1_arm64.deb
+            - https://snapshot.debian.org/file/b6c30cfd57b7dc1d09bb44744823741992e94c57/libelf1t64_0.196-1_arm64.deb
     - name: libexpat1
-      version: 2.8.4-2
+      version: 2.10.0-1
       files:
         - arch: amd64
-          sha256: b7dc32b95693aab0a078d0e3802f0b43b3fe7d57ef5e578e100d09fa8b46df87
+          sha256: 9a333cf590099569f577c1a1d47ac1f439eab14c1faff09b7e81ce3802938003
           urls:
-            - https://deb.debian.org/debian/pool/main/e/expat/libexpat1_2.8.4-2_amd64.deb
-            - https://snapshot.debian.org/file/05e564d8b7bf6d6e2ad707852818c8dde19d2209/libexpat1_2.8.4-2_amd64.deb
+            - https://deb.debian.org/debian/pool/main/e/expat/libexpat1_2.10.0-1_amd64.deb
+            - https://snapshot.debian.org/file/c8bb5af7743992db09252066ac59d55370ca3435/libexpat1_2.10.0-1_amd64.deb
+        - arch: arm64
+          sha256: 85b512bb1342e2321c468d89476beba4b2077d75b3fb48348334408679e408d5
+          urls:
+            - https://deb.debian.org/debian/pool/main/e/expat/libexpat1_2.10.0-1_arm64.deb
+            - https://snapshot.debian.org/file/5381d243cb792240cc58579652f68bf94cb7b755/libexpat1_2.10.0-1_arm64.deb
     - name: libexpat1-dev
-      version: 2.8.4-2
+      version: 2.10.0-1
       files:
         - arch: amd64
-          sha256: 9822db6a65781e4f8212d53c560874c1759f7d4b26958435ad4eab7927baec50
+          sha256: 72589e62a419cb107f97e44f568095910a51404068d75a4d493489a6de1cb8ed
           urls:
-            - https://deb.debian.org/debian/pool/main/e/expat/libexpat1-dev_2.8.4-2_amd64.deb
-            - https://snapshot.debian.org/file/257433bb500ae4175032322b80c6b76ab9f03380/libexpat1-dev_2.8.4-2_amd64.deb
+            - https://deb.debian.org/debian/pool/main/e/expat/libexpat1-dev_2.10.0-1_amd64.deb
+            - https://snapshot.debian.org/file/f29f9c675f410d7f413561376597acffa610f97a/libexpat1-dev_2.10.0-1_amd64.deb
+        - arch: arm64
+          sha256: 4e90231d14dfbb2a0c069ce5c6ca1ffd7f88937728282643b6dea6b1f7ccfeee
+          urls:
+            - https://deb.debian.org/debian/pool/main/e/expat/libexpat1-dev_2.10.0-1_arm64.deb
+            - https://snapshot.debian.org/file/f946936818dbdd34a704fa7140d5fb4bac7f24ac/libexpat1-dev_2.10.0-1_arm64.deb
     - name: libfakeroot
       version: 2.1.4-1
       files:
@@ -847,6 +1319,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/f/fakeroot/libfakeroot_2.1.4-1_amd64.deb
             - https://snapshot.debian.org/file/e9ab991d8a51c015238ac70b7bc5be78df524748/libfakeroot_2.1.4-1_amd64.deb
+        - arch: arm64
+          sha256: 97cb7b0695377b79f3c8574d8a06afd538914b5d296bf6495a3c13cf550378dc
+          urls:
+            - https://deb.debian.org/debian/pool/main/f/fakeroot/libfakeroot_2.1.4-1_arm64.deb
+            - https://snapshot.debian.org/file/2a63d0e9a8997d1cd955bd82bfc52a2e2a325d98/libfakeroot_2.1.4-1_arm64.deb
     - name: libffi8
       version: 3.8.0-2
       files:
@@ -855,6 +1332,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libf/libffi/libffi8_3.8.0-2_amd64.deb
             - https://snapshot.debian.org/file/006866f7bbeefbd18e514ca5565271151063a741/libffi8_3.8.0-2_amd64.deb
+        - arch: arm64
+          sha256: b6e6930ad3b9423237fb64bcf5fb65fdd36890613b7f083094fcf16041c5e851
+          urls:
+            - https://deb.debian.org/debian/pool/main/libf/libffi/libffi8_3.8.0-2_arm64.deb
+            - https://snapshot.debian.org/file/abe192583cfd50f21b9f85bd2c0dfc0205adc509/libffi8_3.8.0-2_arm64.deb
     - name: libfile-stripnondeterminism-perl
       version: 1.15.1-1
       files:
@@ -871,6 +1353,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/f/fontconfig/libfontconfig-dev_2.17.1-5_amd64.deb
             - https://snapshot.debian.org/file/43ec5a3d947c274e5a4e216d476ff13eda158c37/libfontconfig-dev_2.17.1-5_amd64.deb
+        - arch: arm64
+          sha256: 25cd7f979865fb0fbb63282cbadd90f071e5e2d799313dbb4259a162e7322bc6
+          urls:
+            - https://deb.debian.org/debian/pool/main/f/fontconfig/libfontconfig-dev_2.17.1-5_arm64.deb
+            - https://snapshot.debian.org/file/7d944a35fcf23273d8a30138dbc6be2e4586d426/libfontconfig-dev_2.17.1-5_arm64.deb
     - name: libfontconfig1
       version: 2.17.1-5
       files:
@@ -879,22 +1366,37 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/f/fontconfig/libfontconfig1_2.17.1-5_amd64.deb
             - https://snapshot.debian.org/file/feba798bef3287c2273c63c0b0a4337e00fa700b/libfontconfig1_2.17.1-5_amd64.deb
+        - arch: arm64
+          sha256: a060fc66af0e596961062323435219b54b7a6c0eb629d0baf0b29512431c920f
+          urls:
+            - https://deb.debian.org/debian/pool/main/f/fontconfig/libfontconfig1_2.17.1-5_arm64.deb
+            - https://snapshot.debian.org/file/21fc96e529e4b1946a60f87d96a5cd9f5146d71f/libfontconfig1_2.17.1-5_arm64.deb
     - name: libfreetype-dev
-      version: 2.14.3+dfsg-2
+      version: 2.14.3+dfsg-3
       files:
         - arch: amd64
-          sha256: d553cb744f7bbc4d499fc5ccd5ae74c5d1ae0ca878c002f6cb0b5b0b31331959
+          sha256: fe3e38a1a14bbc90877588c04b3d0656a8e1298cca6e43a9c1d7cfb2ed95a9e6
           urls:
-            - https://deb.debian.org/debian/pool/main/f/freetype/libfreetype-dev_2.14.3+dfsg-2_amd64.deb
-            - https://snapshot.debian.org/file/90ef34ba849b7f206b8c3f7f447398f6cfab2490/libfreetype-dev_2.14.3+dfsg-2_amd64.deb
+            - https://deb.debian.org/debian/pool/main/f/freetype/libfreetype-dev_2.14.3+dfsg-3_amd64.deb
+            - https://snapshot.debian.org/file/79836cf03121e92f75fab1e57576864bd68c03b8/libfreetype-dev_2.14.3+dfsg-3_amd64.deb
+        - arch: arm64
+          sha256: d63f01d77756e526ff3a966200b9ddc5a50aa1ff22d22f2395fcd0171bc13bdf
+          urls:
+            - https://deb.debian.org/debian/pool/main/f/freetype/libfreetype-dev_2.14.3+dfsg-3_arm64.deb
+            - https://snapshot.debian.org/file/ff8d25a1c8aca58cc001392169c24957836fed01/libfreetype-dev_2.14.3+dfsg-3_arm64.deb
     - name: libfreetype6
-      version: 2.14.3+dfsg-2
+      version: 2.14.3+dfsg-3
       files:
         - arch: amd64
-          sha256: 728f217835faa2a99b5d530c04bb34db64588fe0e01e85896160a57b27bd71d4
+          sha256: f6eaffc0ddbd5df88bf08c5a01ba85e3bc83bf36c8afcc0563213764b7cee445
           urls:
-            - https://deb.debian.org/debian/pool/main/f/freetype/libfreetype6_2.14.3+dfsg-2_amd64.deb
-            - https://snapshot.debian.org/file/fb227ba9643d7bf9b530a340cf29036a9e8c6c2a/libfreetype6_2.14.3+dfsg-2_amd64.deb
+            - https://deb.debian.org/debian/pool/main/f/freetype/libfreetype6_2.14.3+dfsg-3_amd64.deb
+            - https://snapshot.debian.org/file/7fdbe8c3fac911409af65bf4c81b01b4e66b98c0/libfreetype6_2.14.3+dfsg-3_amd64.deb
+        - arch: arm64
+          sha256: f94638daec4e7c0de4c8cbf7cb68517e640b5a3a424fb840cd9fd43a24a5b939
+          urls:
+            - https://deb.debian.org/debian/pool/main/f/freetype/libfreetype6_2.14.3+dfsg-3_arm64.deb
+            - https://snapshot.debian.org/file/17c7adca8a3dc796cc7c64569f41c3e42ba81e6e/libfreetype6_2.14.3+dfsg-3_arm64.deb
     - name: libgav1-2
       version: 0.20.0-2+b2
       files:
@@ -903,30 +1405,50 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libg/libgav1/libgav1-2_0.20.0-2+b2_amd64.deb
             - https://snapshot.debian.org/file/66e18d00611c55de5c3ca0bf1557c191d4d52d8e/libgav1-2_0.20.0-2+b2_amd64.deb
+        - arch: arm64
+          sha256: 2f03ffaebadcabac9832c38ab62c0d147c913f9b371d53aa6cbc0498d0faea9b
+          urls:
+            - https://deb.debian.org/debian/pool/main/libg/libgav1/libgav1-2_0.20.0-2+b2_arm64.deb
+            - https://snapshot.debian.org/file/2da2bbe4e3922172c64f1b5fbb5c046476ee1eb4/libgav1-2_0.20.0-2+b2_arm64.deb
     - name: libgcc-15-dev
-      version: 15.3.0-4
+      version: 15.3.0-5
       files:
         - arch: amd64
-          sha256: 90f59487ea50b86a9ec565be97b495e2e07c9cac5067c8c96318a2fa750462bd
+          sha256: fcce97b96f208baecbd97b0b57d800a5d2ea419bb736a048c1ecf8d325407a22
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-15/libgcc-15-dev_15.3.0-4_amd64.deb
-            - https://snapshot.debian.org/file/12ca865b605f84d7d0d007d29341a6755946397a/libgcc-15-dev_15.3.0-4_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-15/libgcc-15-dev_15.3.0-5_amd64.deb
+            - https://snapshot.debian.org/file/32725265db00dd10f8bb83f7a04ad01e7e159e4f/libgcc-15-dev_15.3.0-5_amd64.deb
+        - arch: arm64
+          sha256: 1bed70b2f3f035817147af2931d553c60697d7fd6503b97fad7d7ad291e18783
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-15/libgcc-15-dev_15.3.0-5_arm64.deb
+            - https://snapshot.debian.org/file/068d617fe2661017c2245dab017d9c94d24119c7/libgcc-15-dev_15.3.0-5_arm64.deb
     - name: libgcc-16-dev
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: 5c35cbcc5730401d8d427bec286b0515ae5aba496587cfd87e4bd7199c3e9062
+          sha256: a63203467281ca8f62643f6ea5ceb13afd26c11941741f618886b64121829a81
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/libgcc-16-dev_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/68250a8c37c10960f88d741656ba3f893171e3f1/libgcc-16-dev_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libgcc-16-dev_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/3e3148fe2667caad23f358220c4e1c1fddc91349/libgcc-16-dev_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: 0d166789ffeacfa183f17573029795d2443007b76b378db40c93f1c86b92c98c
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libgcc-16-dev_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/26c895d36eca17873855d9609f620634d2f4d3f6/libgcc-16-dev_16.2.0-4_arm64.deb
     - name: libgcc-s1
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: e716dc8baad27e884c45ff83a76955047a7a9e33a80e94f9459ee996ebb800b0
+          sha256: d251ea642c3795e8723ac2b9eeebe511467ca04590ba70f3d555a7616787d7e3
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/libgcc-s1_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/fd323ad476fc5542605c43126e9416d0cdba672f/libgcc-s1_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libgcc-s1_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/b24b594d16496c6cc51b608a973a39c75e594635/libgcc-s1_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: 385ea4394ef27e610dfa033ea422dd79b154d88255a9d945de86ece751578b9f
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libgcc-s1_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/79edd6f7633bd0782fe86eb273ed9a3279dd6e95/libgcc-s1_16.2.0-4_arm64.deb
     - name: libgd-dev
       version: 2.3.3-14
       files:
@@ -935,6 +1457,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libg/libgd2/libgd-dev_2.3.3-14_amd64.deb
             - https://snapshot.debian.org/file/ca860ff0c71953ead5c23a54818e06d11b92e2cf/libgd-dev_2.3.3-14_amd64.deb
+        - arch: arm64
+          sha256: c2682a86c87ece9937652f8bba0da05e99da1b505341975121cf879d468a9751
+          urls:
+            - https://deb.debian.org/debian/pool/main/libg/libgd2/libgd-dev_2.3.3-14_arm64.deb
+            - https://snapshot.debian.org/file/f348f59d59b359efe01cc9945619cab6b8740ba7/libgd-dev_2.3.3-14_arm64.deb
     - name: libgd3
       version: 2.3.3-14
       files:
@@ -943,6 +1470,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libg/libgd2/libgd3_2.3.3-14_amd64.deb
             - https://snapshot.debian.org/file/78dab62d1fd3cfd6af8b0be1b6c953f1d6bf6a5f/libgd3_2.3.3-14_amd64.deb
+        - arch: arm64
+          sha256: c4d2cbb75cb5a1d90352af9aebdaa6aa3292c4af97b59387efd346eef9aa409c
+          urls:
+            - https://deb.debian.org/debian/pool/main/libg/libgd2/libgd3_2.3.3-14_arm64.deb
+            - https://snapshot.debian.org/file/ffabe81ffe251acd72aef2183abc72f099dbfe79/libgd3_2.3.3-14_arm64.deb
     - name: libgdbm-compat4t64
       version: 1.26-1+b2
       files:
@@ -951,6 +1483,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/g/gdbm/libgdbm-compat4t64_1.26-1+b2_amd64.deb
             - https://snapshot.debian.org/file/6f1b95bc2c1c5ad1641b4fd238ac3eb7ca6e164f/libgdbm-compat4t64_1.26-1+b2_amd64.deb
+        - arch: arm64
+          sha256: b33fb20fc7fe0165b18664df356e8f04c8b703546fe4165763c901c3cad19f55
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gdbm/libgdbm-compat4t64_1.26-1+b2_arm64.deb
+            - https://snapshot.debian.org/file/2974d3141fbfde8646bfb305b485e2f8c7c73b1a/libgdbm-compat4t64_1.26-1+b2_arm64.deb
     - name: libgdbm6t64
       version: 1.26-1+b2
       files:
@@ -959,6 +1496,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/g/gdbm/libgdbm6t64_1.26-1+b2_amd64.deb
             - https://snapshot.debian.org/file/85c1eabc0de9ce97a803bf256103f383401939c8/libgdbm6t64_1.26-1+b2_amd64.deb
+        - arch: arm64
+          sha256: 30bee3177745c58b02ffdda3ef366738a3a90c01515fc9d31fdb9df25bdf23b4
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gdbm/libgdbm6t64_1.26-1+b2_arm64.deb
+            - https://snapshot.debian.org/file/d6c1b4313ce4fa2273a84822e68ae10a70c4ca7e/libgdbm6t64_1.26-1+b2_arm64.deb
     - name: libgmp10
       version: 2:6.3.0+dfsg-5+b2
       files:
@@ -967,62 +1509,102 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/g/gmp/libgmp10_6.3.0+dfsg-5+b2_amd64.deb
             - https://snapshot.debian.org/file/0964d9be0da9302715422e658996398049083b53/libgmp10_6.3.0+dfsg-5+b2_amd64.deb
+        - arch: arm64
+          sha256: ceedd3ac17447facce0de2713b6f99d711fa41e7f26cb278778840054d93b6a7
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gmp/libgmp10_6.3.0+dfsg-5+b2_arm64.deb
+            - https://snapshot.debian.org/file/626ab2c549bf269bbc736ae53ddea952c018a48d/libgmp10_6.3.0+dfsg-5+b2_arm64.deb
     - name: libgomp1
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: a94884d440c641499fccc658eb6845cdc7381fe3f419ab71dff8a621614122c7
+          sha256: 11cb09fd79c2de0acbdc23b0eb350445c563b16a36d879b355dfd45a5d2d6d3e
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/libgomp1_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/7d76eae16435880a34efc6453387ede1868d1284/libgomp1_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libgomp1_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/7fcdcf3aa0fd679c483c7fc3a5f4402c4d49b551/libgomp1_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: b985c1e5b615e9651c41bf57350c1cfe16f5f26b1831920d42c0d18ed615a197
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libgomp1_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/8735f9ed6b008c037ac2d6f4bc7a4da6e4c82fd7/libgomp1_16.2.0-4_arm64.deb
     - name: libgprofng0
-      version: 2.47-6
+      version: 2.47.50.20261021-1
       files:
         - arch: amd64
-          sha256: d7bbddc1004b3079fe56f15ae04ab8a1a99cbcf17a45065f131e496016d1c07b
+          sha256: a55df403e0a7d2b0075b15c96608261249e41d4a2e8f4ef6d50e6b979b2dfb51
           urls:
-            - https://deb.debian.org/debian/pool/main/b/binutils/libgprofng0_2.47-6_amd64.deb
-            - https://snapshot.debian.org/file/176066afe8d6dc3477d26a7d9b4420c6141cdc80/libgprofng0_2.47-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/b/binutils/libgprofng0_2.47.50.20261021-1_amd64.deb
+            - https://snapshot.debian.org/file/354cdc4913e3e7dade267a9839063333be505793/libgprofng0_2.47.50.20261021-1_amd64.deb
+        - arch: arm64
+          sha256: c56fe8760842e63e49580495997b26b3241bb07e1f58430c8252d71688a3fe10
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/binutils/libgprofng0_2.47.50.20261021-1_arm64.deb
+            - https://snapshot.debian.org/file/f9b4cddaa9fc9423b3d50f70074b25fcd71f2dfb/libgprofng0_2.47.50.20261021-1_arm64.deb
     - name: libheif-dev
-      version: 1.23.4-1+b1
+      version: 1.23.6-2
       files:
         - arch: amd64
-          sha256: 4cbdbdc093d4ca8a7681294b53bc4e7c50412946e3ee6631085ecd8a2c115f96
+          sha256: bbd5d107d4c003247f326787161a254b369dc04a41e43c0c22149dea66b78614
           urls:
-            - https://deb.debian.org/debian/pool/main/libh/libheif/libheif-dev_1.23.4-1+b1_amd64.deb
-            - https://snapshot.debian.org/file/5a00962d0f824ec1b790798e2c1242abbb96c1b1/libheif-dev_1.23.4-1+b1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libh/libheif/libheif-dev_1.23.6-2_amd64.deb
+            - https://snapshot.debian.org/file/3ba18b9d1b2f34837002c3da75c705ca0da03da0/libheif-dev_1.23.6-2_amd64.deb
+        - arch: arm64
+          sha256: dc8903f4bbaab74b8d5d9366e138e49698cc11f229b4a14a013c441bdd28d666
+          urls:
+            - https://deb.debian.org/debian/pool/main/libh/libheif/libheif-dev_1.23.6-2_arm64.deb
+            - https://snapshot.debian.org/file/66f20ef1362a39cd25174e93074eda0e399f2091/libheif-dev_1.23.6-2_arm64.deb
     - name: libheif-plugin-aomdec
-      version: 1.23.4-1+b1
+      version: 1.23.6-2
       files:
         - arch: amd64
-          sha256: c19f11ff0a71fc825db69a02c81024e500633140fa315de428a7372ba49115a0
+          sha256: 2ddedcbb4d0fede168809576a9e1ecd38292c53f555e9b81df7952b47b4ffb5c
           urls:
-            - https://deb.debian.org/debian/pool/main/libh/libheif/libheif-plugin-aomdec_1.23.4-1+b1_amd64.deb
-            - https://snapshot.debian.org/file/66d1693d295c33cf2a13fd55c88255f3cd65b3d2/libheif-plugin-aomdec_1.23.4-1+b1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libh/libheif/libheif-plugin-aomdec_1.23.6-2_amd64.deb
+            - https://snapshot.debian.org/file/12355191b062b398acc74c0b151aab45a3790830/libheif-plugin-aomdec_1.23.6-2_amd64.deb
+        - arch: arm64
+          sha256: 0baa1cb499010be4f94bd861a7c6acb95072b432be145be47f533218e90663fa
+          urls:
+            - https://deb.debian.org/debian/pool/main/libh/libheif/libheif-plugin-aomdec_1.23.6-2_arm64.deb
+            - https://snapshot.debian.org/file/c00d41a9018dac33120b724648441f38d528b56a/libheif-plugin-aomdec_1.23.6-2_arm64.deb
     - name: libheif-plugin-libde265
-      version: 1.23.4-1+b1
+      version: 1.23.6-2
       files:
         - arch: amd64
-          sha256: 710711ea80366eb149da188db922c7dc9754d37169612b5546ee70449b5703d9
+          sha256: 30948cd0f6b12d763cc42f47518e28c7a46bac79c55914bcb6da82530765c970
           urls:
-            - https://deb.debian.org/debian/pool/main/libh/libheif/libheif-plugin-libde265_1.23.4-1+b1_amd64.deb
-            - https://snapshot.debian.org/file/01b4dc7006ad32b4c5594f2c1c3b2a60a2ccb076/libheif-plugin-libde265_1.23.4-1+b1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libh/libheif/libheif-plugin-libde265_1.23.6-2_amd64.deb
+            - https://snapshot.debian.org/file/f7ec902c65e1a1b70ee30ee4ce884dcc76363e2d/libheif-plugin-libde265_1.23.6-2_amd64.deb
+        - arch: arm64
+          sha256: f101f8d4fd2f974ffb91d15a53767fdfce1a437c62a772e78241c69c01ec4846
+          urls:
+            - https://deb.debian.org/debian/pool/main/libh/libheif/libheif-plugin-libde265_1.23.6-2_arm64.deb
+            - https://snapshot.debian.org/file/0831ac6c2b79b79a7c52bb4290d30d94f8cbce51/libheif-plugin-libde265_1.23.6-2_arm64.deb
     - name: libheif1
-      version: 1.23.4-1+b1
+      version: 1.23.6-2
       files:
         - arch: amd64
-          sha256: 37a923310c423dcbd4471f156da1a8de10102abbbfd633f2ae7450d9e058fe78
+          sha256: 4e6ebd8e8ec71dd2394848148aa0d20b1269fd19f1b650bd4b8b1442114a99a4
           urls:
-            - https://deb.debian.org/debian/pool/main/libh/libheif/libheif1_1.23.4-1+b1_amd64.deb
-            - https://snapshot.debian.org/file/d2deeea7bf9d4537071445cc7b213cb2f62a0be5/libheif1_1.23.4-1+b1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libh/libheif/libheif1_1.23.6-2_amd64.deb
+            - https://snapshot.debian.org/file/cf4665506714491039436c300c298d7ef5f535c2/libheif1_1.23.6-2_amd64.deb
+        - arch: arm64
+          sha256: 3f56c5107c88f991430d2181f08d1a1283e953e590f489d0a08f440287be84f9
+          urls:
+            - https://deb.debian.org/debian/pool/main/libh/libheif/libheif1_1.23.6-2_arm64.deb
+            - https://snapshot.debian.org/file/efb6fb3960b19bf4b2432a630e5e59ee9a8e2710/libheif1_1.23.6-2_arm64.deb
     - name: libhwasan0
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: eac63ff234fb3e9cef6120e23409841041a59b4f5b9700795ad1d7b5e0622376
+          sha256: 143c1d7b7d0e62ebc273494b0d5c1a6fe809b0276c77c14dace5b61e11519855
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/libhwasan0_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/a7745f39d0293d69ca0df111fb82c2ebb632b540/libhwasan0_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libhwasan0_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/0a3d44a116d7092602bd9ce04f31284344900df2/libhwasan0_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: 7d4e254ee480fe70c5e7a328a64a7881044cbe093188e01a5bdaa1c134ab6dc4
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libhwasan0_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/bdf6f7011fb8ca64a9a84d4c211d214898594b92/libhwasan0_16.2.0-4_arm64.deb
     - name: libimagequant-dev
       version: 4.4.1-1+b2
       files:
@@ -1031,6 +1613,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libi/libimagequant/libimagequant-dev_4.4.1-1+b2_amd64.deb
             - https://snapshot.debian.org/file/780bfcfaee15e98323bd37e3b6520f68b31eb318/libimagequant-dev_4.4.1-1+b2_amd64.deb
+        - arch: arm64
+          sha256: 8093be38c5e458dec8c2a5bdf119f910547db82fe57d800d88b9742e0e6d16cb
+          urls:
+            - https://deb.debian.org/debian/pool/main/libi/libimagequant/libimagequant-dev_4.4.1-1+b2_arm64.deb
+            - https://snapshot.debian.org/file/57903b3361c309b2c984eb72b649cde0195fd731/libimagequant-dev_4.4.1-1+b2_arm64.deb
     - name: libimagequant0
       version: 4.4.1-1+b2
       files:
@@ -1039,6 +1626,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libi/libimagequant/libimagequant0_4.4.1-1+b2_amd64.deb
             - https://snapshot.debian.org/file/22b56c0ddf2d464f82584d22788902ef3689126a/libimagequant0_4.4.1-1+b2_amd64.deb
+        - arch: arm64
+          sha256: e054e5d96b21a86af8f517fd49d47b5771f6f6f1197f53274612f2a25acbf098
+          urls:
+            - https://deb.debian.org/debian/pool/main/libi/libimagequant/libimagequant0_4.4.1-1+b2_arm64.deb
+            - https://snapshot.debian.org/file/27655b499b62ff579b950d445e39a80943fcf38a/libimagequant0_4.4.1-1+b2_arm64.deb
     - name: libisl23
       version: 0.28-1
       files:
@@ -1047,14 +1639,24 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/i/isl/libisl23_0.28-1_amd64.deb
             - https://snapshot.debian.org/file/fcb536893da38e9ca6e805e2e1cacdaca61fc504/libisl23_0.28-1_amd64.deb
+        - arch: arm64
+          sha256: 377640feeb6c196c2f0ab8d66a454ffa285d7b16d1da850a03755a4d1377b4ea
+          urls:
+            - https://deb.debian.org/debian/pool/main/i/isl/libisl23_0.28-1_arm64.deb
+            - https://snapshot.debian.org/file/58c36c3bf833b48a618906978904a41141089aa3/libisl23_0.28-1_arm64.deb
     - name: libitm1
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: de34fc9755876fe837bb3c3970d700151d0b02bf442bd2d636724692faa5c7ad
+          sha256: 453b948b39ec0014c27609fd1ea163dcc56f8f73322f5e347c42754dedfb54e9
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/libitm1_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/59dca3a5b849e4bbcd53fafe72cffacabdbb850f/libitm1_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libitm1_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/41ffa131e62c5f26183bf3f404f2aca957d9527c/libitm1_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: e2ff9f6dbb51621a378f8f6cb7ca5ebd5b1e77138c031b3b072d9fd85f30398d
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libitm1_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/1a6e0a7e59da698afff91fe377e7bd1e12c221ab/libitm1_16.2.0-4_arm64.deb
     - name: libjansson4
       version: 2.15.1-1
       files:
@@ -1063,6 +1665,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/j/jansson/libjansson4_2.15.1-1_amd64.deb
             - https://snapshot.debian.org/file/7b81380ba8456176791f1be6163c6b545ac8dacb/libjansson4_2.15.1-1_amd64.deb
+        - arch: arm64
+          sha256: c26abc792285fdbb00e82416d46e5419a17556b2afe4d57dab80bcb01eaca5ec
+          urls:
+            - https://deb.debian.org/debian/pool/main/j/jansson/libjansson4_2.15.1-1_arm64.deb
+            - https://snapshot.debian.org/file/0de17ce710bdcc63f6a7e560b4a5e76e8a5689d0/libjansson4_2.15.1-1_arm64.deb
     - name: libjbig-dev
       version: 2.1-6.1+b3
       files:
@@ -1071,6 +1678,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/j/jbigkit/libjbig-dev_2.1-6.1+b3_amd64.deb
             - https://snapshot.debian.org/file/bfdd36cf1c3b49c38bb8daa093f4b02f3b9fc5d8/libjbig-dev_2.1-6.1+b3_amd64.deb
+        - arch: arm64
+          sha256: 50e2b27ec55f6ba8fe80ba987ef75fb4ad0512e8f32a5b97277850687c10ec73
+          urls:
+            - https://deb.debian.org/debian/pool/main/j/jbigkit/libjbig-dev_2.1-6.1+b3_arm64.deb
+            - https://snapshot.debian.org/file/0b0b9e90a1d1e89389aa9b3769341dedd1af798d/libjbig-dev_2.1-6.1+b3_arm64.deb
     - name: libjbig0
       version: 2.1-6.1+b3
       files:
@@ -1079,6 +1691,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/j/jbigkit/libjbig0_2.1-6.1+b3_amd64.deb
             - https://snapshot.debian.org/file/17081fd12c4ffd93f72cfa490ce0d57b97446b6f/libjbig0_2.1-6.1+b3_amd64.deb
+        - arch: arm64
+          sha256: 646f07ee43601d65802ba26a3ca8c4cac195f4cfbcc521d70103ef865671301e
+          urls:
+            - https://deb.debian.org/debian/pool/main/j/jbigkit/libjbig0_2.1-6.1+b3_arm64.deb
+            - https://snapshot.debian.org/file/0be77306d47e3d036b077b5a0d0bfc98baa72dae/libjbig0_2.1-6.1+b3_arm64.deb
     - name: libjpeg-dev
       version: 1:3.1.3-4
       files:
@@ -1087,6 +1704,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libj/libjpeg-turbo/libjpeg-dev_3.1.3-4_amd64.deb
             - https://snapshot.debian.org/file/3a362c276b7a40f919c211ecc869e9a2ffbcdbf1/libjpeg-dev_3.1.3-4_amd64.deb
+        - arch: arm64
+          sha256: 64fb411ca2f9476d53e1c31406afab543259d0cebfed9806f131154d9e57c73a
+          urls:
+            - https://deb.debian.org/debian/pool/main/libj/libjpeg-turbo/libjpeg-dev_3.1.3-4_arm64.deb
+            - https://snapshot.debian.org/file/98fb1b19665bf70486b728acda4d017d05440342/libjpeg-dev_3.1.3-4_arm64.deb
     - name: libjpeg62-turbo
       version: 1:3.1.3-4
       files:
@@ -1095,6 +1717,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libj/libjpeg-turbo/libjpeg62-turbo_3.1.3-4_amd64.deb
             - https://snapshot.debian.org/file/c47a86533c32e090ddf64680bf196e3e0804f0fd/libjpeg62-turbo_3.1.3-4_amd64.deb
+        - arch: arm64
+          sha256: e494cbc89f909d3f65c8f7013bcaba92456d2e9f9f09abecebba306a1bad0e16
+          urls:
+            - https://deb.debian.org/debian/pool/main/libj/libjpeg-turbo/libjpeg62-turbo_3.1.3-4_arm64.deb
+            - https://snapshot.debian.org/file/06a0add2f93dcb04199adffdc34f3f26d191af63/libjpeg62-turbo_3.1.3-4_arm64.deb
     - name: libjpeg62-turbo-dev
       version: 1:3.1.3-4
       files:
@@ -1103,30 +1730,50 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libj/libjpeg-turbo/libjpeg62-turbo-dev_3.1.3-4_amd64.deb
             - https://snapshot.debian.org/file/d0fd72766cde6749046008e97d2cb91d159e089a/libjpeg62-turbo-dev_3.1.3-4_amd64.deb
+        - arch: arm64
+          sha256: 96032c7386cc2a47560f72659f5af806084a7d846ff1b394f3e147d03ef677d6
+          urls:
+            - https://deb.debian.org/debian/pool/main/libj/libjpeg-turbo/libjpeg62-turbo-dev_3.1.3-4_arm64.deb
+            - https://snapshot.debian.org/file/ed4b92825ac19d89998f789cce4b999383bf3b36/libjpeg62-turbo-dev_3.1.3-4_arm64.deb
     - name: liblerc-dev
-      version: 4.2.0+ds-1
+      version: 4.3.0+ds-2
       files:
         - arch: amd64
-          sha256: 8e693f3b72b13cb071dfaafa8643f57b2a3476aa3fd7b9a9dacc476f348e925e
+          sha256: fb0266dc3650cdbd8c491888d930a49b786a8eafd6395683d198384530f4e65e
           urls:
-            - https://deb.debian.org/debian/pool/main/l/lerc/liblerc-dev_4.2.0+ds-1_amd64.deb
-            - https://snapshot.debian.org/file/ccfdecd6d0a36b9ba6333e1f92470485d4244b55/liblerc-dev_4.2.0+ds-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/l/lerc/liblerc-dev_4.3.0+ds-2_amd64.deb
+            - https://snapshot.debian.org/file/b5550b34f4793cea58b5c5d504687319ddb9fc23/liblerc-dev_4.3.0+ds-2_amd64.deb
+        - arch: arm64
+          sha256: d0b17ccf326d5eccd3d1ed17310317ade1f8ec0a6cc6c2c4661024d47849c60d
+          urls:
+            - https://deb.debian.org/debian/pool/main/l/lerc/liblerc-dev_4.3.0+ds-2_arm64.deb
+            - https://snapshot.debian.org/file/1d6434ed9588c26d39a0340a8ccde2a4e6067948/liblerc-dev_4.3.0+ds-2_arm64.deb
     - name: liblerc4
-      version: 4.2.0+ds-1
+      version: 4.3.0+ds-2
       files:
         - arch: amd64
-          sha256: 6048745ecb91bfb44bc31ec24b951266923beb697f574694f006cb57c8eb0d09
+          sha256: 0fad4b085b224891f9806d1b9a56f6dcf96ec56cee1fbef307702a86dc99e8fe
           urls:
-            - https://deb.debian.org/debian/pool/main/l/lerc/liblerc4_4.2.0+ds-1_amd64.deb
-            - https://snapshot.debian.org/file/3aa75808432b45c7c5705df11db2fe33ce7f5506/liblerc4_4.2.0+ds-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/l/lerc/liblerc4_4.3.0+ds-2_amd64.deb
+            - https://snapshot.debian.org/file/f33b8efcceec986a49834925400a0225716af33e/liblerc4_4.3.0+ds-2_amd64.deb
+        - arch: arm64
+          sha256: b9a028cbec940e663c2d2c84ac55d17cb9ff9fdd469fce5e97af7e4a1d2d02e9
+          urls:
+            - https://deb.debian.org/debian/pool/main/l/lerc/liblerc4_4.3.0+ds-2_arm64.deb
+            - https://snapshot.debian.org/file/2b5adba51452d67ebd0267ca06b25d0bbfcc7b16/liblerc4_4.3.0+ds-2_arm64.deb
     - name: liblsan0
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: 15bc296b18355fe9a465fa00d7460d008ac55f6d2987f02de2747b0f70d92828
+          sha256: f6391c1f8c2c063807de92b9d98a7e0b632bef4e7dd20ac34a6b77160e5b8683
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/liblsan0_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/93648717ab9192e9b0a1b54de0ee7d232d4b2437/liblsan0_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/liblsan0_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/b477d709ff777aa0af5f4df77005851bfbda6fb3/liblsan0_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: efa40ec466a9c512fbd7f886dbadeca7b5cd0086d36732328acdb8340c7a6439
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/liblsan0_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/1432334d65a94d2b8ccf3c0ee2f0e41257d636ae/liblsan0_16.2.0-4_arm64.deb
     - name: liblzma-dev
       version: 5.8.4-1
       files:
@@ -1135,6 +1782,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/x/xz-utils/liblzma-dev_5.8.4-1_amd64.deb
             - https://snapshot.debian.org/file/f0ce2956002a05c428529097f0a7b4e8339be233/liblzma-dev_5.8.4-1_amd64.deb
+        - arch: arm64
+          sha256: 39bc88b349b1bbeb5cf698b0ed6bc2b038244619228f9a86da4b36efae07d096
+          urls:
+            - https://deb.debian.org/debian/pool/main/x/xz-utils/liblzma-dev_5.8.4-1_arm64.deb
+            - https://snapshot.debian.org/file/ccb64bdd9a197d50847f580497d160d0f1725640/liblzma-dev_5.8.4-1_arm64.deb
     - name: liblzma5
       version: 5.8.4-1
       files:
@@ -1143,6 +1795,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/x/xz-utils/liblzma5_5.8.4-1_amd64.deb
             - https://snapshot.debian.org/file/4d77d472849467711c74d142741003bda7954dfb/liblzma5_5.8.4-1_amd64.deb
+        - arch: arm64
+          sha256: 7f154b61a6dbeb833e8dcc8e0bce2fb3ba0e30a61e4c46179ee5fdbee05a9c41
+          urls:
+            - https://deb.debian.org/debian/pool/main/x/xz-utils/liblzma5_5.8.4-1_arm64.deb
+            - https://snapshot.debian.org/file/4317cfc56283f110636649caa2ef1ebc3a00b834/liblzma5_5.8.4-1_arm64.deb
     - name: libmagic-mgc
       version: 1:5.47-4
       files:
@@ -1151,6 +1808,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/f/file/libmagic-mgc_5.47-4_amd64.deb
             - https://snapshot.debian.org/file/99f145798e88fe2518a921193604640e7b2f30d5/libmagic-mgc_5.47-4_amd64.deb
+        - arch: arm64
+          sha256: beb6a90628c976e3ea69a5e5e8d299556ac32346f6790f383038c983b03e53c0
+          urls:
+            - https://deb.debian.org/debian/pool/main/f/file/libmagic-mgc_5.47-4_arm64.deb
+            - https://snapshot.debian.org/file/8c253681b7e857e5c1ef7f6dbbd562b5d5dcb789/libmagic-mgc_5.47-4_arm64.deb
     - name: libmagic1t64
       version: 1:5.47-4
       files:
@@ -1159,6 +1821,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/f/file/libmagic1t64_5.47-4_amd64.deb
             - https://snapshot.debian.org/file/c6b404dc6f6118326bd8352f03a95a4d3ddcb0a5/libmagic1t64_5.47-4_amd64.deb
+        - arch: arm64
+          sha256: d439ae4de2323c9fdb0810d70169b30e64b76901023a74e23086d41f4bff70d6
+          urls:
+            - https://deb.debian.org/debian/pool/main/f/file/libmagic1t64_5.47-4_arm64.deb
+            - https://snapshot.debian.org/file/874fea8af1cec8f7dd58fd291975d114cff3c931/libmagic1t64_5.47-4_arm64.deb
     - name: libmd0
       version: 1.3.0-1
       files:
@@ -1167,6 +1834,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libm/libmd/libmd0_1.3.0-1_amd64.deb
             - https://snapshot.debian.org/file/3cd5308de390f2a159a06d510d6c8e14407fedd5/libmd0_1.3.0-1_amd64.deb
+        - arch: arm64
+          sha256: 7237eae7065e13453f7766f5bccb72cf7d062f87c59c783dfca391f5936f347e
+          urls:
+            - https://deb.debian.org/debian/pool/main/libm/libmd/libmd0_1.3.0-1_arm64.deb
+            - https://snapshot.debian.org/file/4400f94fa46468def46eeda229e7033057ad4f26/libmd0_1.3.0-1_arm64.deb
     - name: libmount1
       version: 2.42.4-1
       files:
@@ -1175,6 +1847,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/u/util-linux/libmount1_2.42.4-1_amd64.deb
             - https://snapshot.debian.org/file/e1d9e8704c1318960a36b182a5f5ba27c60de8e8/libmount1_2.42.4-1_amd64.deb
+        - arch: arm64
+          sha256: 75557252326f9a911a4a0b7f4ee99b61cb73d9a92a25b7c93dd8bab16373e048
+          urls:
+            - https://deb.debian.org/debian/pool/main/u/util-linux/libmount1_2.42.4-1_arm64.deb
+            - https://snapshot.debian.org/file/5b4eebcd09cb6723305cd7012be3cbed6fd45bc3/libmount1_2.42.4-1_arm64.deb
     - name: libmpc3
       version: 1.3.1-3
       files:
@@ -1183,6 +1860,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/m/mpclib3/libmpc3_1.3.1-3_amd64.deb
             - https://snapshot.debian.org/file/c1686e1b340c83530d3768d2e97640f502222848/libmpc3_1.3.1-3_amd64.deb
+        - arch: arm64
+          sha256: 855b66dd52b20134276a7a643e888d33c9dda3c797efb3c96cccc40bfc060b6d
+          urls:
+            - https://deb.debian.org/debian/pool/main/m/mpclib3/libmpc3_1.3.1-3_arm64.deb
+            - https://snapshot.debian.org/file/abe6d3086b682eb8dae41dbcc1a00324cfe7bf6f/libmpc3_1.3.1-3_arm64.deb
     - name: libmpfr6
       version: 4.2.2-3
       files:
@@ -1191,6 +1873,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/m/mpfr4/libmpfr6_4.2.2-3_amd64.deb
             - https://snapshot.debian.org/file/6f9930c70d757f84d968f5133360290677f0559d/libmpfr6_4.2.2-3_amd64.deb
+        - arch: arm64
+          sha256: 26c79fca07f5a357e62a9efd54d35224fcaef4f7456036c47f1ee823e38731f3
+          urls:
+            - https://deb.debian.org/debian/pool/main/m/mpfr4/libmpfr6_4.2.2-3_arm64.deb
+            - https://snapshot.debian.org/file/7460bf007301d319cbc88ee995ba6564eaf0b1e3/libmpfr6_4.2.2-3_arm64.deb
     - name: libncursesw6
       version: 6.6+20260608-2
       files:
@@ -1199,6 +1886,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/n/ncurses/libncursesw6_6.6+20260608-2_amd64.deb
             - https://snapshot.debian.org/file/b244c098e1b39b5af989834fcb4df9ee7db6cdfa/libncursesw6_6.6+20260608-2_amd64.deb
+        - arch: arm64
+          sha256: a27d49cd2f7c3b02caf56b59d2c52f7bbf9d18dcbc8f96c412cf767b6b36c43e
+          urls:
+            - https://deb.debian.org/debian/pool/main/n/ncurses/libncursesw6_6.6+20260608-2_arm64.deb
+            - https://snapshot.debian.org/file/bce900a3fe222008f929603ec53ec996d015f803/libncursesw6_6.6+20260608-2_arm64.deb
     - name: libnettle8t64
       version: 3.10.2-1+b1
       files:
@@ -1207,6 +1899,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/n/nettle/libnettle8t64_3.10.2-1+b1_amd64.deb
             - https://snapshot.debian.org/file/5c42708a4705d66503df361320db6372c7a65a3a/libnettle8t64_3.10.2-1+b1_amd64.deb
+        - arch: arm64
+          sha256: b600dcf64a45508b39be31f8d415f177aa6a1c31af9b7e673063a0f4aea3875e
+          urls:
+            - https://deb.debian.org/debian/pool/main/n/nettle/libnettle8t64_3.10.2-1+b1_arm64.deb
+            - https://snapshot.debian.org/file/5123fdf90845b5229c2677cd6e4d66b61617a997/libnettle8t64_3.10.2-1+b1_arm64.deb
     - name: libpam-modules
       version: 1.7.0-8
       files:
@@ -1215,6 +1912,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/pam/libpam-modules_1.7.0-8_amd64.deb
             - https://snapshot.debian.org/file/cb5cdaed8399c1135421a14d2c011fcf6720157a/libpam-modules_1.7.0-8_amd64.deb
+        - arch: arm64
+          sha256: 9c47983cc565522cc11cf11498e3d10206056e58dedf2b0520ee2199d600609f
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/pam/libpam-modules_1.7.0-8_arm64.deb
+            - https://snapshot.debian.org/file/ff43ee5e7d219a046d19f333e475142b147a4d19/libpam-modules_1.7.0-8_arm64.deb
     - name: libpam-modules-bin
       version: 1.7.0-8
       files:
@@ -1223,6 +1925,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/pam/libpam-modules-bin_1.7.0-8_amd64.deb
             - https://snapshot.debian.org/file/1cd2d29a127dfaf44222f433674dc6480c41168c/libpam-modules-bin_1.7.0-8_amd64.deb
+        - arch: arm64
+          sha256: 6fa2eadfc410f23bb402b0d0fd124642cb62fb82abee82d26ec3b6cd14eb8752
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/pam/libpam-modules-bin_1.7.0-8_arm64.deb
+            - https://snapshot.debian.org/file/2f7d7dd71b75f294ed4be9b7b70999cff42965ba/libpam-modules-bin_1.7.0-8_arm64.deb
     - name: libpam-runtime
       version: 1.7.0-8
       files:
@@ -1239,46 +1946,76 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/pam/libpam0g_1.7.0-8_amd64.deb
             - https://snapshot.debian.org/file/22fe0f07d8d6ba4c7e34e6ba382c03c59a345cf2/libpam0g_1.7.0-8_amd64.deb
+        - arch: arm64
+          sha256: 8c3bf4a232a87b245dc4f6c72609db51c28e1435435382efdd92d2837fb9dfb9
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/pam/libpam0g_1.7.0-8_arm64.deb
+            - https://snapshot.debian.org/file/f015802079b9b5e3715373defe8b0930eec26d47/libpam0g_1.7.0-8_arm64.deb
     - name: libpcre2-16-0
-      version: 10.48-3
+      version: 10.49-1
       files:
         - arch: amd64
-          sha256: aa32a9663c32a294ac61743204959f97c6481ac6e350c2a84ac470c92266e4b6
+          sha256: b0fb10610e5670b324b6c46ef16bdf2b760a53045f310b78f767120df2abe2ab
           urls:
-            - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-16-0_10.48-3_amd64.deb
-            - https://snapshot.debian.org/file/e98953acb1bc1eb5afb4900d15da12b95410db34/libpcre2-16-0_10.48-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-16-0_10.49-1_amd64.deb
+            - https://snapshot.debian.org/file/28ac620d62df0db01198681d75910c53782fdaca/libpcre2-16-0_10.49-1_amd64.deb
+        - arch: arm64
+          sha256: bace5e0084022dafc416bdd04faaef8edabbaf3f989c4b870fafdc330b418641
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-16-0_10.49-1_arm64.deb
+            - https://snapshot.debian.org/file/acd359ac769fabc6b55ca9a418d59f24202ea8e1/libpcre2-16-0_10.49-1_arm64.deb
     - name: libpcre2-32-0
-      version: 10.48-3
+      version: 10.49-1
       files:
         - arch: amd64
-          sha256: 270582b4ab372983a7576de758e73b688de3b407c87b07e260c22f9f56603110
+          sha256: 259497d08992ee5a26afad6ce36cb2a6021552010cd1fde1318c08d35d095620
           urls:
-            - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-32-0_10.48-3_amd64.deb
-            - https://snapshot.debian.org/file/cacf05ce0964655179b0523b537061e998f66195/libpcre2-32-0_10.48-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-32-0_10.49-1_amd64.deb
+            - https://snapshot.debian.org/file/8513e4bdcb8e37ed504d759153ddf48ec372c27a/libpcre2-32-0_10.49-1_amd64.deb
+        - arch: arm64
+          sha256: f1b407d0f8d4cd8f23eaaf3ad03ebb4c8fa8af7d1bd139d6304718b18897373a
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-32-0_10.49-1_arm64.deb
+            - https://snapshot.debian.org/file/d015fa3cc04940619bf1c986f4d9245f1535e438/libpcre2-32-0_10.49-1_arm64.deb
     - name: libpcre2-8-0
-      version: 10.48-3
+      version: 10.49-1
       files:
         - arch: amd64
-          sha256: b146e5b3ee63262f2d50cf431878f2304a4262edd287f3257fdfaa4b734a36be
+          sha256: 854da48a72f55b3f6f20389b58a3e94bddd06dc02b2a9fadd006ccd0048d14ab
           urls:
-            - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-8-0_10.48-3_amd64.deb
-            - https://snapshot.debian.org/file/705971d9ad99e015286b975f3057f1083c25dde5/libpcre2-8-0_10.48-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-8-0_10.49-1_amd64.deb
+            - https://snapshot.debian.org/file/4209bf1cad51327d70c9b0be634febda14e8470b/libpcre2-8-0_10.49-1_amd64.deb
+        - arch: arm64
+          sha256: 3af37b066fb2b6ff7c6cc37c33f5144fa97650030b1b191cb082a93e0c5a5f8a
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-8-0_10.49-1_arm64.deb
+            - https://snapshot.debian.org/file/b891d89fe574b2680b5494d63740b401f530ec99/libpcre2-8-0_10.49-1_arm64.deb
     - name: libpcre2-dev
-      version: 10.48-3
+      version: 10.49-1
       files:
         - arch: amd64
-          sha256: 9e7067b3cb1dd652610e2c0566454dbeed96369460393668569c2c0e94108110
+          sha256: fb7ea91ced791fdf77dee205ac68a283e20d3b981b154e1bd96e06b8e2e825a2
           urls:
-            - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-dev_10.48-3_amd64.deb
-            - https://snapshot.debian.org/file/65510efb4fe57036f852a4547a58aa1b692b8695/libpcre2-dev_10.48-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-dev_10.49-1_amd64.deb
+            - https://snapshot.debian.org/file/a773d28374ad1e9f153a6438352759c794a13583/libpcre2-dev_10.49-1_amd64.deb
+        - arch: arm64
+          sha256: ccbb1eb29bfa80e0c1da4dde7889f9be59796e52cbd3e7bdb61a3d32930caa90
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-dev_10.49-1_arm64.deb
+            - https://snapshot.debian.org/file/672cd72ff4c72e712132f2488c58849d819fddb0/libpcre2-dev_10.49-1_arm64.deb
     - name: libpcre2-posix3
-      version: 10.48-3
+      version: 10.49-1
       files:
         - arch: amd64
-          sha256: b3ca070b39ba282d79b771d0f83171868428ac4c1e64c73fbf3226ad977ddc18
+          sha256: d1f84d41e47f45fffb01f669bb8e8ddb40a6774f3fe9d234322c1bcf127336ba
           urls:
-            - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-posix3_10.48-3_amd64.deb
-            - https://snapshot.debian.org/file/972e8ab7f897c39a42c1cf1076b59753dc68a658/libpcre2-posix3_10.48-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-posix3_10.49-1_amd64.deb
+            - https://snapshot.debian.org/file/8db1957d90a0813a37f4fd628c938141b057a425/libpcre2-posix3_10.49-1_amd64.deb
+        - arch: arm64
+          sha256: ad67845a8f66af270941d0675d0f14521c23faaa7a832856baf72f4220e3617a
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-posix3_10.49-1_arm64.deb
+            - https://snapshot.debian.org/file/1f564694e337945f1736f285bb5ed18451bc6429/libpcre2-posix3_10.49-1_arm64.deb
     - name: libperl5.42
       version: 5.42.3-1
       files:
@@ -1287,6 +2024,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/perl/libperl5.42_5.42.3-1_amd64.deb
             - https://snapshot.debian.org/file/02be14122e26e6673abfe6c8f95efa903ef4fe4c/libperl5.42_5.42.3-1_amd64.deb
+        - arch: arm64
+          sha256: 966aa1e048d806a6ebcef8d322b1e0074086a3674835323a8bf82b804e72d964
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/perl/libperl5.42_5.42.3-1_arm64.deb
+            - https://snapshot.debian.org/file/26a1175158512427e07c28dae5d032a1ffd8d13e/libperl5.42_5.42.3-1_arm64.deb
     - name: libpipeline1
       version: 1.5.8-3
       files:
@@ -1295,6 +2037,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libp/libpipeline/libpipeline1_1.5.8-3_amd64.deb
             - https://snapshot.debian.org/file/fa17c43523cdbb00895a8a676d2824b6c4e70e1a/libpipeline1_1.5.8-3_amd64.deb
+        - arch: arm64
+          sha256: e3218a30e2d3bd25216c9474ae43fe3403da4c62fb12ae018a3a743752fffa1c
+          urls:
+            - https://deb.debian.org/debian/pool/main/libp/libpipeline/libpipeline1_1.5.8-3_arm64.deb
+            - https://snapshot.debian.org/file/eb04b279ee377f46092c1bb521db4e516668ea9c/libpipeline1_1.5.8-3_arm64.deb
     - name: libpkgconf7
       version: 2.5.1-4
       files:
@@ -1303,22 +2050,37 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/pkgconf/libpkgconf7_2.5.1-4_amd64.deb
             - https://snapshot.debian.org/file/45feadfe8f3d29387d65a05e99f7a0d0df240479/libpkgconf7_2.5.1-4_amd64.deb
+        - arch: arm64
+          sha256: 2bc9e6767bd4d04645a36d48b4fbe4a68f74858a69caf9951420142e94f4e3b7
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/pkgconf/libpkgconf7_2.5.1-4_arm64.deb
+            - https://snapshot.debian.org/file/1817897fe3ed3cc4aada76b6b349b59f2b5e1bad/libpkgconf7_2.5.1-4_arm64.deb
     - name: libpng-dev
-      version: 1.6.58-1
+      version: 1.6.59-1
       files:
         - arch: amd64
-          sha256: 6b68d3b2767c95beef1a4d88028a0740a41b601e46c5f87ec9b03d287b8dd61b
+          sha256: a80ae8919cd7ead270adf76a224a26ae6c82451213987138867dd90316cb4ae4
           urls:
-            - https://deb.debian.org/debian/pool/main/libp/libpng1.6/libpng-dev_1.6.58-1_amd64.deb
-            - https://snapshot.debian.org/file/d485b7656a3cc5f53f845ef10eeceb8fc76208d8/libpng-dev_1.6.58-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libp/libpng1.6/libpng-dev_1.6.59-1_amd64.deb
+            - https://snapshot.debian.org/file/6a7d531a1b47ac4fa325d8e69382c11ed1a98c37/libpng-dev_1.6.59-1_amd64.deb
+        - arch: arm64
+          sha256: e2078ed009b5cb1b605cba4ebd8f22b3cb3fafd5b9ec42e8557e1f2a0a0b387c
+          urls:
+            - https://deb.debian.org/debian/pool/main/libp/libpng1.6/libpng-dev_1.6.59-1_arm64.deb
+            - https://snapshot.debian.org/file/6e4f286032ecd43827360741e568ba0875990ba8/libpng-dev_1.6.59-1_arm64.deb
     - name: libpng16-16t64
-      version: 1.6.58-1
+      version: 1.6.59-1
       files:
         - arch: amd64
-          sha256: e01786b8495d7e120333c5208e0d166f080b325f56d7213150a6e83ac912e4e8
+          sha256: fe67acf1d02f21062c0b75cfe3299191b38967d89cfd5cab3a831e2e4b695d05
           urls:
-            - https://deb.debian.org/debian/pool/main/libp/libpng1.6/libpng16-16t64_1.6.58-1_amd64.deb
-            - https://snapshot.debian.org/file/1ab613dec1cba491a9eea8ebd175d67956d00d0b/libpng16-16t64_1.6.58-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libp/libpng1.6/libpng16-16t64_1.6.59-1_amd64.deb
+            - https://snapshot.debian.org/file/47bf0fbcaf6639c39f6b4f97da14549854369ab3/libpng16-16t64_1.6.59-1_amd64.deb
+        - arch: arm64
+          sha256: ce774653bdd2fc0b284d7c98f61c2ec84605d660e0f6d528979e961a71b5c241
+          urls:
+            - https://deb.debian.org/debian/pool/main/libp/libpng1.6/libpng16-16t64_1.6.59-1_arm64.deb
+            - https://snapshot.debian.org/file/cc93891298feb134b017d5a65c86c97ffda745c5/libpng16-16t64_1.6.59-1_arm64.deb
     - name: libpython3-stdlib
       version: 3.14.7-3
       files:
@@ -1327,46 +2089,71 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/python3-defaults/libpython3-stdlib_3.14.7-3_amd64.deb
             - https://snapshot.debian.org/file/6ea451d3ea1263cb502e72446e7432beb7585039/libpython3-stdlib_3.14.7-3_amd64.deb
+        - arch: arm64
+          sha256: 98759771c0a51944cf6db4d03c5a1de66057e8d2532e8f5deba533e5441b688d
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/python3-defaults/libpython3-stdlib_3.14.7-3_arm64.deb
+            - https://snapshot.debian.org/file/321e469b3b3cd840226113bd03e4c73a4256fa82/libpython3-stdlib_3.14.7-3_arm64.deb
     - name: libpython3.14-minimal
-      version: 3.14.8-1
+      version: 3.14.10-1
       files:
         - arch: amd64
-          sha256: 149d1ff143259f6a5a405522d40143595fdedbf6d8e01123ea798603f895c93d
+          sha256: a59bb22e16dde6f441b892cdfd058dd93d8149cf437a31d8985dcca3cf407367
           urls:
-            - https://deb.debian.org/debian/pool/main/p/python3.14/libpython3.14-minimal_3.14.8-1_amd64.deb
-            - https://snapshot.debian.org/file/421e2ceecba032850ea50c89b5e96c62660256bd/libpython3.14-minimal_3.14.8-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/python3.14/libpython3.14-minimal_3.14.10-1_amd64.deb
+            - https://snapshot.debian.org/file/e7e9442e72c867f1716ac5f8c647d9fc22b293f1/libpython3.14-minimal_3.14.10-1_amd64.deb
+        - arch: arm64
+          sha256: 97086d9d8e58072d264382d7057aa475b0d319bbbdb809e95572e599e4ac9351
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/python3.14/libpython3.14-minimal_3.14.10-1_arm64.deb
+            - https://snapshot.debian.org/file/7a5277a05631b1fe4cab5e46f128bdf6a2b77dd7/libpython3.14-minimal_3.14.10-1_arm64.deb
     - name: libpython3.14-stdlib
-      version: 3.14.8-1
+      version: 3.14.10-1
       files:
         - arch: amd64
-          sha256: abfa1b45e311461a4f8ee110d203efbc18808fada340af7036235b0d0c4cfd9a
+          sha256: 0af595928d7a49c12fe33d5667da95dc2fa9868e1a9a00625428074d3b3d458a
           urls:
-            - https://deb.debian.org/debian/pool/main/p/python3.14/libpython3.14-stdlib_3.14.8-1_amd64.deb
-            - https://snapshot.debian.org/file/ab788accb39b8a2def317af94405f78fce3309e4/libpython3.14-stdlib_3.14.8-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/python3.14/libpython3.14-stdlib_3.14.10-1_amd64.deb
+            - https://snapshot.debian.org/file/e213e017b72da94df1473c8f8ae4bd5dabce056d/libpython3.14-stdlib_3.14.10-1_amd64.deb
+        - arch: arm64
+          sha256: 58490213be801cb679ae755b6dffaed89d8866a74f6c9128a6f6667d1c0b7250
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/python3.14/libpython3.14-stdlib_3.14.10-1_arm64.deb
+            - https://snapshot.debian.org/file/f9b36b564be2692f411b64b8eebe6ce7f74b7433/libpython3.14-stdlib_3.14.10-1_arm64.deb
     - name: libquadmath0
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: 885ad445d289ba26fca15fb160f0f4dec29564051e6076bd8a3e489bd29e3bce
+          sha256: e1d1ad037a083ad337047e3f7d9bf786f262f79745109a756e50f8e3ec85ca1f
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/libquadmath0_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/c7045ecf60efa3903d13c052e74cc4e350eac281/libquadmath0_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libquadmath0_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/bd058d9c428bc3f480c1d5e89fd7ddde9b7b06db/libquadmath0_16.2.0-4_amd64.deb
     - name: librav1e-dev
-      version: 0.8.1-11
+      version: 0.8.1-12
       files:
         - arch: amd64
-          sha256: 1e0f9cd42921bd6ef776ca2e4fcb83ca529059c91a632f78436ddfab7f2c3756
+          sha256: 8954d228d560f208e1b0ec2f912588ee47f6f67e71e66830b616677e18a9fa32
           urls:
-            - https://deb.debian.org/debian/pool/main/r/rust-rav1e/librav1e-dev_0.8.1-11_amd64.deb
-            - https://snapshot.debian.org/file/baa9fc5f67fdc4666633fa940c87f7d7d7fed1bc/librav1e-dev_0.8.1-11_amd64.deb
+            - https://deb.debian.org/debian/pool/main/r/rust-rav1e/librav1e-dev_0.8.1-12_amd64.deb
+            - https://snapshot.debian.org/file/4893e215677ec049309562cf6b4e8ee79e3a5396/librav1e-dev_0.8.1-12_amd64.deb
+        - arch: arm64
+          sha256: ed31d3745c42b9a73d9eccc5c929a2c58d5da7526ead96d9984942f5cd6c7383
+          urls:
+            - https://deb.debian.org/debian/pool/main/r/rust-rav1e/librav1e-dev_0.8.1-12_arm64.deb
+            - https://snapshot.debian.org/file/5c82fa0ea17d00874b6b8bcaa9e5ab445aad3157/librav1e-dev_0.8.1-12_arm64.deb
     - name: librav1e0.8
-      version: 0.8.1-11
+      version: 0.8.1-12
       files:
         - arch: amd64
-          sha256: 8c09b7713c298c357056c77cf0dfe496d9a15cbd6806950978e9ffec8d967b9a
+          sha256: 5f806010d7380781b0bdc2d6156d093f5e1c0d5aace398b84ee78cb47d70cc05
           urls:
-            - https://deb.debian.org/debian/pool/main/r/rust-rav1e/librav1e0.8_0.8.1-11_amd64.deb
-            - https://snapshot.debian.org/file/f51b75a8b730520d20ee4d2e6802c3ca5b99a723/librav1e0.8_0.8.1-11_amd64.deb
+            - https://deb.debian.org/debian/pool/main/r/rust-rav1e/librav1e0.8_0.8.1-12_amd64.deb
+            - https://snapshot.debian.org/file/b31bd4215f37df3ddb8ebb54e533738cc1acab0a/librav1e0.8_0.8.1-12_amd64.deb
+        - arch: arm64
+          sha256: b2b07d5598fbc7a3537d20e7594c78c5340305c1c31fc3a15d1ae17dd0ade652
+          urls:
+            - https://deb.debian.org/debian/pool/main/r/rust-rav1e/librav1e0.8_0.8.1-12_arm64.deb
+            - https://snapshot.debian.org/file/867ea99f5782521b432ee79c9764c8d051c6413e/librav1e0.8_0.8.1-12_arm64.deb
     - name: libreadline8t64
       version: 8.3-4
       files:
@@ -1375,30 +2162,50 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/r/readline/libreadline8t64_8.3-4_amd64.deb
             - https://snapshot.debian.org/file/dd44ea08a64705c0876cd1b21adc3b7e608f3b04/libreadline8t64_8.3-4_amd64.deb
+        - arch: arm64
+          sha256: c8f93840910ad4db3778e3b730193e8f50ad947a9f6c978fa941cb6202e934b6
+          urls:
+            - https://deb.debian.org/debian/pool/main/r/readline/libreadline8t64_8.3-4_arm64.deb
+            - https://snapshot.debian.org/file/439fe34864569ef239600d8b8776f2cc05fd16b8/libreadline8t64_8.3-4_arm64.deb
     - name: libseccomp2
-      version: 2.6.1-1+b1
+      version: 2.6.1-1+b2
       files:
         - arch: amd64
-          sha256: 6cfbb195275e4d514ad9f5597bcdcbed7bd1c094d32e1d9bee4cbc6e13a1a550
+          sha256: 2d97c9f6ce55043caff1f6818ff9f85693528604f9d7538bd1ff61a492db8567
           urls:
-            - https://deb.debian.org/debian/pool/main/libs/libseccomp/libseccomp2_2.6.1-1+b1_amd64.deb
-            - https://snapshot.debian.org/file/14b00eb0d291a39ede934036fea21d7076ab52a2/libseccomp2_2.6.1-1+b1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libs/libseccomp/libseccomp2_2.6.1-1+b2_amd64.deb
+            - https://snapshot.debian.org/file/f0a667a3e4b248bb37376291765245a83a6c9168/libseccomp2_2.6.1-1+b2_amd64.deb
+        - arch: arm64
+          sha256: 07819764387caeedc4a4be727b0b18625512620bb78e37ec58469dab113717ff
+          urls:
+            - https://deb.debian.org/debian/pool/main/libs/libseccomp/libseccomp2_2.6.1-1+b2_arm64.deb
+            - https://snapshot.debian.org/file/90094e9724d5b2e461a44a620b884b0f424ca658/libseccomp2_2.6.1-1+b2_arm64.deb
     - name: libselinux-dev
-      version: 3.11-2.1
+      version: 3.11-2.1+b1
       files:
         - arch: amd64
-          sha256: d809f32817d60ea7d0ddb374c0a5ebcae486fcba6528dec6603b14808ae957e6
+          sha256: 3aad410ed1dc0321a7f54a7d028bd981fa45c3c31ac0bb53ef6a5b0d35d4c9c1
           urls:
-            - https://deb.debian.org/debian/pool/main/libs/libselinux/libselinux-dev_3.11-2.1_amd64.deb
-            - https://snapshot.debian.org/file/d36464296568f9a8c8d221eb1fe18d4fd9a796fb/libselinux-dev_3.11-2.1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libs/libselinux/libselinux-dev_3.11-2.1+b1_amd64.deb
+            - https://snapshot.debian.org/file/09fcb0f527fb71e8faf9d92297fbd4417b6ceca7/libselinux-dev_3.11-2.1+b1_amd64.deb
+        - arch: arm64
+          sha256: 224332c4ade7859ad47233d17c0106981e72af52df5ee2bdd9ee1bda43d0f8f9
+          urls:
+            - https://deb.debian.org/debian/pool/main/libs/libselinux/libselinux-dev_3.11-2.1+b1_arm64.deb
+            - https://snapshot.debian.org/file/2561ca4b62770a67b9401564f5818cc10625ee00/libselinux-dev_3.11-2.1+b1_arm64.deb
     - name: libselinux1
-      version: 3.11-2.1
+      version: 3.11-2.1+b1
       files:
         - arch: amd64
-          sha256: e060712ee0dae5f61e1fb4f978edc8a2b083299384caaf9fc05cefbd8972b826
+          sha256: 12c9fc5222e3f4e727793da05f37a5981aaa9cb8e455a8654cb78a15db66ae22
           urls:
-            - https://deb.debian.org/debian/pool/main/libs/libselinux/libselinux1_3.11-2.1_amd64.deb
-            - https://snapshot.debian.org/file/83c57d087df38aa092dda515dc7d1256487d284f/libselinux1_3.11-2.1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libs/libselinux/libselinux1_3.11-2.1+b1_amd64.deb
+            - https://snapshot.debian.org/file/ff1a27eba8c843f93d0abe63e532b8d117a130ac/libselinux1_3.11-2.1+b1_amd64.deb
+        - arch: arm64
+          sha256: 69096c93ae439c34892f94a023aff6f944e5f1e4003c11b83558319a39444f02
+          urls:
+            - https://deb.debian.org/debian/pool/main/libs/libselinux/libselinux1_3.11-2.1+b1_arm64.deb
+            - https://snapshot.debian.org/file/78c886167fe056c962750cd63ff6282c4a4d761e/libselinux1_3.11-2.1+b1_arm64.deb
     - name: libsepol-dev
       version: 3.11-1
       files:
@@ -1407,6 +2214,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libs/libsepol/libsepol-dev_3.11-1_amd64.deb
             - https://snapshot.debian.org/file/c3723b4943d78191e1a15e56b80c098a533a1a83/libsepol-dev_3.11-1_amd64.deb
+        - arch: arm64
+          sha256: 48d4e13ece96f646469983b74560a3f9142839565c2d7fcfa8733a80f9d6cffb
+          urls:
+            - https://deb.debian.org/debian/pool/main/libs/libsepol/libsepol-dev_3.11-1_arm64.deb
+            - https://snapshot.debian.org/file/e7e4ab0cd7fc4a8f7701074f6cc27ae974fd0829/libsepol-dev_3.11-1_arm64.deb
     - name: libsepol2
       version: 3.11-1
       files:
@@ -1415,14 +2227,24 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libs/libsepol/libsepol2_3.11-1_amd64.deb
             - https://snapshot.debian.org/file/d514268988a8f2b489ddb3de6f0e304158053240/libsepol2_3.11-1_amd64.deb
+        - arch: arm64
+          sha256: 8bae0284ef181690265f3e191e8d0497e817125f65f1da53e51cfdbe340a475e
+          urls:
+            - https://deb.debian.org/debian/pool/main/libs/libsepol/libsepol2_3.11-1_arm64.deb
+            - https://snapshot.debian.org/file/7234a20953acd99d25ab944a155de7e7b5474b24/libsepol2_3.11-1_arm64.deb
     - name: libsframe3
-      version: 2.47-6
+      version: 2.47.50.20261021-1
       files:
         - arch: amd64
-          sha256: 36156e7023617de2afc0600d4cc6e08691b21d5cdba749ea90509fce812c299f
+          sha256: bd6fb9902d8139efde7df0c4d9e4ed2e4412a0f27f7534d42d04006644e5791e
           urls:
-            - https://deb.debian.org/debian/pool/main/b/binutils/libsframe3_2.47-6_amd64.deb
-            - https://snapshot.debian.org/file/0c71c259b6e7b8868756d7ce5a8a6c89be6d0e5e/libsframe3_2.47-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/b/binutils/libsframe3_2.47.50.20261021-1_amd64.deb
+            - https://snapshot.debian.org/file/8707197a466a4c65e6faad925b3c5631577767eb/libsframe3_2.47.50.20261021-1_amd64.deb
+        - arch: arm64
+          sha256: 28217443142f93a955533e11cf4a80e6b25286c619495b0944216938b1209f4f
+          urls:
+            - https://deb.debian.org/debian/pool/main/b/binutils/libsframe3_2.47.50.20261021-1_arm64.deb
+            - https://snapshot.debian.org/file/5dd7321e3510d5557602480ebb193cb24510172b/libsframe3_2.47.50.20261021-1_arm64.deb
     - name: libsharpyuv-dev
       version: 1.6.0-0.1
       files:
@@ -1431,6 +2253,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libw/libwebp/libsharpyuv-dev_1.6.0-0.1_amd64.deb
             - https://snapshot.debian.org/file/07092c05032b622a09dfae7be7ecb54e012f117f/libsharpyuv-dev_1.6.0-0.1_amd64.deb
+        - arch: arm64
+          sha256: 2943f4c2df97ef0d4d3534f893af6141f5f7c186714e88f66f3dae4ef1d38c8e
+          urls:
+            - https://deb.debian.org/debian/pool/main/libw/libwebp/libsharpyuv-dev_1.6.0-0.1_arm64.deb
+            - https://snapshot.debian.org/file/72edb8396a214a5b23050a15f8745d8568512c15/libsharpyuv-dev_1.6.0-0.1_arm64.deb
     - name: libsharpyuv0
       version: 1.6.0-0.1
       files:
@@ -1439,6 +2266,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libw/libwebp/libsharpyuv0_1.6.0-0.1_amd64.deb
             - https://snapshot.debian.org/file/32c86d6b80ebbeeb103e4f20513abd2c340ca788/libsharpyuv0_1.6.0-0.1_amd64.deb
+        - arch: arm64
+          sha256: fc6a3223eeaedaf5697087e0097b8f1b83268bd830be76916b99d56ef9d33ae7
+          urls:
+            - https://deb.debian.org/debian/pool/main/libw/libwebp/libsharpyuv0_1.6.0-0.1_arm64.deb
+            - https://snapshot.debian.org/file/4b0f320f4d5c019a0560d7a9b7252873665e9759/libsharpyuv0_1.6.0-0.1_arm64.deb
     - name: libsmartcols1
       version: 2.42.4-1
       files:
@@ -1447,6 +2279,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/u/util-linux/libsmartcols1_2.42.4-1_amd64.deb
             - https://snapshot.debian.org/file/265220221414f0bbb249768c4055dc1bd788b7f0/libsmartcols1_2.42.4-1_amd64.deb
+        - arch: arm64
+          sha256: c1462c27a61a078b58f72b1f4dce8e8e3c58238b0ba1d1851f09c586724946ff
+          urls:
+            - https://deb.debian.org/debian/pool/main/u/util-linux/libsmartcols1_2.42.4-1_arm64.deb
+            - https://snapshot.debian.org/file/062d2ad43080a3501315d8167f353049cfb87c71/libsmartcols1_2.42.4-1_arm64.deb
     - name: libsqlite3-0
       version: 3.53.4-2
       files:
@@ -1455,46 +2292,76 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/s/sqlite3/libsqlite3-0_3.53.4-2_amd64.deb
             - https://snapshot.debian.org/file/ccef609db812935fae3e50a19ff7786a68024a5e/libsqlite3-0_3.53.4-2_amd64.deb
+        - arch: arm64
+          sha256: e417fb0642502c090d84a6f5fce1a2e5961dfe18644415ddce77a1a67cd2fc89
+          urls:
+            - https://deb.debian.org/debian/pool/main/s/sqlite3/libsqlite3-0_3.53.4-2_arm64.deb
+            - https://snapshot.debian.org/file/9bd24d1a146222357866094f63f169683654fa26/libsqlite3-0_3.53.4-2_arm64.deb
     - name: libssl3t64
-      version: 3.6.4-1
+      version: 3.6.5-1
       files:
         - arch: amd64
-          sha256: 440d869ef7c24af2e92602c156a6753587414bd1de30b1e55f722082bc157434
+          sha256: 0a0ec84fe860c5c93c74d53cbb071aea0793327a3761b483080e9d7b73c21b37
           urls:
-            - https://deb.debian.org/debian/pool/main/o/openssl/libssl3t64_3.6.4-1_amd64.deb
-            - https://snapshot.debian.org/file/2c405e774bfabfb2f3542713dab1ff58b7e51ff7/libssl3t64_3.6.4-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/o/openssl/libssl3t64_3.6.5-1_amd64.deb
+            - https://snapshot.debian.org/file/746327c24b4eb989674a856e5a3742d75365d636/libssl3t64_3.6.5-1_amd64.deb
+        - arch: arm64
+          sha256: 76770c099cfb06cd48cb0764ac3a7771c8b38e17d25780010d55772dce6b36f8
+          urls:
+            - https://deb.debian.org/debian/pool/main/o/openssl/libssl3t64_3.6.5-1_arm64.deb
+            - https://snapshot.debian.org/file/90b9cd150535243011c173adb03222a2570aab06/libssl3t64_3.6.5-1_arm64.deb
     - name: libstdc++-16-dev
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: 9bbc2704dd8d47fb593f7051cb01c8bdba22e13d817774f771cad854b53c4e49
+          sha256: a850688c171492cadd7be8ef9741fcd45fe6c42b928efe4e34f6960e2e5dbf0b
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/libstdc++-16-dev_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/0f210eb1bd0ec7bc1f3a47bb9abbf737ffc75f2f/libstdc++-16-dev_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libstdc++-16-dev_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/6f4539a2468586c565db4955ae6b8e1e7b6adb52/libstdc++-16-dev_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: 33fe1ed9ef42a8de49ac97d4ea32b3459d48029a73e3bd6806ee3169d35da8b3
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libstdc++-16-dev_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/f050499af8d7408b8675417947baf30cb471a14b/libstdc++-16-dev_16.2.0-4_arm64.deb
     - name: libstdc++6
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: 7c9e1a89e6c0b9202699957b469c06d0b86f5c97e86c1ff912b6502ddd8793b6
+          sha256: cef6654bba1daece0bc0dbe0e3f69fa5a26eb6ba139f3536e6f4806bd787f3e7
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/libstdc++6_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/62128a071f615ef357fdad89eeb7146f03a95c32/libstdc++6_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libstdc++6_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/4fd8dfe2b8b6505c3aeffb06d47c1c06df8d4c38/libstdc++6_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: d7d0387468ffed2bc8aa32e16cd05bd9e4b9ea120863d69ee557d2d6dd663c39
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libstdc++6_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/c57963a5c34207e9dffacdda614df4c4e6d6d715/libstdc++6_16.2.0-4_arm64.deb
     - name: libsvtav1enc-dev
-      version: 4.1.0+dfsg-1
+      version: 4.2.0+dfsg-3
       files:
         - arch: amd64
-          sha256: 61dff5243248b68018e19dea560669c107b747c089188bd18c3c9930ecf3628a
+          sha256: fb0963eed69911d5eac6c1360b6de0c4b8961074c9b2066290e95ff13f7bc627
           urls:
-            - https://deb.debian.org/debian/pool/main/s/svt-av1/libsvtav1enc-dev_4.1.0+dfsg-1_amd64.deb
-            - https://snapshot.debian.org/file/4ef24321bfddb11b65bf031896043eeaf5022d91/libsvtav1enc-dev_4.1.0+dfsg-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/s/svt-av1/libsvtav1enc-dev_4.2.0+dfsg-3_amd64.deb
+            - https://snapshot.debian.org/file/64e8840bf25271bae51285420dd6ab6f079b7b71/libsvtav1enc-dev_4.2.0+dfsg-3_amd64.deb
+        - arch: arm64
+          sha256: eea8b0a284be489293d7fe47ccc9c623d74874e550797bfe706fecf8e02492f7
+          urls:
+            - https://deb.debian.org/debian/pool/main/s/svt-av1/libsvtav1enc-dev_4.2.0+dfsg-3_arm64.deb
+            - https://snapshot.debian.org/file/3a0e49ace351dd723ca1c9fca070d32fcca2d35c/libsvtav1enc-dev_4.2.0+dfsg-3_arm64.deb
     - name: libsvtav1enc4
-      version: 4.1.0+dfsg-1
+      version: 4.2.0+dfsg-3
       files:
         - arch: amd64
-          sha256: c5f8d4bf368b4138762f6f735fdc7798ec11e225fe89bb5090abea3521f60780
+          sha256: 7844a846c1adf1f32072c53f28e8f36715b02adff944ac06928055d38da21acf
           urls:
-            - https://deb.debian.org/debian/pool/main/s/svt-av1/libsvtav1enc4_4.1.0+dfsg-1_amd64.deb
-            - https://snapshot.debian.org/file/1bbda49a2a08ea258a70dbafcc9cbea3ceb9890c/libsvtav1enc4_4.1.0+dfsg-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/s/svt-av1/libsvtav1enc4_4.2.0+dfsg-3_amd64.deb
+            - https://snapshot.debian.org/file/fbe920b546765a751b5001eea3e12d9e991141bb/libsvtav1enc4_4.2.0+dfsg-3_amd64.deb
+        - arch: arm64
+          sha256: 3465866132f9310c82d57945b0fad53f6f82f4ae22e408e8338c1cf10fe102eb
+          urls:
+            - https://deb.debian.org/debian/pool/main/s/svt-av1/libsvtav1enc4_4.2.0+dfsg-3_arm64.deb
+            - https://snapshot.debian.org/file/b118cac135e23e03ca352bc5af8f206f2db4a063/libsvtav1enc4_4.2.0+dfsg-3_arm64.deb
     - name: libsystemd0
       version: 262-1
       files:
@@ -1503,6 +2370,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/s/systemd/libsystemd0_262-1_amd64.deb
             - https://snapshot.debian.org/file/11373dc2b61701456f3425aebf2a55725ba3f0f5/libsystemd0_262-1_amd64.deb
+        - arch: arm64
+          sha256: 558f41b5b1f56d51e74d94ce4bd1d719875983613f809c49c83900c2bbd87149
+          urls:
+            - https://deb.debian.org/debian/pool/main/s/systemd/libsystemd0_262-1_arm64.deb
+            - https://snapshot.debian.org/file/558edc0e10596ea615078571362e9c1e40ec1b4a/libsystemd0_262-1_arm64.deb
     - name: libtiff-dev
       version: 4.7.2-1
       files:
@@ -1511,6 +2383,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/t/tiff/libtiff-dev_4.7.2-1_amd64.deb
             - https://snapshot.debian.org/file/c33746995a1ed159045d44671e88eedf6afd3901/libtiff-dev_4.7.2-1_amd64.deb
+        - arch: arm64
+          sha256: 2e817a9d5e1fee83b963d1d5695c2722b38d7066b6fba079158a82573c30c256
+          urls:
+            - https://deb.debian.org/debian/pool/main/t/tiff/libtiff-dev_4.7.2-1_arm64.deb
+            - https://snapshot.debian.org/file/92ab099494b81f827fac6ec619d7f818f697357f/libtiff-dev_4.7.2-1_arm64.deb
     - name: libtiff6
       version: 4.7.2-1
       files:
@@ -1519,6 +2396,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/t/tiff/libtiff6_4.7.2-1_amd64.deb
             - https://snapshot.debian.org/file/ab29760f71763e18287e38b7984c6dee2d4890a8/libtiff6_4.7.2-1_amd64.deb
+        - arch: arm64
+          sha256: f9d9dcecd56355c783d697e73669b3e375ea9afeb0028d9813160bb3134075c2
+          urls:
+            - https://deb.debian.org/debian/pool/main/t/tiff/libtiff6_4.7.2-1_arm64.deb
+            - https://snapshot.debian.org/file/e8f1f61bf88f1f59b880e07121772ae56a281055/libtiff6_4.7.2-1_arm64.deb
     - name: libtiffxx6
       version: 4.7.2-1
       files:
@@ -1527,6 +2409,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/t/tiff/libtiffxx6_4.7.2-1_amd64.deb
             - https://snapshot.debian.org/file/10742a0876f8d85260bb645188c045b71f1c50b6/libtiffxx6_4.7.2-1_amd64.deb
+        - arch: arm64
+          sha256: 71d539a05f74636f9c7a8bbb660dc14aeaca993556df1fe6f1623cf7e20e2c70
+          urls:
+            - https://deb.debian.org/debian/pool/main/t/tiff/libtiffxx6_4.7.2-1_arm64.deb
+            - https://snapshot.debian.org/file/9ab9b628dec794f47b8b86da10778125305535b7/libtiffxx6_4.7.2-1_arm64.deb
     - name: libtinfo6
       version: 6.6+20260608-2
       files:
@@ -1535,30 +2422,45 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/n/ncurses/libtinfo6_6.6+20260608-2_amd64.deb
             - https://snapshot.debian.org/file/e735a70960f7e4a0d2928a333dccd23490f460e3/libtinfo6_6.6+20260608-2_amd64.deb
+        - arch: arm64
+          sha256: 2ba77e68fbadd96dd7aa83399ab681593d5b48e951ae63e69a7a0650dfdfaf76
+          urls:
+            - https://deb.debian.org/debian/pool/main/n/ncurses/libtinfo6_6.6+20260608-2_arm64.deb
+            - https://snapshot.debian.org/file/c40d80e1450d8de372543945e772ad857ccf7267/libtinfo6_6.6+20260608-2_arm64.deb
     - name: libtool
-      version: 2.6.2-2
+      version: 2.6.2-3
       files:
         - arch: all
-          sha256: b411b94624cbe73afbe5bc177ea34053e758e40de82fce44064a58e4f731341f
+          sha256: 2c21ecbe4068a5cd9ce6b033e03fe33102bb6b1d56ba99640e60a0603d15ccb0
           urls:
-            - https://deb.debian.org/debian/pool/main/libt/libtool/libtool_2.6.2-2_all.deb
-            - https://snapshot.debian.org/file/829a82139594e3173d89cb98a9e1d4aba89b7f25/libtool_2.6.2-2_all.deb
+            - https://deb.debian.org/debian/pool/main/libt/libtool/libtool_2.6.2-3_all.deb
+            - https://snapshot.debian.org/file/4293b3fde47deeeea72586d7c3b7d0227330d4ce/libtool_2.6.2-3_all.deb
     - name: libtsan2
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: dd210da482dee72e1ab41fca36a864edda2e03a2a18d94b0cffacdb861414a04
+          sha256: fea7dd754a62af902d0495d42db3e3b52aef91d455b9d770d682080511766881
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/libtsan2_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/c5fcf9464ce7d1a790cfc2d920c46efbe41ef9c9/libtsan2_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libtsan2_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/d8369c1cc49913f188f683728d4c12100ac3525e/libtsan2_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: d32f9c3f754c2be3e992a736f4ba3007504e038fe89649693237d5abd5715721
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libtsan2_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/032fecfb3bb4c7d0c4448d4e0a01b5265273b325/libtsan2_16.2.0-4_arm64.deb
     - name: libubsan1
-      version: 16.2.0-3
+      version: 16.2.0-4
       files:
         - arch: amd64
-          sha256: 3c749a6bc37bd1aca3c7ece1063032716b328f0a80013688828dcd2448dc9f46
+          sha256: 6a37169e525055fcfaed5b54f7bc1c93babb2338c9b9deff62f2613bdfc04f8d
           urls:
-            - https://deb.debian.org/debian/pool/main/g/gcc-16/libubsan1_16.2.0-3_amd64.deb
-            - https://snapshot.debian.org/file/05efe97de4bc9841dec40aae17cda5a68d009ab3/libubsan1_16.2.0-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libubsan1_16.2.0-4_amd64.deb
+            - https://snapshot.debian.org/file/6722e3cd37918e700cec9802b9ad89932d93f0a6/libubsan1_16.2.0-4_amd64.deb
+        - arch: arm64
+          sha256: 996a0a52cc9a26e725ce3b0664d81d4e7658d35e2ec235ed4f2e64ac1b6fa14c
+          urls:
+            - https://deb.debian.org/debian/pool/main/g/gcc-16/libubsan1_16.2.0-4_arm64.deb
+            - https://snapshot.debian.org/file/832996858d7a3bc81666827c2211aa422691cfe9/libubsan1_16.2.0-4_arm64.deb
     - name: libuchardet0
       version: 0.0.8-2+b2
       files:
@@ -1567,6 +2469,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/u/uchardet/libuchardet0_0.0.8-2+b2_amd64.deb
             - https://snapshot.debian.org/file/86acc8a7444fb07d9f8cbf65f811628bdd242abe/libuchardet0_0.0.8-2+b2_amd64.deb
+        - arch: arm64
+          sha256: c853ca5ce7986422a5fe5f8ea80940116e0746e537e99d8b401efcb7d585537e
+          urls:
+            - https://deb.debian.org/debian/pool/main/u/uchardet/libuchardet0_0.0.8-2+b2_arm64.deb
+            - https://snapshot.debian.org/file/40c59f66f4460b259ce5917959a6b86da9cc31a1/libuchardet0_0.0.8-2+b2_arm64.deb
     - name: libudev1
       version: 262-1
       files:
@@ -1575,6 +2482,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/s/systemd/libudev1_262-1_amd64.deb
             - https://snapshot.debian.org/file/11568af6ed01c0b8a6895664734bde79e5de46c1/libudev1_262-1_amd64.deb
+        - arch: arm64
+          sha256: cd4a42461675b178caa95623b31077583635886c2fca993d4ff3393c4148abea
+          urls:
+            - https://deb.debian.org/debian/pool/main/s/systemd/libudev1_262-1_arm64.deb
+            - https://snapshot.debian.org/file/4f3d89720014fd217a3060f7052935d2244ace42/libudev1_262-1_arm64.deb
     - name: libunistring5
       version: 1.4.2-1
       files:
@@ -1583,6 +2495,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libu/libunistring/libunistring5_1.4.2-1_amd64.deb
             - https://snapshot.debian.org/file/8b188f01b3a8ee30b2f0d58a800acb30bb570a0d/libunistring5_1.4.2-1_amd64.deb
+        - arch: arm64
+          sha256: 532a6e1cc3d9f154d8892e5c58bcfb070c4fbad7d221c6f81af3acf9a9fcb12e
+          urls:
+            - https://deb.debian.org/debian/pool/main/libu/libunistring/libunistring5_1.4.2-1_arm64.deb
+            - https://snapshot.debian.org/file/be9d01f1620829331bd474330db0bbcc09b26b7f/libunistring5_1.4.2-1_arm64.deb
     - name: libuuid1
       version: 2.42.4-1
       files:
@@ -1591,6 +2508,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/u/util-linux/libuuid1_2.42.4-1_amd64.deb
             - https://snapshot.debian.org/file/8d3cc79f7d0a8ba3581111f5f184c9f03d3a1fa3/libuuid1_2.42.4-1_amd64.deb
+        - arch: arm64
+          sha256: a328012faba3f0ce224a61571a77b0798dbd783303aa436277c7909ed77800a9
+          urls:
+            - https://deb.debian.org/debian/pool/main/u/util-linux/libuuid1_2.42.4-1_arm64.deb
+            - https://snapshot.debian.org/file/d15846733c1102d1ba0fe4b62265787050909c68/libuuid1_2.42.4-1_arm64.deb
     - name: libvpx-dev
       version: 1.17.0-1
       files:
@@ -1599,6 +2521,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libv/libvpx/libvpx-dev_1.17.0-1_amd64.deb
             - https://snapshot.debian.org/file/d733be573b7ab5bb36295d9921a4f60ae08c6c6f/libvpx-dev_1.17.0-1_amd64.deb
+        - arch: arm64
+          sha256: 543655f38a00843d482cf0748f2d71fa117af423e95cdc6e8354b0bbb7150b7a
+          urls:
+            - https://deb.debian.org/debian/pool/main/libv/libvpx/libvpx-dev_1.17.0-1_arm64.deb
+            - https://snapshot.debian.org/file/0a39d2199b2096854d27241b8168286a14fc89eb/libvpx-dev_1.17.0-1_arm64.deb
     - name: libvpx12
       version: 1.17.0-1
       files:
@@ -1607,6 +2534,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libv/libvpx/libvpx12_1.17.0-1_amd64.deb
             - https://snapshot.debian.org/file/7fda771022c45c78c988b224b616f7ceb1c3b186/libvpx12_1.17.0-1_amd64.deb
+        - arch: arm64
+          sha256: 6e1301459708d07b1579357de962dd14a7b77a80ba9706c31ad5757ebd35b377
+          urls:
+            - https://deb.debian.org/debian/pool/main/libv/libvpx/libvpx12_1.17.0-1_arm64.deb
+            - https://snapshot.debian.org/file/e8395885634591743f9f456ed94a46ee9c623f48/libvpx12_1.17.0-1_arm64.deb
     - name: libwebp-dev
       version: 1.6.0-0.1
       files:
@@ -1615,6 +2547,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libw/libwebp/libwebp-dev_1.6.0-0.1_amd64.deb
             - https://snapshot.debian.org/file/b169a788a1cbe7c9f29d4c770985bdc245bfb41b/libwebp-dev_1.6.0-0.1_amd64.deb
+        - arch: arm64
+          sha256: 1a1ad212888919ef9096332108be9eae26aead4c92db744e62684201795d1aea
+          urls:
+            - https://deb.debian.org/debian/pool/main/libw/libwebp/libwebp-dev_1.6.0-0.1_arm64.deb
+            - https://snapshot.debian.org/file/0b752d36c4874a91001f83ba56a3035115d5ae9e/libwebp-dev_1.6.0-0.1_arm64.deb
     - name: libwebp7
       version: 1.6.0-0.1
       files:
@@ -1623,6 +2560,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libw/libwebp/libwebp7_1.6.0-0.1_amd64.deb
             - https://snapshot.debian.org/file/9342d188be562ce87d5e3e14da99783c37f066d6/libwebp7_1.6.0-0.1_amd64.deb
+        - arch: arm64
+          sha256: 9fa4573c997f31a9551d8424609a1c500b29087738ac388378490c85b739186a
+          urls:
+            - https://deb.debian.org/debian/pool/main/libw/libwebp/libwebp7_1.6.0-0.1_arm64.deb
+            - https://snapshot.debian.org/file/4404ac122dd4a0d41fb6bc032ccbdf94ad7f9a53/libwebp7_1.6.0-0.1_arm64.deb
     - name: libwebpdecoder3
       version: 1.6.0-0.1
       files:
@@ -1631,6 +2573,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libw/libwebp/libwebpdecoder3_1.6.0-0.1_amd64.deb
             - https://snapshot.debian.org/file/6d8f3e5db4faba37536437b28e9fe14c01891013/libwebpdecoder3_1.6.0-0.1_amd64.deb
+        - arch: arm64
+          sha256: 84709c32028666f23e2a212f40f767b7db3dfe08eac792b460aea26a8fb0c0cf
+          urls:
+            - https://deb.debian.org/debian/pool/main/libw/libwebp/libwebpdecoder3_1.6.0-0.1_arm64.deb
+            - https://snapshot.debian.org/file/501c29c59b184df5338ba24431638fcd3a3fb92e/libwebpdecoder3_1.6.0-0.1_arm64.deb
     - name: libwebpdemux2
       version: 1.6.0-0.1
       files:
@@ -1639,6 +2586,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libw/libwebp/libwebpdemux2_1.6.0-0.1_amd64.deb
             - https://snapshot.debian.org/file/0eb6a7949488f6485025009a282d7dc8e728717a/libwebpdemux2_1.6.0-0.1_amd64.deb
+        - arch: arm64
+          sha256: fd315ecc6771d3d94eb00775b5ec6cdd70a14aecda4896ccf531de6c3bd3f37f
+          urls:
+            - https://deb.debian.org/debian/pool/main/libw/libwebp/libwebpdemux2_1.6.0-0.1_arm64.deb
+            - https://snapshot.debian.org/file/6fde4fd39fc3a5ab550a70c91910cd9fec0e8972/libwebpdemux2_1.6.0-0.1_arm64.deb
     - name: libwebpmux3
       version: 1.6.0-0.1
       files:
@@ -1647,30 +2599,45 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libw/libwebp/libwebpmux3_1.6.0-0.1_amd64.deb
             - https://snapshot.debian.org/file/19088a79940f6c733f38aceffde0c6f8a04efe30/libwebpmux3_1.6.0-0.1_amd64.deb
+        - arch: arm64
+          sha256: 18f02cd5fd02f19f946e85aff8478a709dd1c994c6b8d2676046e34f0430d226
+          urls:
+            - https://deb.debian.org/debian/pool/main/libw/libwebp/libwebpmux3_1.6.0-0.1_arm64.deb
+            - https://snapshot.debian.org/file/b271af6a3d8663f15d9cb2fbab86cad21c9c4441/libwebpmux3_1.6.0-0.1_arm64.deb
     - name: libx11-6
-      version: 2:1.8.13-1
+      version: 2:1.8.14-1
       files:
         - arch: amd64
-          sha256: b2ac87f0581b3485a91a5cef4b189f0ad7373569214bf4bec41e169a0abfca73
+          sha256: 4db6a694864986c410275434c86bfb26f01ddfd471512cf7fa1eabdf09fc9312
           urls:
-            - https://deb.debian.org/debian/pool/main/libx/libx11/libx11-6_1.8.13-1_amd64.deb
-            - https://snapshot.debian.org/file/f14e6f64cf44149f80d2da7237d5fe547983c5f0/libx11-6_1.8.13-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libx/libx11/libx11-6_1.8.14-1_amd64.deb
+            - https://snapshot.debian.org/file/a355dc2e2c7b6af8b29a2145e96ba239b18f993a/libx11-6_1.8.14-1_amd64.deb
+        - arch: arm64
+          sha256: 51c2ad982f79bd5f871f5314ea94b30e232dc3dcb5950eb43028d55e0890886c
+          urls:
+            - https://deb.debian.org/debian/pool/main/libx/libx11/libx11-6_1.8.14-1_arm64.deb
+            - https://snapshot.debian.org/file/24a791c3ff90e7fcf2a78f2e377ad2d4ec287da0/libx11-6_1.8.14-1_arm64.deb
     - name: libx11-data
-      version: 2:1.8.13-1
+      version: 2:1.8.14-1
       files:
         - arch: all
-          sha256: e711ddf5a618b355953688a7b45050e0aef7b1effbe4a01c8ad0296695ab2e86
+          sha256: 4e9d56e61e5eca504179adf0fe32aed8bce39dc2d112049a80387f6c1e1cb66b
           urls:
-            - https://deb.debian.org/debian/pool/main/libx/libx11/libx11-data_1.8.13-1_all.deb
-            - https://snapshot.debian.org/file/3043ce71b5f681ebc692d1b622bb97585761680d/libx11-data_1.8.13-1_all.deb
+            - https://deb.debian.org/debian/pool/main/libx/libx11/libx11-data_1.8.14-1_all.deb
+            - https://snapshot.debian.org/file/4b093cb607dc33c2184d2fd0b3a19552bf71cb21/libx11-data_1.8.14-1_all.deb
     - name: libx11-dev
-      version: 2:1.8.13-1
+      version: 2:1.8.14-1
       files:
         - arch: amd64
-          sha256: d1c1c0a151fc29d01e5136a05b9a9a08d99471e9b4baab917429f65d61f39151
+          sha256: 0c3143d7005998e5d99dc84313a528ab1c6791a1d2b9e3a459db8b899fab7f8b
           urls:
-            - https://deb.debian.org/debian/pool/main/libx/libx11/libx11-dev_1.8.13-1_amd64.deb
-            - https://snapshot.debian.org/file/7ea34bf3c968b9261ff2dac5987de53c85f8bf71/libx11-dev_1.8.13-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libx/libx11/libx11-dev_1.8.14-1_amd64.deb
+            - https://snapshot.debian.org/file/7cd90202c8a1212bf19bd6e0858a5e1d526609ce/libx11-dev_1.8.14-1_amd64.deb
+        - arch: arm64
+          sha256: 441771ed74171e736e574cb656ec940f9d9d55b23b0ed85dcbb1df4c939346b2
+          urls:
+            - https://deb.debian.org/debian/pool/main/libx/libx11/libx11-dev_1.8.14-1_arm64.deb
+            - https://snapshot.debian.org/file/24fa161c6eda9e359a2259f21dbdf5cdec6cf358/libx11-dev_1.8.14-1_arm64.deb
     - name: libxau-dev
       version: 1:1.0.11-1+b2
       files:
@@ -1679,6 +2646,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libx/libxau/libxau-dev_1.0.11-1+b2_amd64.deb
             - https://snapshot.debian.org/file/4951978d6d0bcdeafe6739c3591e120bc17e0678/libxau-dev_1.0.11-1+b2_amd64.deb
+        - arch: arm64
+          sha256: 3eada099d69406d022e4964ef1c126071059f0b63428d5f51146d7754a2bc1a9
+          urls:
+            - https://deb.debian.org/debian/pool/main/libx/libxau/libxau-dev_1.0.11-1+b2_arm64.deb
+            - https://snapshot.debian.org/file/b4b68eeb1df9cf8b01f9d574874b5b2e3945453f/libxau-dev_1.0.11-1+b2_arm64.deb
     - name: libxau6
       version: 1:1.0.11-1+b2
       files:
@@ -1687,6 +2659,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libx/libxau/libxau6_1.0.11-1+b2_amd64.deb
             - https://snapshot.debian.org/file/317030a0cf1f517b6631c376bd6888a232b0f1d0/libxau6_1.0.11-1+b2_amd64.deb
+        - arch: arm64
+          sha256: 19fedd999557072f06b95493e66be33bed4c460a976e812f031190db3d848827
+          urls:
+            - https://deb.debian.org/debian/pool/main/libx/libxau/libxau6_1.0.11-1+b2_arm64.deb
+            - https://snapshot.debian.org/file/3a4e100d40ce4da765795541c40f53fc93ebdfd5/libxau6_1.0.11-1+b2_arm64.deb
     - name: libxcb1
       version: 1.17.0-2+b2
       files:
@@ -1695,6 +2672,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libx/libxcb/libxcb1_1.17.0-2+b2_amd64.deb
             - https://snapshot.debian.org/file/cf30b79b9f92fe886b47980a8ca3e9ca5b7ccc11/libxcb1_1.17.0-2+b2_amd64.deb
+        - arch: arm64
+          sha256: 65da730d6bb5e167ba2e391990a62b4a52b5f9ebdb837f8578f0962b7bcf37f8
+          urls:
+            - https://deb.debian.org/debian/pool/main/libx/libxcb/libxcb1_1.17.0-2+b2_arm64.deb
+            - https://snapshot.debian.org/file/e06fd535da8a5c2cc5ff342acfa58fcd1bd0b659/libxcb1_1.17.0-2+b2_arm64.deb
     - name: libxcb1-dev
       version: 1.17.0-2+b2
       files:
@@ -1703,6 +2685,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libx/libxcb/libxcb1-dev_1.17.0-2+b2_amd64.deb
             - https://snapshot.debian.org/file/9af01383c56912085a7aab105d5eb80e4409252f/libxcb1-dev_1.17.0-2+b2_amd64.deb
+        - arch: arm64
+          sha256: 740a2bd30df6a7c3b0fd473c14973ff5ce0c2cb3cf2b86bb6a353070f40a1eda
+          urls:
+            - https://deb.debian.org/debian/pool/main/libx/libxcb/libxcb1-dev_1.17.0-2+b2_arm64.deb
+            - https://snapshot.debian.org/file/8e235782c2aa141f27469352e983c54dd4e475ae/libxcb1-dev_1.17.0-2+b2_arm64.deb
     - name: libxdmcp-dev
       version: 1:1.1.5-2+b1
       files:
@@ -1711,6 +2698,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libx/libxdmcp/libxdmcp-dev_1.1.5-2+b1_amd64.deb
             - https://snapshot.debian.org/file/7665caa9ca60ac21053d84be6af5e733c1fb462d/libxdmcp-dev_1.1.5-2+b1_amd64.deb
+        - arch: arm64
+          sha256: 6d06a9349fc9d00aa88e900441b80cb7ce6ddcce946a535a61720e06adc8a423
+          urls:
+            - https://deb.debian.org/debian/pool/main/libx/libxdmcp/libxdmcp-dev_1.1.5-2+b1_arm64.deb
+            - https://snapshot.debian.org/file/8d3188783c9aabe3ce1d664da8f290285324bb0c/libxdmcp-dev_1.1.5-2+b1_arm64.deb
     - name: libxdmcp6
       version: 1:1.1.5-2+b1
       files:
@@ -1719,46 +2711,76 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libx/libxdmcp/libxdmcp6_1.1.5-2+b1_amd64.deb
             - https://snapshot.debian.org/file/1364fe3fdd9dece0dec8667c5129c365ebc12c20/libxdmcp6_1.1.5-2+b1_amd64.deb
+        - arch: arm64
+          sha256: 422afbf863c6a592d49582bcad5e96c474372dc9596885204a8390275bdf7ab9
+          urls:
+            - https://deb.debian.org/debian/pool/main/libx/libxdmcp/libxdmcp6_1.1.5-2+b1_arm64.deb
+            - https://snapshot.debian.org/file/dde451911489216fd41dc1ac5deaacca6c520981/libxdmcp6_1.1.5-2+b1_arm64.deb
     - name: libxml2-16
-      version: 2.15.4+dfsg-1
+      version: 2.15.4+dfsg-1+b1
       files:
         - arch: amd64
-          sha256: 36f043b5014adf26ff722f693361d1d677088d1eb384fe4522ad514b52053c88
+          sha256: f2b4d9acff743ff71f5409ae301452ebbb37d0d8709cf46fc9ec755d7df803ff
           urls:
-            - https://deb.debian.org/debian/pool/main/libx/libxml2/libxml2-16_2.15.4+dfsg-1_amd64.deb
-            - https://snapshot.debian.org/file/b711aac427bea64c95cc76c600efed5c2d959cc0/libxml2-16_2.15.4+dfsg-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libx/libxml2/libxml2-16_2.15.4+dfsg-1+b1_amd64.deb
+            - https://snapshot.debian.org/file/7e9aa21cc1a6de2e3d19ac51127ec5a05e86a0ba/libxml2-16_2.15.4+dfsg-1+b1_amd64.deb
+        - arch: arm64
+          sha256: 06acef645b03587c3c848c4c5859d9c29f1e2bbfe76b5e64f12838398c523f22
+          urls:
+            - https://deb.debian.org/debian/pool/main/libx/libxml2/libxml2-16_2.15.4+dfsg-1+b1_arm64.deb
+            - https://snapshot.debian.org/file/59ef59f9db49d2787f15f55f51c7211a451c4ec2/libxml2-16_2.15.4+dfsg-1+b1_arm64.deb
     - name: libxpm-dev
-      version: 1:3.5.19-1
+      version: 1:3.5.20-1
       files:
         - arch: amd64
-          sha256: 78b9c315ce2ef5760d53db6c165ec85e007212af2525b1cfede133fc2cf0b6c2
+          sha256: 7d479986df4463dd26e5a4dce51c0fd1cf6f496cf7d34820b9795876dbb219f6
           urls:
-            - https://deb.debian.org/debian/pool/main/libx/libxpm/libxpm-dev_3.5.19-1_amd64.deb
-            - https://snapshot.debian.org/file/1195f09ba04ca51ba75e66e045aad78d6a74e07d/libxpm-dev_3.5.19-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libx/libxpm/libxpm-dev_3.5.20-1_amd64.deb
+            - https://snapshot.debian.org/file/22885fe022c558892b845a1e3daf4ea1a6dce8b7/libxpm-dev_3.5.20-1_amd64.deb
+        - arch: arm64
+          sha256: f4a049a86d2eb8c39272012dcf8c45a859ba2e90c72c359bcf612f93aa523046
+          urls:
+            - https://deb.debian.org/debian/pool/main/libx/libxpm/libxpm-dev_3.5.20-1_arm64.deb
+            - https://snapshot.debian.org/file/f2ee3157b658e1317e8a247a0f9251a4b75c722b/libxpm-dev_3.5.20-1_arm64.deb
     - name: libxpm4
-      version: 1:3.5.19-1
+      version: 1:3.5.20-1
       files:
         - arch: amd64
-          sha256: 852dc5f8d4e63c9408001667816d70261a320505f6cf97b248f7cfb0fac32696
+          sha256: 97af7c96b70a99211ccbd42923fe8244fcb7e157952f13d591db38660bc0dea5
           urls:
-            - https://deb.debian.org/debian/pool/main/libx/libxpm/libxpm4_3.5.19-1_amd64.deb
-            - https://snapshot.debian.org/file/90d5ebf9803ca753991098d60178299e2ec1fbd5/libxpm4_3.5.19-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/libx/libxpm/libxpm4_3.5.20-1_amd64.deb
+            - https://snapshot.debian.org/file/60413ca3a71298e4f04c70d09ba2d47cec428d2b/libxpm4_3.5.20-1_amd64.deb
+        - arch: arm64
+          sha256: a950436dba3476baf79ee0b7f23e835888b0317ec3d10baea5b91047f88ebe82
+          urls:
+            - https://deb.debian.org/debian/pool/main/libx/libxpm/libxpm4_3.5.20-1_arm64.deb
+            - https://snapshot.debian.org/file/661828f96ecf0c9fa06b2a894b1e42486d5ac8d3/libxpm4_3.5.20-1_arm64.deb
     - name: libyuv-dev
-      version: 0.0.1971.20260904-2
+      version: 0.0.1974.20261008-1
       files:
         - arch: amd64
-          sha256: 242220082c1cca5977c3b838180876ea1d5de02d6a2d736cf222fb9200743bce
+          sha256: 8b63366300d18f7f47683d8a4cf03e13eb3306dde04c2b001e5734aa0f060d54
           urls:
-            - https://deb.debian.org/debian/pool/main/liby/libyuv/libyuv-dev_0.0.1971.20260904-2_amd64.deb
-            - https://snapshot.debian.org/file/43fae128939f1e4790ffbd31d52b6c118ddeb4d2/libyuv-dev_0.0.1971.20260904-2_amd64.deb
+            - https://deb.debian.org/debian/pool/main/liby/libyuv/libyuv-dev_0.0.1974.20261008-1_amd64.deb
+            - https://snapshot.debian.org/file/a92b107c22e9036fa29c7fac310e7112def82ee3/libyuv-dev_0.0.1974.20261008-1_amd64.deb
+        - arch: arm64
+          sha256: a90aac14df07aaa76aefab380e2000099c8ff3e5edf5501f3f11cb6badc3f382
+          urls:
+            - https://deb.debian.org/debian/pool/main/liby/libyuv/libyuv-dev_0.0.1974.20261008-1_arm64.deb
+            - https://snapshot.debian.org/file/70e78a6eb28d72aba4ecf40a99ab065e91320d70/libyuv-dev_0.0.1974.20261008-1_arm64.deb
     - name: libyuv0
-      version: 0.0.1971.20260904-2
+      version: 0.0.1974.20261008-1
       files:
         - arch: amd64
-          sha256: 3e997ca63bbc8ed9703cdc5cc30c6ccd701df60e13871c696e8121820148c129
+          sha256: 8e01a507764361ed8500c46f49e9142b08c9f8e7eebd7b511ebf2f5102fb7acf
           urls:
-            - https://deb.debian.org/debian/pool/main/liby/libyuv/libyuv0_0.0.1971.20260904-2_amd64.deb
-            - https://snapshot.debian.org/file/51b6696d2726845d8d546d656c0351ca990dbb00/libyuv0_0.0.1971.20260904-2_amd64.deb
+            - https://deb.debian.org/debian/pool/main/liby/libyuv/libyuv0_0.0.1974.20261008-1_amd64.deb
+            - https://snapshot.debian.org/file/ee25ecd468ab5c2231421d56e11a0b5487aed13d/libyuv0_0.0.1974.20261008-1_amd64.deb
+        - arch: arm64
+          sha256: 7c3395f0879670e726cd9a967332eeccb3d351d49c45a384f45b209ad68b2e7c
+          urls:
+            - https://deb.debian.org/debian/pool/main/liby/libyuv/libyuv0_0.0.1974.20261008-1_arm64.deb
+            - https://snapshot.debian.org/file/92e1eb6aa8a472aef4dd444b1c062324fcc1fc73/libyuv0_0.0.1974.20261008-1_arm64.deb
     - name: libzstd-dev
       version: 1.5.7+dfsg-4
       files:
@@ -1767,6 +2789,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libz/libzstd/libzstd-dev_1.5.7+dfsg-4_amd64.deb
             - https://snapshot.debian.org/file/220f57ccd93632ca99199c5dbd6c8f1f7bcb19d0/libzstd-dev_1.5.7+dfsg-4_amd64.deb
+        - arch: arm64
+          sha256: 7e16181a7773292e3489704f7c4ff42e373228fe1237ec33e5b58814f8a8a0a1
+          urls:
+            - https://deb.debian.org/debian/pool/main/libz/libzstd/libzstd-dev_1.5.7+dfsg-4_arm64.deb
+            - https://snapshot.debian.org/file/5e0605fa2398e85f9fb91c1022f9e229eac4dc8b/libzstd-dev_1.5.7+dfsg-4_arm64.deb
     - name: libzstd1
       version: 1.5.7+dfsg-4
       files:
@@ -1775,14 +2802,19 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/libz/libzstd/libzstd1_1.5.7+dfsg-4_amd64.deb
             - https://snapshot.debian.org/file/f273ef0e133ffd3a8ff2d65929bc06d52e9ca475/libzstd1_1.5.7+dfsg-4_amd64.deb
+        - arch: arm64
+          sha256: e99e6e244d6c80f1c8e96cb68bb04bffc6848b12e3dcc5a35f6a775e4332e936
+          urls:
+            - https://deb.debian.org/debian/pool/main/libz/libzstd/libzstd1_1.5.7+dfsg-4_arm64.deb
+            - https://snapshot.debian.org/file/da4eb36088ffdc70b3bb3d456d455ddfc06bb2f9/libzstd1_1.5.7+dfsg-4_arm64.deb
     - name: linux-libc-dev
-      version: 7.2.8-1
+      version: 7.2.15-1
       files:
         - arch: all
-          sha256: 4d218af167cb5cfc687b1a8945ea4592274dab593ffd8c205ceca27eb73c59f3
+          sha256: 69b2e8f1a753c950c11f4ca5a5a53771749af4501dedcd33de7091187145b98b
           urls:
-            - https://deb.debian.org/debian/pool/main/l/linux/linux-libc-dev_7.2.8-1_all.deb
-            - https://snapshot.debian.org/file/b9d99c031db851ab24477465e80039caffbf1338/linux-libc-dev_7.2.8-1_all.deb
+            - https://deb.debian.org/debian/pool/main/l/linux/linux-libc-dev_7.2.15-1_all.deb
+            - https://snapshot.debian.org/file/72514a07be4fb6145fbde7fc79d8ef5c0a3b85f4/linux-libc-dev_7.2.15-1_all.deb
     - name: m4
       version: 1.4.21-1
       files:
@@ -1791,22 +2823,37 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/m/m4/m4_1.4.21-1_amd64.deb
             - https://snapshot.debian.org/file/2d7493fd538c9e11431930b994d929913ea34eea/m4_1.4.21-1_amd64.deb
+        - arch: arm64
+          sha256: c31eda3b037f41d41ac1e5e1f9b1caab0d8e82a9d1a68021ceb7f84ec708f098
+          urls:
+            - https://deb.debian.org/debian/pool/main/m/m4/m4_1.4.21-1_arm64.deb
+            - https://snapshot.debian.org/file/321395511ce8c6d019062719747aca68d52460a8/m4_1.4.21-1_arm64.deb
     - name: make
-      version: 4.4.1-3
+      version: 4.4.1-3+b1
       files:
         - arch: amd64
           sha256: 5bebcf4afc4af6812605f35cd49de042cf8c6185918200bfbf99c3f2c1b0fbb2
           urls:
             - https://deb.debian.org/debian/pool/main/m/make-dfsg/make_4.4.1-3_amd64.deb
             - https://snapshot.debian.org/file/caa7cdd84e4f195b97ade394373a7602c259a6c8/make_4.4.1-3_amd64.deb
+        - arch: arm64
+          sha256: 441a13e4c40e15cb70c57ed22d4ef146fed253e0beacf365083b9eb2d6020c01
+          urls:
+            - https://deb.debian.org/debian/pool/main/m/make-dfsg/make_4.4.1-3+b1_arm64.deb
+            - https://snapshot.debian.org/file/18b7af8765c0303b17e082f996c545ad00973e66/make_4.4.1-3+b1_arm64.deb
     - name: man-db
-      version: 2.13.1-1
+      version: 2.13.1-1+b1
       files:
         - arch: amd64
           sha256: d5a407221a0d59845484b5343a37ec6374102e949353e4b158eaa2cbaf27aa5a
           urls:
             - https://deb.debian.org/debian/pool/main/m/man-db/man-db_2.13.1-1_amd64.deb
             - https://snapshot.debian.org/file/01b888083208011eba6ff90581cef9e8dbc8e722/man-db_2.13.1-1_amd64.deb
+        - arch: arm64
+          sha256: 8bf204c38a26a4dc1a1cc9802a864ea4f46a1e9764974353bbf25c1a77683b00
+          urls:
+            - https://deb.debian.org/debian/pool/main/m/man-db/man-db_2.13.1-1+b1_arm64.deb
+            - https://snapshot.debian.org/file/5a77e69b6e326eeac1383a63608f9167cc516e14/man-db_2.13.1-1+b1_arm64.deb
     - name: mawk
       version: 1.3.4.20260302-2
       files:
@@ -1815,6 +2862,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/m/mawk/mawk_1.3.4.20260302-2_amd64.deb
             - https://snapshot.debian.org/file/d1151b2e774868cba67776374ac702d8223f0787/mawk_1.3.4.20260302-2_amd64.deb
+        - arch: arm64
+          sha256: 9405c5cf8a3bda860d0be5d74fac922f294ca994c1066033e1684709a75392c0
+          urls:
+            - https://deb.debian.org/debian/pool/main/m/mawk/mawk_1.3.4.20260302-2_arm64.deb
+            - https://snapshot.debian.org/file/567f9045f38eb34453f5007ab2950214927c3318/mawk_1.3.4.20260302-2_arm64.deb
     - name: media-types
       version: 14.0.0
       files:
@@ -1839,6 +2891,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/n/ncurses/ncurses-bin_6.6+20260608-2_amd64.deb
             - https://snapshot.debian.org/file/abdfb5d7f2f7ffb193ba2d28fa8c54ad14610f3f/ncurses-bin_6.6+20260608-2_amd64.deb
+        - arch: arm64
+          sha256: b7e1a0c0e78296804f366ae4e8a6a676e83aa192afbcc14d880b2fc4503c59a5
+          urls:
+            - https://deb.debian.org/debian/pool/main/n/ncurses/ncurses-bin_6.6+20260608-2_arm64.deb
+            - https://snapshot.debian.org/file/5e7e953aae2c94aa028492fe94b887f9228402ba/ncurses-bin_6.6+20260608-2_arm64.deb
     - name: netbase
       version: "6.6"
       files:
@@ -1848,21 +2905,31 @@ tools:
             - https://deb.debian.org/debian/pool/main/n/netbase/netbase_6.6_all.deb
             - https://snapshot.debian.org/file/dffed79d73bcaf5e395a22557981b017003d9e54/netbase_6.6_all.deb
     - name: openssl-provider-legacy
-      version: 3.6.4-1
+      version: 3.6.5-1
       files:
         - arch: amd64
-          sha256: 442cad44fb35e5b825f880185be909664faed1e4729f8b843c7d93615dc92733
+          sha256: 82b7c056f7dfd91e4eedb1a0738d655867b6e13bd25ce03406e9cf464e9345ad
           urls:
-            - https://deb.debian.org/debian/pool/main/o/openssl/openssl-provider-legacy_3.6.4-1_amd64.deb
-            - https://snapshot.debian.org/file/2ce21453e2d278028114ca1191d941f563ed78f7/openssl-provider-legacy_3.6.4-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/o/openssl/openssl-provider-legacy_3.6.5-1_amd64.deb
+            - https://snapshot.debian.org/file/eaecb6f7b23761fe05fb0691dfc642960fb1b7d9/openssl-provider-legacy_3.6.5-1_amd64.deb
+        - arch: arm64
+          sha256: d20c164b2d206a1295df5c8b5cefe9b84846b1e3cfa057639b632245f867d426
+          urls:
+            - https://deb.debian.org/debian/pool/main/o/openssl/openssl-provider-legacy_3.6.5-1_arm64.deb
+            - https://snapshot.debian.org/file/dd0d185606636831d6a57ce083f54db87a54baa9/openssl-provider-legacy_3.6.5-1_arm64.deb
     - name: patch
-      version: 2.8-2
+      version: 2.8.1-1
       files:
         - arch: amd64
-          sha256: 80c46a0085b33acc74bf451fddb6a70cb43d4ebcc4a873aec04d8d0a63ffc630
+          sha256: e2137d3fa3589c7084215ddac5f477f00490c85b0631bfa09bbf429948cf6bcd
           urls:
-            - https://deb.debian.org/debian/pool/main/p/patch/patch_2.8-2_amd64.deb
-            - https://snapshot.debian.org/file/c2ef3be7b58282247f219cc21a518e4eda6cbd90/patch_2.8-2_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/patch/patch_2.8.1-1_amd64.deb
+            - https://snapshot.debian.org/file/43c7055eac97bde6937f33fe2d5c39bdcab9c0c0/patch_2.8.1-1_amd64.deb
+        - arch: arm64
+          sha256: 88f12ac8c073ec44762eb1e83a6ba39e58e08bd8b3baf2e38b8b33e9148008e7
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/patch/patch_2.8.1-1_arm64.deb
+            - https://snapshot.debian.org/file/705fa2584dd40546d793272184b54119e09db2c9/patch_2.8.1-1_arm64.deb
     - name: perl
       version: 5.42.3-1
       files:
@@ -1871,6 +2938,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/perl/perl_5.42.3-1_amd64.deb
             - https://snapshot.debian.org/file/b034e9046ac792fc0d9e8df4604f65e4266b9f55/perl_5.42.3-1_amd64.deb
+        - arch: arm64
+          sha256: 1379a64c9bbb43998c349abaede8131b7234ffefecf3ebe6961a1a016c751e61
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/perl/perl_5.42.3-1_arm64.deb
+            - https://snapshot.debian.org/file/bc1fe338d1fb0bd4ca20bcc44f55979e9f3d185d/perl_5.42.3-1_arm64.deb
     - name: perl-base
       version: 5.42.3-1
       files:
@@ -1879,6 +2951,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/perl/perl-base_5.42.3-1_amd64.deb
             - https://snapshot.debian.org/file/a01642c4b773f185388aa4a0a61b3cf19b80a3b9/perl-base_5.42.3-1_amd64.deb
+        - arch: arm64
+          sha256: 3eeb538518a1366e4b9f466e5883a60823acd4f92a5da5cf41395d5c4141d109
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/perl/perl-base_5.42.3-1_arm64.deb
+            - https://snapshot.debian.org/file/e9bb66d8eb576bbe2bb4320d0844b3ca7006276a/perl-base_5.42.3-1_arm64.deb
     - name: perl-modules-5.42
       version: 5.42.3-1
       files:
@@ -1895,6 +2972,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/pkgconf/pkgconf_2.5.1-4_amd64.deb
             - https://snapshot.debian.org/file/596de6397a71f84e1bdccec87e12edb7c0fbc7b0/pkgconf_2.5.1-4_amd64.deb
+        - arch: arm64
+          sha256: df3608234bf05d77a05c67377dd678388e9e15de31e803120944a7fb919976f2
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/pkgconf/pkgconf_2.5.1-4_arm64.deb
+            - https://snapshot.debian.org/file/cd94dc60d9f8aa6ba1780c54a9e5da8e31cc5e23/pkgconf_2.5.1-4_arm64.deb
     - name: pkgconf-bin
       version: 2.5.1-4
       files:
@@ -1903,6 +2985,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/pkgconf/pkgconf-bin_2.5.1-4_amd64.deb
             - https://snapshot.debian.org/file/078ae2642c5bb6435f5c8625c25d9c2fb765f68a/pkgconf-bin_2.5.1-4_amd64.deb
+        - arch: arm64
+          sha256: 7c1fb5b5e703a7686b211678bd169d38c4762a34fbe4dcaa347a2c9ec0ef27f8
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/pkgconf/pkgconf-bin_2.5.1-4_arm64.deb
+            - https://snapshot.debian.org/file/5981b05dad88dd2a3765539681dad9851e45ba17/pkgconf-bin_2.5.1-4_arm64.deb
     - name: po-debconf
       version: 1.0.22
       files:
@@ -1919,6 +3006,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/python3-defaults/python3_3.14.7-3_amd64.deb
             - https://snapshot.debian.org/file/74f8bbe586753a2cf48babfddcb8a6c0e50959ec/python3_3.14.7-3_amd64.deb
+        - arch: arm64
+          sha256: 31a967473374986b4973dd850b1845b04d343ae8a4c6f3571abef3459cd379a0
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/python3-defaults/python3_3.14.7-3_arm64.deb
+            - https://snapshot.debian.org/file/b407ac66848fadc24844d5a6991074c8b807ef62/python3_3.14.7-3_arm64.deb
     - name: python3-minimal
       version: 3.14.7-3
       files:
@@ -1927,30 +3019,45 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/p/python3-defaults/python3-minimal_3.14.7-3_amd64.deb
             - https://snapshot.debian.org/file/8efe1530d8e6137fa809782ef73ef93e25203286/python3-minimal_3.14.7-3_amd64.deb
+        - arch: arm64
+          sha256: d3d3ce1fa5e078c4ea7480a4ddc70a835d04b34229a30be9992424dce1b744c0
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/python3-defaults/python3-minimal_3.14.7-3_arm64.deb
+            - https://snapshot.debian.org/file/5385eb53d4bb91d74c25ea6d0a7c6c953e0951fe/python3-minimal_3.14.7-3_arm64.deb
     - name: python3.14
-      version: 3.14.8-1
+      version: 3.14.10-1
       files:
         - arch: amd64
-          sha256: e5854629b8555d123537ca313d9d9ab4f40fe427e91406b38ef1c2c323581aaa
+          sha256: 96f4d045aeb704d72ed40c0c37099d5035b57d2095f3c9e42ab103344cad05f8
           urls:
-            - https://deb.debian.org/debian/pool/main/p/python3.14/python3.14_3.14.8-1_amd64.deb
-            - https://snapshot.debian.org/file/c99b3c9e5feb707bdfeb3176a448f8ec690692d9/python3.14_3.14.8-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/python3.14/python3.14_3.14.10-1_amd64.deb
+            - https://snapshot.debian.org/file/4cb601a2bbcb920274fbf83f7b89912a95b44aeb/python3.14_3.14.10-1_amd64.deb
+        - arch: arm64
+          sha256: d7a763075b50c7aeddc66b44d90a1c8298f8bafd2259b76803b7d652bfc3e646
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/python3.14/python3.14_3.14.10-1_arm64.deb
+            - https://snapshot.debian.org/file/02960c915006b11726b7506a2969d7a1b77ee5dd/python3.14_3.14.10-1_arm64.deb
     - name: python3.14-minimal
-      version: 3.14.8-1
+      version: 3.14.10-1
       files:
         - arch: amd64
-          sha256: 06e82c1b5c9d6f3ff6a25e0eb4c136fb10cedd93d51ec378ff163c9bee584270
+          sha256: a23204aa66be03a9ad427367e75ee2142c60685c8c229bcde0bdde8b421cefb8
           urls:
-            - https://deb.debian.org/debian/pool/main/p/python3.14/python3.14-minimal_3.14.8-1_amd64.deb
-            - https://snapshot.debian.org/file/0b1b2d38552cc71367dae0691a71165ca67bbb53/python3.14-minimal_3.14.8-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/p/python3.14/python3.14-minimal_3.14.10-1_amd64.deb
+            - https://snapshot.debian.org/file/0e1d78bfe1be9ef806fb828d81d7a06acd2aee90/python3.14-minimal_3.14.10-1_amd64.deb
+        - arch: arm64
+          sha256: 8cb7d20c5ec46e17a3ad48c6e0afc2e1cc7de2d6da20cb0d74842d96a39321dc
+          urls:
+            - https://deb.debian.org/debian/pool/main/p/python3.14/python3.14-minimal_3.14.10-1_arm64.deb
+            - https://snapshot.debian.org/file/6da04bfd477ea620c87dace3aae0b72ca2611a6a/python3.14-minimal_3.14.10-1_arm64.deb
     - name: quilt
-      version: 0.69-0.1
+      version: 0.69-1
       files:
         - arch: all
-          sha256: f7af9e428205bf58796ef88e9094536606f39130f028d672668683635e58cc9c
+          sha256: 2aec2c4c5fced7141c4f87575a0d37f902ab60f80c6cf5efd7be0b7c6b7a4bbb
           urls:
-            - https://deb.debian.org/debian/pool/main/q/quilt/quilt_0.69-0.1_all.deb
-            - https://snapshot.debian.org/file/acbdad2bd61b72be700343ad8157cb8ce995a54d/quilt_0.69-0.1_all.deb
+            - https://deb.debian.org/debian/pool/main/q/quilt/quilt_0.69-1_all.deb
+            - https://snapshot.debian.org/file/8b04f21a3d188a4d8860a1dddc3054d20ff63a00/quilt_0.69-1_all.deb
     - name: rdfind
       version: 1.8.0-1
       files:
@@ -1959,6 +3066,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/r/rdfind/rdfind_1.8.0-1_amd64.deb
             - https://snapshot.debian.org/file/f3027d34b43d25588fac44267e6173763c8e48b1/rdfind_1.8.0-1_amd64.deb
+        - arch: arm64
+          sha256: 1bb943f903c4f8a8cad32e2d17d2661ced2e43473915ec7054d88b94c1f58f40
+          urls:
+            - https://deb.debian.org/debian/pool/main/r/rdfind/rdfind_1.8.0-1_arm64.deb
+            - https://snapshot.debian.org/file/8d2290e8615e059dc314f7cd30bb70b10f639df3/rdfind_1.8.0-1_arm64.deb
     - name: readline-common
       version: 8.3-4
       files:
@@ -1975,6 +3087,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/s/sed/sed_4.9-3_amd64.deb
             - https://snapshot.debian.org/file/ae71e4c50c620ac507735454e0ee516b7f3f3f09/sed_4.9-3_amd64.deb
+        - arch: arm64
+          sha256: 8637cfc7ccb30c56970af22c0cd911153c9f4ae848daeade050ac16a1e3b9675
+          urls:
+            - https://deb.debian.org/debian/pool/main/s/sed/sed_4.9-3_arm64.deb
+            - https://snapshot.debian.org/file/a6c9fa836b8a03d3ea4cda648078429452b01f64/sed_4.9-3_arm64.deb
     - name: sensible-utils
       version: 0.0.26
       files:
@@ -1991,14 +3108,24 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/s/symlinks/symlinks_1.4-5+b1_amd64.deb
             - https://snapshot.debian.org/file/77b04e819a074dad0f6bae5f44af8bd20bb64be3/symlinks_1.4-5+b1_amd64.deb
+        - arch: arm64
+          sha256: 406c69f778971a5b1fdbc2a9d00e55109b9a86327ffc96c17a58383488b20906
+          urls:
+            - https://deb.debian.org/debian/pool/main/s/symlinks/symlinks_1.4-5+b1_arm64.deb
+            - https://snapshot.debian.org/file/d0b700b6d106a7ec285c3734a3b55f78e493243f/symlinks_1.4-5+b1_arm64.deb
     - name: systemtap-sdt-dev
-      version: 5.5-1
+      version: 5.6-1
       files:
         - arch: amd64
-          sha256: 4ebc33d3cd4567932ba904e2bf2e889ee5f3a465060c1ceb3b3f1a3eb8d81f3a
+          sha256: 0484826934bf7998e28d6111d83c42e242cefbf3ad70c199a00b9802ae9bed0f
           urls:
-            - https://deb.debian.org/debian/pool/main/s/systemtap/systemtap-sdt-dev_5.5-1_amd64.deb
-            - https://snapshot.debian.org/file/4f38863fb7ec18ce201cd2c9b06d3a9794ca9dd6/systemtap-sdt-dev_5.5-1_amd64.deb
+            - https://deb.debian.org/debian/pool/main/s/systemtap/systemtap-sdt-dev_5.6-1_amd64.deb
+            - https://snapshot.debian.org/file/64b22c722c6e13e0a6a0dc41078f748997ca96dd/systemtap-sdt-dev_5.6-1_amd64.deb
+        - arch: arm64
+          sha256: e71e1578c4fbde1eaef6461e8872e4184e296d44056e0f4db5119e9860ec189c
+          urls:
+            - https://deb.debian.org/debian/pool/main/s/systemtap/systemtap-sdt-dev_5.6-1_arm64.deb
+            - https://snapshot.debian.org/file/ac5ceef13bbb3956dde62fb81a6d0f80d076f921/systemtap-sdt-dev_5.6-1_arm64.deb
     - name: sysvinit-utils
       version: 3.18-1
       files:
@@ -2007,22 +3134,32 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/s/sysvinit/sysvinit-utils_3.18-1_amd64.deb
             - https://snapshot.debian.org/file/70f42f13855ee5c5e677b81b4e9c1f446b1a8544/sysvinit-utils_3.18-1_amd64.deb
+        - arch: arm64
+          sha256: eff5de69c0029cf4ef33fd6d1b951c9821f7888d9fc62504f472cbd1b604809a
+          urls:
+            - https://deb.debian.org/debian/pool/main/s/sysvinit/sysvinit-utils_3.18-1_arm64.deb
+            - https://snapshot.debian.org/file/121c429ea3df73ffe48c2cd47e33c2e091c2d348/sysvinit-utils_3.18-1_arm64.deb
     - name: tar
-      version: 1.35+dfsg-6
+      version: 1.35+dfsg-7
       files:
         - arch: amd64
-          sha256: e1019bbb6e60aefa0927ffd6b2b8ecdee3943ee72efd1a1ffb5e4528874437b8
+          sha256: e4aae649b837198cf8bbe1e1e9c457882ccf18e4ba1b440021d916fe425619b7
           urls:
-            - https://deb.debian.org/debian/pool/main/t/tar/tar_1.35+dfsg-6_amd64.deb
-            - https://snapshot.debian.org/file/2d2a970f413042321a110131b63ad575885643c7/tar_1.35+dfsg-6_amd64.deb
+            - https://deb.debian.org/debian/pool/main/t/tar/tar_1.35+dfsg-7_amd64.deb
+            - https://snapshot.debian.org/file/8d19aa927c0270353074b45bda04b2651d46dfe5/tar_1.35+dfsg-7_amd64.deb
+        - arch: arm64
+          sha256: 7c532c2eae31e34fad397b7596a9b83b61642e04b6913b76884107693639d5f6
+          urls:
+            - https://deb.debian.org/debian/pool/main/t/tar/tar_1.35+dfsg-7_arm64.deb
+            - https://snapshot.debian.org/file/0faba9100d5ca113e07b59dcf1c026e62b619a2c/tar_1.35+dfsg-7_arm64.deb
     - name: tzdata
-      version: "2026e-1"
+      version: 2026f-1
       files:
         - arch: all
-          sha256: e04d96b6fd39854cba37dfbf35e28b375bace5eca688332540f41ab89602b568
+          sha256: 7ef210d4dfaca780b16cfbd307c4a38d0408b24e6774bde541a45b8ffe742b9f
           urls:
-            - https://deb.debian.org/debian/pool/main/t/tzdata/tzdata_2026e-1_all.deb
-            - https://snapshot.debian.org/file/5acd7f00e760b686c57a9289d5feb2b4f7f7e7b0/tzdata_2026e-1_all.deb
+            - https://deb.debian.org/debian/pool/main/t/tzdata/tzdata_2026f-1_all.deb
+            - https://snapshot.debian.org/file/037ac1ae2ee622d118e556d2cfbcc7037fdd0515/tzdata_2026f-1_all.deb
     - name: util-linux
       version: 2.42.4-1
       files:
@@ -2031,6 +3168,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/u/util-linux/util-linux_2.42.4-1_amd64.deb
             - https://snapshot.debian.org/file/51c2a6c05851c7e77bcc987a7eb7e487588c8f90/util-linux_2.42.4-1_amd64.deb
+        - arch: arm64
+          sha256: 4041ef33dc098a173d32c01c80f7515f1edd97f07ec7f80db268a3fc614ee4c5
+          urls:
+            - https://deb.debian.org/debian/pool/main/u/util-linux/util-linux_2.42.4-1_arm64.deb
+            - https://snapshot.debian.org/file/8a2e93dbed515dd5ffbd19f9400a246de90355e6/util-linux_2.42.4-1_arm64.deb
     - name: uuid-dev
       version: 2.42.4-1
       files:
@@ -2039,6 +3181,11 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/u/util-linux/uuid-dev_2.42.4-1_amd64.deb
             - https://snapshot.debian.org/file/75bc3685898d946daa09480347bb34f86397c0e5/uuid-dev_2.42.4-1_amd64.deb
+        - arch: arm64
+          sha256: a908149f03ac09dedca700c1441dcbbfd0b6e236fd95104168314482a1c7efb7
+          urls:
+            - https://deb.debian.org/debian/pool/main/u/util-linux/uuid-dev_2.42.4-1_arm64.deb
+            - https://snapshot.debian.org/file/5e746208e005c7ad14f4a776fd850b38d1fb97b9/uuid-dev_2.42.4-1_arm64.deb
     - name: x11proto-dev
       version: 2025.1-1
       files:
@@ -2071,19 +3218,34 @@ tools:
           urls:
             - https://deb.debian.org/debian/pool/main/x/xz-utils/xz-utils_5.8.4-1_amd64.deb
             - https://snapshot.debian.org/file/48325eafe62314791a99199786f0c49de470dfe7/xz-utils_5.8.4-1_amd64.deb
+        - arch: arm64
+          sha256: 3733a6d533f944758a2f5966b4a31ab104406d1d7326669c2f831cd92dba851d
+          urls:
+            - https://deb.debian.org/debian/pool/main/x/xz-utils/xz-utils_5.8.4-1_arm64.deb
+            - https://snapshot.debian.org/file/698c3c6fad3b79e0e3a5812bc7fc441278bf3f84/xz-utils_5.8.4-1_arm64.deb
     - name: zlib1g
-      version: 1:1.3.dfsg+really1.3.2-3
+      version: 1:1.3.dfsg+really1.3.2-4
       files:
         - arch: amd64
-          sha256: 52c585b07bea72ef36df9ddd5d1937f4739d3caec057d827954baec256292651
+          sha256: 8506ce550a81ac14b047608e0df121037d9cbb10c3cc28446f68cf8c1d9d31ce
           urls:
-            - https://deb.debian.org/debian/pool/main/z/zlib/zlib1g_1.3.dfsg+really1.3.2-3_amd64.deb
-            - https://snapshot.debian.org/file/59015e03a4e7514025edef9b5a473418e3644585/zlib1g_1.3.dfsg+really1.3.2-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/z/zlib/zlib1g_1.3.dfsg+really1.3.2-4_amd64.deb
+            - https://snapshot.debian.org/file/656edc6892a7741fa016ed2c4db942e9b7f5c2cc/zlib1g_1.3.dfsg+really1.3.2-4_amd64.deb
+        - arch: arm64
+          sha256: aaf9e8cfc7d86771144c660d544806c886a5ae406f97bd50b62588a0718229ab
+          urls:
+            - https://deb.debian.org/debian/pool/main/z/zlib/zlib1g_1.3.dfsg+really1.3.2-4_arm64.deb
+            - https://snapshot.debian.org/file/e8fa3baca6f2e855868e5ac7773f336e8d0bb8a0/zlib1g_1.3.dfsg+really1.3.2-4_arm64.deb
     - name: zlib1g-dev
-      version: 1:1.3.dfsg+really1.3.2-3
+      version: 1:1.3.dfsg+really1.3.2-4
       files:
         - arch: amd64
-          sha256: 806da77dddbc81e408e02edd08be34ea33a6dafb15f56287f3ebc21633ea812b
+          sha256: 5cc3668b8dcc7fd5d02c4a79430b51d3804561ba37eae4dc35319169239b0df4
           urls:
-            - https://deb.debian.org/debian/pool/main/z/zlib/zlib1g-dev_1.3.dfsg+really1.3.2-3_amd64.deb
-            - https://snapshot.debian.org/file/140974e08967a733a6f98d5d20513121578b572b/zlib1g-dev_1.3.dfsg+really1.3.2-3_amd64.deb
+            - https://deb.debian.org/debian/pool/main/z/zlib/zlib1g-dev_1.3.dfsg+really1.3.2-4_amd64.deb
+            - https://snapshot.debian.org/file/9dd02615fd7c659697111810c4ffab43d3891630/zlib1g-dev_1.3.dfsg+really1.3.2-4_amd64.deb
+        - arch: arm64
+          sha256: d965d85041a0443a07606a65b2bf9329c43efef9871d7dcbbd8131857b086e8f
+          urls:
+            - https://deb.debian.org/debian/pool/main/z/zlib/zlib1g-dev_1.3.dfsg+really1.3.2-4_arm64.deb
+            - https://snapshot.debian.org/file/4af40d139ff466f3d8ab086690f95b88ab867bab/zlib1g-dev_1.3.dfsg+really1.3.2-4_arm64.deb
