@@ -3,19 +3,21 @@ name: restore-inputs
 # Reusable: fetch the recorded inputs (source archives and tooling .debs) and
 # mirror them to ghcr once, so the node jobs pull them from the shared cache
 # rather than re-fetching per node. The warm path is a near no-op (HEADs only).
+#
+# This is a single arch-neutral job: restore-cache and publish only move bytes
+# keyed by arch (fetch + mirror), they never run target-architecture code, so one
+# x86 runner handles every arch by looping. glbx is pure Go, so the amd64 binary
+# drives the loop regardless of the target arch it is keying inputs for. Only the
+# per-node image build (build-node.yml) runs native code and must match its
+# runner's architecture.
 on:
   workflow_call:
-    inputs:
-      arch:
-        default: amd64
-        type: string
 
 permissions:
   contents: read
   packages: write
 
 env:
-  GLBX_ARCH: ${{ inputs.arch }}
   GLBX_REGISTRY: ghcr.io/${{ github.repository }}/objstore
   GLBX_REGISTRY_USER: ${{ github.actor }}
   GLBX_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -28,8 +30,10 @@ jobs:
         uses: actions/checkout@v5
       - uses: ./.github/actions/glbx-bin
         with:
-          arch: ${{ inputs.arch }}
-      - name: Download the recorded inputs (source archives and tooling .debs)
-        run: bin/glbx restore-cache --conf-dir . --arch "$GLBX_ARCH"
-      - name: Publish the inputs to ghcr for the node jobs to pull
-        run: bin/glbx publish --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+          arch: amd64
+      - name: Download and publish the recorded inputs for every arch
+        run: |
+          for a in amd64 arm64; do
+            bin/glbx restore-cache --conf-dir . --arch "$a"
+            bin/glbx publish --conf-dir . --stub bin/exec_env_stub --arch "$a"
+          done

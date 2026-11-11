@@ -2,27 +2,32 @@ name: plan
 
 # Reusable: determine which graph nodes already exist in the registry, so the
 # caller can skip their jobs before a runner starts. Emits one JSON object
-# { "<node Key>": true|false } as the `built` output.
+# { "<node Key>": true|false } per arch as the `built-<arch>` outputs.
+#
+# This is a single arch-neutral job: `graph --check-built` only computes
+# identities and does registry HEAD lookups — it never runs target-architecture
+# code — so one x86 runner plans every arch by looping, with the amd64 glbx
+# binary (glbx is pure Go) keying each pass by its --arch. Only the per-node image
+# build (build-node.yml) runs native code and must match its runner's arch.
 on:
   workflow_call:
     inputs:
-      arch:
-        default: amd64
-        type: string
       id-seed-override:
         default: ""
         type: string
     outputs:
-      built:
-        description: JSON object mapping each node Key to whether its output is already in the registry.
-        value: ${{ jobs.plan.outputs.built }}
+      built-amd64:
+        description: JSON object mapping each amd64 node Key to whether its output is already in the registry.
+        value: ${{ jobs.plan.outputs['built-amd64'] }}
+      built-arm64:
+        description: JSON object mapping each arm64 node Key to whether its output is already in the registry.
+        value: ${{ jobs.plan.outputs['built-arm64'] }}
 
 permissions:
   contents: read
   packages: read
 
 env:
-  GLBX_ARCH: ${{ inputs.arch }}
   GLBX_REGISTRY: ghcr.io/${{ github.repository }}/objstore
   GLBX_REGISTRY_USER: ${{ github.actor }}
   GLBX_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -35,18 +40,20 @@ jobs:
   plan:
     runs-on: ubuntu-latest
     outputs:
-      built: ${{ steps.check.outputs.built }}
+      built-amd64: ${{ steps.check.outputs['built-amd64'] }}
+      built-arm64: ${{ steps.check.outputs['built-arm64'] }}
     steps:
       - name: Check out the config repo
         uses: actions/checkout@v5
       - uses: ./.github/actions/glbx-bin
         with:
-          arch: ${{ inputs.arch }}
-      - name: Determine which nodes already exist in the registry
+          arch: amd64
+      - name: Determine which nodes already exist in the registry, per arch
         id: check
         run: |
-          bin/glbx graph --format=json --check-built \
-            --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH" > /tmp/graph.json
-          built="$(jq -c '.builtStatus' /tmp/graph.json)"
-          echo "built=$built" >> "$GITHUB_OUTPUT"
-          echo "already built: $(jq '[.builtStatus[] | select(.)] | length' /tmp/graph.json) / $(jq '.nodes | length' /tmp/graph.json)"
+          for a in amd64 arm64; do
+            bin/glbx graph --format=json --check-built \
+              --conf-dir . --stub bin/exec_env_stub --arch "$a" > "/tmp/graph.$a.json"
+            echo "built-$a=$(jq -c '.builtStatus' "/tmp/graph.$a.json")" >> "$GITHUB_OUTPUT"
+            echo "already built ($a): $(jq '[.builtStatus[] | select(.)] | length' "/tmp/graph.$a.json") / $(jq '.nodes | length' "/tmp/graph.$a.json")"
+          done
