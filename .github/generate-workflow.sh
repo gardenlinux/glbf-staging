@@ -77,7 +77,8 @@ on:
     inputs:
       glbx-ref:
         description: glbx ref (branch, tag, or full SHA) to build the executor from
-        default: main
+        # WIP: temporarily default to the arm64-port branch instead of main.
+        default: arm64-port
         type: string
       id-seed-override:
         description: >-
@@ -101,7 +102,7 @@ jobs:
   build-glbx:
     uses: ./.github/workflows/build-glbx.yml
     with:
-      glbx-ref: ${{ inputs.glbx-ref || 'main' }}
+      glbx-ref: ${{ inputs.glbx-ref || 'arm64-port' }}
 
   check-graph:
     needs: [build-glbx]
