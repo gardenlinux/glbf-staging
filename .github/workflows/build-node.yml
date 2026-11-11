@@ -85,5 +85,5 @@ jobs:
       - name: Check ${{ inputs.node-key }} reproduces
         run: |
           bin/glbx build --check-reproducible --target "$NODE_KEY" \
-            --report /tmp/reprod-report.json \
+            --report /tmp/reprod-report.json --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
