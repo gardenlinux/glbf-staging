@@ -357,7 +357,7 @@ jobs:
 
   node-amd64-18:
     name: "glibc"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-17]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-15, node-amd64-16, node-amd64-17]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -374,7 +374,7 @@ jobs:
 
   node-amd64-19:
     name: "glibc"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-15, node-amd64-16, node-amd64-17]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -391,7 +391,7 @@ jobs:
 
   node-amd64-20:
     name: "glibc"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-15, node-amd64-16, node-amd64-17]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -408,7 +408,7 @@ jobs:
 
   node-amd64-21:
     name: "attr"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-1, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-1, node-amd64-19, node-amd64-20]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -425,7 +425,7 @@ jobs:
 
   node-amd64-22:
     name: "acl"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-0, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-21]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-0, node-amd64-19, node-amd64-20, node-amd64-21]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -442,7 +442,7 @@ jobs:
 
   node-amd64-23:
     name: "base-files"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-4]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-4]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -459,7 +459,7 @@ jobs:
 
   node-amd64-24:
     name: "bzip2"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-7]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-7]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -476,7 +476,7 @@ jobs:
 
   node-amd64-25:
     name: "cdebconf"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-8]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-8]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -493,7 +493,7 @@ jobs:
 
   node-amd64-26:
     name: "debianutils"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-10, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-10, node-amd64-19, node-amd64-20]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -510,7 +510,7 @@ jobs:
 
   node-amd64-27:
     name: "diffutils"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-11, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-11, node-amd64-19, node-amd64-20]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -544,7 +544,7 @@ jobs:
 
   node-amd64-29:
     name: "gmp"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-28]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-28]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -595,7 +595,7 @@ jobs:
 
   node-amd64-32:
     name: "hostname"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-31]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-31]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -646,7 +646,7 @@ jobs:
 
   node-amd64-35:
     name: "libcap-ng"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-34]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-34]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -663,7 +663,7 @@ jobs:
 
   node-amd64-36:
     name: "audit"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-2, node-amd64-20, node-amd64-35]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-2, node-amd64-20, node-amd64-35]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -697,7 +697,7 @@ jobs:
 
   node-amd64-38:
     name: "libcap2"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-37]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-37]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -731,7 +731,7 @@ jobs:
 
   node-amd64-40:
     name: "libmd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-39]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-39]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -782,7 +782,7 @@ jobs:
 
   node-amd64-43:
     name: "libxcrypt"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-42]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-42]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -816,7 +816,7 @@ jobs:
 
   node-amd64-45:
     name: "libzstd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-44]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-44]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -850,7 +850,7 @@ jobs:
 
   node-amd64-47:
     name: "mawk"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-46]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-46]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -884,7 +884,7 @@ jobs:
 
   node-amd64-49:
     name: "ncurses"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-48]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-48]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -901,7 +901,7 @@ jobs:
 
   node-amd64-50:
     name: "bash"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-23, node-amd64-26, node-amd64-49, node-amd64-6]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-23, node-amd64-26, node-amd64-49, node-amd64-6]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -952,24 +952,7 @@ jobs:
 
   node-amd64-53:
     name: "pam"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-52]
-    # Build unless this node is already present in the registry. A skipped
-    # (already-built) dependency must not cascade-skip a dependent that does
-    # need rebuilding, so !cancelled() && !failure() replaces the implicit
-    # success() gate — which treats a skipped need as reason to skip. The skip
-    # fires only on an explicit true: an empty plan output or a missing key
-    # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-amd64'] == '' || fromJSON(needs['plan'].outputs['built-amd64'])['debian-binary-pkg:pam:libpam-runtime:amd64'] != true) }}"
-    uses: ./.github/workflows/build-node.yml
-    with:
-      node-key: "debian-binary-pkg:pam:libpam-runtime:amd64"
-      arch: amd64
-      runner: "ubuntu-latest"
-      id-seed-override: "${{ inputs.id-seed-override }}"
-
-  node-amd64-54:
-    name: "pam"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-2, node-amd64-20, node-amd64-3, node-amd64-36, node-amd64-52]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-3, node-amd64-36, node-amd64-52]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -984,7 +967,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-55:
+  node-amd64-54:
     name: "pcre2"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -1001,9 +984,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-56:
+  node-amd64-55:
     name: "pcre2"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-55]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-54]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1018,9 +1001,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-57:
+  node-amd64-56:
     name: "grep"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-30, node-amd64-56]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-30, node-amd64-55]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1035,9 +1018,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-58:
+  node-amd64-57:
     name: "libselinux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-41, node-amd64-56]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-41, node-amd64-55]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1052,9 +1035,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-59:
+  node-amd64-58:
     name: "base-passwd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-25, node-amd64-5, node-amd64-58]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-25, node-amd64-5, node-amd64-57]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1069,9 +1052,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-60:
+  node-amd64-59:
     name: "findutils"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-13, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-58]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-13, node-amd64-19, node-amd64-20, node-amd64-57]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1086,7 +1069,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-61:
+  node-amd64-60:
     name: "protobuf-c"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -1103,9 +1086,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-62:
+  node-amd64-61:
     name: "protobuf-c"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-61]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-60]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1120,9 +1103,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-63:
+  node-amd64-62:
     name: "protobuf-c"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-61]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-60]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1137,9 +1120,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-64:
+  node-amd64-63:
     name: "glbx-pkcs11-forward"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-61, node-amd64-62, node-amd64-63]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-61, node-amd64-62]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1154,9 +1137,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-65:
+  node-amd64-64:
     name: "glbx-pkcs11-forward"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-61, node-amd64-62, node-amd64-63, node-amd64-64]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-61, node-amd64-62, node-amd64-63]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1171,9 +1154,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-66:
+  node-amd64-65:
     name: "linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-65]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-64]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1188,9 +1171,9 @@ jobs:
       runner: "ubuntu-latest-8core"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-67:
+  node-amd64-66:
     name: "linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-66]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-65]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1205,9 +1188,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-68:
+  node-amd64-67:
     name: "linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-66]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-65]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1222,7 +1205,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-69:
+  node-amd64-68:
     name: "sed"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -1239,9 +1222,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-70:
+  node-amd64-69:
     name: "sed"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-22, node-amd64-58, node-amd64-69]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-22, node-amd64-57, node-amd64-68]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1256,7 +1239,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-71:
+  node-amd64-70:
     name: "shadow"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -1273,9 +1256,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-72:
+  node-amd64-71:
     name: "shadow"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-71]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-70]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1290,7 +1273,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-73:
+  node-amd64-72:
     name: "systemd"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -1307,9 +1290,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-74:
+  node-amd64-73:
     name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-73]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-72]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1324,9 +1307,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-75:
+  node-amd64-74:
     name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-38, node-amd64-45, node-amd64-58, node-amd64-73]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-38, node-amd64-45, node-amd64-57, node-amd64-72]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1341,9 +1324,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-76:
+  node-amd64-75:
     name: "pam"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-2, node-amd64-20, node-amd64-3, node-amd64-36, node-amd64-43, node-amd64-52, node-amd64-58, node-amd64-75]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-3, node-amd64-36, node-amd64-43, node-amd64-52, node-amd64-57, node-amd64-74]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1358,9 +1341,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-77:
+  node-amd64-76:
     name: "pam"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-2, node-amd64-20, node-amd64-3, node-amd64-36, node-amd64-43, node-amd64-52, node-amd64-58, node-amd64-75]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-3, node-amd64-36, node-amd64-43, node-amd64-52, node-amd64-57, node-amd64-74]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1375,9 +1358,26 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
+  node-amd64-77:
+    name: "pam"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-3, node-amd64-36, node-amd64-43, node-amd64-52, node-amd64-57, node-amd64-74]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-amd64'] == '' || fromJSON(needs['plan'].outputs['built-amd64'])['debian-binary-pkg:pam:libpam-runtime:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:pam:libpam-runtime:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
   node-amd64-78:
     name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-73]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-72]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1394,7 +1394,7 @@ jobs:
 
   node-amd64-79:
     name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-73]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-72]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1411,7 +1411,7 @@ jobs:
 
   node-amd64-80:
     name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-73]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-72]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1427,40 +1427,6 @@ jobs:
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-amd64-81:
-    name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-73]
-    # Build unless this node is already present in the registry. A skipped
-    # (already-built) dependency must not cascade-skip a dependent that does
-    # need rebuilding, so !cancelled() && !failure() replaces the implicit
-    # success() gate — which treats a skipped need as reason to skip. The skip
-    # fires only on an explicit true: an empty plan output or a missing key
-    # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-amd64'] == '' || fromJSON(needs['plan'].outputs['built-amd64'])['debian-binary-pkg:systemd:systemd-boot:amd64'] != true) }}"
-    uses: ./.github/workflows/build-node.yml
-    with:
-      node-key: "debian-binary-pkg:systemd:systemd-boot:amd64"
-      arch: amd64
-      runner: "ubuntu-latest"
-      id-seed-override: "${{ inputs.id-seed-override }}"
-
-  node-amd64-82:
-    name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-73]
-    # Build unless this node is already present in the registry. A skipped
-    # (already-built) dependency must not cascade-skip a dependent that does
-    # need rebuilding, so !cancelled() && !failure() replaces the implicit
-    # success() gate — which treats a skipped need as reason to skip. The skip
-    # fires only on an explicit true: an empty plan output or a missing key
-    # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-amd64'] == '' || fromJSON(needs['plan'].outputs['built-amd64'])['debian-binary-pkg:systemd:systemd-sysv:amd64'] != true) }}"
-    uses: ./.github/workflows/build-node.yml
-    with:
-      node-key: "debian-binary-pkg:systemd:systemd-sysv:amd64"
-      arch: amd64
-      runner: "ubuntu-latest"
-      id-seed-override: "${{ inputs.id-seed-override }}"
-
-  node-amd64-83:
     name: "tar"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -1477,9 +1443,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-84:
+  node-amd64-82:
     name: "tar"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-22, node-amd64-58, node-amd64-83]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-22, node-amd64-57, node-amd64-81]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1494,7 +1460,7 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-85:
+  node-amd64-83:
     name: "util-linux"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -1511,9 +1477,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-86:
+  node-amd64-84:
     name: "util-linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-83]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1528,9 +1494,9 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-amd64-87:
+  node-amd64-85:
     name: "util-linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-58, node-amd64-75, node-amd64-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-57, node-amd64-74, node-amd64-83]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1545,9 +1511,43 @@ jobs:
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
+  node-amd64-86:
+    name: "systemd"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-38, node-amd64-45, node-amd64-57, node-amd64-72, node-amd64-84, node-amd64-85]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-amd64'] == '' || fromJSON(needs['plan'].outputs['built-amd64'])['debian-binary-pkg:systemd:systemd-boot:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:systemd:systemd-boot:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-amd64-87:
+    name: "systemd"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-38, node-amd64-45, node-amd64-57, node-amd64-72, node-amd64-84, node-amd64-85]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-amd64'] == '' || fromJSON(needs['plan'].outputs['built-amd64'])['debian-binary-pkg:systemd:systemd-sysv:amd64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:systemd:systemd-sysv:amd64"
+      arch: amd64
+      runner: "ubuntu-latest"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
   node-amd64-88:
     name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-73, node-amd64-85, node-amd64-86, node-amd64-87]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-38, node-amd64-45, node-amd64-57, node-amd64-72, node-amd64-84, node-amd64-85]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1564,7 +1564,7 @@ jobs:
 
   node-amd64-89:
     name: "util-linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-83]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1581,7 +1581,7 @@ jobs:
 
   node-amd64-90:
     name: "util-linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-83]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1598,7 +1598,7 @@ jobs:
 
   node-amd64-91:
     name: "util-linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-2, node-amd64-20, node-amd64-3, node-amd64-34, node-amd64-35, node-amd64-36, node-amd64-37, node-amd64-38, node-amd64-41, node-amd64-42, node-amd64-43, node-amd64-44, node-amd64-45, node-amd64-52, node-amd64-53, node-amd64-54, node-amd64-55, node-amd64-56, node-amd64-58, node-amd64-72, node-amd64-73, node-amd64-75, node-amd64-76, node-amd64-77, node-amd64-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-3, node-amd64-36, node-amd64-53, node-amd64-71, node-amd64-75, node-amd64-76, node-amd64-77, node-amd64-83]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1615,7 +1615,7 @@ jobs:
 
   node-amd64-92:
     name: "util-linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-58, node-amd64-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-57, node-amd64-74, node-amd64-83]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1632,7 +1632,7 @@ jobs:
 
   node-amd64-93:
     name: "util-linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-2, node-amd64-20, node-amd64-3, node-amd64-34, node-amd64-35, node-amd64-36, node-amd64-37, node-amd64-38, node-amd64-41, node-amd64-42, node-amd64-43, node-amd64-44, node-amd64-45, node-amd64-49, node-amd64-52, node-amd64-53, node-amd64-54, node-amd64-55, node-amd64-56, node-amd64-58, node-amd64-73, node-amd64-75, node-amd64-76, node-amd64-77, node-amd64-78, node-amd64-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-35, node-amd64-43, node-amd64-49, node-amd64-53, node-amd64-57, node-amd64-74, node-amd64-75, node-amd64-76, node-amd64-77, node-amd64-78, node-amd64-83]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1666,7 +1666,7 @@ jobs:
 
   node-amd64-95:
     name: "xz-utils"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-94]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-94]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1700,7 +1700,7 @@ jobs:
 
   node-amd64-97:
     name: "zlib"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-96]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-96]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1717,7 +1717,7 @@ jobs:
 
   node-amd64-98:
     name: "dpkg"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-12, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-24, node-amd64-40, node-amd64-45, node-amd64-58, node-amd64-84, node-amd64-95, node-amd64-97]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-12, node-amd64-19, node-amd64-20, node-amd64-24, node-amd64-40, node-amd64-45, node-amd64-57, node-amd64-82, node-amd64-95, node-amd64-97]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1734,7 +1734,7 @@ jobs:
 
   node-amd64-99:
     name: "openssl"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-45, node-amd64-51, node-amd64-97]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-45, node-amd64-51, node-amd64-97]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1751,7 +1751,7 @@ jobs:
 
   node-amd64-100:
     name: "openssl"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-45, node-amd64-51, node-amd64-97]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-19, node-amd64-20, node-amd64-45, node-amd64-51, node-amd64-97]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1768,7 +1768,7 @@ jobs:
 
   node-amd64-101:
     name: "coreutils"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-100, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-21, node-amd64-22, node-amd64-29, node-amd64-38, node-amd64-44, node-amd64-45, node-amd64-51, node-amd64-58, node-amd64-75, node-amd64-9, node-amd64-96, node-amd64-97, node-amd64-99]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-100, node-amd64-19, node-amd64-20, node-amd64-21, node-amd64-22, node-amd64-29, node-amd64-38, node-amd64-57, node-amd64-74, node-amd64-9, node-amd64-99]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1785,7 +1785,7 @@ jobs:
 
   node-amd64-102:
     name: "kmod"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-100, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-33, node-amd64-44, node-amd64-45, node-amd64-51, node-amd64-96, node-amd64-97, node-amd64-99]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-100, node-amd64-19, node-amd64-20, node-amd64-33, node-amd64-99]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1802,7 +1802,7 @@ jobs:
 
   node-amd64-103:
     name: "kmod"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-100, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-33, node-amd64-44, node-amd64-45, node-amd64-51, node-amd64-96, node-amd64-97, node-amd64-99]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-100, node-amd64-19, node-amd64-20, node-amd64-33, node-amd64-99]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1819,7 +1819,7 @@ jobs:
 
   node-amd64-104:
     name: "linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-100, node-amd64-102, node-amd64-103, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-33, node-amd64-44, node-amd64-45, node-amd64-51, node-amd64-66, node-amd64-96, node-amd64-97, node-amd64-99]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-102, node-amd64-103, node-amd64-65]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1836,7 +1836,7 @@ jobs:
 
   node-amd64-105:
     name: "linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-100, node-amd64-102, node-amd64-103, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-33, node-amd64-44, node-amd64-45, node-amd64-51, node-amd64-66, node-amd64-96, node-amd64-97, node-amd64-99]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-102, node-amd64-103, node-amd64-65]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1853,7 +1853,7 @@ jobs:
 
   node-amd64-106:
     name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-103, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-19, node-amd64-20, node-amd64-73]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-103, node-amd64-19, node-amd64-20, node-amd64-38, node-amd64-45, node-amd64-57, node-amd64-72, node-amd64-84, node-amd64-85]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1870,7 +1870,7 @@ jobs:
 
   node-amd64-107:
     name: "rootfs-base"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-100, node-amd64-101, node-amd64-102, node-amd64-103, node-amd64-104, node-amd64-105, node-amd64-106, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-18, node-amd64-19, node-amd64-20, node-amd64-23, node-amd64-27, node-amd64-32, node-amd64-33, node-amd64-37, node-amd64-38, node-amd64-41, node-amd64-44, node-amd64-45, node-amd64-47, node-amd64-50, node-amd64-51, node-amd64-55, node-amd64-56, node-amd64-57, node-amd64-58, node-amd64-59, node-amd64-60, node-amd64-61, node-amd64-62, node-amd64-63, node-amd64-64, node-amd64-65, node-amd64-66, node-amd64-67, node-amd64-68, node-amd64-70, node-amd64-73, node-amd64-74, node-amd64-75, node-amd64-78, node-amd64-79, node-amd64-80, node-amd64-81, node-amd64-82, node-amd64-85, node-amd64-86, node-amd64-87, node-amd64-88, node-amd64-89, node-amd64-90, node-amd64-91, node-amd64-92, node-amd64-93, node-amd64-96, node-amd64-97, node-amd64-98, node-amd64-99]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-101, node-amd64-104, node-amd64-105, node-amd64-106, node-amd64-18, node-amd64-19, node-amd64-20, node-amd64-23, node-amd64-27, node-amd64-32, node-amd64-47, node-amd64-50, node-amd64-56, node-amd64-58, node-amd64-59, node-amd64-66, node-amd64-67, node-amd64-69, node-amd64-73, node-amd64-74, node-amd64-78, node-amd64-79, node-amd64-80, node-amd64-84, node-amd64-85, node-amd64-86, node-amd64-87, node-amd64-88, node-amd64-89, node-amd64-90, node-amd64-91, node-amd64-92, node-amd64-93, node-amd64-98]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1887,7 +1887,7 @@ jobs:
 
   node-amd64-108:
     name: "rootfs-initrd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-105, node-amd64-106, node-amd64-14, node-amd64-15, node-amd64-16, node-amd64-17, node-amd64-18, node-amd64-19, node-amd64-20, node-amd64-23, node-amd64-37, node-amd64-38, node-amd64-41, node-amd64-44, node-amd64-45, node-amd64-55, node-amd64-56, node-amd64-58, node-amd64-59, node-amd64-61, node-amd64-62, node-amd64-63, node-amd64-64, node-amd64-65, node-amd64-66, node-amd64-67, node-amd64-73, node-amd64-74, node-amd64-75, node-amd64-78, node-amd64-85, node-amd64-86, node-amd64-87, node-amd64-88, node-amd64-89, node-amd64-92]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-105, node-amd64-106, node-amd64-18, node-amd64-19, node-amd64-20, node-amd64-23, node-amd64-58, node-amd64-66, node-amd64-73, node-amd64-74, node-amd64-78, node-amd64-84, node-amd64-85, node-amd64-88, node-amd64-89, node-amd64-92]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -1921,7 +1921,7 @@ jobs:
 
   node-amd64-110:
     name: "rootfs-min"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-101, node-amd64-23, node-amd64-50, node-amd64-59]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-101, node-amd64-23, node-amd64-50, node-amd64-58]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2312,7 +2312,7 @@ jobs:
 
   node-arm64-18:
     name: "glibc"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-17]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-15, node-arm64-16, node-arm64-17]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2329,7 +2329,7 @@ jobs:
 
   node-arm64-19:
     name: "glibc"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-15, node-arm64-16, node-arm64-17]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2346,7 +2346,7 @@ jobs:
 
   node-arm64-20:
     name: "glibc"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-15, node-arm64-16, node-arm64-17]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2363,7 +2363,7 @@ jobs:
 
   node-arm64-21:
     name: "attr"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-1, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-1, node-arm64-19, node-arm64-20]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2380,7 +2380,7 @@ jobs:
 
   node-arm64-22:
     name: "acl"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-0, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-21]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-0, node-arm64-19, node-arm64-20, node-arm64-21]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2397,7 +2397,7 @@ jobs:
 
   node-arm64-23:
     name: "base-files"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-4]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-4]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2414,7 +2414,7 @@ jobs:
 
   node-arm64-24:
     name: "bzip2"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-7]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-7]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2431,7 +2431,7 @@ jobs:
 
   node-arm64-25:
     name: "cdebconf"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-8]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-8]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2448,7 +2448,7 @@ jobs:
 
   node-arm64-26:
     name: "debianutils"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-10, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-10, node-arm64-19, node-arm64-20]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2465,7 +2465,7 @@ jobs:
 
   node-arm64-27:
     name: "diffutils"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-11, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-11, node-arm64-19, node-arm64-20]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2499,7 +2499,7 @@ jobs:
 
   node-arm64-29:
     name: "gmp"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-28]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-28]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2550,7 +2550,7 @@ jobs:
 
   node-arm64-32:
     name: "hostname"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-31]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-31]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2601,7 +2601,7 @@ jobs:
 
   node-arm64-35:
     name: "libcap-ng"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-34]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-34]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2618,7 +2618,7 @@ jobs:
 
   node-arm64-36:
     name: "audit"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-2, node-arm64-20, node-arm64-35]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-2, node-arm64-20, node-arm64-35]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2652,7 +2652,7 @@ jobs:
 
   node-arm64-38:
     name: "libcap2"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-37]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-37]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2686,7 +2686,7 @@ jobs:
 
   node-arm64-40:
     name: "libmd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-39]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-39]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2737,7 +2737,7 @@ jobs:
 
   node-arm64-43:
     name: "libxcrypt"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-42]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-42]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2771,7 +2771,7 @@ jobs:
 
   node-arm64-45:
     name: "libzstd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-44]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-44]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2805,7 +2805,7 @@ jobs:
 
   node-arm64-47:
     name: "mawk"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-46]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-46]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2839,7 +2839,7 @@ jobs:
 
   node-arm64-49:
     name: "ncurses"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-48]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-48]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2856,7 +2856,7 @@ jobs:
 
   node-arm64-50:
     name: "bash"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-23, node-arm64-26, node-arm64-49, node-arm64-6]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-23, node-arm64-26, node-arm64-49, node-arm64-6]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2907,24 +2907,7 @@ jobs:
 
   node-arm64-53:
     name: "pam"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-52]
-    # Build unless this node is already present in the registry. A skipped
-    # (already-built) dependency must not cascade-skip a dependent that does
-    # need rebuilding, so !cancelled() && !failure() replaces the implicit
-    # success() gate — which treats a skipped need as reason to skip. The skip
-    # fires only on an explicit true: an empty plan output or a missing key
-    # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-arm64'] == '' || fromJSON(needs['plan'].outputs['built-arm64'])['debian-binary-pkg:pam:libpam-runtime:arm64'] != true) }}"
-    uses: ./.github/workflows/build-node.yml
-    with:
-      node-key: "debian-binary-pkg:pam:libpam-runtime:arm64"
-      arch: arm64
-      runner: "ubuntu-26.04-arm"
-      id-seed-override: "${{ inputs.id-seed-override }}"
-
-  node-arm64-54:
-    name: "pam"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-2, node-arm64-20, node-arm64-3, node-arm64-36, node-arm64-52]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-3, node-arm64-36, node-arm64-52]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2939,7 +2922,7 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-55:
+  node-arm64-54:
     name: "pcre2"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -2956,9 +2939,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-56:
+  node-arm64-55:
     name: "pcre2"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-55]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-54]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2973,9 +2956,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-57:
+  node-arm64-56:
     name: "grep"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-30, node-arm64-56]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-30, node-arm64-55]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -2990,9 +2973,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-58:
+  node-arm64-57:
     name: "libselinux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-41, node-arm64-56]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-41, node-arm64-55]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3007,9 +2990,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-59:
+  node-arm64-58:
     name: "base-passwd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-25, node-arm64-5, node-arm64-58]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-25, node-arm64-5, node-arm64-57]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3024,9 +3007,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-60:
+  node-arm64-59:
     name: "findutils"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-13, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-58]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-13, node-arm64-19, node-arm64-20, node-arm64-57]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3041,7 +3024,7 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-61:
+  node-arm64-60:
     name: "protobuf-c"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -3058,9 +3041,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-62:
+  node-arm64-61:
     name: "protobuf-c"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-61]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-60]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3075,9 +3058,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-63:
+  node-arm64-62:
     name: "protobuf-c"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-61]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-60]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3092,9 +3075,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-64:
+  node-arm64-63:
     name: "glbx-pkcs11-forward"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-61, node-arm64-62, node-arm64-63]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-61, node-arm64-62]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3109,9 +3092,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-65:
+  node-arm64-64:
     name: "glbx-pkcs11-forward"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-61, node-arm64-62, node-arm64-63, node-arm64-64]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-61, node-arm64-62, node-arm64-63]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3126,9 +3109,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-66:
+  node-arm64-65:
     name: "linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-65]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-64]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3143,9 +3126,9 @@ jobs:
       runner: "ubuntu-latest-arm-8core"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-67:
+  node-arm64-66:
     name: "linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-66]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-65]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3160,9 +3143,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-68:
+  node-arm64-67:
     name: "linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-66]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-65]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3177,7 +3160,7 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-69:
+  node-arm64-68:
     name: "sed"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -3194,9 +3177,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-70:
+  node-arm64-69:
     name: "sed"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-22, node-arm64-58, node-arm64-69]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-22, node-arm64-57, node-arm64-68]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3211,7 +3194,7 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-71:
+  node-arm64-70:
     name: "shadow"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -3228,9 +3211,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-72:
+  node-arm64-71:
     name: "shadow"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-71]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-70]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3245,7 +3228,7 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-73:
+  node-arm64-72:
     name: "systemd"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -3262,9 +3245,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-74:
+  node-arm64-73:
     name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-73]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-72]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3279,9 +3262,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-75:
+  node-arm64-74:
     name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-38, node-arm64-45, node-arm64-58, node-arm64-73]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-38, node-arm64-45, node-arm64-57, node-arm64-72]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3296,9 +3279,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-76:
+  node-arm64-75:
     name: "pam"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-2, node-arm64-20, node-arm64-3, node-arm64-36, node-arm64-43, node-arm64-52, node-arm64-58, node-arm64-75]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-3, node-arm64-36, node-arm64-43, node-arm64-52, node-arm64-57, node-arm64-74]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3313,9 +3296,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-77:
+  node-arm64-76:
     name: "pam"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-2, node-arm64-20, node-arm64-3, node-arm64-36, node-arm64-43, node-arm64-52, node-arm64-58, node-arm64-75]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-3, node-arm64-36, node-arm64-43, node-arm64-52, node-arm64-57, node-arm64-74]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3330,9 +3313,26 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
+  node-arm64-77:
+    name: "pam"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-3, node-arm64-36, node-arm64-43, node-arm64-52, node-arm64-57, node-arm64-74]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-arm64'] == '' || fromJSON(needs['plan'].outputs['built-arm64'])['debian-binary-pkg:pam:libpam-runtime:arm64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:pam:libpam-runtime:arm64"
+      arch: arm64
+      runner: "ubuntu-26.04-arm"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
   node-arm64-78:
     name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-73]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-72]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3349,7 +3349,7 @@ jobs:
 
   node-arm64-79:
     name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-73]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-72]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3366,7 +3366,7 @@ jobs:
 
   node-arm64-80:
     name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-73]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-72]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3382,40 +3382,6 @@ jobs:
       id-seed-override: "${{ inputs.id-seed-override }}"
 
   node-arm64-81:
-    name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-73]
-    # Build unless this node is already present in the registry. A skipped
-    # (already-built) dependency must not cascade-skip a dependent that does
-    # need rebuilding, so !cancelled() && !failure() replaces the implicit
-    # success() gate — which treats a skipped need as reason to skip. The skip
-    # fires only on an explicit true: an empty plan output or a missing key
-    # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-arm64'] == '' || fromJSON(needs['plan'].outputs['built-arm64'])['debian-binary-pkg:systemd:systemd-boot:arm64'] != true) }}"
-    uses: ./.github/workflows/build-node.yml
-    with:
-      node-key: "debian-binary-pkg:systemd:systemd-boot:arm64"
-      arch: arm64
-      runner: "ubuntu-26.04-arm"
-      id-seed-override: "${{ inputs.id-seed-override }}"
-
-  node-arm64-82:
-    name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-73]
-    # Build unless this node is already present in the registry. A skipped
-    # (already-built) dependency must not cascade-skip a dependent that does
-    # need rebuilding, so !cancelled() && !failure() replaces the implicit
-    # success() gate — which treats a skipped need as reason to skip. The skip
-    # fires only on an explicit true: an empty plan output or a missing key
-    # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-arm64'] == '' || fromJSON(needs['plan'].outputs['built-arm64'])['debian-binary-pkg:systemd:systemd-sysv:arm64'] != true) }}"
-    uses: ./.github/workflows/build-node.yml
-    with:
-      node-key: "debian-binary-pkg:systemd:systemd-sysv:arm64"
-      arch: arm64
-      runner: "ubuntu-26.04-arm"
-      id-seed-override: "${{ inputs.id-seed-override }}"
-
-  node-arm64-83:
     name: "tar"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -3432,9 +3398,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-84:
+  node-arm64-82:
     name: "tar"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-22, node-arm64-58, node-arm64-83]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-22, node-arm64-57, node-arm64-81]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3449,7 +3415,7 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-85:
+  node-arm64-83:
     name: "util-linux"
     needs: [build-glbx, check-graph, restore-inputs, plan]
     # Build unless this node is already present in the registry. A skipped
@@ -3466,9 +3432,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-86:
+  node-arm64-84:
     name: "util-linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-83]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3483,9 +3449,9 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
-  node-arm64-87:
+  node-arm64-85:
     name: "util-linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-58, node-arm64-75, node-arm64-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-57, node-arm64-74, node-arm64-83]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3500,9 +3466,43 @@ jobs:
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
 
+  node-arm64-86:
+    name: "systemd"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-38, node-arm64-45, node-arm64-57, node-arm64-72, node-arm64-84, node-arm64-85]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-arm64'] == '' || fromJSON(needs['plan'].outputs['built-arm64'])['debian-binary-pkg:systemd:systemd-boot:arm64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:systemd:systemd-boot:arm64"
+      arch: arm64
+      runner: "ubuntu-26.04-arm"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
+  node-arm64-87:
+    name: "systemd"
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-38, node-arm64-45, node-arm64-57, node-arm64-72, node-arm64-84, node-arm64-85]
+    # Build unless this node is already present in the registry. A skipped
+    # (already-built) dependency must not cascade-skip a dependent that does
+    # need rebuilding, so !cancelled() && !failure() replaces the implicit
+    # success() gate — which treats a skipped need as reason to skip. The skip
+    # fires only on an explicit true: an empty plan output or a missing key
+    # builds, so anything unexpected errs toward building.
+    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-arm64'] == '' || fromJSON(needs['plan'].outputs['built-arm64'])['debian-binary-pkg:systemd:systemd-sysv:arm64'] != true) }}"
+    uses: ./.github/workflows/build-node.yml
+    with:
+      node-key: "debian-binary-pkg:systemd:systemd-sysv:arm64"
+      arch: arm64
+      runner: "ubuntu-26.04-arm"
+      id-seed-override: "${{ inputs.id-seed-override }}"
+
   node-arm64-88:
     name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-73, node-arm64-85, node-arm64-86, node-arm64-87]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-38, node-arm64-45, node-arm64-57, node-arm64-72, node-arm64-84, node-arm64-85]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3519,7 +3519,7 @@ jobs:
 
   node-arm64-89:
     name: "util-linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-83]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3536,7 +3536,7 @@ jobs:
 
   node-arm64-90:
     name: "util-linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-83]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3553,7 +3553,7 @@ jobs:
 
   node-arm64-91:
     name: "util-linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-2, node-arm64-20, node-arm64-3, node-arm64-34, node-arm64-35, node-arm64-36, node-arm64-37, node-arm64-38, node-arm64-41, node-arm64-42, node-arm64-43, node-arm64-44, node-arm64-45, node-arm64-52, node-arm64-53, node-arm64-54, node-arm64-55, node-arm64-56, node-arm64-58, node-arm64-72, node-arm64-73, node-arm64-75, node-arm64-76, node-arm64-77, node-arm64-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-3, node-arm64-36, node-arm64-53, node-arm64-71, node-arm64-75, node-arm64-76, node-arm64-77, node-arm64-83]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3570,7 +3570,7 @@ jobs:
 
   node-arm64-92:
     name: "util-linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-58, node-arm64-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-57, node-arm64-74, node-arm64-83]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3587,7 +3587,7 @@ jobs:
 
   node-arm64-93:
     name: "util-linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-2, node-arm64-20, node-arm64-3, node-arm64-34, node-arm64-35, node-arm64-36, node-arm64-37, node-arm64-38, node-arm64-41, node-arm64-42, node-arm64-43, node-arm64-44, node-arm64-45, node-arm64-49, node-arm64-52, node-arm64-53, node-arm64-54, node-arm64-55, node-arm64-56, node-arm64-58, node-arm64-73, node-arm64-75, node-arm64-76, node-arm64-77, node-arm64-78, node-arm64-85]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-35, node-arm64-43, node-arm64-49, node-arm64-53, node-arm64-57, node-arm64-74, node-arm64-75, node-arm64-76, node-arm64-77, node-arm64-78, node-arm64-83]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3621,7 +3621,7 @@ jobs:
 
   node-arm64-95:
     name: "xz-utils"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-94]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-94]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3655,7 +3655,7 @@ jobs:
 
   node-arm64-97:
     name: "zlib"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-96]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-96]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3672,7 +3672,7 @@ jobs:
 
   node-arm64-98:
     name: "dpkg"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-12, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-24, node-arm64-40, node-arm64-45, node-arm64-58, node-arm64-84, node-arm64-95, node-arm64-97]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-12, node-arm64-19, node-arm64-20, node-arm64-24, node-arm64-40, node-arm64-45, node-arm64-57, node-arm64-82, node-arm64-95, node-arm64-97]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3689,7 +3689,7 @@ jobs:
 
   node-arm64-99:
     name: "openssl"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-45, node-arm64-51, node-arm64-97]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-45, node-arm64-51, node-arm64-97]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3706,7 +3706,7 @@ jobs:
 
   node-arm64-100:
     name: "openssl"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-45, node-arm64-51, node-arm64-97]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-19, node-arm64-20, node-arm64-45, node-arm64-51, node-arm64-97]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3723,7 +3723,7 @@ jobs:
 
   node-arm64-101:
     name: "coreutils"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-100, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-21, node-arm64-22, node-arm64-29, node-arm64-38, node-arm64-44, node-arm64-45, node-arm64-51, node-arm64-58, node-arm64-75, node-arm64-9, node-arm64-96, node-arm64-97, node-arm64-99]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-100, node-arm64-19, node-arm64-20, node-arm64-21, node-arm64-22, node-arm64-29, node-arm64-38, node-arm64-57, node-arm64-74, node-arm64-9, node-arm64-99]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3740,7 +3740,7 @@ jobs:
 
   node-arm64-102:
     name: "kmod"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-100, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-33, node-arm64-44, node-arm64-45, node-arm64-51, node-arm64-96, node-arm64-97, node-arm64-99]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-100, node-arm64-19, node-arm64-20, node-arm64-33, node-arm64-99]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3757,7 +3757,7 @@ jobs:
 
   node-arm64-103:
     name: "kmod"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-100, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-33, node-arm64-44, node-arm64-45, node-arm64-51, node-arm64-96, node-arm64-97, node-arm64-99]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-100, node-arm64-19, node-arm64-20, node-arm64-33, node-arm64-99]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3774,7 +3774,7 @@ jobs:
 
   node-arm64-104:
     name: "linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-100, node-arm64-102, node-arm64-103, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-33, node-arm64-44, node-arm64-45, node-arm64-51, node-arm64-66, node-arm64-96, node-arm64-97, node-arm64-99]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-102, node-arm64-103, node-arm64-65]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3791,7 +3791,7 @@ jobs:
 
   node-arm64-105:
     name: "linux"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-100, node-arm64-102, node-arm64-103, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-33, node-arm64-44, node-arm64-45, node-arm64-51, node-arm64-66, node-arm64-96, node-arm64-97, node-arm64-99]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-102, node-arm64-103, node-arm64-65]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3808,7 +3808,7 @@ jobs:
 
   node-arm64-106:
     name: "systemd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-103, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-19, node-arm64-20, node-arm64-73]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-103, node-arm64-19, node-arm64-20, node-arm64-38, node-arm64-45, node-arm64-57, node-arm64-72, node-arm64-84, node-arm64-85]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3825,7 +3825,7 @@ jobs:
 
   node-arm64-107:
     name: "rootfs-base"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-100, node-arm64-101, node-arm64-102, node-arm64-103, node-arm64-104, node-arm64-105, node-arm64-106, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-18, node-arm64-19, node-arm64-20, node-arm64-23, node-arm64-27, node-arm64-32, node-arm64-33, node-arm64-37, node-arm64-38, node-arm64-41, node-arm64-44, node-arm64-45, node-arm64-47, node-arm64-50, node-arm64-51, node-arm64-55, node-arm64-56, node-arm64-57, node-arm64-58, node-arm64-59, node-arm64-60, node-arm64-61, node-arm64-62, node-arm64-63, node-arm64-64, node-arm64-65, node-arm64-66, node-arm64-67, node-arm64-68, node-arm64-70, node-arm64-73, node-arm64-74, node-arm64-75, node-arm64-78, node-arm64-79, node-arm64-80, node-arm64-81, node-arm64-82, node-arm64-85, node-arm64-86, node-arm64-87, node-arm64-88, node-arm64-89, node-arm64-90, node-arm64-91, node-arm64-92, node-arm64-93, node-arm64-96, node-arm64-97, node-arm64-98, node-arm64-99]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-101, node-arm64-104, node-arm64-105, node-arm64-106, node-arm64-18, node-arm64-19, node-arm64-20, node-arm64-23, node-arm64-27, node-arm64-32, node-arm64-47, node-arm64-50, node-arm64-56, node-arm64-58, node-arm64-59, node-arm64-66, node-arm64-67, node-arm64-69, node-arm64-73, node-arm64-74, node-arm64-78, node-arm64-79, node-arm64-80, node-arm64-84, node-arm64-85, node-arm64-86, node-arm64-87, node-arm64-88, node-arm64-89, node-arm64-90, node-arm64-91, node-arm64-92, node-arm64-93, node-arm64-98]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3842,7 +3842,7 @@ jobs:
 
   node-arm64-108:
     name: "rootfs-initrd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-105, node-arm64-106, node-arm64-14, node-arm64-15, node-arm64-16, node-arm64-17, node-arm64-18, node-arm64-19, node-arm64-20, node-arm64-23, node-arm64-37, node-arm64-38, node-arm64-41, node-arm64-44, node-arm64-45, node-arm64-55, node-arm64-56, node-arm64-58, node-arm64-59, node-arm64-61, node-arm64-62, node-arm64-63, node-arm64-64, node-arm64-65, node-arm64-66, node-arm64-67, node-arm64-73, node-arm64-74, node-arm64-75, node-arm64-78, node-arm64-85, node-arm64-86, node-arm64-87, node-arm64-88, node-arm64-89, node-arm64-92]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-105, node-arm64-106, node-arm64-18, node-arm64-19, node-arm64-20, node-arm64-23, node-arm64-58, node-arm64-66, node-arm64-73, node-arm64-74, node-arm64-78, node-arm64-84, node-arm64-85, node-arm64-88, node-arm64-89, node-arm64-92]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3876,7 +3876,7 @@ jobs:
 
   node-arm64-110:
     name: "rootfs-min"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-101, node-arm64-23, node-arm64-50, node-arm64-59]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-101, node-arm64-23, node-arm64-50, node-arm64-58]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
