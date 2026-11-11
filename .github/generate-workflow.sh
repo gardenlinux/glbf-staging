@@ -132,8 +132,9 @@ EOF
 	# One caller job per (graph node, arch). glbx emits the per-arch graph; jq
 	# turns it into YAML in a single pass: node index becomes a stable, GHA-safe
 	# job id prefixed by arch (node-<arch>-<i>) so the two arches never collide,
-	# the node's short name rides in the job name (so the Actions UI shows just
-	# "libc6" or "rootfs", grouping the two arches of a package under one name)
+	# the node's group key rides in the job name (so the Actions UI shows just
+	# "libc6" or "rootfs" — and every binary of one source package shares its
+	# source name, grouping the two arches of a package under one name)
 	# while the full arch-qualified Key rides in the node-key input, and each
 	# node's incoming edges become needs: on the same-arch predecessor jobs. The
 	# build logic itself is in build-node.yml; the needs: edges and the if: skip
@@ -149,7 +150,7 @@ EOF
 				| to_entries[]
 				| .key as $i
 				| .value.key as $key
-				| .value.shortName as $short
+				| .value.groupKey as $short
 				| ([$edges[] | select(.to == $key) | "node-\($arch)-\($id[.from])"] | sort) as $preds
 				| (["build-glbx", "check-graph", "restore-inputs-\($arch)", "plan-\($arch)"] + $preds) as $needs
 				| ($runners.overrides[$key] // $runners.default[$arch]) as $runner
