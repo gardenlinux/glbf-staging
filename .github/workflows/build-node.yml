@@ -70,6 +70,10 @@ jobs:
         run: |
           bin/glbx build --target "$NODE_KEY" --no-recurse --stream \
             --conf-dir . --stub bin/exec_env_stub --arch "$GLBX_ARCH"
+          id="$(bin/glbx build --print-id "$NODE_KEY")"
+          manifest="$(bin/glbx cache map get "$id")"
+          echo "$NODE_KEY -> $id -> $manifest"
+          bin/glbx cache blobs get "$manifest"
       - name: Publish ${{ inputs.node-key }} blobs to ghcr
         id: publish-blobs
         run: |
