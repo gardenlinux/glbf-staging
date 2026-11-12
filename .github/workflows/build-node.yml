@@ -78,7 +78,7 @@ jobs:
           # Pass the withheld aliases on as a job output. base64 (single line, no
           # wrapping) keeps it a plain key=value output — no multiline-delimiter
           # rules, no chance a value line collides with a heredoc marker.
-          echo "aliases=$(base64 -w0 /tmp/aliases.json)" >> "$GITHUB_OUTPUT"
+          echo "aliases=$(base64 -w0 /tmp/aliases.json)" | tee -a "$GITHUB_OUTPUT"
 
   check-reprod:
     name: check reproducibility ${{ inputs.node-key }}
