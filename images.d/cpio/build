@@ -1,10 +1,8 @@
 #!/usr/bin/python3
 """cpio (initrd) assembly script.
 
-Packs a rootfs tree into a zstd-compressed cpio initramfs, after stripping it
-down to what an initrd needs: it drops payload with no part in finding and
-mounting the root (see strip_payload) and prunes the kernel module set to the
-wanted modules plus their dependency closure.
+Packs a rootfs tree into a zstd-compressed cpio initramfs, after pruning the
+kernel module set to the wanted modules plus their dependency closure.
 
 Usage (the contract glbx invokes):
     build <rootfs-tarball> <output-cpio>
@@ -71,43 +69,6 @@ def wanted_module_closure(dep_path, wanted):
         keep.add(path)
         keep.update(deps.get(path, ()))
     return keep
-
-
-def strip_payload(rootfs_dir):
-    """Remove files the initrd never uses. The initrd only finds the root device,
-    mounts it, and switch-roots, so none of these play a part:
-
-    - /usr/share and /var (docs, locale data, dpkg database, caches, logs);
-      /var is left as a single empty directory.
-    - the udev hardware database (vendor/product name tables).
-    - the gconv charset converters — everything runs under LC_ALL=C.
-    - the per-locale data under /usr/lib/locale, same reason.
-    - ldconfig — the linker cache is not rebuilt in a throwaway initrd.
-    """
-    rm_tree = lambda *p: shutil.rmtree(os.path.join(rootfs_dir, *p), ignore_errors=True)
-    rm_file = lambda *p: _remove_quiet(os.path.join(rootfs_dir, *p))
-
-    rm_tree("usr/share")
-    rm_tree("var")
-    os.makedirs(os.path.join(rootfs_dir, "var"))
-
-    rm_file("usr/lib/udev/hwdb.bin")
-    rm_tree("usr/lib/udev/hwdb.d")
-    rm_tree("usr/lib/locale")
-    rm_file("usr/sbin/ldconfig")
-
-    # gconv lives under the arch-triplet library dir, which varies by arch.
-    for triplet in os.scandir(os.path.join(rootfs_dir, "usr/lib")):
-        if triplet.is_dir():
-            rm_tree("usr/lib", triplet.name, "gconv")
-
-
-def _remove_quiet(path):
-    """Remove a file, ignoring its absence."""
-    try:
-        os.remove(path)
-    except FileNotFoundError:
-        pass
 
 
 def prune_modules(rootfs_dir, inputs_dir):
@@ -179,7 +140,6 @@ def main():
     rootfs_dir = tempfile.mkdtemp(prefix="glbx-cpio-")
     run("tar", "-xf", rootfs_tarball, "-C", rootfs_dir)
 
-    strip_payload(rootfs_dir)
     prune_modules(rootfs_dir, inputs_dir)
 
     pack_cpio(rootfs_dir, out)
