@@ -53,7 +53,7 @@ jobs:
         run: |
           for a in amd64 arm64; do
             bin/glbx graph --format=json --check-built \
-              --conf-dir . --stub bin/exec_env_stub --arch "$a" > "/tmp/graph.$a.json"
+              --arch "$a" > "/tmp/graph.$a.json"
             echo "built-$a=$(jq -c '.builtStatus' "/tmp/graph.$a.json")" >> "$GITHUB_OUTPUT"
             echo "already built ($a): $(jq '[.builtStatus[] | select(.)] | length' "/tmp/graph.$a.json") / $(jq '.nodes | length' "/tmp/graph.$a.json")"
           done
