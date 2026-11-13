@@ -85,7 +85,7 @@ jobs:
           result="$(bin/glbx import --no-merge \
             --repo "$REPO" --dist "$DIST" --update-tag "$UPDATE_TAG" \
             --keyring .wf/.github/keyrings/debian-archive-keyring.gpg \
-            --cookie "$COOKIE" --output . "$PKG")"
+            --cookie "$COOKIE" "$PKG")"
           echo "$result"
           commit="$(echo "$result" | jq -r '.commit')"
           already="$(echo "$result" | jq -r '.already_present')"
@@ -128,7 +128,7 @@ jobs:
             git merge --no-ff --no-edit "$U"
 
             if [ "$UPDATE_LOCKFILE" = "true" ]; then
-              bin/glbx lockfile --output . \
+              bin/glbx lockfile \
                 --repo "$REPO" --dist "$DIST" \
                 --cookie "$COOKIE" "$PKG"
               git add "pkgs/$PKG"
