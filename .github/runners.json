@@ -1,6 +1,10 @@
 {
-  "default": "ubuntu-latest",
+  "default": {
+    "amd64": "ubuntu-latest",
+    "arm64": "ubuntu-26.04-arm"
+  },
   "overrides": {
-    "debian-pkg-build:linux:amd64": "ubuntu-latest-8core"
+    "debian-pkg-build:linux:amd64": "ubuntu-latest-8core",
+    "debian-pkg-build:linux:arm64": "ubuntu-latest-arm-8core"
   }
 }

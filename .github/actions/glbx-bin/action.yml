@@ -1,5 +1,9 @@
 name: Fetch glbx binaries
-description: Download the run-scoped glbx-bin artifact and make the binaries executable.
+description: Download the run-scoped glbx-bin-<arch> artifact and make the binaries executable.
+inputs:
+  arch:
+    description: Which architecture's binaries to fetch (selects the glbx-bin-<arch> artifact).
+    required: true
 outputs:
   glbx:
     description: Path to the glbx binary.
@@ -13,7 +17,7 @@ runs:
     - name: Fetch the glbx binaries
       uses: actions/download-artifact@v7
       with:
-        name: glbx-bin
+        name: glbx-bin-${{ inputs.arch }}
         path: bin
     - name: Make the binaries executable
       shell: bash
