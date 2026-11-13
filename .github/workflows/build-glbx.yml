@@ -10,9 +10,7 @@ on:
     inputs:
       glbx-ref:
         description: glbx ref (branch, tag, or full SHA) to build the executor from
-        # WIP: temporarily default to the arm64-port branch instead of main;
-        # revert to main once that work lands.
-        default: arm64-port
+        default: main
         type: string
 
 jobs:
@@ -23,7 +21,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           repository: gardenlinux/glbx
-          ref: ${{ inputs.glbx-ref || 'arm64-port' }}
+          ref: ${{ inputs.glbx-ref || 'main' }}
       - uses: actions/setup-go@v6
         with:
           go-version: stable
