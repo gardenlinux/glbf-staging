@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+
+# Strip the initrd rootfs down to what an initramfs actually uses. The initrd
+# only finds the root device, mounts it, and switch-roots, so none of this plays
+# a part at that stage; dropping it keeps the packed cpio small.
+
+# Docs, locale data, dpkg database, caches, logs. /var is recreated empty so the
+# tree still has the mount point.
+rm -rf /usr/share
+rm -rf /var
+mkdir /var
+
+# The udev hardware database (vendor/product name tables).
+rm -f /usr/lib/udev/hwdb.bin
+rm -rf /usr/lib/udev/hwdb.d
+
+# The gconv charset converters and per-locale data: everything runs under
+# LC_ALL=C. gconv lives under the arch-triplet library dir, which varies by arch.
+rm -rf /usr/lib/locale
+rm -rf /usr/lib/*/gconv
