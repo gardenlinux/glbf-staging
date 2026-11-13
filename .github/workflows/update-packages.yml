@@ -84,13 +84,14 @@ jobs:
           ref: ${{ github.sha }}
           path: .wf
       - uses: ./.wf/.github/actions/glbx-bin
+        with:
+          arch: amd64
       - name: Resolve which packages have a newer version
         id: check
         run: |
           # One cookie per run so check-updates and every later import share one
           # signed InRelease snapshot of the archive.
           updates="$(bin/glbx check-updates \
-            --conf-dir . \
             --repo "$REPO" \
             --dist "$DIST" \
             --update-tag "$UPDATE_TAG" \
