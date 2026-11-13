@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 mkdir -p /etc/systemd/system/serial-getty@ttyS0.service.d
 cat > /etc/systemd/system/serial-getty@ttyS0.service.d/autologin.conf <<'CONF'
@@ -8,6 +8,7 @@ ExecStart=
 ExecStart=-/sbin/agetty --autologin root --keep-baud 115200,57600,38400,9600 - $TERM
 CONF
 
-mkdir -p /etc/systemd/system/getty.target.wants
-ln -sf /usr/lib/systemd/system/serial-getty@.service \
-    /etc/systemd/system/getty.target.wants/serial-getty@ttyS0.service
+if [ "$(dpkg --print-architecture)" = arm64 ]; then
+    mkdir -p /etc/systemd/system/serial-getty@ttyAMA0.service.d
+    cp /etc/systemd/system/serial-getty@ttyS0.service.d/autologin.conf /etc/systemd/system/serial-getty@ttyAMA0.service.d/autologin.conf
+fi
