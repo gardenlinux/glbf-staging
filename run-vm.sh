@@ -2,7 +2,14 @@
 
 set -eufo pipefail
 
-image_id="$1"
+image_arg="${1:-"image:disk:$(dpkg --print-architecture)"}"
+
+if grep -xP '[a-f0-9]{64}' <<< "$image_arg" >/dev/null; then
+	image_id="$image_arg"
+else
+	image_id="$(glbx build --print-id "$image_arg")"
+fi
+
 image_manifest="$(glbx cache map get "$image_id")"
 image_blob="$(glbx cache blobs get "$image_manifest" | awk '$2 == "image" { print $1 }')"
 image_path="$(realpath "$(glbx cache blobs path "$image_blob")")"
