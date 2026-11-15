@@ -45,6 +45,10 @@ env:
   GLBX_REGISTRY: ghcr.io/${{ github.repository }}/objstore
   GLBX_REGISTRY_USER: ${{ github.actor }}
   GLBX_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # Publish SBOMs under the Garden Linux namespace rather than the local default
+  # ("localhost"). This scopes the SBOM object-store map keys and the public
+  # sbom-<manifest> closure tags, and is folded into every SBOM element ID.
+  GLBX_SBOM_NAMESPACE: gardenlinux.io
   # Empty leaves the committed identity seed in force; glbx reads an empty
   # GLBX_ID_SEED_OVERRIDE as no override. A non-empty value reseeds every
   # identity, forcing a full rebuild of both the build and the reproducibility
