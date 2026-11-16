@@ -276,7 +276,7 @@ test_scripts = \
 	t/Dpkg_Dist_Files.t \
 	t/dpkg_source.t \
 	t/dpkg_buildpackage.t \
-	t/dpkg_buildtree.t \
+	t/dpkg_buildtree_prog.t \
 	t/dpkg_mergechangelogs.t \
 	t/mk.t \
 	# EOL
