@@ -1886,7 +1886,7 @@ jobs:
 
   node-amd64-108:
     name: "rootfs-initrd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-105, node-amd64-106, node-amd64-18, node-amd64-19, node-amd64-20, node-amd64-23, node-amd64-58, node-amd64-66, node-amd64-73, node-amd64-74, node-amd64-78, node-amd64-84, node-amd64-85, node-amd64-88, node-amd64-89, node-amd64-92]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-amd64-105, node-amd64-106, node-amd64-23, node-amd64-58, node-amd64-66, node-amd64-73, node-amd64-74, node-amd64-78, node-amd64-84, node-amd64-85, node-amd64-88, node-amd64-89, node-amd64-92]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
@@ -3841,7 +3841,7 @@ jobs:
 
   node-arm64-108:
     name: "rootfs-initrd"
-    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-105, node-arm64-106, node-arm64-18, node-arm64-19, node-arm64-20, node-arm64-23, node-arm64-58, node-arm64-66, node-arm64-73, node-arm64-74, node-arm64-78, node-arm64-84, node-arm64-85, node-arm64-88, node-arm64-89, node-arm64-92]
+    needs: [build-glbx, check-graph, restore-inputs, plan, node-arm64-105, node-arm64-106, node-arm64-23, node-arm64-58, node-arm64-66, node-arm64-73, node-arm64-74, node-arm64-78, node-arm64-84, node-arm64-85, node-arm64-88, node-arm64-89, node-arm64-92]
     # Build unless this node is already present in the registry. A skipped
     # (already-built) dependency must not cascade-skip a dependent that does
     # need rebuilding, so !cancelled() && !failure() replaces the implicit
