@@ -82,7 +82,7 @@ jobs:
       - name: Import the new version as a pristine commit (no merge)
         id: import
         run: |
-          result="$(bin/glbx import --no-merge \
+          result="$(glbx import --no-merge \
             --repo "$REPO" --dist "$DIST" --update-tag "$UPDATE_TAG" \
             --keyring .wf/.github/keyrings/debian-archive-keyring.gpg \
             --cookie "$COOKIE" "$PKG")"
@@ -128,7 +128,7 @@ jobs:
             git merge --no-ff --no-edit "$U"
 
             if [ "$UPDATE_LOCKFILE" = "true" ]; then
-              bin/glbx lockfile \
+              glbx lockfile \
                 --repo "$REPO" --dist "$DIST" \
                 --cookie "$COOKIE" "$PKG"
               git add "pkgs/$PKG"

@@ -38,11 +38,18 @@ only committed derived artefact. Regenerate with:
 
     GLBX=path/to/glbx STUB=path/to/exec_env_stub .github/generate-workflow.sh
 
-A run's first jobs build glbx from a chosen ref and then **gate** on the graph:
-`check-graph` regenerates `build.yml` from the current sources and fails if it
-differs from the committed copy. So a stale committed workflow can never silently
-build the wrong thing — adding or removing a package means regenerating and
-committing `build.yml`.
+A run's first job (`build-glbx`) compiles glbx from a chosen ref
+(`glbx-ref` dispatch input, default `main`) and shares the binaries as run-scoped
+artifacts; it builds **inside glbx's own devcontainer** (`.devcontainer`, via
+rootless podman, mirroring glbx's own CI) so the build-time toolchain is the
+pinned, well-defined set the devcontainer ships rather than whatever the runner
+happens to have. Downstream jobs install those binaries onto `PATH`
+(`.github/actions/glbx-bin` drops them in `/usr/local/bin`) and run glbx directly
+on the host — no container layer — needing only an unprivileged-user-namespace
+sysctl for glbx's own sandbox. The run then **gates** on the graph: `check-graph`
+regenerates `build.yml` from the current sources and fails if it differs from the
+committed copy. So a stale committed workflow can never silently build the wrong
+thing — adding or removing a package means regenerating and committing `build.yml`.
 
 All build logic lives in hand-authored **reusable workflows**
 (`.github/workflows/{build-glbx,check-graph,restore-inputs,plan,build-node}.yml`);

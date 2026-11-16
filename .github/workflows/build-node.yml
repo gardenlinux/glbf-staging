@@ -76,18 +76,18 @@ jobs:
           arch: ${{ inputs.arch }}
       - name: Build ${{ inputs.node-key }}
         run: |
-          bin/glbx build --target "$NODE_KEY" --no-recurse --stream --arch "$GLBX_ARCH"
+          glbx build --target "$NODE_KEY" --no-recurse --stream --arch "$GLBX_ARCH"
       - name: Print ${{ inputs.node-key }} metadata
         run: |
-          id="$(bin/glbx build --print-id "$NODE_KEY")"
-          manifest="$(bin/glbx cache map get "$id")"
+          id="$(glbx build --print-id "$NODE_KEY")"
+          manifest="$(glbx cache map get "$id")"
           echo "$NODE_KEY -> $id -> $manifest"
           echo
-          bin/glbx cache blobs get "$manifest"
+          glbx cache blobs get "$manifest"
       - name: Publish ${{ inputs.node-key }} blobs to ghcr
         id: publish-blobs
         run: |
-          bin/glbx publish --target "$NODE_KEY" --aliases-to /tmp/aliases.json --arch "$GLBX_ARCH"
+          glbx publish --target "$NODE_KEY" --aliases-to /tmp/aliases.json --arch "$GLBX_ARCH"
           # Pass the withheld aliases on as a job output. base64 (single line, no
           # wrapping) keeps it a plain key=value output — no multiline-delimiter
           # rules, no chance a value line collides with a heredoc marker.
@@ -111,7 +111,7 @@ jobs:
       - name: Seed the withheld map alias into the local store
         run: |
           echo "$ALIASES" | base64 -d > /tmp/aliases.json
-          bin/glbx cache map set --from /tmp/aliases.json
+          glbx cache map set --from /tmp/aliases.json
       - name: Check ${{ inputs.node-key }} reproduces
         id: check
         # Classify the reproducibility check from its exit code and JSON report.
@@ -122,7 +122,7 @@ jobs:
         # let the publish + report steps run. State "match" means reproduced.
         run: |
           rc=0
-          bin/glbx build --check-reproducible --target "$NODE_KEY" \
+          glbx build --check-reproducible --target "$NODE_KEY" \
             --report /tmp/reprod-report.json --stream --arch "$GLBX_ARCH" || rc=$?
 
           if [ "$rc" -eq 0 ]; then
@@ -144,7 +144,7 @@ jobs:
         # inspection. No alias: the node stays unbuilt and is rechecked next run.
         run: |
           manifest="$(jq -r --arg k "$NODE_KEY" '.nodes[] | select(.key == $k) | .reproduced_manifest' /tmp/reprod-report.json)"
-          bin/glbx publish --manifest "$manifest" --arch "$GLBX_ARCH"
+          glbx publish --manifest "$manifest" --arch "$GLBX_ARCH"
       - name: Report ${{ inputs.node-key }} non-reproducible
         if: steps.check.outputs.result == 'non-reproducible'
         # Always fails, so the GitHub UI opens it as the failing step. Prints the
@@ -153,11 +153,11 @@ jobs:
           echo "=== reproducibility report ==="
           cat /tmp/reprod-report.json
           echo
-          id="$(bin/glbx build --print-id "$NODE_KEY")"
+          id="$(glbx build --print-id "$NODE_KEY")"
           manifest="$(jq -r --arg k "$NODE_KEY" '.nodes[] | select(.key == $k) | .reproduced_manifest' /tmp/reprod-report.json)"
           echo "$NODE_KEY -> $id -> $manifest"
           echo
-          bin/glbx cache blobs get "$manifest"
+          glbx cache blobs get "$manifest"
           echo
           echo "::error::$NODE_KEY is not reproducible."
           exit 1
@@ -178,4 +178,4 @@ jobs:
       - name: Publish ${{ inputs.node-key }} map alias to ghcr
         run: |
           echo "$ALIASES" | base64 -d > /tmp/aliases.json
-          bin/glbx publish --aliases-from /tmp/aliases.json --arch "$GLBX_ARCH"
+          glbx publish --aliases-from /tmp/aliases.json --arch "$GLBX_ARCH"

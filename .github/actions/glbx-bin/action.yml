@@ -1,16 +1,12 @@
-name: Fetch glbx binaries
-description: Download the run-scoped glbx-bin-<arch> artifact and make the binaries executable.
+name: Install glbx binaries
+description: >-
+  Download the run-scoped glbx-bin-<arch> artifact (built by build-glbx.yml) into
+  /usr/local/bin and make it executable, so subsequent steps invoke `glbx` and
+  `exec_env_stub` as native commands on PATH.
 inputs:
   arch:
-    description: Which architecture's binaries to fetch (selects the glbx-bin-<arch> artifact).
+    description: Which architecture's binaries to install (selects the glbx-bin-<arch> artifact).
     required: true
-outputs:
-  glbx:
-    description: Path to the glbx binary.
-    value: bin/glbx
-  stub:
-    description: Path to the exec_env_stub binary.
-    value: bin/exec_env_stub
 runs:
   using: composite
   steps:
@@ -18,7 +14,9 @@ runs:
       uses: actions/download-artifact@v7
       with:
         name: glbx-bin-${{ inputs.arch }}
-        path: bin
-    - name: Make the binaries executable
+        path: /tmp/glbx-bin
+    - name: Install the binaries on PATH
       shell: bash
-      run: chmod +x bin/glbx bin/exec_env_stub
+      run: |
+        sudo install -m 0755 /tmp/glbx-bin/glbx /usr/local/bin/glbx
+        sudo install -m 0755 /tmp/glbx-bin/exec_env_stub /usr/local/bin/exec_env_stub

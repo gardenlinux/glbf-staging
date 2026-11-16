@@ -91,7 +91,7 @@ jobs:
         run: |
           # One cookie per run so check-updates and every later import share one
           # signed InRelease snapshot of the archive.
-          updates="$(bin/glbx check-updates \
+          updates="$(glbx check-updates \
             --repo "$REPO" \
             --dist "$DIST" \
             --update-tag "$UPDATE_TAG" \

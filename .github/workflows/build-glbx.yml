@@ -5,6 +5,12 @@ name: build-glbx
 # run-scoped artifacts (glbx-bin-amd64, glbx-bin-arm64). glbx is pure Go, so one
 # runner cross-compiles both arches via `make cross`; only the native per-node
 # image build runs on its own architecture (handled by the node runner map).
+#
+# The build happens inside glbx's own devcontainer (.devcontainer/Containerfile)
+# via rootless podman, mirroring how glbx's own CI builds it — so the build-time
+# toolchain (Go, protoc, protoc-gen-go, …) is exactly the pinned, well-defined set
+# the devcontainer ships, not whatever the runner happens to have. The downstream
+# jobs run the resulting binary directly on the host (no container layer).
 on:
   workflow_call:
     inputs:
@@ -22,16 +28,33 @@ jobs:
         with:
           repository: gardenlinux/glbx
           ref: ${{ inputs.glbx-ref || 'main' }}
-      - uses: actions/setup-go@v6
-        with:
-          go-version: stable
-      - name: Install protobuf toolchain
+      - name: Prepare rootless podman (unprivileged userns + subid ranges)
         run: |
-          sudo apt-get update
-          sudo apt-get install -y protobuf-compiler
-          go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          user="$(id -un)"
+          start=$(awk -F: '
+            NF == 3 { end = $2 + $3; if (end > max) max = end }
+            END { print int((max + 99999) / 100000) * 100000 }
+          ' /etc/subuid /etc/subgid)
+          sudo sed -i "/^${user}:/d" /etc/subuid /etc/subgid
+          echo "${user}:${start}:1000000" | sudo tee -a /etc/subuid /etc/subgid
+          podman system migrate
+      - name: Build the glbx devcontainer
+        # NODOC=1 skips the Rust/mdbook layer — staging only needs `make cross`,
+        # never `make doc`, and compiling mdbook dominates the image build.
+        run: podman build --build-arg NODOC=1 -t glbx-dev .devcontainer
       - name: Cross-compile glbx and the sandbox stub for every arch
-        run: make cross
+        run: >
+          podman run --rm
+          --tmpfs /tmp
+          --security-opt 'unmask=/proc/*'
+          --security-opt seccomp=unconfined
+          --security-opt label=disable
+          --security-opt apparmor=unconfined
+          --userns keep-id:uid=1000,gid=1000
+          -v "$GITHUB_WORKSPACE:/home/dev/workspace"
+          -w /home/dev/workspace
+          glbx-dev make cross
       - name: Share the amd64 binaries with the node jobs
         uses: actions/upload-artifact@v6
         with:

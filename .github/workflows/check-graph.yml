@@ -17,8 +17,6 @@ jobs:
           arch: amd64
       - name: Regenerate the workflow from the current sources and compare
         env:
-          GLBX: bin/glbx
-          STUB: bin/exec_env_stub
           GLBX_ARCH: amd64
         run: |
           .github/generate-workflow.sh /tmp/build.current.yml
