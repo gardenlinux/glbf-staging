@@ -11,6 +11,14 @@ name: build-glbx
 # toolchain (Go, protoc, protoc-gen-go, …) is exactly the pinned, well-defined set
 # the devcontainer ships, not whatever the runner happens to have. The downstream
 # jobs run the resulting binary directly on the host (no container layer).
+#
+# Across runs the compiled binaries are cached in the GitHub Actions cache, keyed
+# by the exact glbx commit the input ref resolves to (glbx-build@<sha>, both
+# arches in one entry). The input ref is a branch/tag that can point at a
+# different commit each run, so the key is the resolved SHA, not the ref name. On
+# a cache hit the devcontainer build AND the cross-compile are both skipped — the
+# restored bin-<arch>/ dirs are re-emitted as the run-scoped artifacts exactly as a
+# fresh build would. On a miss we build, upload, and the cache is saved post-job.
 on:
   workflow_call:
     inputs:
@@ -28,7 +36,22 @@ jobs:
         with:
           repository: gardenlinux/glbx
           ref: ${{ inputs.glbx-ref || 'main' }}
+      - name: Resolve the glbx commit for the cache key
+        id: rev
+        # The input ref is a moving branch/tag; key the cache on the commit it
+        # resolves to so a branch that advanced rebuilds while an unchanged commit
+        # hits regardless of which ref name reached it.
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Restore cached glbx binaries
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            bin-amd64
+            bin-arm64
+          key: glbx-build@${{ steps.rev.outputs.sha }}
       - name: Prepare rootless podman (unprivileged userns + subid ranges)
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
           user="$(id -un)"
@@ -40,10 +63,12 @@ jobs:
           echo "${user}:${start}:1000000" | sudo tee -a /etc/subuid /etc/subgid
           podman system migrate
       - name: Build the glbx devcontainer
+        if: steps.cache.outputs.cache-hit != 'true'
         # NODOC=1 skips the Rust/mdbook layer — staging only needs `make cross`,
         # never `make doc`, and compiling mdbook dominates the image build.
         run: podman build --build-arg NODOC=1 -t glbx-dev .devcontainer
       - name: Cross-compile glbx and the sandbox stub for every arch
+        if: steps.cache.outputs.cache-hit != 'true'
         run: >
           podman run --rm
           --tmpfs /tmp
