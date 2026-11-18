@@ -1,0 +1,56 @@
+From 35cbd6e0255c27c7c5371ec9f7ba80959cb46f5c Mon Sep 17 00:00:00 2001
+From: Paul Eggert <eggert@cs.ucla.edu>
+Date: Sun, 25 Oct 2026 18:22:30 -0700
+Subject: [PATCH] tar: make GNUSparseFile headers reproducible
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Follow libarchive’s lead in using names of the form
+"%d/GNUSparseFile.0/%f", not "%d/GNUSparseFile.%p/%f", when
+building archives.  This makes the output reproducible.
+Problem reported by Johannes Schauer Marin Rodrigues in:
+https://lists.gnu.org/r/bug-tar/2026-10/msg00009.html
+* src/sparse.c (pax_dump_header_0, pax_dump_header_1):
+Use "0", not "%p", in the format of a GNUSparseFile header.
+---
+ src/sparse.c    |  9 +++++----
+ 4 files changed, 24 insertions(+), 22 deletions(-)
+
+diff --git a/src/sparse.c b/src/sparse.c
+index 050d91da..16abe9f3 100644
+--- a/src/sparse.c
++++ b/src/sparse.c
+@@ -1014,7 +1014,8 @@ static struct tar_sparse_optab const star_optab = {
+                         GNU.sparse.size variable)
+ 
+    The name field of the ustar header is constructed using the pattern
+-   "%d/GNUSparseFile.%p/%f".
++   "%d/GNUSparseFile.0/%f".  Although the pattern formerly used "%p"
++   instead of "0", the "%p" hurt reproducibility.
+ 
+    The sparse map itself is stored in the file data block, preceding the actual
+    file data. It consists of a series of octal numbers of arbitrary length,
+@@ -1082,8 +1083,8 @@ pax_dump_header_0 (struct tar_sparse_file *file)
+     {
+       xheader_store ("GNU.sparse.name", file->stat_info, NULL);
+       save_file_name = file->stat_info->file_name;
+-      file->stat_info->file_name = xheader_format_name (file->stat_info,
+-					       "%d/GNUSparseFile.%p/%f", 0);
++      file->stat_info->file_name
++	= xheader_format_name (file->stat_info, "%d/GNUSparseFile.0/%f", 0);
+ 
+       xheader_string_begin (&file->stat_info->xhdr);
+       for (i = 0; i < file->stat_info->sparse_map_avail; i++)
+@@ -1182,7 +1183,7 @@ pax_dump_header_1 (struct tar_sparse_file *file)
+   xheader_store ("GNU.sparse.realsize", file->stat_info, NULL);
+ 
+   file->stat_info->file_name =
+-    xheader_format_name (file->stat_info, "%d/GNUSparseFile.%p/%f", 0);
++    xheader_format_name (file->stat_info, "%d/GNUSparseFile.0/%f", 0);
+   /* Make sure the created header name is shorter than NAME_FIELD_SIZE: */
+   if (strlen (file->stat_info->file_name) > NAME_FIELD_SIZE)
+     file->stat_info->file_name[NAME_FIELD_SIZE] = 0;
+-- 
+2.56.0
+
