@@ -83,9 +83,9 @@ jobs:
         id: import
         run: |
           result="$(glbx import --no-merge \
-            --repo "$REPO" --dist "$DIST" --update-tag "$UPDATE_TAG" \
-            --keyring .wf/.github/keyrings/debian-archive-keyring.gpg \
-            --cookie "$COOKIE" "$PKG")"
+            --update-tag "$UPDATE_TAG" \
+            --params "repo=$REPO,dist=$DIST,cookie=$COOKIE,keyring=.wf/.github/keyrings/debian-archive-keyring.gpg" \
+            "debian:$PKG")"
           echo "$result"
           commit="$(echo "$result" | jq -r '.commit')"
           already="$(echo "$result" | jq -r '.already_present')"
@@ -129,8 +129,8 @@ jobs:
 
             if [ "$UPDATE_LOCKFILE" = "true" ]; then
               glbx lockfile \
-                --repo "$REPO" --dist "$DIST" \
-                --cookie "$COOKIE" "$PKG"
+                --params "repo=$REPO,dist=$DIST,cookie=$COOKIE" \
+                "pkg:$PKG"
               git add "pkgs/$PKG"
               git commit -m "update $PKG build deps"
             fi

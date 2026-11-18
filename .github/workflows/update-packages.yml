@@ -4,7 +4,7 @@ name: update-packages
 # meaningful commit to name the run after, so title it by the branch it targets.
 run-name: update-packages (${{ inputs.target-branch || 'main' }})
 
-# Manual (and, once enabled, daily) entrypoint for the package-update pass: build
+# Manual and daily entrypoint for the package-update pass: build
 # glbx, check every selected package for a newer version, and fan out one
 # update-one-package call per updatable package. The target branch is pure data,
 # so this can run from main while opening PRs against another branch.
@@ -18,11 +18,10 @@ on:
       update-lockfile: { type: boolean, default: false,                             description: "also bump the build-deps lockfile on the clean path" }
       update-tag:      { type: string,  default: "debian:testing",                  description: "auto_update tag to select packages by AND to write into imports" }
       auto-merge:      { type: boolean, default: false,                             description: "auto-merge each opened PR once its build is green (default on for the cron, off for a manual dispatch)" }
-  # Daily cron — disabled for the initial PoC. The params job below supplies the
-  # cron's parameters (the dispatch inputs are empty on a schedule trigger), so
-  # uncommenting this line is the only change needed to enable unattended runs.
-  # schedule:
-  #   - cron: "23 4 * * *"     # off-peak, non-:00 minute
+  # Daily cron at 00:00 UTC. The params job below supplies the cron's parameters
+  # (the dispatch inputs are empty on a schedule trigger).
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
   # Resolve the run's parameters once: each takes its workflow_dispatch input, or
