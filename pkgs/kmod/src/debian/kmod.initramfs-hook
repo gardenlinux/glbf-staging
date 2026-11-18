@@ -1,6 +1,4 @@
 #!/bin/sh -e
-# Copy the compatibility symlinks until initramfs-tools will be converted
-# to use the kmod program.
 
 if [ "$1" = "prereqs" ]; then exit 0; fi
 
@@ -24,11 +22,13 @@ kconfig_yes() {
 # the initramfs then also copy the library that kmod will use with dlopen(3)
 # to uncompress them.
 if ! kconfig_yes CONFIG_MODULE_DECOMPRESS; then
-  if [ "$(find $DESTDIR/lib/modules/ -name "*.xz")" ]; then
-	  copy_exec /usr/lib/*-linux-gnu/liblzma.so.5
+  libdir="$(env --unset=LD_PRELOAD ldd /usr/bin/kmod | sed -nr '/.*=>\s*(\S+)\/libc\.so\.[0-9]+ .*/ {s//\1/p;q}')"
+
+  if [ "$libdir" -a "$(find "$DESTDIR/lib/modules/" -name "*.xz")" ]; then
+    copy_exec "$libdir"/liblzma.so.5
   fi
-  if [ "$(find $DESTDIR/lib/modules/ -name "*.zst")" ]; then
-	  copy_exec /usr/lib/*-linux-gnu/libzstd.so.1
+  if [ "$libdir" -a "$(find "$DESTDIR/lib/modules/" -name "*.zst")" ]; then
+    copy_exec "$libdir"/libzstd.so.1
   fi
 fi
 
