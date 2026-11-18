@@ -436,7 +436,6 @@ CONFIG_TULIP=m
 # CONFIG_TULIP_MMIO is not set
 CONFIG_WINBOND_840=m
 CONFIG_DM9102=m
-CONFIG_PCMCIA_XIRCOM=m
 
 ##
 ## file: drivers/net/ethernet/intel/Kconfig
@@ -715,12 +714,6 @@ CONFIG_SYSFS_SYSCALL=y
 ## file: lib/Kconfig.ubsan
 ##
 # CONFIG_UBSAN is not set
-
-##
-## file: mm/Kconfig
-##
-#. Enabling compaction currently leads to memory corruption on alpha
-# CONFIG_COMPACTION is not set
 
 ##
 ## file: net/lapb/Kconfig

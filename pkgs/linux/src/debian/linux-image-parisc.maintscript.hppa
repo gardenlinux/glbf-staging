@@ -1,1 +1,1 @@
-dir_to_symlink /usr/share/doc/linux-image-parisc linux-image-7.2.12+deb14-parisc 5.7~rc5-1~exp1 linux-image-parisc
+dir_to_symlink /usr/share/bug/linux-image-parisc linux-base-7.3.4+deb14-parisc 7.3-1~exp1 linux-image-parisc
