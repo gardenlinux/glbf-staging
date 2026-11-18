@@ -1,0 +1,5 @@
+pkg_type: debian
+build_profiles: [nocheck, pkg.cdebconf.nogtk]
+build_options: [nocheck]
+runtime_depends:
+  libdebconfclient0: [glibc:libc6]

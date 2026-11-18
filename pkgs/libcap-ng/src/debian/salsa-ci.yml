@@ -1,0 +1,13 @@
+---
+include:
+  - https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/recipes/debian.yml
+
+variables:
+  SALSA_CI_DISABLE_BUILD_PACKAGE_ALL: true
+  SALSA_CI_DISABLE_BUILD_PACKAGE_ANY: true
+
+  SALSA_CI_ENABLE_BUILD_PACKAGE_PROFILES: true
+  BUILD_PROFILES: python
+
+  SALSA_CI_DISABLE_WRAP_AND_SORT: false
+  SALSA_CI_WRAP_AND_SORT_ARGS: '-asbkt'

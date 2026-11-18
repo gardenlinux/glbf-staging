@@ -1,0 +1,47 @@
+#!/usr/bin/make -f
+
+# Fast harness for out-of-container signing. The compile step builds the kernel's
+# own sign-file and extract-cert tools and runs them against the glbx signing
+# token, exactly as a kernel build does — exercising the forwarding PKCS#11
+# module, the Unix socket, and the host signing service — but in seconds. If any
+# signing step fails, the package build fails.
+
+GLBX_PKCS11_MODULE = /usr/lib/$(shell dpkg-architecture -qDEB_HOST_MULTIARCH)/glbx/pkcs11-forward.so
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	gcc -O2 -I. -Iksrc -o sign-file sign-file.c -lcrypto
+	gcc -O2 -I. -o extract-cert extract-cert.c -lcrypto
+
+	# Activate the OpenSSL pkcs11 provider so the tools load the forwarding module.
+	printf '%s\n' \
+		'openssl_conf = glbx_init' \
+		'[glbx_init]' \
+		'providers = glbx_providers' \
+		'[glbx_providers]' \
+		'default = glbx_default' \
+		'pkcs11 = glbx_pkcs11' \
+		'[glbx_default]' \
+		'activate = 1' \
+		'[glbx_pkcs11]' \
+		'activate = 1' \
+		> glbx-openssl.cnf
+
+	# Fetch the certificate from the token, then sign a dummy module, both through
+	# the PKCS#11 forwarding module — the same calls the kernel build makes.
+	head -c 1024 /dev/zero > dummy.ko
+	export OPENSSL_CONF=$(CURDIR)/glbx-openssl.cnf; \
+	export PKCS11_PROVIDER_MODULE=$(GLBX_PKCS11_MODULE); \
+	./extract-cert "pkcs11:token=glbx" signing_key.x509; \
+	./sign-file sha256 "pkcs11:token=glbx" signing_key.x509 dummy.ko
+
+	# Verify the appended signature is well-formed (the module was signed).
+	grep -q '~Module signature appended~' dummy.ko
+
+override_dh_auto_install:
+	install -D -m644 signing_key.x509 debian/signtest/usr/share/signtest/signing_key.x509
+
+override_dh_auto_clean:
+	rm -f sign-file extract-cert glbx-openssl.cnf dummy.ko signing_key.x509

@@ -1,0 +1,181 @@
+name: build-node
+
+# Reusable: build one graph node, verify it reproduces, then publish its map
+# alias. Three jobs run in sequence on separate runners. `build` builds exactly
+# this node with recursion inhibited (its dependencies must already be cache hits
+# published by earlier node jobs) and publishes its output BLOBS to ghcr, but
+# withholds the map alias — it emits the alias as JSON on a job output instead of
+# setting the map-<id> tag. `check-reprod` seeds that alias into its local map and
+# rebuilds the node to check it reproduces the published output; its check step
+# classifies the outcome from the JSON report — a hard build failure fails the job
+# at the check step, a reproduced output passes and ends the job, and a
+# built-but-non-reproducible output publishes the rebuilt manifest's blobs (no
+# alias) and then fails on a final report step (so the GitHub UI auto-opens that
+# step). `publish` runs only after both succeed and sets the withheld map alias on
+# ghcr. Because the alias is what graph --check-built probes, a node that fails
+# reproducibility never gets its alias set, so the next run sees it not-built and
+# rebuilds + rechecks it rather than latching the unverified output as built. Each
+# job needs the previous and carries no if: of its own, so the default success()
+# gate runs them only when build actually ran — when the caller skipped this node
+# as already-built, all three skip.
+on:
+  workflow_call:
+    inputs:
+      node-key:
+        description: The graph node Key to build (e.g. debian-pkg-build:acl:amd64).
+        required: true
+        type: string
+      arch:
+        default: amd64
+        type: string
+      id-seed-override:
+        default: ""
+        type: string
+      runner:
+        description: The runner label this node's jobs run on.
+        default: ubuntu-latest
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  GLBX_ARCH: ${{ inputs.arch }}
+  GLBX_REGISTRY: ghcr.io/${{ github.repository }}/objstore
+  GLBX_REGISTRY_USER: ${{ github.actor }}
+  GLBX_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # Publish SBOMs under the Garden Linux namespace rather than the local default
+  # ("localhost"). This scopes the SBOM object-store map keys and the public
+  # sbom-<manifest> closure tags, and is folded into every SBOM element ID.
+  GLBX_SBOM_NAMESPACE: gardenlinux.io
+  # Empty leaves the committed identity seed in force; glbx reads an empty
+  # GLBX_ID_SEED_OVERRIDE as no override. A non-empty value reseeds every
+  # identity, forcing a full rebuild of both the build and the reproducibility
+  # check.
+  GLBX_ID_SEED_OVERRIDE: ${{ inputs.id-seed-override }}
+  # Enable out-of-container signing diagnostics on both the host signing service
+  # and the in-container forwarding module, to trace a module-signing failure.
+  GLBX_SIGN_DEBUG: "1"
+
+jobs:
+  build:
+    name: build ${{ inputs.node-key }}
+    runs-on: ${{ inputs.runner }}
+    env:
+      NODE_KEY: ${{ inputs.node-key }}
+    outputs:
+      aliases: ${{ steps.publish-blobs.outputs.aliases }}
+    steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: Check out the config repo
+        uses: actions/checkout@v5
+      - uses: ./.github/actions/glbx-bin
+        with:
+          arch: ${{ inputs.arch }}
+      - name: Build ${{ inputs.node-key }}
+        run: |
+          glbx build --target "$NODE_KEY" --no-recurse --stream --arch "$GLBX_ARCH"
+      - name: Print ${{ inputs.node-key }} metadata
+        run: |
+          id="$(glbx build --print-id "$NODE_KEY")"
+          manifest="$(glbx cache map get "$id")"
+          echo "$NODE_KEY -> $id -> $manifest"
+          echo
+          glbx cache blobs get "$manifest"
+      - name: Publish ${{ inputs.node-key }} blobs to ghcr
+        id: publish-blobs
+        run: |
+          glbx publish --target "$NODE_KEY" --aliases-to /tmp/aliases.json --arch "$GLBX_ARCH"
+          # Pass the withheld aliases on as a job output. base64 (single line, no
+          # wrapping) keeps it a plain key=value output — no multiline-delimiter
+          # rules, no chance a value line collides with a heredoc marker.
+          echo "aliases=$(base64 -w0 /tmp/aliases.json)" | tee -a "$GITHUB_OUTPUT"
+
+  check-reprod:
+    name: check reproducibility ${{ inputs.node-key }}
+    needs: [build]
+    runs-on: ${{ inputs.runner }}
+    env:
+      NODE_KEY: ${{ inputs.node-key }}
+      ALIASES: ${{ needs.build.outputs.aliases }}
+    steps:
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: Check out the config repo
+        uses: actions/checkout@v5
+      - uses: ./.github/actions/glbx-bin
+        with:
+          arch: ${{ inputs.arch }}
+      - name: Seed the withheld map alias into the local store
+        run: |
+          echo "$ALIASES" | base64 -d > /tmp/aliases.json
+          glbx cache map set --from /tmp/aliases.json
+      - name: Check ${{ inputs.node-key }} reproduces
+        id: check
+        # Classify the reproducibility check from its exit code and JSON report.
+        # The report is written even for a rebuild failure (state "error"); only a
+        # setup failure (target not built) exits non-zero before writing one. So no
+        # report, or state "error", means the build failed — fail here. State
+        # "mismatch" means it built but did not reproduce: emit non-reproducible and
+        # let the publish + report steps run. State "match" means reproduced.
+        run: |
+          rc=0
+          glbx build --check-reproducible --target "$NODE_KEY" \
+            --report /tmp/reprod-report.json --stream --arch "$GLBX_ARCH" || rc=$?
+
+          if [ "$rc" -eq 0 ]; then
+            echo "result=reproducible" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          state="$(jq -r --arg k "$NODE_KEY" '.nodes[] | select(.key == $k) | .state' /tmp/reprod-report.json 2>/dev/null)"
+          if [ "$state" = "mismatch" ]; then
+            echo "$NODE_KEY built but did not reproduce."
+            echo "result=non-reproducible" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::$NODE_KEY failed to build (report state: ${state:-missing})."
+            exit 1
+          fi
+      - name: Publish ${{ inputs.node-key }} rebuilt manifest to ghcr
+        if: steps.check.outputs.result == 'non-reproducible'
+        # Upload the rebuilt (non-reproducing) manifest and its blobs for
+        # inspection. No alias: the node stays unbuilt and is rechecked next run.
+        run: |
+          manifest="$(jq -r --arg k "$NODE_KEY" '.nodes[] | select(.key == $k) | .reproduced_manifest' /tmp/reprod-report.json)"
+          glbx publish --manifest "$manifest" --arch "$GLBX_ARCH"
+      - name: Report ${{ inputs.node-key }} non-reproducible
+        if: steps.check.outputs.result == 'non-reproducible'
+        # Always fails, so the GitHub UI opens it as the failing step. Prints the
+        # report and the build-step metadata for the rebuilt manifest.
+        run: |
+          echo "=== reproducibility report ==="
+          cat /tmp/reprod-report.json
+          echo
+          id="$(glbx build --print-id "$NODE_KEY")"
+          manifest="$(jq -r --arg k "$NODE_KEY" '.nodes[] | select(.key == $k) | .reproduced_manifest' /tmp/reprod-report.json)"
+          echo "$NODE_KEY -> $id -> $manifest"
+          echo
+          glbx cache blobs get "$manifest"
+          echo
+          echo "::error::$NODE_KEY is not reproducible."
+          exit 1
+
+  publish:
+    name: publish ${{ inputs.node-key }}
+    needs: [build, check-reprod]
+    runs-on: ${{ inputs.runner }}
+    env:
+      NODE_KEY: ${{ inputs.node-key }}
+      ALIASES: ${{ needs.build.outputs.aliases }}
+    steps:
+      - name: Check out the config repo
+        uses: actions/checkout@v5
+      - uses: ./.github/actions/glbx-bin
+        with:
+          arch: ${{ inputs.arch }}
+      - name: Publish ${{ inputs.node-key }} map alias to ghcr
+        run: |
+          echo "$ALIASES" | base64 -d > /tmp/aliases.json
+          glbx publish --aliases-from /tmp/aliases.json --arch "$GLBX_ARCH"

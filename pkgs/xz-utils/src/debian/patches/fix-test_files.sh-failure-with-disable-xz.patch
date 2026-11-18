@@ -1,0 +1,32 @@
+From: Lasse Collin <lasse.collin@tukaani.org>
+Date: Wed, 9 Sep 2026 22:37:17 +0300
+Subject: Tests: Fix test_files.sh failure with --disable-xz
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+Reported-by: Otto Kekäläinen
+Fixes: 7f539d14484e ("Tests: Test that integer overflow in xz --list totals is caught")
+Fixes: https://github.com/tukaani-project/xz/issues/244
+
+(cherry picked from commit 3b1efb04d17c3a9ef7f473d73af13f1531428ffe and can be
+dropped in the XZ Utils 5.8.5 import)
+
+Forwarded: https://github.com/tukaani-project/xz/issues/244
+---
+ tests/test_files.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/test_files.sh b/tests/test_files.sh
+index fa02ecd..9312de9 100755
+--- a/tests/test_files.sh
++++ b/tests/test_files.sh
+@@ -134,7 +134,7 @@ fi
+ # It should succeed when the file is passed twice to xz -l and
+ # fail when passed thrice.
+ I="$srcdir/files/bad-1-index-huge-uncomp.xz"
+-if test -n "$XZ" && "$XZ" -l "$I" "$I" > /dev/null 2>&1; then
++if test -z "$XZ" || "$XZ" -l "$I" "$I" > /dev/null 2>&1; then
+ 	:
+ else
+ 	echo "xz -l unexpectedly failed when the file was used twice: $I"

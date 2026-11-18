@@ -1,0 +1,6 @@
+sources:
+    - file: acl_2.4.0.orig.tar.xz
+      sha256: e661131456d2708a01c614a0f400e11d7d1bfaeb6f3e74b75bb980b72f0161a3
+      urls:
+        - https://deb.debian.org/debian/pool/main/a/acl/acl_2.4.0.orig.tar.xz
+        - https://snapshot.debian.org/file/194272659d2cfad5180a4cf7eb9a4b3c28a6afe9/acl_2.4.0.orig.tar.xz

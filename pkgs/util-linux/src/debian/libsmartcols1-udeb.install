@@ -1,0 +1,3 @@
+#!/usr/bin/dh-exec
+usr/lib/*/libsmartcols*.so.*
+debian/libsmartcols1-udeb.lintian-overrides => /usr/share/lintian/overrides/libsmartcols1-udeb

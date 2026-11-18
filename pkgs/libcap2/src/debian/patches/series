@@ -1,0 +1,3 @@
+Hide-private-symbols.patch
+Filter-out-PIE-flags-when-building-shared-objects.patch
+Skip-git-if-not-installed.patch

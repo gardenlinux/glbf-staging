@@ -1,0 +1,11 @@
+Tests:
+ testsuite,
+Depends:
+ autoconf (>= 2.64~),
+ automake,
+ gettext,
+ libtool (>= 2.2),
+ @,
+Restrictions:
+ allow-stderr,
+ rw-build-tree,

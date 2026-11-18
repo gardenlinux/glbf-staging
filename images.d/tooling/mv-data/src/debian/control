@@ -1,0 +1,15 @@
+Source: mv-data
+Section: admin
+Priority: optional
+Maintainer: Garden Linux <contact@gardenlinux.io>
+Standards-Version: 4.7.2
+Build-Depends: debhelper-compat (= 13)
+Rules-Requires-Root: no
+
+Package: mv-data
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: sparse data mover for disk image assembly
+ Copies a range of bytes from an input file into an output file at a given
+ offset, punching holes in the input as it goes so a filesystem image can be
+ placed into a partition slot of a disk image without doubling storage use.

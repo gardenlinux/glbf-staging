@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+if [ "$1" = configure ] && dpkg --compare-versions "$2"  lt 3.8-2 ; then
+  # rebuild for new file context.bin format
+  /usr/libexec/libselinux/selinux_compile_fcontexts || true
+fi
+
+if [ "$1" = triggered ]; then
+  # rebuild for (possible) new libpcre2 version
+  /usr/libexec/libselinux/selinux_compile_fcontexts || true
+  exit 0
+fi
+
+#DEBHELPER#

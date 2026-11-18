@@ -1,0 +1,13 @@
+# DP: Link libga68 dynamically.
+
+--- a/src/gcc/algol68/a68spec.cc
++++ b/src/gcc/algol68/a68spec.cc
+@@ -32,7 +32,7 @@
+   LIBGA68_DYNAMIC
+ };
+ 
+-static enum libga68_link_mode libga68_link = LIBGA68_STATIC;
++static enum libga68_link_mode libga68_link = LIBGA68_DYNAMIC;
+ 
+ /* This bit is set if we saw a `-xfoo' language specification.  */
+ #define LANGSPEC (1 << 1)

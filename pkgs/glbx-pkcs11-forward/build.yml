@@ -1,0 +1,7 @@
+pkg_type: debian
+build_profiles: [nocheck]
+build_options: [nocheck]
+build_depends:
+  - protobuf-c:libprotobuf-c-dev
+lockfile_deps:
+  glbx-pkcs11-forward: [libc6]

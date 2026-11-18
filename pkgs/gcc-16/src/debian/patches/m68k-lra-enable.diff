@@ -1,0 +1,24 @@
+From: John Paul Adrian Glaubitz <glaubitz@esk.arch.suse.de>
+Date: Wed, 25 Feb 2026 19:55:38 +0100
+Subject: [PATCH] m68k: Enable LRA by default
+
+---
+ gcc/config/m68k/m68k.opt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/gcc/config/m68k/m68k.opt b/src/gcc/config/m68k/m68k.opt
+index 7558ce1b9c7..a3467664a12 100644
+--- a/src/gcc/config/m68k/m68k.opt
++++ b/src/gcc/config/m68k/m68k.opt
+@@ -147,7 +147,7 @@ Target RejectNegative Mask(LONG_JUMP_TABLE_OFFSETS)
+ Use 32-bit offsets in jump tables rather than 16-bit offsets.
+ 
+ mlra
+-Target Var(m68k_lra_p) Undocumented
++Target Var(m68k_lra_p) Init(1) Save
+ Use LRA for reload instead of the old reload framework.  This option is
+ experimental, and it may be removed in future versions of the compiler.
+ 
+-- 
+2.53.0
+

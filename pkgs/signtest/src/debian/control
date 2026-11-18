@@ -1,0 +1,14 @@
+Source: signtest
+Section: admin
+Priority: optional
+Maintainer: Garden Linux <contact@gardenlinux.io>
+Build-Depends: debhelper-compat (= 13), gcc, libssl-dev, pkcs11-provider
+Standards-Version: 4.6.2
+
+Package: signtest
+Architecture: any
+Depends: ${misc:Depends}
+Description: Fast harness exercising out-of-container signing
+ Builds the kernel's extract-cert tool and runs it against the glbx signing
+ token, so the full signing path (forwarding module, socket, host service) is
+ exercised without a kernel build.

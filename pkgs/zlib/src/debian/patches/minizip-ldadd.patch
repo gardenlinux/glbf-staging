@@ -1,0 +1,15 @@
+Description: Explicitly link -lz for miniunzip
+Author: Helmut Grohne <helmut@subdivi.de>
+Bug-Debian: https://github.com/madler/zlib/pull/1210/commits/81e2fcfff71e799652fbdd3b6e16b95eb1a3f22b
+
+--- a/contrib/minizip/Makefile.am
++++ b/contrib/minizip/Makefile.am
+@@ -39,7 +39,7 @@
+ EXTRA_PROGRAMS = miniunzip minizip
+
+ miniunzip_SOURCES = miniunz.c
+-miniunzip_LDADD = libminizip.la
++miniunzip_LDADD = libminizip.la -lz
+
+ minizip_SOURCES = minizip.c
+ minizip_LDADD = libminizip.la -lz

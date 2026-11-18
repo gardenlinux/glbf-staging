@@ -1,0 +1,3 @@
+#!/usr/bin/dh-exec
+usr/lib/*/libmount*.so.*
+debian/libmount1-udeb.lintian-overrides => /usr/share/lintian/overrides/libmount1-udeb

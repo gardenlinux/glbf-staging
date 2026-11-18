@@ -1,0 +1,5 @@
+usr/include/auplugin.h
+usr/lib/*/libauplugin.a
+usr/lib/*/libauplugin.so
+usr/share/man/man3/auplugin.3
+usr/share/man/man3/auplugin_fgets.3

@@ -1,0 +1,3 @@
+libpcre2-32.so.0 libpcre2-32-0 #MINVER#
+ (symver)PCRE2_10.47 10.47
+ (symver)PCRE2_10.48 10.48

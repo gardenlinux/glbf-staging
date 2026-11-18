@@ -1,0 +1,28 @@
+From: Christian Kastner <ckk@debian.org>
+Date: Thu, 30 Jul 2015 11:46:37 +0200
+Subject: Hide private symbols
+
+Hide a symbol which is clearly meant to be private. This resolves a FTBFS in
+combination with the new build dependency gperf.
+
+Closes: #793311
+Closes: #869588
+
+Bug-Debian: https://bugs.debian.org/793311
+Bug-Debian: https://bugs.debian.org/869588
+Last-Update: 2022-03-04
+---
+ libcap/cap_names.header | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libcap/cap_names.header b/libcap/cap_names.header
+index 8d64f64..ba4b4ce 100644
+--- a/libcap/cap_names.header
++++ b/libcap/cap_names.header
+@@ -1,5 +1,5 @@
+ struct __cap_token_s { const char *name; int index; };
+ %{
+-const struct __cap_token_s *__cap_lookup_name(const char *, size_t);
++static const struct __cap_token_s *__cap_lookup_name(const char *, size_t);
+ %}
+ %%

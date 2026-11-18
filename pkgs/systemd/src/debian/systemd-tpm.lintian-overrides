@@ -1,0 +1,5 @@
+# Lintian is really bad at associating manpages
+systemd-tpm: spare-manual-page
+# Our units without [Install] are either event driven or statically enabled
+systemd-tpm: systemd-service-file-refers-to-unusual-wantedby-target * [*]
+systemd-tpm: systemd-service-file-missing-install-key [*]

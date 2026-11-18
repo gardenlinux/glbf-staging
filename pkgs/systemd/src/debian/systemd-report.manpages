@@ -1,0 +1,14 @@
+#!/usr/bin/dh-exec
+debian/tmp/usr/share/man/man1/systemd-report.1
+debian/tmp/usr/share/man/man8/systemd-report-files.8
+debian/tmp/usr/share/man/man8/systemd-report-files.socket.8
+debian/tmp/usr/share/man/man8/systemd-report-files@.service.8
+debian/tmp/usr/share/man/man8/systemd-report-sign-plain.8
+debian/tmp/usr/share/man/man8/systemd-report-sign-plain.socket.8
+debian/tmp/usr/share/man/man8/systemd-report-sign-plain@.service.8
+debian/tmp/usr/share/man/man8/systemd-report-sign-tpm2.8
+debian/tmp/usr/share/man/man8/systemd-report-sign-tpm2.socket.8
+debian/tmp/usr/share/man/man8/systemd-report-sign-tpm2@.service.8
+debian/tmp/usr/share/man/man8/systemd-report-sign-tsm.8
+debian/tmp/usr/share/man/man8/systemd-report-sign-tsm.socket.8
+debian/tmp/usr/share/man/man8/systemd-report-sign-tsm@.service.8

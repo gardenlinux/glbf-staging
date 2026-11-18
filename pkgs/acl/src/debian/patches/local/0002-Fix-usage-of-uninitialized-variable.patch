@@ -1,0 +1,27 @@
+From a036e32ca386c3e5fed074dbca55e0d217ab71f8 Mon Sep 17 00:00:00 2001
+From: Vasily Gurevich <vas.gurevich@gmail.com>
+Date: Sat, 3 Dec 2022 12:06:41 +0100
+Subject: [PATCH acl] Fix usage of uninitialized variable
+
+Ref: https://bugs.debian.org/612599
+Signed-off-by: Guillem Jover <guillem@hadrons.org>
+---
+ tools/getfacl.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/getfacl.c b/tools/getfacl.c
+index 3713fad..4d40265 100644
+--- a/tools/getfacl.c
++++ b/tools/getfacl.c
+@@ -382,6 +382,8 @@ static int do_show(const char *fullname, const struct stat *st,
+ 			show_line(NULL, NULL, NULL, NULL,
+ 			          &dacl_names, dacl, &dacl_ent, dacl_mask);
+ 			continue;
++		} else if (!dacl && !acl) {
++			return -1;
+ 		} else {
+ 			if (acl_tag == ACL_USER || acl_tag == ACL_GROUP) {
+ 				int id_cmp = 0;
+-- 
+2.53.0
+

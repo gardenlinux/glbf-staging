@@ -1,0 +1,6 @@
+sources:
+    - file: grep_3.12.orig.tar.xz
+      sha256: 2649b27c0e90e632eadcd757be06c6e9a4f48d941de51e7c0f83ff76408a07b9
+      urls:
+        - https://deb.debian.org/debian/pool/main/g/grep/grep_3.12.orig.tar.xz
+        - https://snapshot.debian.org/file/4b4df79f5963041d515ef64cfa245e0193a33009/grep_3.12.orig.tar.xz

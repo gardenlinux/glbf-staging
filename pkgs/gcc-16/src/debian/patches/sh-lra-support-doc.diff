@@ -1,0 +1,178 @@
+>From c2d30267327ee7339214b5bd070ff9aeb37118f6 Mon Sep 17 00:00:00 2001
+From: Oleg Endo <olegendo@gcc.gnu.org>
+Date: Sun, 29 Sep 2024 21:33:29 +0900
+Subject: [PATCH] SH: Add support for LRA and enable it by default
+
+SH: Tighten memory predicates and constraints
+
+In particular, reject invalid hard-regs for memory address registers when using
+LRA.  Unfortunately we need to distingquish between old reload and LRA behaviors
+for the transitional period.  LRA seems to require stricter predicates and
+constraints.
+
+gcc/ChangeLog:
+
+	PR target/55212
+	* config/sh/predicates.md (simple_mem_operand):
+	Use 'satisfies_constraint_Sra'.
+	(post_inc_mem, pre_dec_mem): Use 'satisfies_constraint_Rab'.
+	* config/sh/constraints.md (Rab, Rai, Sgb): New constraints.
+	(Sua, Sdd, Snd, Ssd, Sbv, Sra, Ara, Add): Use Rab and Rai constraints.
+	* config/sh/sync.md (atomic_mem_operand_0, atomic_mem_operand_1): Reject
+	GBR addresses when hard-llcs atomic mode is enabled.
+
+SH: pin input args to hard-regs via predicates for sfuncs
+
+Some sfuncs uses hard reg as input and clobber its raw reg pattern. It
+seems that LRA doesn't process this clobber pattern.  Rewrite these
+patterns so as to work with LRA.
+
+gcc/ChangeLog:
+	* config/sh/predicates.md (hard_reg_r4, hard_reg_r5,
+	hard_reg_r6): New predicates.
+	* config/sh/sh.md (udivsi3_i4, udivsi3_i4_single,
+	udivsi3_i1): Rewrite with match_operand and match_dup.
+	(block_lump_real, block_lump_real_i4): Ditto.
+	(udivsi3): Adjust for it.
+	* config/sh/sh-mem.cc (expand_block_move): Ditto.
+
+LRA: Add cannot_substitute_const_equiv_p target hook
+
+On SH fp constant load special instructions 'fldi0' and 'fldi1' are only valid
+for single-precision fp mode and thus depend on mode-switiching.  Since LRA is
+not aware of that it would emit such constant loads in the wrong mode.  The new
+target hook allows rejecting such potentially unsafe substitutions.
+
+gcc/ChangeLog:
+	PR target/117182
+	* target.def (cannot_substitute_const_equiv_p): New target hook.
+	* doc/tm.texi.in: Add it.
+	* lra-constraints.cc (get_equiv): Use it.
+	* config/sh/sh.cc (sh_cannot_substitute_const_equiv_p): Override it.
+	* doc/tm.texi: Re-generate.
+
+SH: try to workaround fp-reg related move insns
+
+LRA will try to satisfy the constraints in match_scratch for the memory
+displacements and it will make issues on this target. To mitigate the
+issue, split movsf_ie_ra into several new patterns to remove
+match_scratch.  Also define a new sub-pattern of movdf for constant
+loads.
+
+gcc/ChangeLog:
+	* gcc/config/sh/predicates.md (pc_relative_load_operand):
+	New predicate.
+	* gcc/config/sh/sh-protos.h (sh_movsf_ie_ra_split_p): Remove.
+	(sh_movsf_ie_y_split_p): New proto.
+	* gcc/config/sh/sh.cc: (sh_movsf_ie_ra_split_p): Remove.
+	(sh_movsf_ie_y_split_p): New function.
+	(broken_move): Take movsf_ie_ra into account for fldi cases.
+	* gcc/config/sh/sh.md (movdf_i4_F_z): New insn pattern.
+	(movdf): Use it.
+	(movsf_ie_ra): Use define_insn instead of define_insn_and_split.
+	(movsf_ie_F_z, movsf_ie_Q_z, movsf_ie_y): New insn pattern.
+	(movsf): Use new patterns.
+	(movsf-1):  Don't split when operands[0] or operands[1]
+	is fpul.
+	(movdf_i4_F_z+7): New splitter.
+
+SH: Try to workaround fp-reg related move insns pt.2
+
+The current movsf logic for LRA doesn't work well for reg from/to
+multiword subreg.  Use a separate pattern movsf_ie_rffr for that case.
+Also movsf_ie_ra should be disabled for reg from/to subreg of SImode.
+If not, it's recognizable as such move when subreg1 pass tries to split
+multiword because the constraints aren't effective in that stage.
+
+gcc/ChangeLog:
+	PR target/55212
+	* config/sh/sh-protos.h (sh_movsf_ie_subreg_multiword_p):
+	New proto.
+	* config/sh/sh.cc (sh_movsf_ie_subreg_multiword_p): New function.
+	* config/sh/sh.md (movsf_ie_rffr): New insn_and_split.
+	(movsf): Use movsf_ie_rffr when sh_movsf_ie_subreg_multiword_p is true.
+	(movsf_ie_ra): Disable when sh_movsf_ie_y_split_p is true.
+
+SH: Try to reduce R0 live ranges
+
+Some move or extend patterns will make long R0 live ranges and could
+confuse LRA.
+
+gcc/ChangeLog:
+	* config/sh/sh-protos.h
+        (sh_satisfies_constraint_Sid_subreg_index): Declare.
+	* config/sh/sh.cc (sh_satisfies_constraint_Sid_subreg_index):
+	New function.
+	* config/sh/sh.md (extend<mode>si2_short_mem_disp_z,
+	*mov<mode>_store_mem_index, mov<mode>_store_mem_index):
+	New insn and insn_and_split patterns.
+	(extend<mode>si2, mov<mode>): Use them for LRA.
+
+SH: Fix the condition to use movsh_ie_y pattern.
+
+gcc/ChangeLog:
+	* config/sh/sh.cc (sh_movsf_ie_y_split_p): Take the subreg
+	of DImode into account.
+
+SH: enable LRA by default
+
+gcc/ChangeLog:
+
+	PR target/55212
+	* conifg/sh/sh.opt (sh_lra_flag): Init to 1.
+---
+ gcc/config/sh/constraints.md |  65 +++++--
+ gcc/config/sh/predicates.md  |  37 +++-
+ gcc/config/sh/sh-mem.cc      |   4 +-
+ gcc/config/sh/sh-protos.h    |   4 +-
+ gcc/config/sh/sh.cc          |  79 ++++++--
+ gcc/config/sh/sh.md          | 337 ++++++++++++++++++++++++++++-------
+ gcc/config/sh/sh.opt         |   2 +-
+ gcc/config/sh/sync.md        |   8 +-
+ gcc/doc/tm.texi              |  17 +-
+ gcc/doc/tm.texi.in           |   2 +
+ gcc/lra-constraints.cc       |   6 +-
+ gcc/target.def               |  21 ++-
+ 12 files changed, 464 insertions(+), 118 deletions(-)
+
+diff --git a/gcc/doc/tm.texi b/gcc/doc/tm.texi
+index 394a46fdbaa..f5296fb18b4 100644
+--- a/src/gcc/doc/tm.texi
++++ b/src/gcc/doc/tm.texi
+@@ -3121,9 +3121,20 @@ A target hook which returns @code{true} if @var{subst} can't
+ substitute safely pseudos with equivalent memory values during
+ register allocation.
+ The default version of this target hook returns @code{false}.
+-On most machines, this default should be used.  For generally
+-machines with non orthogonal register usage for addressing, such
+-as SH, this hook can be used to avoid excessive spilling.
++On most machines, this default should be used.  For machines with
++non-orthogonal register usage for addressing, such as SH,
++this hook can be used to avoid excessive spilling.
++@end deftypefn
++
++@deftypefn {Target Hook} bool TARGET_CANNOT_SUBSTITUTE_CONST_EQUIV_P (rtx @var{subst})
++A target hook which returns @code{true} if @var{subst} can't
++substitute safely pseudos with equivalent constant values during
++register allocation.
++The default version of this target hook returns @code{false}.
++On most machines, this default should be used.  For machines with
++special constant load instructions that have additional constraints
++or being dependent on mode-switching, such as SH, this hook can be
++used to avoid unsafe substitution.
+ @end deftypefn
+ 
+ @deftypefn {Target Hook} bool TARGET_LEGITIMIZE_ADDRESS_DISPLACEMENT (rtx *@var{offset1}, rtx *@var{offset2}, poly_int64 @var{orig_offset}, machine_mode @var{mode})
+diff --git a/src/gcc/doc/tm.texi.in b/src/gcc/doc/tm.texi.in
+index 274bb899d0c..19a47b7062b 100644
+--- a/src/gcc/doc/tm.texi.in
++++ b/src/gcc/doc/tm.texi.in
+@@ -2426,6 +2426,8 @@ in the reload pass.
+ 
+ @hook TARGET_CANNOT_SUBSTITUTE_MEM_EQUIV_P
+ 
++@hook TARGET_CANNOT_SUBSTITUTE_CONST_EQUIV_P
++
+ @hook TARGET_LEGITIMIZE_ADDRESS_DISPLACEMENT
+ 
+ @hook TARGET_SPILL_CLASS

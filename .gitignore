@@ -1,0 +1,8 @@
+# glbx build artefacts (the object-store cache and work dirs live outside the
+# tree; these are the only build outputs that can land in it).
+/glbx-build-*.json
+/bin/
+
+# Editor / OS cruft.
+*.swp
+.DS_Store

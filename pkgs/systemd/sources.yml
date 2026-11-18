@@ -1,0 +1,6 @@
+sources:
+    - file: systemd_262.orig.tar.gz
+      sha256: 6aa77506c0644aa67f940a48e3d3a7368601f787e4f249139516d353f107bcab
+      urls:
+        - https://deb.debian.org/debian/pool/main/s/systemd/systemd_262.orig.tar.gz
+        - https://snapshot.debian.org/file/0d0dd1fe0e7df9a8af331a68fe2209268c29e9ff/systemd_262.orig.tar.gz

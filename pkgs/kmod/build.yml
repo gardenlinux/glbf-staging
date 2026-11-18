@@ -1,0 +1,6 @@
+pkg_type: debian
+build_profiles: [nocheck]
+build_options: [nocheck]
+runtime_depends:
+  kmod: [glibc:libc6, openssl:libssl3t64, kmod:libkmod2]
+  libkmod2: [glibc:libc6, openssl:libssl3t64]

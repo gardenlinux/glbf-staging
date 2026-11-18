@@ -1,0 +1,6 @@
+sources:
+    - file: audit_4.1.2.orig.tar.gz
+      sha256: 5c638bbeef9adb6c5715d3a60f0f5adb93e9b81633608af13d23c61f5e5db04d
+      urls:
+        - https://deb.debian.org/debian/pool/main/a/audit/audit_4.1.2.orig.tar.gz
+        - https://snapshot.debian.org/file/6277412f0da6c5b5ff2cf3ead75a19120a850db1/audit_4.1.2.orig.tar.gz

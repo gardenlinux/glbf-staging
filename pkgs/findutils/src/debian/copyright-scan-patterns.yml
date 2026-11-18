@@ -1,0 +1,44 @@
+check:
+  pattern:
+    - build-aux/
+    - configure.ac
+    - init.cfg
+    - maint.mk
+    - tests/
+  suffixes:
+    - texi
+    - valgrind
+    - y
+ignore:
+  pattern:
+    - tool-versions.txt
+    - aclocal.m4
+    - configure$
+    - po/LINGUAS
+    - AUTHORS
+    - ChangeLog
+    - THANKS
+    - config.h.in
+    - doc/version.texi
+    - doc/versionmaint.texi
+    - stamp-h.in
+    - Makefile.in
+    - m4/Makefile.am
+    - po/Makevar
+    - tests/GNUmakefile
+    - tests/lang-default
+    - doc/fdl.texi
+    - gnulib-tests/test-xstrtoul.c
+    - gnulib-tests/test-xstrtoumax.c
+    - po/POTFILES.in
+  suffixes:
+    - xe
+    - xi
+    - exp
+    - xo
+    - info
+    - info-1
+    - info-2
+    - info-3
+    - info-4
+    - info-5

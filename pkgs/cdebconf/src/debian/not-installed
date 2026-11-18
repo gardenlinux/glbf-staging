@@ -1,0 +1,8 @@
+deb/usr/lib/${DEB_HOST_MULTIARCH}/libdebconfclient.a
+
+udeb/usr/lib/${DEB_HOST_MULTIARCH}/libdebconfclient.a
+udeb/usr/lib/${DEB_HOST_MULTIARCH}/libdebconfclient.so
+udeb/usr/lib/cdebconf/frontend/passthrough.so
+udeb/usr/share/man/man7/debconf.7cdebconf
+udeb/usr/share/man/man8/dpkg-preconfigure.8cdebconf
+udeb/usr/share/man/man8/dpkg-reconfigure.8cdebconf

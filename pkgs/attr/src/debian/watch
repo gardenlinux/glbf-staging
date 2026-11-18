@@ -1,0 +1,6 @@
+Version: 5
+
+Source: https://download-mirror.savannah.gnu.org/releases/attr/
+Matching-Pattern: attr-(\d.*?)(?:\.src)?\.(?:tgz|tbz2|txz|tar\.(?:gz|bz2|xz))
+Pgp-Sig-Url-Mangle: s/$/.sig/
+Update-Script: uupdate

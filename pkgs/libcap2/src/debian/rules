@@ -1,0 +1,129 @@
+#!/usr/bin/make -f
+
+# Exports DEB_{BUILD,HOST}_* flags
+include /usr/share/dpkg/architecture.mk
+
+# Pass this as version-info to dh_makeshlibs
+SHLIBS_MINVER = 1:2.63
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# Support cross-compiling
+ifneq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
+CC := $(DEB_HOST_GNU_TYPE)-gcc
+endif
+
+# One upstream target, "_makenames", requires the BUILD compiler instead of HOST
+BUILD_CC ?= cc
+export BUILD_LDFLAGS = $(shell dpkg-architecture -a$(DEB_BUILD_ARCH) -c dpkg-buildflags --get LDFLAGS)
+export BUILD_CPPFLAGS = $(shell dpkg-architecture -a$(DEB_BUILD_ARCH) -c dpkg-buildflags --get CPPFLAGS)
+
+# Upstream's way of setting optimization
+ifneq (,$(filter noopt, $(DEB_BUILD_OPTIONS)))
+COPTS = COPTS=-O0
+endif
+
+# See pam_cap/Makefile for FORCELINKPAM
+MAKE_ASSIGNMENTS = \
+	prefix=/usr \
+	FORCELINKPAM=yes \
+	GOLANG=no
+
+%:
+	dh ${@}
+
+
+override_dh_auto_clean:
+	dh_auto_clean -- $(MAKE_ASSIGNMENTS)
+	# The Golang build system does not appear to fully honor -B, so we need
+	# two cleans
+	set -e; if test -d _build; then \
+		dh_auto_clean -B_build -O--buildsystem=golang; \
+		dh_auto_clean -O--buildsystem=golang; \
+	fi
+	# Undo change of lookup (see override_dh_auto_build)
+	sed -i -e 's,\./tcapsh-static,../progs/tcapsh-static,g' tests/libcap_launch_test.c
+
+
+override_dh_auto_build:
+	# See pam_cap/Makefile for FORCELINKPAM
+	dh_auto_build -- \
+		$(MAKE_ASSIGNMENTS) \
+		BUILD_CC=$(BUILD_CC) \
+		CROSS_COMPILE=$(DEB_HOST_GNU_TYPE)- \
+		$(COPTS) \
+		DYNAMIC=yes \
+		SUDO=$(DEB_GAIN_ROOT_CMD)
+	# Some of test suite is only invoked when run as real root. Explicitly
+	# build all binaries so we can include them in the autopkgtest.	
+	dh_auto_build -D libcap -- $(MAKE_ASSIGNMENTS) cap_test
+	dh_auto_build -D pam_cap -- $(MAKE_ASSIGNMENTS) test_pam_cap
+	# Change lookup from sibling dir to current dir
+	sed -i -e 's,\.\./progs/tcapsh-static,./tcapsh-static,g' tests/libcap_launch_test.c
+	dh_auto_build -D tests -- $(MAKE_ASSIGNMENTS) \
+		psx_test \
+		libcap_psx_test \
+		uns_test \
+		libcap_launch_test \
+		libcap_psx_launch_test \
+		noop \
+		exploit \
+		noexploit
+	dh_auto_build -D progs -- $(MAKE_ASSIGNMENTS) tcapsh-static
+
+
+override_dh_installdirs:
+	dh_installdirs
+	# While the PAM module and the library are in /lib, according to the
+	# FHS, development files must go into usr/lib/<triplet>.
+	mkdir -p debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)
+
+
+override_dh_auto_install:
+	dh_auto_install -- \
+		$(MAKE_ASSIGNMENTS) \
+		lib=lib/$(DEB_HOST_MULTIARCH) \
+		PKGCONFIGDIR=/usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig \
+		RAISE_SETFCAP=no
+
+execute_after_dh_install-arch:
+	# Unfortunately, RPATH seems to be needed for the build-time tests
+	# (avoiding it and going through LD_LIBRARY_PATH didn't work in all
+	# cases).
+	# Also, we need to operate on the install result, as the original
+	# executable may still be used by a running test process.
+	# .
+	# List is identical to build above, minus noop (no RPATH)
+	cd debian/libcap-dev/usr/lib/$(DEB_HOST_MULTIARCH)/libcap2/tests  && \
+		patchelf --remove-rpath \
+			psx_test \
+			libcap_psx_test \
+			uns_test \
+			libcap_launch_test \
+			libcap_psx_launch_test \
+			exploit \
+			noexploit
+
+override_dh_auto_test:
+	dh_auto_test -- $(MAKE_ASSIGNMENTS)
+
+override_dh_makeshlibs:
+	dh_makeshlibs -V'libcap2 (>= $(SHLIBS_MINVER))' -plibcap2 \
+		--add-udeb=libcap2-udeb -- -c4
+	dh_makeshlibs --remaining-packages -- -c4
+
+override_dh_gencontrol:
+	dh_gencontrol -- -Vmisc:Built-Using="$(shell dpkg-query -f '$${source:Package} (= $${source:Version})' -W libc-dev-bin)"
+
+export DH_GOLANG_BUILDPKG := \
+	kernel.org/pub/linux/libs/security/libcap/cap \
+	kernel.org/pub/linux/libs/security/libcap/psx
+
+execute_after_dh_auto_configure-indep:
+	dh_auto_configure -B_build -O--buildsystem=golang
+
+execute_after_dh_auto_install-indep:
+	dh_auto_install -B_build -O--buildsystem=golang
+
+execute_after_dh_auto_build-indep:
+	dh_auto_build -B_build -O--buildsystem=golang

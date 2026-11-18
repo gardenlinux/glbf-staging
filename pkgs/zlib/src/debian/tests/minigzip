@@ -1,0 +1,23 @@
+#!/bin/bash
+set -e
+
+# Compile the test
+gcc -o minigzip test/minigzip.c -lz
+
+# Create a sample file
+echo "This is a test" > original.txt
+
+# Backup the original file
+cp original.txt original_backup.txt
+
+# Compress the file
+./minigzip original.txt
+
+# Decompress the file (output will be original.txt)
+./minigzip -d original.txt.gz
+
+# Verify the decompressed file matches the original
+diff original.txt original_backup.txt && echo "Files match!" || echo "Files differ"
+
+# Cleanup
+rm original.txt original_backup.txt minigzip

@@ -1,0 +1,59 @@
+name: plan
+
+# Reusable: determine which graph nodes already exist in the registry, so the
+# caller can skip their jobs before a runner starts. Emits one JSON object
+# { "<node Key>": true|false } per arch as the `built-<arch>` outputs.
+#
+# This is a single arch-neutral job: `graph --check-built` only computes
+# identities and does registry HEAD lookups — it never runs target-architecture
+# code — so one x86 runner plans every arch by looping, with the amd64 glbx
+# binary (glbx is pure Go) keying each pass by its --arch. Only the per-node image
+# build (build-node.yml) runs native code and must match its runner's arch.
+on:
+  workflow_call:
+    inputs:
+      id-seed-override:
+        default: ""
+        type: string
+    outputs:
+      built-amd64:
+        description: JSON object mapping each amd64 node Key to whether its output is already in the registry.
+        value: ${{ jobs.plan.outputs['built-amd64'] }}
+      built-arm64:
+        description: JSON object mapping each arm64 node Key to whether its output is already in the registry.
+        value: ${{ jobs.plan.outputs['built-arm64'] }}
+
+permissions:
+  contents: read
+  packages: read
+
+env:
+  GLBX_REGISTRY: ghcr.io/${{ github.repository }}/objstore
+  GLBX_REGISTRY_USER: ${{ github.actor }}
+  GLBX_REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # Must match the seed the node jobs build under: a non-empty override reseeds
+  # every identity so --check-built finds none in the registry and every node
+  # rebuilds. Empty leaves the committed seed in force.
+  GLBX_ID_SEED_OVERRIDE: ${{ inputs.id-seed-override }}
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      built-amd64: ${{ steps.check.outputs['built-amd64'] }}
+      built-arm64: ${{ steps.check.outputs['built-arm64'] }}
+    steps:
+      - name: Check out the config repo
+        uses: actions/checkout@v5
+      - uses: ./.github/actions/glbx-bin
+        with:
+          arch: amd64
+      - name: Determine which nodes already exist in the registry, per arch
+        id: check
+        run: |
+          for a in amd64 arm64; do
+            glbx graph --format=json --check-built \
+              --arch "$a" > "/tmp/graph.$a.json"
+            echo "built-$a=$(jq -c '.builtStatus' "/tmp/graph.$a.json")" >> "$GITHUB_OUTPUT"
+            echo "already built ($a): $(jq '[.builtStatus[] | select(.)] | length' "/tmp/graph.$a.json") / $(jq '.nodes | length' "/tmp/graph.$a.json")"
+          done

@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+set -eufo pipefail
+
+image_arg="${1:-"image:disk:$(dpkg --print-architecture)"}"
+
+if grep -xP '[a-f0-9]{64}' <<< "$image_arg" >/dev/null; then
+	image_id="$image_arg"
+else
+	image_id="$(glbx build --print-id "$image_arg")"
+fi
+
+image_manifest="$(glbx cache map get "$image_id")"
+image_blob="$(glbx cache blobs get "$image_manifest" | awk '$2 == "image" { print $1 }')"
+image_path="$(realpath "$(glbx cache blobs path "$image_blob")")"
+
+disk=""
+
+cleanup() {
+	if [ -n "$disk" ] && [ -f "$disk" ]; then
+		rm -f "$disk"
+	fi
+}
+trap cleanup EXIT
+
+disk="$(mktemp --suffix=.qcow2)"
+qemu-img create -f qcow2 -F raw -b "$image_path" "$disk" 16G
+
+case "$(uname -m)" in
+	x86_64)
+		qemu-system-x86_64 \
+			-machine q35 \
+			-cpu max \
+			-m 4096 \
+			-nodefaults \
+			-no-reboot \
+			-nographic \
+			-serial mon:stdio \
+			-drive if=pflash,format=raw,unit=0,file=/usr/share/OVMF/OVMF_CODE_4M.fd,readonly=on \
+			-drive if=virtio,format=qcow2,file="$disk"
+		;;
+	aarch64)
+		qemu-system-aarch64 \
+			-machine virt \
+			-cpu max \
+			-m 4096 \
+			-nodefaults \
+			-no-reboot \
+			-nographic \
+			-serial mon:stdio \
+			-drive if=pflash,format=raw,unit=0,file=/usr/share/AAVMF/AAVMF_CODE.fd,readonly=on \
+			-drive if=virtio,format=qcow2,file="$disk"
+		;;
+	*)
+		echo "unsupported arch" >&2
+		exit 1
+		;;
+esac
