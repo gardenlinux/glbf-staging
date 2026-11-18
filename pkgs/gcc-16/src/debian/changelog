@@ -1,3 +1,45 @@
+gcc-16 (16.2.0-4) unstable; urgency=medium
+
+  * Update to git 20261024 from the gcc-16 branch.
+    - Fix PR ada/120106, PR target/127843 (PA), PR target/128105 (x86),
+      PR target/127692 (S390), PR target/127851 (x86),
+      PR tree-optimization/127357, PR tree-optimization/127916,
+      PR tree-optimization/126462, PR target/127393 (AArch64),
+      PR target/127393 (AArch64), PR tree-optimization/127382,
+      PR target/125060 (PPC),  PR target/127553 (RISCV),
+      PR tree-optimization/127687, PR middle-end/127517, PR middle-end/127492,
+      PR target/127498 (x86), PR middle-end/127378, PR target/127352 (x86),
+      PR middle-end/127336, PR tree-optimization/127149, PR target/127482 (AVR),
+      PR middle-end/127474, PR target/127650 (x86), PR target/126096 (AArch64),
+      PR tree-optimization/127579, PR target/107549 (xtensa),
+      PR target/126629 (AArch64), PR tree-optimization/127571,
+      PR rtl-optimization/127367, PR target/127500 (x86),
+      PR target/127461 (x86), PR ada/128044, PR ada/127994, PR ada/127974,
+      PR ada/127994, PR ada/127880, PR ada/127759, PR ada/126448, PR ada/126125,
+      PR ada/127756, PR c/127383, PR c++/127232, PR c++/126794, PR c++/127749,
+      PR c++/126680, PR c++/125536, PR c++/127493, PR c++/127276,
+      PR c++/127109, PR c++/126922, PR c++/122774, PR c++/127707,
+      PR c++/127672, PR c++/126654, PR c++/127643, PR fortran/110421,
+      PR fortran/127683, PR fortran/127187, PR fortran/125324,
+      PR preprocessor/121508, PR preprocessor/123339, PR fortran/127845,
+      PR fortran/127846, PR other/116547, PR libstdc++/127757,
+      PR libstdc++/115955, PR libstdc++/124370, PR libstdc++/125785,
+      PR libstdc++/127666, PR libstdc++/126364, PR libstdc++/114400,
+      PR libstdc++/127656, PR libstdc++/123409, PR libstdc++/126786.
+
+  [ Matthias Klose ]
+  * Update libstdc++ (all archs) and libgcc (armhf, arm64) symbols files.
+
+  [ Nicolas Boulenguez ]
+  * Ada: fix GNATMAKE_FOR_BUILD in ada-gnat-name.diff. Closes: #1136069.
+    Build gnat with gnat-16 again.
+    Refresh and apply ada-gcc-name.diff.
+    Report a source diff when the alihash changes. Closes: #1115882.
+    Refresh the PR ada/114065 time_t64 patches. Closes: #1108322.
+  * Compute the libgnat alihash with crc32 instead of xor.
+
+ -- Matthias Klose <doko@debian.org>  Sat, 24 Oct 2026 12:39:05 +0200
+
 gcc-16 (16.2.0-3) unstable; urgency=medium
 
   * Update to git 20260918 from the gcc-16 branch.

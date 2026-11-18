@@ -58,6 +58,7 @@ libstdc++.so.6 #PACKAGE# #MINVER#
  (symver)GLIBCXX_3.4.33 14
  (symver)GLIBCXX_3.4.34 15
  (symver)GLIBCXX_3.4.35 16
+ (symver)GLIBCXX_3.4.36 16.2
  (symver|arch=alpha ppc64 ppc64el powerpc s390x)GLIBCXX_LDBL_3.4 4.2.1
  (symver|arch=alpha ppc64 ppc64el powerpc s390x)GLIBCXX_LDBL_3.4.7 4.2.1
  (symver|arch=alpha ppc64 ppc64el powerpc s390x)GLIBCXX_LDBL_3.4.10 4.3
