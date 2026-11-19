@@ -1,10 +1,30 @@
-# DP: updates from the 16 branch upto 20260918 (documentation).
+# DP: updates from the 16 branch upto 20261024 (documentation).
 
 LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
-	78d4ac73dd391005b895a6148cd9831e28e1208b 222f7e062b26d227fb410f87b928035f52d105bb \
+	78d4ac73dd391005b895a6148cd9831e28e1208b f2a06b6c0d7705b06d6a801003f941a5509a0c11 \
 	| awk '/^diff .*\.texi/ {skip=0; print; next} /^diff / {skip=1; next} skip==0' \
         | grep -v -E '^(diff|index)'
 
+--- a/src/gcc/doc/extend.texi
++++ b/src/gcc/doc/extend.texi
+@@ -3357,7 +3357,7 @@ int pclose (FILE*);
+   FILE* fopen (const char*, const char*);
+ [[gnu::malloc, gnu::malloc (fclose, 1)]]
+   FILE* fmemopen(void *, size_t, const char *);
+-[[gnu::malloc, gnu::malloc (fclose, 1)]]
++[[gnu::malloc, gnu::malloc (pclose, 1)]]
+   FILE* popen (const char*, const char*);
+ [[gnu::malloc, gnu::malloc (fclose, 1)]]
+   FILE* tmpfile (void);
+@@ -9838,7 +9838,7 @@ does not distinguish between types with different attributes.  Support
+ for attributes in C++ may be restricted in future to attributes on
+ declarations only, but not on nested declarators.
+ 
+-@xref{Attributes}, for details of the semantics of attributes.
++@xref{Attributes}, for details of the semantics of attributes
+ applying to functions.
+ 
+ An @dfn{attribute specifier} is of the form
 --- a/src/gcc/doc/install.texi
 +++ b/src/gcc/doc/install.texi
 @@ -2492,7 +2492,7 @@ Linux systems and on big endian 64-bit systems where the default cpu
@@ -239,3 +259,16 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  @samp{tt-ascalon-d8},
  
  @samp{thead-c906},
+--- a/src/gcc/doc/sourcebuild.texi
++++ b/src/gcc/doc/sourcebuild.texi
+@@ -2358,8 +2358,8 @@ ARM target supports the @code{-mfloat-abi=hard} option.
+ @anchor{arm_mve}
+ ARM target supports generating MVE instructions.
+ 
+-@item arm_v8_1_lob_ok
+-@anchor{arm_v8_1_lob_ok}
++@item arm_v8_1m_lob_hw
++@anchor{arm_v8_1m_lob_hw}
+ ARM Target supports executing the Armv8.1-M Mainline Low Overhead Loop
+ instructions @code{DLS} and @code{LE}.
+ Some multilibs may be incompatible with these options.
