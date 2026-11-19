@@ -4,4 +4,4 @@ packages:
   - systemd:systemd
   - systemd:udev
   - util-linux:mount
-  - linux:linux-modules-7.2+unreleased-cloud-%ARCH%
+  - linux:linux-modules-7.3+unreleased-cloud-%ARCH%

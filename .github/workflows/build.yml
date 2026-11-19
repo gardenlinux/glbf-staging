@@ -1179,10 +1179,10 @@ jobs:
     # success() gate — which treats a skipped need as reason to skip. The skip
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-amd64'] == '' || fromJSON(needs['plan'].outputs['built-amd64'])['debian-binary-pkg:linux:linux-base-7.2+unreleased-cloud-amd64:amd64'] != true) }}"
+    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-amd64'] == '' || fromJSON(needs['plan'].outputs['built-amd64'])['debian-binary-pkg:linux:linux-base-7.3+unreleased-cloud-amd64:amd64'] != true) }}"
     uses: ./.github/workflows/build-node.yml
     with:
-      node-key: "debian-binary-pkg:linux:linux-base-7.2+unreleased-cloud-amd64:amd64"
+      node-key: "debian-binary-pkg:linux:linux-base-7.3+unreleased-cloud-amd64:amd64"
       arch: amd64
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
@@ -1196,10 +1196,10 @@ jobs:
     # success() gate — which treats a skipped need as reason to skip. The skip
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-amd64'] == '' || fromJSON(needs['plan'].outputs['built-amd64'])['debian-binary-pkg:linux:linux-binary-7.2+unreleased-cloud-amd64:amd64'] != true) }}"
+    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-amd64'] == '' || fromJSON(needs['plan'].outputs['built-amd64'])['debian-binary-pkg:linux:linux-binary-7.3+unreleased-cloud-amd64:amd64'] != true) }}"
     uses: ./.github/workflows/build-node.yml
     with:
-      node-key: "debian-binary-pkg:linux:linux-binary-7.2+unreleased-cloud-amd64:amd64"
+      node-key: "debian-binary-pkg:linux:linux-binary-7.3+unreleased-cloud-amd64:amd64"
       arch: amd64
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
@@ -1825,10 +1825,10 @@ jobs:
     # success() gate — which treats a skipped need as reason to skip. The skip
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-amd64'] == '' || fromJSON(needs['plan'].outputs['built-amd64'])['debian-binary-pkg:linux:linux-image-7.2+unreleased-cloud-amd64:amd64'] != true) }}"
+    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-amd64'] == '' || fromJSON(needs['plan'].outputs['built-amd64'])['debian-binary-pkg:linux:linux-image-7.3+unreleased-cloud-amd64:amd64'] != true) }}"
     uses: ./.github/workflows/build-node.yml
     with:
-      node-key: "debian-binary-pkg:linux:linux-image-7.2+unreleased-cloud-amd64:amd64"
+      node-key: "debian-binary-pkg:linux:linux-image-7.3+unreleased-cloud-amd64:amd64"
       arch: amd64
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
@@ -1842,10 +1842,10 @@ jobs:
     # success() gate — which treats a skipped need as reason to skip. The skip
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-amd64'] == '' || fromJSON(needs['plan'].outputs['built-amd64'])['debian-binary-pkg:linux:linux-modules-7.2+unreleased-cloud-amd64:amd64'] != true) }}"
+    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-amd64'] == '' || fromJSON(needs['plan'].outputs['built-amd64'])['debian-binary-pkg:linux:linux-modules-7.3+unreleased-cloud-amd64:amd64'] != true) }}"
     uses: ./.github/workflows/build-node.yml
     with:
-      node-key: "debian-binary-pkg:linux:linux-modules-7.2+unreleased-cloud-amd64:amd64"
+      node-key: "debian-binary-pkg:linux:linux-modules-7.3+unreleased-cloud-amd64:amd64"
       arch: amd64
       runner: "ubuntu-latest"
       id-seed-override: "${{ inputs.id-seed-override }}"
@@ -3134,10 +3134,10 @@ jobs:
     # success() gate — which treats a skipped need as reason to skip. The skip
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-arm64'] == '' || fromJSON(needs['plan'].outputs['built-arm64'])['debian-binary-pkg:linux:linux-base-7.2+unreleased-cloud-arm64:arm64'] != true) }}"
+    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-arm64'] == '' || fromJSON(needs['plan'].outputs['built-arm64'])['debian-binary-pkg:linux:linux-base-7.3+unreleased-cloud-arm64:arm64'] != true) }}"
     uses: ./.github/workflows/build-node.yml
     with:
-      node-key: "debian-binary-pkg:linux:linux-base-7.2+unreleased-cloud-arm64:arm64"
+      node-key: "debian-binary-pkg:linux:linux-base-7.3+unreleased-cloud-arm64:arm64"
       arch: arm64
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
@@ -3151,10 +3151,10 @@ jobs:
     # success() gate — which treats a skipped need as reason to skip. The skip
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-arm64'] == '' || fromJSON(needs['plan'].outputs['built-arm64'])['debian-binary-pkg:linux:linux-binary-7.2+unreleased-cloud-arm64:arm64'] != true) }}"
+    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-arm64'] == '' || fromJSON(needs['plan'].outputs['built-arm64'])['debian-binary-pkg:linux:linux-binary-7.3+unreleased-cloud-arm64:arm64'] != true) }}"
     uses: ./.github/workflows/build-node.yml
     with:
-      node-key: "debian-binary-pkg:linux:linux-binary-7.2+unreleased-cloud-arm64:arm64"
+      node-key: "debian-binary-pkg:linux:linux-binary-7.3+unreleased-cloud-arm64:arm64"
       arch: arm64
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
@@ -3780,10 +3780,10 @@ jobs:
     # success() gate — which treats a skipped need as reason to skip. The skip
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-arm64'] == '' || fromJSON(needs['plan'].outputs['built-arm64'])['debian-binary-pkg:linux:linux-image-7.2+unreleased-cloud-arm64:arm64'] != true) }}"
+    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-arm64'] == '' || fromJSON(needs['plan'].outputs['built-arm64'])['debian-binary-pkg:linux:linux-image-7.3+unreleased-cloud-arm64:arm64'] != true) }}"
     uses: ./.github/workflows/build-node.yml
     with:
-      node-key: "debian-binary-pkg:linux:linux-image-7.2+unreleased-cloud-arm64:arm64"
+      node-key: "debian-binary-pkg:linux:linux-image-7.3+unreleased-cloud-arm64:arm64"
       arch: arm64
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
@@ -3797,10 +3797,10 @@ jobs:
     # success() gate — which treats a skipped need as reason to skip. The skip
     # fires only on an explicit true: an empty plan output or a missing key
     # builds, so anything unexpected errs toward building.
-    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-arm64'] == '' || fromJSON(needs['plan'].outputs['built-arm64'])['debian-binary-pkg:linux:linux-modules-7.2+unreleased-cloud-arm64:arm64'] != true) }}"
+    if: "${{ !cancelled() && !failure() && (needs['plan'].outputs['built-arm64'] == '' || fromJSON(needs['plan'].outputs['built-arm64'])['debian-binary-pkg:linux:linux-modules-7.3+unreleased-cloud-arm64:arm64'] != true) }}"
     uses: ./.github/workflows/build-node.yml
     with:
-      node-key: "debian-binary-pkg:linux:linux-modules-7.2+unreleased-cloud-arm64:arm64"
+      node-key: "debian-binary-pkg:linux:linux-modules-7.3+unreleased-cloud-arm64:arm64"
       arch: arm64
       runner: "ubuntu-26.04-arm"
       id-seed-override: "${{ inputs.id-seed-override }}"
