@@ -48,10 +48,12 @@ usr/lib/udev/rules.d/60-persistent-media-controller.rules
 usr/lib/udev/rules.d/60-persistent-storage-mtd.rules
 usr/lib/udev/rules.d/60-persistent-storage.rules
 usr/lib/udev/rules.d/60-persistent-storage-tape.rules
+<pkg.systemd.upstream> usr/lib/udev/rules.d/60-persistent-usb.rules
 usr/lib/udev/rules.d/60-persistent-v4l.rules
 usr/lib/udev/rules.d/60-sensor.rules
 usr/lib/udev/rules.d/60-serial.rules
 <!stage1> usr/lib/udev/rules.d/60-tpm2-id.rules
+<pkg.systemd.upstream> usr/lib/udev/rules.d/61-block-hwdb.rules
 usr/lib/udev/rules.d/64-btrfs.rules
 usr/lib/udev/rules.d/65-integration.rules
 usr/lib/udev/rules.d/70-camera.rules

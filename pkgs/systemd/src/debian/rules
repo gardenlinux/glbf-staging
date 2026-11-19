@@ -20,7 +20,11 @@ ifeq ($(DEB_VENDOR),Ubuntu)
     CONFFLAGS_DISTRO = \
 		-Duser-path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
 		-Ddefault-llmnr=no \
+		-Dvar-log-mode=0775
+ifeq (, $(filter pkg.systemd.upstream, $(DEB_BUILD_PROFILES)))
+    CONFFLAGS_DISTRO += \
 		-Ddefault-mdns=no
+endif
 
 else
     DEFAULT_NTP_SERVERS = 0.debian.pool.ntp.org 1.debian.pool.ntp.org 2.debian.pool.ntp.org 3.debian.pool.ntp.org
@@ -103,7 +107,7 @@ CONFFLAGS = \
 	-Dnss-systemd=true \
 	-Dresolve=true \
 	-Dstatus-unit-format-default=combined \
-	-Dstandalone-binaries=true \
+	-Dstandalone-binaries=shutdown,sysusers,tmpfiles \
 	-Dutmp=false \
 	-Dtty-mode=0600 \
 	-Dvmspawn=enabled \

@@ -1,3 +1,43 @@
+systemd (262.2-1) unstable; urgency=medium
+
+  [ Nick Rosbrook ]
+  * Update upstream source from tag 'upstream/262.2'
+    Update to upstream version '262.2'
+    with Debian dir 3f18fa03316933da8e74eb50c2c0343014b6e8db
+  * d/rules: set /var/log mode to 0775 on ubuntu
+  * d/t/upstream:
+    - drop old repart workaround
+    - drop workaround for mkosi < 27
+    - drop workaround for mkosi < 25
+    - drop mkosi workaround for systemd < 258
+  * Drop namespace-util-handle-missing-nsfs-compat-ioctls.patch.
+    Patch included in v262.2.
+
+  [ Luca Boccassi ]
+  * Stop building standalone report/repart binaries.
+    The new default is to build also report/repart as standalone binaries
+    but we don't need them, so fix the list to shutdown/sysusers/tmpfiles
+  * Backport patch to fix i386 unit test run on amd64 kernel
+  * Move sd-dissect bash completion to systemd-container package
+  * d/t/upstream: depend on mkosi as it's needed by ubuntu
+  * d/t/upstream: look for deb binaries in AUTOPKGTEST_ARTIFACTS.
+    In recent autopkgtest the location changed, look into AUTOPKGTEST_ARTIFACTS
+    instead of AUTOPKGTEST_TMP as that works with all versions
+
+ -- Nick Rosbrook <enr0n@ubuntu.com>  Thu, 05 Nov 2026 10:40:21 -0500
+
+systemd (262.1-1) unstable; urgency=medium
+
+  [ Nick Rosbrook ]
+  * d/control: make systemd-sysv Conflicts: openrc-init (Closes: #1149850)
+
+  [ Luca Boccassi ]
+  * Update upstream source from tag 'upstream/262.1' Update to upstream
+    version '262.1' with Debian dir
+    dea58eef6c33305dd481eefb28afb0e7a51e7281
+
+ -- Luca Boccassi <bluca@debian.org>  Fri, 16 Oct 2026 22:54:19 +0100
+
 systemd (262-1) unstable; urgency=medium
 
   [ Nick Rosbrook ]
