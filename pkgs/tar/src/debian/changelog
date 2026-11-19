@@ -1,3 +1,11 @@
+tar (1.35+dfsg-7) unstable; urgency=medium
+
+  * Team upload (salsa.debian.org/debian namespace)
+  * Cherry-pick upstream commit to fix reproducibility in PAX archives with
+    sparse files (Closes: #1152143)
+
+ -- Johannes Schauer Marin Rodrigues <josch@debian.org>  Mon, 26 Oct 2026 07:53:54 +0100
+
 tar (1.35+dfsg-6) unstable; urgency=medium
 
   [ Johannes Schauer Marin Rodrigues ]
