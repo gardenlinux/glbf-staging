@@ -1,3 +1,10 @@
+pcre2 (10.49-1) unstable; urgency=medium
+
+  * New upstream release to fix GHSA-r9hj-j2rw-4q3m (already in the
+    preceding NMU)
+
+ -- Matthew Vernon <matthew@debian.org>  Wed, 28 Oct 2026 17:43:19 +0000
+
 pcre2 (10.48-3.1) unstable; urgency=medium
 
   * Non-maintainer upload.
