@@ -1,3 +1,15 @@
+zlib (1:1.3.dfsg+really1.3.2-4) unstable; urgency=low
+
+  * Pull in upstream patch to fix void undefined behavior in gzwrite.c.
+  * Pull in upstream patch to fix buffer overflow bug in non-blocking
+    gzwrite (CVE-2026-85091) (Closes: #1146895).
+  * Apply patch from Helmut Grohne <helmut@subdivi.de> making the
+    multilib dependencies massively more verbose to avoid cross build
+    issues due to incomplete gcc-multilib not being available on some
+    architectures (closes: #1141300).
+
+ -- Mark Brown <broonie@debian.org>  Sun, 25 Oct 2026 22:40:02 +0000
+
 zlib (1:1.3.dfsg+really1.3.2-3) unstable; urgency=low
 
   * Suppress crcvx to fix building of minizip on s390 with patch
