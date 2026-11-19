@@ -111,22 +111,35 @@ jobs:
             exit 0
           fi
 
-          # Trial-merge on a throwaway branch to decide clean vs. conflict,
-          # then abort so nothing is left half-staged either way; the chosen
-          # path re-does the merge from a clean checkout.
+          # Do the real merge once on the staging branch, preserving U's
+          # ancestry (never squash/rebase). Three outcomes: a clean three-way
+          # merge; a merge that conflicts but the package's pkg_type can
+          # auto-resolve (the kernel regenerates its generated debian/control);
+          # or a conflict nothing automatic can fix. The first two become a
+          # normal PR with the merge made; the third a draft PR whose branch is
+          # just the pristine import U.
           git checkout -B "$branch" "origin/$TARGET"
-          if git merge --no-commit --no-ff "$U" >/dev/null 2>&1; then
-            clean=1
+          if git merge --no-ff --no-edit "$U"; then
+            resolved=1
+          elif glbx resolve-conflicts \
+                 --params "repo=$REPO,dist=$DIST,cookie=$COOKIE" \
+                 "$PKG"; then
+            # resolve-conflicts regenerated and git-added the files its pkg_type
+            # owns and left no unmerged entries; finalize the merge commit it set
+            # up (it never commits — the caller owns the commit).
+            git commit --no-edit
+            resolved=1
           else
-            clean=0
+            # Either no auto-resolution strategy for this pkg_type, or conflicts
+            # remain that it could not fix. The partial auto-resolution (if any)
+            # is NOT a complete, non-conflicting commit, so it must not be pushed:
+            # abort back to a clean tree and fall through to the draft-PR path,
+            # whose branch is only the pristine import U — exactly as before.
+            git merge --abort 2>/dev/null || true
+            resolved=0
           fi
-          git merge --abort 2>/dev/null || true
 
-          if [ "$clean" = 1 ]; then
-            # Real merge commit preserving U's ancestry (never squash/rebase).
-            git checkout -B "$branch" "origin/$TARGET"
-            git merge --no-ff --no-edit "$U"
-
+          if [ "$resolved" = 1 ]; then
             if [ "$UPDATE_LOCKFILE" = "true" ]; then
               glbx lockfile \
                 --params "repo=$REPO,dist=$DIST,cookie=$COOKIE" \
@@ -147,6 +160,7 @@ jobs:
             # instructions and the state block.
             git push origin "$U:refs/heads/$branch"
 
+            git checkout -B "$branch" "origin/$TARGET"
             git merge --no-commit --no-ff "$U" >/dev/null 2>&1 || true
             pathlist="$(git diff --name-only --diff-filter=U | format_conflict_paths)"
             git merge --abort 2>/dev/null || true
