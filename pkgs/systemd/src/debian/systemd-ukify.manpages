@@ -1,1 +1,2 @@
-usr/share/man/man1/ukify.1
+#!/usr/bin/dh-exec
+debian/tmp/usr/share/man/man1/ukify.1

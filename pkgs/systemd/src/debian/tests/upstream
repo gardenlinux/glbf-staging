@@ -74,13 +74,13 @@ mount "$loop" "$workdir/btrfs" --options compress=zstd:1,user_subvol_rm_allowed,
 # so unset these variables to hide it
 unset SUDO_USER SUDO_UID SUDO_GID
 
-apt_dir="/etc/apt"
+apt_dir=""
 local_binaries=""
-if [ -d "${AUTOPKGTEST_TMP}/../binaries" ]; then
+if [ -d "${AUTOPKGTEST_ARTIFACTS}/../binaries" ]; then
     # If locally built binaries are being used, prepare /etc/apt so that
     # it will not conflict with settings implied by PackageDirectories=
     # used below.
-    local_binaries="$(realpath "${AUTOPKGTEST_TMP}/../binaries")"
+    local_binaries="$(realpath "${AUTOPKGTEST_ARTIFACTS}/../binaries")"
     apt_dir="$(mktemp -d)/apt"
     cp -r /etc/apt "$apt_dir"
 
@@ -97,20 +97,14 @@ if [ -d "${AUTOPKGTEST_TMP}/../binaries" ]; then
     done
 fi
 
-# Moved in v258
-mkosi_local_conf="mkosi.local.conf"
-if [ -d mkosi ]; then
-    mkosi_local_conf="mkosi/mkosi.local.conf"
-fi
-
-tee "${mkosi_local_conf}" <<EOF
+tee "mkosi/mkosi.local.conf" <<EOF
 [Output]
 Format=disk
 
 [Build]
 WorkspaceDirectory=$workdir
 PackageCacheDirectory=$workdir/cache
-SandboxTrees=${apt_dir}:/etc/apt/
+${apt_dir:+"SandboxTrees=${apt_dir}:/etc/apt/"}
 ToolsTree=
 Environment=NO_BUILD=1 NO_SYNC=1 ARTIFACT_DIRECTORY="$AUTOPKGTEST_ARTIFACTS" TEST_SAVE_JOURNAL=fail TEST_SHOW_JOURNAL=warning
 Incremental=no
@@ -129,15 +123,6 @@ EOF
 if dpkg-vendor --is Ubuntu && [ "${TEST_UPSTREAM:-0}" -ne 1 ]; then
     # Ubuntu uses mkosi from the archive
     sed -i "/^MinimumVersion=.*/d" mkosi/mkosi.conf
-
-    # These options do not exist in v26, which is currently the latest mkosi release.
-    for image in minimal-0 minimal-base minimal-1; do
-        f="mkosi/mkosi.images/$image/mkosi.conf"
-        sed -i "/^Incremental=relaxed/d" "$f"
-        sed -i "/^CacheOnly=metadata/d" "$f"
-    done
-
-    mkosi_version="$(dpkg --status mkosi | awk '/^Version:/{print $NF}')"
 else
     # Use mkosi from git
     mkosi_tree="${AUTOPKGTEST_TMP}/mkosi"
@@ -149,25 +134,7 @@ else
     fi
 
     export PATH="${mkosi_tree}/bin:$PATH"
-
-    mkosi_version="$(git -C "$mkosi_tree" describe | tr -d 'v')"
 fi
-
-# mkosi registers a pid with machined before it is assigned to a scope, so machined
-# associates it with the user session, and kills it later when the machine is shut down,
-# disable registration to avoid it. This is a workaround for versions older than 25, where
-# MachinedRegister=no does the same.
-if systemd-analyze compare-versions "$mkosi_version" lt 25; then
-    sed -i "/  register_machine(/d" "$mkosi_tree/mkosi/qemu.py"
-else
-    tee -a "${mkosi_local_conf}" <<EOF
-[Runtime]
-Register=no
-EOF
-fi
-
-# kernel 6.12 broke mounting btrfs filesystems from loop devices, so switch to ext4
-sed -i "s/Format=btrfs/Format=ext4/" mkosi.repart/10-root.conf || true
 
 # qemu/vsock does not appear to work on ppc64el/s390x, so skip those tests
 # qemu tests time out on arm64, so skip them

@@ -1,5 +1,6 @@
 #!/usr/bin/dh-exec
 usr/lib/systemd/systemd-bless-boot
+<pkg.systemd.upstream> usr/lib/systemd/systemd-efivars-clear
 usr/lib/systemd/system-generators/systemd-bless-boot-generator
 usr/lib/systemd/system/sockets.target.wants/systemd-bootctl.socket
 usr/lib/systemd/system/sysinit.target.wants/systemd-boot-random-seed.service
@@ -9,6 +10,7 @@ usr/lib/systemd/system/systemd-bootctl@.service
 usr/lib/systemd/system/systemd-boot-clear-sysfail.service
 usr/lib/systemd/system/systemd-boot-random-seed.service
 usr/lib/systemd/system/systemd-boot-update.service
+<pkg.systemd.upstream> usr/lib/systemd/system/systemd-efivars-clear.service
 usr/lib/systemd/system/systemd-sysupdate-notify-bootctl.socket
 usr/lib/systemd/system/systemd-sysupdate-notify-bootctl@.service
 ../extra/initramfs etc/

@@ -5,6 +5,7 @@ debian/tmp/usr/share/man/man1/journalctl.1
 debian/tmp/usr/share/man/man1/localectl.1
 debian/tmp/usr/share/man/man1/loginctl.1
 debian/tmp/usr/share/man/man1/networkctl.1
+<pkg.systemd.upstream> debian/tmp/usr/share/man/man1/ptyctl.1
 debian/tmp/usr/share/man/man1/run0.1
 debian/tmp/usr/share/man/man1/systemctl.1
 debian/tmp/usr/share/man/man1/systemd.1
@@ -23,6 +24,7 @@ debian/tmp/usr/share/man/man1/systemd-firstboot.service.1
 debian/tmp/usr/share/man/man1/systemd-id128.1
 debian/tmp/usr/share/man/man1/systemd-inhibit.1
 debian/tmp/usr/share/man/man1/systemd-machine-id-setup.1
+<pkg.systemd.upstream> debian/tmp/usr/share/man/man1/systemd-manifest.1
 debian/tmp/usr/share/man/man1/systemd-mount.1
 debian/tmp/usr/share/man/man1/systemd-mute-console.1
 debian/tmp/usr/share/man/man1/systemd-mute-console.socket.1
@@ -58,6 +60,7 @@ debian/tmp/usr/share/man/man5/logind.conf.5
 debian/tmp/usr/share/man/man5/logind.conf.d.5
 debian/tmp/usr/share/man/man5/machine-id.5
 debian/tmp/usr/share/man/man5/machine-info.5
+<pkg.systemd.upstream> debian/tmp/usr/share/man/man5/machine-tags.d.5
 debian/tmp/usr/share/man/man5/networkd.conf.5
 debian/tmp/usr/share/man/man5/networkd.conf.d.5
 debian/tmp/usr/share/man/man5/org.freedesktop.hostname1.5
@@ -174,6 +177,7 @@ debian/tmp/usr/share/man/man8/systemd-hybrid-sleep.service.8
 debian/tmp/usr/share/man/man8/systemd-journald.8
 debian/tmp/usr/share/man/man8/systemd-journald-audit.socket.8
 debian/tmp/usr/share/man/man8/systemd-journald-dev-log.socket.8
+<pkg.systemd.upstream> debian/tmp/usr/share/man/man8/systemd-journald-metrics.socket.8
 debian/tmp/usr/share/man/man8/systemd-journald.service.8
 debian/tmp/usr/share/man/man8/systemd-journald@.service.8
 debian/tmp/usr/share/man/man8/systemd-journald.socket.8
@@ -183,10 +187,12 @@ debian/tmp/usr/share/man/man8/systemd-kexec.service.8
 debian/tmp/usr/share/man/man8/systemd-localed.8
 debian/tmp/usr/share/man/man8/systemd-localed.service.8
 debian/tmp/usr/share/man/man8/systemd-logind.8
+<pkg.systemd.upstream> debian/tmp/usr/share/man/man8/systemd-logind-metrics.socket.8
 debian/tmp/usr/share/man/man8/systemd-logind.service.8
 debian/tmp/usr/share/man/man8/systemd-loop@.service.8
 debian/tmp/usr/share/man/man8/systemd-machine-id-commit.service.8
 debian/tmp/usr/share/man/man8/systemd-machine-tag@.service.8
+<pkg.systemd.upstream> debian/tmp/usr/share/man/man8/systemd-machine-tags.service.8
 debian/tmp/usr/share/man/man8/systemd-makefs.8
 debian/tmp/usr/share/man/man8/systemd-makefs@.service.8
 debian/tmp/usr/share/man/man8/systemd-mkswap@.service.8
@@ -200,6 +206,8 @@ debian/tmp/usr/share/man/man8/systemd-network-generator.service.8
 debian/tmp/usr/share/man/man8/systemd-poweroff.service.8
 debian/tmp/usr/share/man/man8/systemd-pstore.8
 debian/tmp/usr/share/man/man8/systemd-pstore.service.8
+<pkg.systemd.upstream> debian/tmp/usr/share/man/man8/systemd-ptybrokerd.8
+<pkg.systemd.upstream> debian/tmp/usr/share/man/man8/systemd-ptybrokerd.service.8
 debian/tmp/usr/share/man/man8/systemd-quotacheck.8
 debian/tmp/usr/share/man/man8/systemd-quotacheck@.service.8
 debian/tmp/usr/share/man/man8/systemd-quotacheck-root.service.8
@@ -243,6 +251,7 @@ debian/tmp/usr/share/man/man8/systemd-tmpfiles-setup.service.8
 debian/tmp/usr/share/man/man8/systemd-udev-settle.service.8
 debian/tmp/usr/share/man/man8/systemd-update-done.8
 debian/tmp/usr/share/man/man8/systemd-update-done.service.8
+<pkg.systemd.upstream> debian/tmp/usr/share/man/man8/systemd-update-helper.8
 debian/tmp/usr/share/man/man8/systemd-user-sessions.8
 debian/tmp/usr/share/man/man8/systemd-user-sessions.service.8
 debian/tmp/usr/share/man/man8/systemd-validatefs@.service.8

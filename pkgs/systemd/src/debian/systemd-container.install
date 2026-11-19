@@ -94,8 +94,10 @@ usr/share/polkit-1/actions/org.freedesktop.import1.policy
 usr/share/polkit-1/actions/org.freedesktop.machine1.policy
 usr/share/polkit-1/actions/org.freedesktop.portable1.policy
 <pkg.systemd.upstream> usr/share/polkit-1/actions/org.freedesktop.sysupdate1.policy
+<pkg.systemd.upstream> usr/share/zsh/vendor-completions/_systemd-dissect
 usr/share/zsh/vendor-completions/_systemd-nspawn
 usr/share/zsh/vendor-completions/_systemd-sysupdate
+<pkg.systemd.upstream> usr/share/zsh/vendor-completions/_systemd-vmspawn
 <pkg.systemd.upstream> usr/share/zsh/vendor-completions/_updatectl
 usr/share/zsh/vendor-completions/_sd_machines
 usr/share/zsh/vendor-completions/_machinectl
@@ -103,6 +105,7 @@ usr/share/zsh/vendor-completions/_storagectl
 usr/share/bash-completion/completions/machinectl
 usr/share/bash-completion/completions/portablectl
 usr/share/bash-completion/completions/storagectl
+usr/share/bash-completion/completions/systemd-dissect
 usr/share/bash-completion/completions/systemd-nspawn
 usr/share/bash-completion/completions/systemd-sysupdate
 <pkg.systemd.upstream> usr/share/bash-completion/completions/updatectl

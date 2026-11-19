@@ -152,6 +152,7 @@ Conflicts: sysvinit-core,
            startpar,
            bfh-container (<< 20211009-22~),
            molly-guard (<< 0.8.2~),
+           openrc-init,
 Replaces: sysvinit-core,
 Pre-Depends: systemd
 Depends: ${misc:Depends},
@@ -177,7 +178,7 @@ Recommends: libnss-mymachines,
             default-dbus-system-bus | dbus-system-bus,
             ${dlopen:Recommends},
 Suggests: ${dlopen:Suggests},
-Conflicts: systemd (<< 256-2~),
+Conflicts: systemd (<< 262.1-2~),
 Description: systemd container/nspawn tools
  This package provides systemd's tools for nspawn and container/VM management:
   * systemd-nspawn
