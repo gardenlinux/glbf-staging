@@ -1,3 +1,32 @@
+coreutils (9.12-0.3) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Cherry-picking patch from upstream:
+    - relax env,printenv: only quote when outputting to terminals
+      [GH: 355] (Closes: #1152651).
+  * Adding direct libcap-dev to build-depends to bring back building with
+    capability support, was previously pulled in via libsystemd-dev, thanks to
+    Collin Funk <collin.funk1@gmail.com> (Closes: #1150670).
+  * Removed some useless whitespaces in packaging files at EOL.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 31 Oct 2026 00:01:30 +0100
+
+coreutils (9.12-0.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Uploading to unstable.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 30 Oct 2026 09:28:12 +0100
+
+coreutils (9.12-0.1) experimental; urgency=medium
+
+  * Non-maintainer upload.
+  * New upstream release (Closes: #1138992, #1148239).
+  * Correcting control by moving homepage filed from binary section to source
+    section.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 20 Oct 2026 02:27:38 +0200
+
 coreutils (9.10-1) unstable; urgency=low
 
   * New upstream version
@@ -180,12 +209,12 @@ coreutils (8.28-1) unstable; urgency=low
     - date introduces stable long option --rfc-email for -R
     - nproc honors OMP_THREAD_LIMIT
   * Reenable default ls quoting
-  * Get rid of old transition packages & logic for mktemp, timeout, 
+  * Get rid of old transition packages & logic for mktemp, timeout,
     and realpath
   * drop hppa longlong patch
   * drop PPC sha256.o patch
-    Discussion in 854053 indicated that it shouldn't be an issue with gcc 7. 
-    If people do still see a performance issue with sha256 on PPC we should 
+    Discussion in 854053 indicated that it shouldn't be an issue with gcc 7.
+    If people do still see a performance issue with sha256 on PPC we should
     be early enough in the buster cycle to fix it in gcc.
   * Standards version 4.1.1.0
     - update watch file & add upstream signing key
@@ -202,7 +231,7 @@ coreutils (8.26-3) unstable; urgency=medium
 
 coreutils (8.26-2) unstable; urgency=low
 
-  * Fix regression in which specifying a TZ in date -d causes the 
+  * Fix regression in which specifying a TZ in date -d causes the
     displayed date to no longer be printed in the local time zone
     Upstream patch from Pádraig Brady (Closes: #851934)
 
@@ -210,7 +239,7 @@ coreutils (8.26-2) unstable; urgency=low
 
 coreutils (8.26-1) unstable; urgency=low
 
-  * New upstream version 
+  * New upstream version
 
  -- Michael Stone <mstone@debian.org>  Fri, 09 Dec 2016 09:08:27 -0500
 
@@ -247,10 +276,10 @@ coreutils (8.24-1) unstable; urgency=low
 
 coreutils (8.23-4) unstable; urgency=low
 
-  * [33] remove chroot optimization that avoids the actual chroot when 
-    running "chroot /". The intent was to allow "chroot / true" to 
+  * [33] remove chroot optimization that avoids the actual chroot when
+    running "chroot /". The intent was to allow "chroot / true" to
     work in all cases on all platforms even for non-root users, but
-    has caused problems with bind mounts. Upstream has added a new 
+    has caused problems with bind mounts. Upstream has added a new
     option to chroot, but I'll wait for the new upstream version for
     that. (Closes: #765514)
   * remove spurious file addition in patch [31] that did not affect
@@ -264,7 +293,7 @@ coreutils (8.23-3) unstable; urgency=low
   * build with verbose make (Closes: #751132)
   * add numfmt to package description (Closes: #764698)
   * [31] show duplicate remote mounts in df (Closes: #737399)
-  * [32] cherry pick upstream fix to make info doc references 
+  * [32] cherry pick upstream fix to make info doc references
     more reliable (Closes: #760861)
 
  -- Michael Stone <mstone@debian.org>  Wed, 29 Oct 2014 20:58:59 -0400
@@ -326,7 +355,7 @@ coreutils (8.20-2) unstable; urgency=low
   * Disable df test which seems to fail on some buildds
   * Get rid of realpath (provided by other package) (Closes: #693211)
   * Add autopkgtest. Thanks Martin Pitt. (Closes: #692748)
-  * Fix HAVE_LONG_LONG typo in factor. Thanks Daniel Schepler 
+  * Fix HAVE_LONG_LONG typo in factor. Thanks Daniel Schepler
     (Closes: #693337)
 
  -- Michael Stone <mstone@debian.org>  Sun, 18 Nov 2012 09:26:57 -0500
@@ -468,7 +497,7 @@ coreutils (7.5-6) unstable; urgency=low
 coreutils (7.5-5) unstable; urgency=low
 
   * update standards version to 3.8.3.0 (no changes)
-  * [82] fix "function not implemented" in cp -a of symlink on older 
+  * [82] fix "function not implemented" in cp -a of symlink on older
     linux kernels (Closes: #545306)
 
  -- Michael Stone <mstone@debian.org>  Thu, 10 Sep 2009 20:07:24 -0400
@@ -487,7 +516,7 @@ coreutils (7.5-3) unstable; urgency=low
 
 coreutils (7.5-2) unstable; urgency=low
 
-  * [79] fix ls-misc build test problem if files are created world-writable 
+  * [79] fix ls-misc build test problem if files are created world-writable
     (Closes: #544965)
   * [80] fix tail/wait build test problem on kfreebsd (Closes: #545009)
   * add -mieee to sh4 build flags (Closes: #544977)
@@ -502,7 +531,7 @@ coreutils (7.5-1) unstable; urgency=low
     - chroot adds --userspec and --groups
     - cp adds --reflink
     - sort adds --human-numeric-sort
-    - tail --follow uses inotify 
+    - tail --follow uses inotify
   * update package description (Closes: #535458)
   * tweak section and priority for mktemp package
   * conflict with package "timeout". I think coreutils timeout is just
@@ -520,7 +549,7 @@ coreutils (7.4-2) unstable; urgency=low
 coreutils (7.4-1) unstable; urgency=low
 
   * new upstream version (Closes: #285609)
-  * replaces: mktemp 
+  * replaces: mktemp
   * adds: arch(1) (Closes: #516050)
 
  -- Michael Stone <mstone@debian.org>  Wed, 03 Jun 2009 21:26:52 -0400
@@ -568,7 +597,7 @@ coreutils (6.10-6) unstable; urgency=low
   * [76] Add ubuntu/upstream patch to prevent failure of cp of a special
     (e.g., fifo) file to an existing file
   * [71] change getgrouplist patch to skip the autoconf test and use
-    getgrouplist unconditionally. (Patch isn't immediately ready for 
+    getgrouplist unconditionally. (Patch isn't immediately ready for
     upstream anyway, and I assume that glibc provides this function
     on all our supported platforms. If this turns out to not be true,
     I'll revisit.) (Closes: #459615)
@@ -605,7 +634,7 @@ coreutils (6.10-3) unstable; urgency=low
     (Thanks Jan Moringen) (Closes: #463043)
   * Try upstream fix for info references in man pages
     (Closes: #388684)
-  * Upstream change in documentation for mv in the case of a 
+  * Upstream change in documentation for mv in the case of a
     moving a symlink to a directory with a trailing '/'
     (Closes: #343652)
   * move kill to /bin on hurd (Closes: #380387)
@@ -618,11 +647,11 @@ coreutils (6.10-2) unstable; urgency=low
 
   * run make check with VERBOSE enabled; this no longer makes the logs
     unreadably huge (thanks Julien Cristau for asking the obvious
-    question) 
+    question)
   * print cpu info during build to help debug build failures
   * bump policy version
   * lose perl-base & bzip2 build-deps. Someday need to support lzma tarball
-  * drop more legacy fileutils/shellutils/textutils upgrade support. 
+  * drop more legacy fileutils/shellutils/textutils upgrade support.
     hopefully people have finished upgrading to etch
 
  -- Michael Stone <mstone@debian.org>  Wed, 23 Jan 2008 20:36:12 -0500
@@ -670,7 +699,7 @@ coreutils (6.10~20070907-1) experimental; urgency=low
  -- Michael Stone <mstone@debian.org>  Sat, 08 Sep 2007 07:55:11 -0400
 
 coreutils (5.97-5.4) unstable; urgency=medium
-  
+
   * Non-maintainer upload.
   * New patch 64_coreutils-futimens: rename futimens to cu_futimens,
     since glibc now defines an futimens function with a different
@@ -682,7 +711,7 @@ coreutils (5.97-5.4) unstable; urgency=medium
 coreutils (5.97-5.3) unstable; urgency=high
 
   * This is a non-maintainer upload done with the maintainer's blessing,
-    to fix a FTBS bug, and to get the SELinux changes in through to Etch. 
+    to fix a FTBS bug, and to get the SELinux changes in through to Etch.
   * Bug fix: "coreutils - FTBFS", thanks to Bastian Blank and Andreas
     Barth. The problem is with a build time test suite, which did not
     take into account that there could be two directory names with the
@@ -690,7 +719,7 @@ coreutils (5.97-5.3) unstable; urgency=high
     is not anything s390 specific, nor is it a problem with the coreutils
     package itself, just with the build time test.  Applied a version of
     the patch being used by upstream to fix the test.
-                                                 (Closes: #380552, #407628). 
+                                                 (Closes: #380552, #407628).
 
  -- Manoj Srivastava <srivasta@debian.org>  Tue, 23 Jan 2007 15:00:28 -0600
 
@@ -711,7 +740,7 @@ coreutils (5.97-5.2) unstable; urgency=low
 
 coreutils (5.97-5.1) unstable; urgency=low
 
-  * With permission from the maintainer, this upload (from a non-maintainer) 
+  * With permission from the maintainer, this upload (from a non-maintainer)
     updates the SELinux patch, synchronizing with the latest patches from
     fedora core (:pserver:anonymous@cvs.fedora.redhat.com:/cvs/dist,
     repository rpms/coreutils/devel). The patches had to be tweaked for
@@ -784,12 +813,12 @@ coreutils (5.96-4) unstable; urgency=low
 coreutils (5.96-3) unstable; urgency=low
 
   * Follow strategy from Ian Jackson to better deal with the dpkg md5sum
-    mess. Only remove dpkg's mad md5sum diversion `once' (ie, on upgrade 
+    mess. Only remove dpkg's mad md5sum diversion `once' (ie, on upgrade
     from non-/usr/bin/md5sum-supplying coreutils).  This preserves any later
     sysadmin-installed diversions of md5sum.textutils.
   * Add NEWS.Debian notes on the POSIX2_VERSION change
   * add who --ips option to display IPs instead of hostnames. Code taken
-    from last.c in sysvinit-2.86.ds1. 
+    from last.c in sysvinit-2.86.ds1.
     Closes: #363126
 
  -- Michael Stone <mstone@debian.org>  Sat, 27 May 2006 14:05:44 -0400
@@ -843,7 +872,7 @@ coreutils (5.94-1) unstable; urgency=low
 
 coreutils (5.93-5) unstable; urgency=low
 
-  * Actually conflict with apt-move instead of just thinking about it 
+  * Actually conflict with apt-move instead of just thinking about it
     (Closes: #339136)
   * Drop help2man build-dep (we're actually using one in the build tree)
 
@@ -852,7 +881,7 @@ coreutils (5.93-5) unstable; urgency=low
 coreutils (5.93-4) unstable; urgency=low
 
   * Conflict with apt-move expecting particular stat syntax (Closes: #339136)
-    I need to think more about what to do with upstream changes to stat -c 
+    I need to think more about what to do with upstream changes to stat -c
   * For now, add upstream patch so that stat -c "%whatever\n" actually works
 
  -- Michael Stone <mstone@debian.org>  Tue, 15 Nov 2005 09:30:56 -0500
@@ -913,7 +942,7 @@ coreutils (5.2.1-3) unstable; urgency=low
 coreutils (5.2.1-2) unstable; urgency=low
 
   * remove su for kfreebsd (Closes: #225131)
-  * add yacc to build depends. forgot that the date patch [31] forced a 
+  * add yacc to build depends. forgot that the date patch [31] forced a
     rebuild from getdate.y (Closes: #259563)
 
  -- Michael Stone <mstone@debian.org>  Fri, 16 Jul 2004 07:28:41 -0400
@@ -936,17 +965,17 @@ coreutils (5.2.1-1) unstable; urgency=low
       Now, using -H elicits a warning to that effect.
   * [53] Update acl patch for 5.2.1. Now based on FC2 coreutils patch.
   * Removed xattr patch. AFAICT this isn't particularly useful for anything
-    except selinux, and other selinux support isn't included. Also, the 
-    option added with this patch isn't being used consistently between 
+    except selinux, and other selinux support isn't included. Also, the
+    option added with this patch isn't being used consistently between
     different linux distributions and I'd rather not support something that
     will cause incompatibilities. If anyone was depending on this support
     please contact me with details. (Closes: #244603)
   * fix minor typo in README.Debian (Closes: #218333)
-  * [31] seconds defaults to 0 when using something like 
+  * [31] seconds defaults to 0 when using something like
     date -d '21:04 +0100' (Closes: #238046)
   * rebuild should fix hppa problem (Closes: #219458)
   * remove join -n
-  * update documentation for test so that the FD parameter to test -t is 
+  * update documentation for test so that the FD parameter to test -t is
     mandatory (Closes: #255694)
 
  -- Michael Stone <mstone@debian.org>  Wed, 14 Jul 2004 06:13:38 -0400
@@ -955,7 +984,7 @@ coreutils (5.0.91-2) unstable; urgency=low
 
   * add bzip2 to build-deps (Closes: #214094)
   * fix stupid typo in preinst info cleanup script (Closes: #214134)
-  * make sure /usr/share/info doesn't contain a dir file 
+  * make sure /usr/share/info doesn't contain a dir file
     (Closes: #214050, #214138)
 
  -- Michael Stone <mstone@debian.org>  Sat, 04 Oct 2003 18:35:32 -0400
@@ -1026,7 +1055,7 @@ coreutils (5.0.90-1) unstable; urgency=low
       is >= 200112
   * [26] split-fail test doesn't fail
   * revert 17, patch doesn't work anyway. 26 is a new patch for the problem
-    of building as non-root in a chroot owned by the builder. 
+    of building as non-root in a chroot owned by the builder.
     (Closes: #204778)
   * use dh_buildinfo
   * standards-version 3.6.0
@@ -1040,7 +1069,7 @@ coreutils (5.0.90-1) unstable; urgency=low
 
 coreutils (5.0-5) unstable; urgency=low
 
-  * [23] upstream patch to make split --verbose actually verbose 
+  * [23] upstream patch to make split --verbose actually verbose
     (Closes: #199205)
   * enable kill & su for freebsd (Closes: #194743)
   * [24] upstream fix for du not displaying / on last line of du /
@@ -1127,11 +1156,11 @@ coreutils (4.5.8-1) unstable; urgency=low
 
   * New upstream version
     - du -S once again works like it did before the change in 4.5.5
-    - stat accepts a new file format, %B, for the size of each block 
+    - stat accepts a new file format, %B, for the size of each block
       reported by %b
     - du accepts new option: --apparent-size
     - du --bytes (-b) works the same way it did in fileutils-3.16 and before
-    - du reports proper sizes for directories (not zero) 
+    - du reports proper sizes for directories (not zero)
     - df now always displays under `Filesystem', the device file name
       corresponding to the listed mount point.  Before, for a block- or
       character- special file command line argument, df would display that
@@ -1156,7 +1185,7 @@ coreutils (4.5.7-1) unstable; urgency=low
     - Includes upstream's fix for 175135
   * {shell,text,file}utils now priority extra, section misc
   * putty added to dircolors known terminal list (Closes: #180312)
-  * split will not terminate prematurely on non-full buffer read 
+  * split will not terminate prematurely on non-full buffer read
     (Closes: #177559)
 
  -- Michael Stone <mstone@debian.org>  Sun, 09 Feb 2003 09:09:19 -0500
@@ -1219,7 +1248,7 @@ coreutils (4.5.3-2) unstable; urgency=low
 coreutils (4.5.3-1) unstable; urgency=low
 
   * New upstream version
-  * backed out more specific uname processor output 
+  * backed out more specific uname processor output
     - Closes: #164691, #164710, #165530, #166621
     - basically no positive feedback :)
   * remove /usr/share/doc/coreutils/ABOUT-NLS.gz (Closes: #164920)
@@ -1241,7 +1270,7 @@ coreutils (4.5.2-1) unstable; urgency=low
 
 coreutils (4.5.1-2) unstable; urgency=high
 
-  * don't provide stat (causes nasty upgrade problem) 
+  * don't provide stat (causes nasty upgrade problem)
     (Closes: #161245, #161249)
   * bump standards-version
   * register info file properly
