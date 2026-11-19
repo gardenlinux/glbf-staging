@@ -71,7 +71,8 @@ build-deb/.stamp-build: build-deb/build.ninja
 build-udeb/.stamp-build: build-udeb/build.ninja
 	# ignore the blhc false positives (see CONFFLAGS_udeb)
 	@echo 'blhc: ignore-line-regexp: .* [^ ]*cc .+ -Os -fomit-frame-pointer .+'
-	@echo 'blhc: ignore-line-regexp:  *(LD|CC) .+/build-deb/testsuite/.+'
+	# ignore the blhc false positives (test suite modules)
+	@echo 'blhc: ignore-line-regexp:  *(LD|CC) \[M\] *(mod-|\.module-).*\.k?o'
 	dh_auto_build --builddir=build-udeb
 	touch $@
 
@@ -83,7 +84,7 @@ override_dh_auto_test:
 override_dh_auto_install:
 	dh_auto_install --builddir=build-deb
 ifdef BUILD_UDEB
-	cd build-udeb && DESTDIR=$(TU) meson install --tags runtime
+	dh_auto_install --builddir=build-udeb --destdir=$(TU) -- --tags runtime
 endif
 
 override_dh_install:
@@ -96,7 +97,7 @@ endif
 		$(DD)/usr/lib/*/pkgconfig/libkmod.pc
 ifdef BUILD_UDEB
 	dh_install --sourcedir=$(TU) -pkmod-udeb -plibkmod2-udeb
-	egrep -i '^[a-z]' debian/extra/aliases.conf > $(DU)/usr/lib/modprobe.d/aliases.conf
+	egrep -i '^[a-z]' debian/kmod.modprobe > $(DU)/usr/lib/modprobe.d/aliases.conf
 endif
 
 override_dh_installdocs:
@@ -106,6 +107,9 @@ override_dh_installdocs:
 
 override_dh_installchangelogs:
 	dh_installchangelogs NEWS
+
+override_dh_installmodules:
+	dh_installmodules --no-scripts --name=aliases
 
 override_dh_makeshlibs:
 	dh_makeshlibs -V'libkmod2 (>= $(shell perl debian/highest_symbol_version debian/libkmod2.symbols))' -- -c4
