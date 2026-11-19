@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+
+cat > /etc/initrd-release << EOF
+ID=gardenlinux
+ID_LIKE=debian
+NAME="Garden Linux"
+PRETTY_NAME="Garden Linux"
+HOME_URL="https://gardenlinux.io"
+SUPPORT_URL="https://github.com/gardenlinux/gardenlinux"
+BUG_REPORT_URL="https://github.com/gardenlinux/gardenlinux/issues"
+EOF

@@ -1,0 +1,13 @@
+images:
+  - name: disk
+    rootfs: base
+    type: disk
+    inputs:
+      - label: initrd
+        image: initrd
+  - name: initrd
+    rootfs: initrd
+    type: cpio
+    inputs:
+      - label: modules
+        value: virtio_blk

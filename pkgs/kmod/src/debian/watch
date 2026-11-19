@@ -1,0 +1,4 @@
+Version: 5
+
+Source: https://www.kernel.org/pub/linux/utils/kernel/kmod/
+Matching-Pattern: kmod-([\d\.]+)\.tar\.xz

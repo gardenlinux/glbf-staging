@@ -1,0 +1,6 @@
+sources:
+    - file: pcre2_10.49.orig.tar.gz
+      sha256: 929f0b20e62879252a15886b06c89f1edef61a363cbd5826fb041080a5e557ae
+      urls:
+        - https://deb.debian.org/debian/pool/main/p/pcre2/pcre2_10.49.orig.tar.gz
+        - https://snapshot.debian.org/file/8018e00dd5a075c30544de6dfab0b7b7a771e671/pcre2_10.49.orig.tar.gz

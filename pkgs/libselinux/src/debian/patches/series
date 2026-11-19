@@ -1,0 +1,6 @@
+default
+man
+Fix-matchpathcon_filespec_add-condition-for-alpha.patch
+Link-the-Python-bindings-with-fPIC.patch
+Do-not-use-64-bit-atomics-on-architectures-lacking-them.patch
+Replace-PyString_FromString-with-PyUnicode_FromString-for-SWIG-4.5.0-compatibility.patch

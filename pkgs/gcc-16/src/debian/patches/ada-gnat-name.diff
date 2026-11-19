@@ -1,0 +1,178 @@
+# DP: allow override of build and host gnat compilers
+
+Allow the Debian build system to select the Ada compiler producing
+ * source generators for the build machine
+ * gnat tools for the host machine
+
+In Makefile.tpl (hence .in), chunk 1 modifies HOST_EXPORTS and chunk 3
+modifies EXTRA_TARGET_FLAGS.
+
+When gcc/ada/{Make-generated,/gcc-interface/Makefile}.in are modified,
+ada-verbose.diff must be refreshed.
+
+Forwarded: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120106
+Bug-Debian: https://bugs.debian.org/1078144
+
+--- a/src/Makefile.in
++++ b/src/Makefile.in
+@@ -206,6 +206,7 @@ HOST_EXPORTS = \
+ 	GOC="$(GOC)"; export GOC; \
+ 	GDC="$(GDC)"; export GDC; \
+ 	GM2="$(GM2)"; export GM2; \
++	GNATMAKE_FOR_BUILD="$(GNATMAKE_FOR_BUILD)"; export GNATMAKE_FOR_BUILD; \
+ 	AR="$(AR)"; export AR; \
+ 	AS="$(AS)"; export AS; \
+ 	CC_FOR_BUILD="$(CC_FOR_BUILD)"; export CC_FOR_BUILD; \
+@@ -380,6 +381,7 @@ GFORTRAN_FOR_BUILD = @GFORTRAN_FOR_BUILD
+ GOC_FOR_BUILD = @GOC_FOR_BUILD@
+ GDC_FOR_BUILD = @GDC_FOR_BUILD@
+ GM2_FOR_BUILD = @GM2_FOR_BUILD@
++GNATMAKE_FOR_BUILD = @GNATMAKE_FOR_BUILD@
+ LDFLAGS_FOR_BUILD = @LDFLAGS_FOR_BUILD@
+ LD_FOR_BUILD = @LD_FOR_BUILD@
+ NM_FOR_BUILD = @NM_FOR_BUILD@
+@@ -1043,6 +1045,7 @@ EXTRA_TARGET_FLAGS = \
+ 	'GDCFLAGS=$$(GDCFLAGS_FOR_TARGET)' \
+ 	'GM2=$$(GM2_FOR_TARGET) $$(XGCC_FLAGS_FOR_TARGET) $$(TFLAGS)' \
+ 	'GM2FLAGS=$$(GM2FLAGS_FOR_TARGET)' \
++	'GNATMAKE_FOR_BUILD=$(GNATMAKE_FOR_BUILD)' \
+ 	'LD=$(COMPILER_LD_FOR_TARGET)' \
+ 	'LDFLAGS=$$(LDFLAGS_FOR_TARGET)' \
+ 	'LIBCFLAGS=$$(LIBCFLAGS_FOR_TARGET)' \
+--- a/src/Makefile.tpl
++++ b/src/Makefile.tpl
+@@ -209,6 +209,7 @@ HOST_EXPORTS = \
+ 	GOC="$(GOC)"; export GOC; \
+ 	GDC="$(GDC)"; export GDC; \
+ 	GM2="$(GM2)"; export GM2; \
++	GNATMAKE_FOR_BUILD="$(GNATMAKE_FOR_BUILD)"; export GNATMAKE_FOR_BUILD; \
+ 	AR="$(AR)"; export AR; \
+ 	AS="$(AS)"; export AS; \
+ 	CC_FOR_BUILD="$(CC_FOR_BUILD)"; export CC_FOR_BUILD; \
+@@ -383,6 +384,7 @@ GFORTRAN_FOR_BUILD = @GFORTRAN_FOR_BUILD
+ GOC_FOR_BUILD = @GOC_FOR_BUILD@
+ GDC_FOR_BUILD = @GDC_FOR_BUILD@
+ GM2_FOR_BUILD = @GM2_FOR_BUILD@
++GNATMAKE_FOR_BUILD = @GNATMAKE_FOR_BUILD@
+ LDFLAGS_FOR_BUILD = @LDFLAGS_FOR_BUILD@
+ LD_FOR_BUILD = @LD_FOR_BUILD@
+ NM_FOR_BUILD = @NM_FOR_BUILD@
+@@ -799,6 +801,7 @@ EXTRA_TARGET_FLAGS = \
+ 	'GDCFLAGS=$$(GDCFLAGS_FOR_TARGET)' \
+ 	'GM2=$$(GM2_FOR_TARGET) $$(XGCC_FLAGS_FOR_TARGET) $$(TFLAGS)' \
+ 	'GM2FLAGS=$$(GM2FLAGS_FOR_TARGET)' \
++	'GNATMAKE_FOR_BUILD=$(GNATMAKE_FOR_BUILD)' \
+ 	'LD=$(COMPILER_LD_FOR_TARGET)' \
+ 	'LDFLAGS=$$(LDFLAGS_FOR_TARGET)' \
+ 	'LIBCFLAGS=$$(LIBCFLAGS_FOR_TARGET)' \
+--- a/src/configure.ac
++++ b/src/configure.ac
+@@ -1453,6 +1453,7 @@ if test "${build}" != "${host}" ; then
+   GFORTRAN_FOR_BUILD=${GFORTRAN_FOR_BUILD-gfortran}
+   GOC_FOR_BUILD=${GOC_FOR_BUILD-gccgo}
+   GDC_FOR_BUILD=${GDC_FOR_BUILD-gdc}
++  GNATMAKE_FOR_BUILD=${GNATMAKE_FOR_BUILD-gnatmake}
+   DLLTOOL_FOR_BUILD=${DLLTOOL_FOR_BUILD-dlltool}
+   LD_FOR_BUILD=${LD_FOR_BUILD-ld}
+   NM_FOR_BUILD=${NM_FOR_BUILD-nm}
+@@ -1468,6 +1469,7 @@ else
+   GFORTRAN_FOR_BUILD="\$(GFORTRAN)"
+   GOC_FOR_BUILD="\$(GOC)"
+   GDC_FOR_BUILD="\$(GDC)"
++  GNATMAKE_FOR_BUILD="\$(GNATMAKE)"
+   DLLTOOL_FOR_BUILD="\$(DLLTOOL)"
+   LD_FOR_BUILD="\$(LD)"
+   NM_FOR_BUILD="\$(NM)"
+@@ -3910,6 +3912,7 @@ AC_SUBST(DSYMUTIL_FOR_BUILD)
+ AC_SUBST(GFORTRAN_FOR_BUILD)
+ AC_SUBST(GOC_FOR_BUILD)
+ AC_SUBST(GDC_FOR_BUILD)
++AC_SUBST(GNATMAKE_FOR_BUILD)
+ AC_SUBST(LDFLAGS_FOR_BUILD)
+ AC_SUBST(LD_FOR_BUILD)
+ AC_SUBST(NM_FOR_BUILD)
+--- a/src/gcc/ada/Make-generated.in
++++ b/src/gcc/ada/Make-generated.in
+@@ -18,7 +18,7 @@ GEN_IL_FLAGS = -gnata -gnat2012 -gnatw.g
+ ada/seinfo_tables.ads ada/seinfo_tables.adb ada/sinfo.h ada/einfo.h ada/nmake.ads ada/nmake.adb ada/seinfo.ads ada/sinfo-nodes.ads ada/sinfo-nodes.adb ada/einfo-entities.ads ada/einfo-entities.adb: ada/stamp-gen_il ; @true
+ ada/stamp-gen_il: $(fsrcdir)/ada/gen_il*
+ 	$(MKDIR) ada/gen_il
+-	cd ada/gen_il; gnatmake -g $(GEN_IL_FLAGS) gen_il-main
++	cd ada/gen_il; $(GNATMAKE_FOR_BUILD) -g $(GEN_IL_FLAGS) gen_il-main
+ 	# Ignore errors to work around finalization issues in older compilers
+ 	- cd ada/gen_il; ./gen_il-main
+ 	$(fsrcdir)/../move-if-change ada/gen_il/seinfo_tables.ads ada/seinfo_tables.ads
+@@ -39,14 +39,14 @@ ada/stamp-gen_il: $(fsrcdir)/ada/gen_il*
+ # would cause bootstrapping with older compilers to fail. You can call it by
+ # hand, as a sanity check that these files are legal.
+ ada/seinfo_tables.o: ada/seinfo_tables.ads ada/seinfo_tables.adb
+-	cd ada ; gnatmake $(GEN_IL_INCLUDES) seinfo_tables.adb -gnatU -gnatX
++	cd ada ; $(GNATMAKE_FOR_BUILD) $(GEN_IL_INCLUDES) seinfo_tables.adb -gnatU -gnatX
+ 
+ ada/snames.h ada/snames.ads ada/snames.adb : ada/stamp-snames ; @true
+ ada/stamp-snames : ada/snames.ads-tmpl ada/snames.adb-tmpl ada/snames.h-tmpl ada/xsnamest.adb ada/xutil.ads ada/xutil.adb
+ 	-$(MKDIR) ada/bldtools/snamest
+ 	$(RM) $(addprefix ada/bldtools/snamest/,$(notdir $^))
+ 	$(CP) $^ ada/bldtools/snamest
+-	cd ada/bldtools/snamest && gnatmake xsnamest && ./xsnamest
++	cd ada/bldtools/snamest && $(GNATMAKE_FOR_BUILD) xsnamest && ./xsnamest
+ 	$(fsrcdir)/../move-if-change ada/bldtools/snamest/snames.ns ada/snames.ads
+ 	$(fsrcdir)/../move-if-change ada/bldtools/snamest/snames.nb ada/snames.adb
+ 	$(fsrcdir)/../move-if-change ada/bldtools/snamest/snames.nh ada/snames.h
+--- a/src/gcc/ada/gcc-interface/Makefile.in
++++ b/src/gcc/ada/gcc-interface/Makefile.in
+@@ -648,7 +648,7 @@ OSCONS_EXTRACT=$(GCC_FOR_ADA_RTS) $(GNAT
+ 	-$(MKDIR) ./bldtools/oscons
+ 	$(RM) $(addprefix ./bldtools/oscons/,$(notdir $^))
+ 	$(CP) $^ ./bldtools/oscons
+-	(cd ./bldtools/oscons ; gnatmake xoscons)
++	(cd ./bldtools/oscons ; $(GNATMAKE_FOR_BUILD) xoscons)
+ 
+ $(RTSDIR)/s-oscons.ads: ../stamp-gnatlib1-$(RTSDIR) s-oscons-tmplt.c gsocket.h ./bldtools/oscons/xoscons
+ 	$(RM) $(RTSDIR)/s-oscons-tmplt.i $(RTSDIR)/s-oscons-tmplt.s
+--- a/src/gnattools/Makefile.in
++++ b/src/gnattools/Makefile.in
+@@ -33,7 +33,8 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
+ # Nonstandard autoconf-set variables.
+ LN_S=@LN_S@
+ target_noncanonical=@target_noncanonical@
+-host_noncanonical=@host_noncanonical@
++GNATMAKE=@GNATMAKE@
++GNATBIND=@GNATBIND@
+ 
+ # Variables for the user (or the top level) to override.
+ exeext = @EXEEXT@
+@@ -122,17 +123,11 @@ TOOLS_FLAGS_TO_PASS_RE= \
+ 	"TOOLSCASE=cross"
+ 
+ # Variables for gnattools, cross
+-ifeq ($(build), $(host))
+-  GNATMAKE_FOR_HOST=gnatmake
+-  GNATLINK_FOR_HOST=gnatlink
+-  GNATBIND_FOR_HOST=gnatbind
+-  GNATLS_FOR_HOST=gnatls
+-else
+-  GNATMAKE_FOR_HOST=$(host_noncanonical)-gnatmake
+-  GNATLINK_FOR_HOST=$(host_noncanonical)-gnatlink
+-  GNATBIND_FOR_HOST=$(host_noncanonical)-gnatbind
+-  GNATLS_FOR_HOST=$(host_noncanonical)-gnatls
+-endif
++# See configure.ac for what "cross" means here.
++GNATMAKE_FOR_HOST=$(GNATMAKE)
++GNATLINK_FOR_HOST=$(subst gnatmake,gnatlink,$(GNATMAKE))
++GNATBIND_FOR_HOST=$(GNATBIND)
++GNATLS_FOR_HOST=$(subst gnatmake,gnatls,$(GNATMAKE))
+ 
+ # Put the host RTS dir first in the PATH to hide the default runtime
+ # files that are among the sources
+--- a/src/gnattools/configure.ac
++++ b/src/gnattools/configure.ac
+@@ -45,7 +45,7 @@ AC_CANONICAL_BUILD
+ AC_CANONICAL_HOST
+ AC_CANONICAL_TARGET
+ 
+-ACX_NONCANONICAL_HOST
++ACX_PROG_GNAT
+ ACX_NONCANONICAL_TARGET
+ 
+ # Need to pass this down for now :-P

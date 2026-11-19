@@ -1,0 +1,6 @@
+sources:
+    - file: libzstd_1.5.7+dfsg.orig.tar.xz
+      sha256: 0c092ef267edce57ba7f3f2645c861f72eaf5e76273c6c3632869423464b90a5
+      urls:
+        - https://deb.debian.org/debian/pool/main/libz/libzstd/libzstd_1.5.7+dfsg.orig.tar.xz
+        - https://snapshot.debian.org/file/232037627d9d8bd80033e4316bdb62f737c9968f/libzstd_1.5.7+dfsg.orig.tar.xz

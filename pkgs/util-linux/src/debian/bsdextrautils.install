@@ -1,0 +1,25 @@
+#!/usr/bin/dh-exec
+usr/bin/col
+usr/bin/colcrt
+usr/bin/colrm
+usr/bin/column
+usr/bin/hexdump
+usr/bin/look
+usr/bin/ul
+usr/bin/rev
+<!nodoc> usr/share/man/man1/col.1
+<!nodoc> usr/share/man/man1/colcrt.1
+<!nodoc> usr/share/man/man1/colrm.1
+<!nodoc> usr/share/man/man1/column.1
+<!nodoc> usr/share/man/man1/hexdump.1
+<!nodoc> usr/share/man/man1/look.1
+<!nodoc> usr/share/man/man1/ul.1
+<!nodoc> usr/share/man/man1/rev.1
+usr/share/bash-completion/completions/col
+usr/share/bash-completion/completions/colcrt
+usr/share/bash-completion/completions/colrm
+usr/share/bash-completion/completions/column
+usr/share/bash-completion/completions/hexdump
+usr/share/bash-completion/completions/look
+usr/share/bash-completion/completions/rev
+usr/share/bash-completion/completions/ul

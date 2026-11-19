@@ -1,0 +1,328 @@
+#!/usr/bin/python3
+"""gpt-ext4 assembly script.
+
+Builds a GPT disk image carrying a FAT32 EFI System Partition followed by a
+minimized, reproducible ext4 root partition.
+
+Usage (the contract glbx invokes):
+    build <rootfs-tarball> <output-disk-image>
+
+The `initrd` image input (at $GLBX_INPUTS_DIR/initrd) is placed on the ESP next
+to the kernel. The loader entry (root by partition UUID) and the ESP mount unit
+(ESP by partition UUID, mounted at /boot/efi) are written here, where those
+partition UUIDs are known.
+
+Every identifier a tool would otherwise randomize is derived from the image's
+content identity (GLBX_IMAGE_ID, set by glbx), so the disk is a pure function of
+the rootfs tarball. Timestamps are pinned to the Unix epoch.
+"""
+
+import hashlib
+import os
+import subprocess
+import sys
+import tempfile
+
+MIB = 1024 * 1024
+
+# Well-known, fixed GPT partition type GUIDs.
+ESP_TYPE_GUID = "c12a7328-f81f-11d2-ba4b-00a0c93ec93b"
+# Root partition type GUID per the Discoverable Partitions Spec — architecture
+# dependent, so systemd-gpt-auto-generator mounts the right partition as root.
+# Keyed by the dpkg/Debian architecture glbx targets (GLBX_ARCH).
+ROOT_TYPE_GUID_BY_ARCH = {
+    "amd64": "4f68bce3-e8cd-4db1-96e7-fbcaf984b709",  # x86-64
+    "arm64": "b921b045-1df0-41c3-af44-4c6f280d3fae",  # aarch64
+}
+# Fallback: the x86-64 GUID, preserving the historical default for any arch not
+# listed above (so behaviour on amd64 is unchanged).
+DEFAULT_ROOT_TYPE_GUID = ROOT_TYPE_GUID_BY_ARCH["amd64"]
+
+# Fixed size of the EFI System Partition, in MiB.
+ESP_SIZE_MIB = 256
+
+# Slack left in the root filesystem after minimizing, in MiB.
+SIZE_PADDING_MIB = 16
+
+
+def run(*argv, capture=False, stdin=None, env=None):
+    """Run a command, failing hard on non-zero exit. Returns stdout if captured."""
+    result = subprocess.run(
+        argv,
+        check=True,
+        input=stdin,
+        stdout=subprocess.PIPE if capture else None,
+        text=True,
+        env=env,
+    )
+    return result.stdout if capture else None
+
+
+def uuid_hash(seed):
+    """Derive a reproducible UUID from a seed string via SHA-256."""
+    h = hashlib.sha256(seed.encode()).hexdigest()
+    return f"{h[0:8]}-{h[8:12]}-{h[12:16]}-{h[16:20]}-{h[20:32]}"
+
+
+def ceil_mib(num_bytes):
+    """Round a byte count up to whole MiB."""
+    return (num_bytes + MIB - 1) // MIB
+
+
+def file_size(path):
+    return os.path.getsize(path)
+
+
+# --- tool wrappers -----------------------------------------------------------
+
+
+def dir_size(path):
+    """Total apparent size of a directory tree, in bytes (du -sb)."""
+    out = run("du", "-sb", path, capture=True)
+    return int(out.split()[0])
+
+
+def extract_tarball(tarball, dest):
+    run("tar", "-xf", tarball, "-C", dest)
+
+
+def make_esp(image, source_dir):
+    """Create a reproducible FAT32 EFI System Partition populated from source_dir.
+
+    mkfat32 formats the pre-sized image in place; its volume serial is zeroed and
+    every directory-entry timestamp is pinned by MKFAT32_FAKE_TIME, so the output
+    is a pure function of source_dir.
+    """
+    truncate(image, ESP_SIZE_MIB)
+    env = dict(os.environ, MKFAT32_FAKE_TIME="0")
+    run("mkfat32", "-d", source_dir, image, env=env)
+
+
+def make_ext4(image, source_dir, size_mib, *, fs_uuid, hash_seed):
+    """Create a reproducible ext4 filesystem populated from source_dir."""
+    run(
+        "mke2fs", "-q", "-F", "-t", "ext4", "-b", "4096", "-I", "256",
+        "-L", "ROOT",
+        "-U", fs_uuid,
+        "-E", f"hash_seed={hash_seed},hash_sign=unsigned",
+        "-d", source_dir,
+        image, f"{size_mib}M",
+    )
+
+
+def shrink_ext4(image):
+    """Shrink the filesystem to its minimum."""
+    run("resize2fs", "-M", image)
+
+
+def grow_ext4(image, size_mib):
+    """Grow the filesystem (and the backing file) to an exact MiB size."""
+    truncate(image, size_mib)
+    run("resize2fs", image, f"{size_mib}M")
+
+
+def truncate(path, size_mib):
+    run("truncate", "-s", f"{size_mib}M", path)
+
+
+def write_gpt(disk, *, disk_uuid, partitions):
+    """Write a GPT table laying out partitions in order from a pinned layout."""
+    lines = [
+        "label: gpt",
+        f"label-id: {disk_uuid}",
+    ]
+    for part in partitions:
+        lines.append(
+            f"uuid={part['uuid']};type={part['type']};"
+            f"size={part['size_mib']}MiB;name={part['name']}"
+        )
+    run("sfdisk", disk, stdin="\n".join(lines) + "\n")
+
+
+def partition_extent(disk, part_uuid):
+    """Return the (byte offset, byte length) of a partition in the disk."""
+    dump = run("sfdisk", "-d", disk, capture=True)
+    sector_size = 512
+    entry = None
+    for line in dump.splitlines():
+        if line.startswith("sector-size:"):
+            sector_size = int(line.split(":")[1])
+        if f"uuid={part_uuid}".lower() in line.lower():
+            entry = line
+    if entry is None:
+        sys.exit(f"partition {part_uuid} not found in GPT table")
+    fields = dict(
+        kv.strip().split("=", 1)
+        for kv in entry.split(":", 1)[1].split(",")
+        if "=" in kv
+    )
+    start = int(fields["start"])
+    sectors = int(fields["size"])
+    return start * sector_size, sectors * sector_size
+
+
+def place_partition(src, disk, offset, length):
+    """Copy a partition image into the disk at a byte offset, sparsely."""
+    run(
+        "mv_data",
+        "--input", src,
+        "--output", disk,
+        "--output-offset", str(offset),
+        "--length", str(length),
+    )
+
+
+def write_loader(boot_dir, *, root_part_uuid):
+    """Write the systemd-boot loader config and the single boot entry.
+
+    The entry selects the root filesystem by partition UUID (deterministically
+    derived here), not by filesystem label or partlabel.
+    """
+    loader = os.path.join(boot_dir, "loader")
+    entries = os.path.join(loader, "entries")
+    os.makedirs(entries, exist_ok=True)
+    with open(os.path.join(loader, "loader.conf"), "w") as f:
+        f.write("timeout 0\n")
+    with open(os.path.join(entries, "default.conf"), "w") as f:
+        f.write(
+            "title   default\n"
+            "linux   /vmlinuz\n"
+            "initrd  /initrd\n"
+            f"options console=ttyS0 loglevel=7 root=PARTUUID={root_part_uuid} rw systemd.gpt_auto=0\n"
+        )
+
+
+def write_boot_mount(rootfs_dir, *, esp_part_uuid):
+    """Write the unit that mounts the ESP at /boot/efi, keyed by partition UUID."""
+    unit_dir = os.path.join(rootfs_dir, "usr/lib/systemd/system")
+    os.makedirs(unit_dir, exist_ok=True)
+    with open(os.path.join(unit_dir, "boot-efi.mount"), "w") as f:
+        f.write(
+            "[Unit]\n"
+            "Description=EFI System Partition\n\n"
+            "[Mount]\n"
+            f"What=/dev/disk/by-partuuid/{esp_part_uuid}\n"
+            "Where=/boot/efi\n"
+            "Type=vfat\n"
+            "Options=dmask=0022,fmask=0133\n\n"
+            "[Install]\n"
+            "WantedBy=local-fs.target\n"
+        )
+    wants = os.path.join(unit_dir, "local-fs.target.wants")
+    os.makedirs(wants, exist_ok=True)
+    link = os.path.join(wants, "boot-efi.mount")
+    if not os.path.lexists(link):
+        os.symlink("../boot-efi.mount", link)
+
+
+# --- main --------------------------------------------------------------------
+
+
+
+def main():
+    rootfs_tarball, out = sys.argv[1], sys.argv[2]
+
+    image_id = os.environ.get("GLBX_IMAGE_ID")
+    if not image_id:
+        sys.exit("GLBX_IMAGE_ID must be set by glbx")
+
+    # The root partition type GUID is architecture dependent (Discoverable
+    # Partitions Spec). glbx passes the target arch in GLBX_ARCH; fall back to the
+    # x86-64 GUID when it is absent or unknown so older glbx / unlisted arches
+    # keep the previous behaviour.
+    arch = os.environ.get("GLBX_ARCH", "")
+    root_type_guid = ROOT_TYPE_GUID_BY_ARCH.get(arch, DEFAULT_ROOT_TYPE_GUID)
+
+    # All on-disk identifiers derive from the image identity; timestamps are 0.
+    os.environ["SOURCE_DATE_EPOCH"] = "0"
+    fs_uuid = uuid_hash(f"{image_id}:fs_uuid")
+    hash_seed = uuid_hash(f"{image_id}:hash_seed")
+    disk_uuid = uuid_hash(f"{image_id}:disk_uuid")
+    esp_part_uuid = uuid_hash(f"{image_id}:part_uuid:esp")
+    root_part_uuid = uuid_hash(f"{image_id}:part_uuid:root")
+
+    workdir = tempfile.mkdtemp()
+    # A tmpfs workspace keeps the (large) extracted tree and the partition images
+    # off any backing disk and gives a clean mount to tear down at the end.
+    run("mount", "-t", "tmpfs", "-o", "size=4G", "tmpfs", workdir)
+
+    rootfs_dir = os.path.join(workdir, "rootfs")
+    os.makedirs(rootfs_dir)
+    extract_tarball(rootfs_tarball, rootfs_dir)
+
+    # Split the boot tree (systemd-boot loader + kernel, placed by the rootfs
+    # conf.d scripts) out of the root filesystem: it becomes the FAT32 ESP, and
+    # the ext4 root is built from everything that remains.
+    boot_dir = os.path.join(workdir, "boot")
+    rootfs_boot = os.path.join(rootfs_dir, "boot")
+    if not os.path.isdir(rootfs_boot):
+        sys.exit("rootfs has no /boot tree — expected the conf.d scripts to populate it")
+    run("mv", rootfs_boot, boot_dir)
+    # Leave an empty /boot behind with an empty /boot/efi mount point, where the
+    # boot-efi.mount unit mounts the ESP at runtime. The ESP itself carries no
+    # efi/ directory, so drop the one that rode along in the split.
+    os.makedirs(os.path.join(rootfs_boot, "efi"))
+    efi_on_esp = os.path.join(boot_dir, "efi")
+    if os.path.isdir(efi_on_esp):
+        os.rmdir(efi_on_esp)
+
+    # Place the initrd (an image input) onto the boot tree alongside the kernel.
+    inputs_dir = os.environ.get("GLBX_INPUTS_DIR")
+    if not inputs_dir:
+        sys.exit("GLBX_INPUTS_DIR must be set by glbx")
+    run("cp", os.path.join(inputs_dir, "initrd"), os.path.join(boot_dir, "initrd"))
+
+    # Write the loader entry (root by partition UUID) onto the ESP tree and the
+    # ESP mount unit into the root filesystem — both keyed by the deterministic
+    # partition UUIDs computed above.
+    write_loader(boot_dir, root_part_uuid=root_part_uuid)
+    write_boot_mount(rootfs_dir, esp_part_uuid=esp_part_uuid)
+
+    # Build the ESP from the real boot tree.
+    esp = os.path.join(workdir, "esp.img")
+    make_esp(esp, boot_dir)
+
+    # Build the ext4 root (now without /boot), generously sized, then shrink it to
+    # the minimum and pad.
+    root = os.path.join(workdir, "root.img")
+    initial_mib = ceil_mib(dir_size(rootfs_dir)) + 128
+    make_ext4(root, rootfs_dir, initial_mib, fs_uuid=fs_uuid, hash_seed=hash_seed)
+    shrink_ext4(root)
+    grow_ext4(root, ceil_mib(file_size(root)) + SIZE_PADDING_MIB)
+
+    esp_mib = ceil_mib(file_size(esp))
+    root_mib = ceil_mib(file_size(root))
+
+    # The GPT disk holds both partitions plus 2 MiB of GPT overhead.
+    truncate(out, esp_mib + root_mib + 2)
+    write_gpt(
+        out,
+        disk_uuid=disk_uuid,
+        partitions=[
+            {
+                "uuid": esp_part_uuid,
+                "type": ESP_TYPE_GUID,
+                "size_mib": esp_mib,
+                "name": "BOOT",
+            },
+            {
+                "uuid": root_part_uuid,
+                "type": root_type_guid,
+                "size_mib": root_mib,
+                "name": "ROOT",
+            },
+        ],
+    )
+
+    # Copy each partition image into the slot the GPT table assigned it.
+    for part_image, part_uuid in ((esp, esp_part_uuid), (root, root_part_uuid)):
+        offset, length = partition_extent(out, part_uuid)
+        place_partition(part_image, out, offset, length)
+
+    os.remove(esp)
+    os.remove(root)
+    subprocess.run(["umount", workdir], check=False)
+
+
+if __name__ == "__main__":
+    main()

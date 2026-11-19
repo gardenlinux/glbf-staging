@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -eux
+
+cd "$AUTOPKGTEST_TMP"
+cat <<EOF > libselinux.c
+#include <selinux/selinux.h>
+
+int main(void)
+{
+    is_selinux_enabled();
+    return 0;
+}
+EOF
+
+gcc -o libselinux-test libselinux.c $(pkg-config --cflags --libs libselinux)
+echo "build (libselinux): OK"
+
+./libselinux-test
+echo "run (libselinux): OK"

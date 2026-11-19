@@ -1,0 +1,5 @@
+# Upstream patches
+
+# Local patches
+local/0001-build-Use-LDLIBS-instead-of-LDFLAGS-for-example-Make.patch
+local/0002-Fix-usage-of-uninitialized-variable.patch

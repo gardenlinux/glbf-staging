@@ -1,0 +1,43 @@
+#!/bin/sh
+
+set -e
+
+WORKDIR=$(mktemp -d)
+trap "rm -rf $WORKDIR" 0 INT QUIT ABRT PIPE TERM
+
+# build the tests, but do not run them
+export DEB_BUILD_OPTIONS="nocheck $DEB_BUILD_OPTIONS"
+dpkg-buildpackage --no-sign --rules-target build
+cd build-deb1
+make test-programs
+
+# copy the built tests (not the libtool wrappers)
+cp -a test/.libs/* $WORKDIR
+
+cd $WORKDIR
+errs=
+
+for t in *; do
+  echo "========== Running test $t =========="
+  if [ -x ./$t ]; then
+    rc=
+    ./$t || rc=$?
+    if [ -z "$rc" ]; then
+      echo "========== OK $t =========="
+    elif [ $rc -eq 77 ]; then
+      echo "========== IGNORE $t =========="
+    else
+      echo "========== FAIL $t =========="
+      errs="$errs $t"
+    fi
+  fi
+done
+
+if [ -n "$errs" ]; then
+  echo "Testsuite failed ($errs)"
+  exit 1
+else
+  echo "Testsuite passed"
+  exit 0
+fi
+

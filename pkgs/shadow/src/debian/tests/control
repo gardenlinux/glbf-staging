@@ -1,0 +1,19 @@
+Tests:
+ smoke,
+Restrictions:
+ needs-root,
+ superficial,
+
+Tests:
+ upstream,
+Depends:
+ expect,
+ procps,
+ @,
+ @builddeps@,
+Restrictions:
+ allow-stderr,
+ breaks-testbed,
+ build-needed,
+ isolation-machine,
+ needs-root,

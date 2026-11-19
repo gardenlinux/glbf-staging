@@ -1,0 +1,8 @@
+pkg_type: debian
+build_profiles: [nocheck]
+build_options: [nocheck]
+runtime_depends:
+  libprotobuf-c-dev: [protobuf-c:libprotobuf-c1]
+lockfile_deps:
+  libprotobuf-c1: [libc6]
+  libprotobuf-c-dev: [libc6]

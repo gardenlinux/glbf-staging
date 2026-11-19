@@ -1,0 +1,15 @@
+Source: mkfat32
+Section: admin
+Priority: optional
+Maintainer: Garden Linux <contact@gardenlinux.io>
+Standards-Version: 4.7.2
+Build-Depends: debhelper-compat (= 13), golang
+Rules-Requires-Root: no
+
+Package: mkfat32
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: reproducible FAT32 filesystem creator for disk image assembly
+ Formats a pre-allocated image file as a FAT32 filesystem, optionally populated
+ from a directory tree, producing byte-identical output across runs so an ESP
+ can be assembled deterministically.

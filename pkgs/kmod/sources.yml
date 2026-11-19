@@ -1,0 +1,6 @@
+sources:
+    - file: kmod_34.3.orig.tar.xz
+      sha256: 21768efd014d5569b5aac349c40c64047a6d804ccff7f338328f3326dbe4a1f7
+      urls:
+        - https://deb.debian.org/debian/pool/main/k/kmod/kmod_34.3.orig.tar.xz
+        - https://snapshot.debian.org/file/c933ec9414820308cff38908cb7dc015250bb630/kmod_34.3.orig.tar.xz

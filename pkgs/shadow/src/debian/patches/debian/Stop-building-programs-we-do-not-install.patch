@@ -1,0 +1,512 @@
+From: Chris Hofstaedtler <zeha@debian.org>
+Date: Tue, 6 Aug 2024 00:27:13 +0200
+Subject: Stop building programs we do not install
+
+---
+ man/Makefile.am       | 13 -------------
+ man/cs/Makefile.am    |  4 ----
+ man/da/Makefile.am    |  2 --
+ man/de/Makefile.am    |  8 --------
+ man/fr/Makefile.am    |  8 --------
+ man/hu/Makefile.am    |  3 ---
+ man/id/Makefile.am    |  1 -
+ man/it/Makefile.am    |  8 --------
+ man/ja/Makefile.am    |  7 -------
+ man/ko/Makefile.am    |  2 --
+ man/pl/Makefile.am    |  4 ----
+ man/ru/Makefile.am    |  7 -------
+ man/sv/Makefile.am    |  6 ------
+ man/tr/Makefile.am    |  2 --
+ man/uk/Makefile.am    |  7 -------
+ man/zh_CN/Makefile.am |  8 --------
+ man/zh_TW/Makefile.am |  2 --
+ src/Makefile.am       |  6 +++---
+ 18 files changed, 3 insertions(+), 95 deletions(-)
+
+diff --git a/man/Makefile.am b/man/Makefile.am
+index 19cd4e9..04d2340 100644
+--- a/man/Makefile.am
++++ b/man/Makefile.am
+@@ -12,8 +12,6 @@ man_MANS = \
+ 	man8/chgpasswd.8 \
+ 	man8/chpasswd.8 \
+ 	man1/chsh.1 \
+-	man5/faillog.5 \
+-	man8/faillog.8 \
+ 	man3/getspnam.3 \
+ 	man1/gpasswd.1 \
+ 	man8/groupadd.8 \
+@@ -23,18 +21,14 @@ man_MANS = \
+ 	man8/grpconv.8 \
+ 	man8/grpunconv.8 \
+ 	man5/gshadow.5 \
+-	man1/login.1 \
+ 	man5/login.defs.5 \
+-	man1/newgrp.1 \
+ 	man8/newusers.8 \
+-	man8/nologin.8 \
+ 	man1/passwd.1 \
+ 	man5/passwd.5 \
+ 	man8/pwck.8 \
+ 	man8/pwconv.8 \
+ 	man8/pwunconv.8 \
+ 	man8/shadowconfig.8 \
+-	man1/sg.1 \
+ 	man3/shadow.3 \
+ 	man5/shadow.5 \
+ 	man8/useradd.8 \
+@@ -78,8 +72,6 @@ man_XMANS = \
+ 	chgpasswd.8.xml \
+ 	chpasswd.8.xml \
+ 	chsh.1.xml \
+-	faillog.5.xml \
+-	faillog.8.xml \
+ 	getsubids.1.xml \
+ 	gpasswd.1.xml \
+ 	groupadd.8.xml \
+@@ -92,10 +84,8 @@ man_XMANS = \
+ 	login.access.5.xml \
+ 	login.defs.5.xml \
+ 	newgidmap.1.xml \
+-	newgrp.1.xml \
+ 	newuidmap.1.xml \
+ 	newusers.8.xml \
+-	nologin.8.xml \
+ 	passwd.1.xml \
+ 	passwd.5.xml \
+ 	porttime.5.xml \
+@@ -103,9 +93,6 @@ man_XMANS = \
+ 	pwconv.8.xml \
+ 	shadow.3.xml \
+ 	shadow.5.xml \
+-	sg.1.xml \
+-	su.1.xml \
+-	suauth.5.xml \
+ 	subgid.5.xml \
+ 	subuid.5.xml \
+ 	useradd.8.xml \
+diff --git a/man/cs/Makefile.am b/man/cs/Makefile.am
+index e010029..be9aa66 100644
+--- a/man/cs/Makefile.am
++++ b/man/cs/Makefile.am
+@@ -2,18 +2,14 @@
+ mandir = @mandir@/cs
+ 
+ man_MANS = \
+-	man5/faillog.5 \
+-	man8/faillog.8 \
+ 	man1/gpasswd.1 \
+ 	man8/groupadd.8 \
+ 	man8/groupdel.8 \
+ 	man8/groupmod.8 \
+ 	man8/grpck.8 \
+ 	man5/gshadow.5 \
+-	man8/nologin.8 \
+ 	man5/passwd.5 \
+ 	man5/shadow.5 \
+-	man1/su.1 \
+ 	man8/vipw.8
+ 
+ if ENABLE_LASTLOG
+diff --git a/man/da/Makefile.am b/man/da/Makefile.am
+index 0c85972..12234cb 100644
+--- a/man/da/Makefile.am
++++ b/man/da/Makefile.am
+@@ -7,8 +7,6 @@ man_MANS = \
+ 	man8/groupdel.8 \
+ 	man5/gshadow.5 \
+ 	man1/newgrp.1 \
+-	man8/nologin.8 \
+-	man1/sg.1 \
+ 	man8/vigr.8 \
+ 	man8/vipw.8
+ 
+diff --git a/man/de/Makefile.am b/man/de/Makefile.am
+index edb3a15..a1d2c19 100644
+--- a/man/de/Makefile.am
++++ b/man/de/Makefile.am
+@@ -7,8 +7,6 @@ man_MANS = \
+ 	man8/chgpasswd.8 \
+ 	man8/chpasswd.8 \
+ 	man1/chsh.1 \
+-	man5/faillog.5 \
+-	man8/faillog.8 \
+ 	man3/getspnam.3 \
+ 	man1/gpasswd.1 \
+ 	man8/groupadd.8 \
+@@ -18,21 +16,15 @@ man_MANS = \
+ 	man8/grpconv.8 \
+ 	man8/grpunconv.8 \
+ 	man5/gshadow.5 \
+-	man1/login.1 \
+ 	man5/login.defs.5 \
+-	man1/newgrp.1 \
+ 	man8/newusers.8 \
+-	man8/nologin.8 \
+ 	man1/passwd.1 \
+ 	man5/passwd.5 \
+ 	man8/pwck.8 \
+ 	man8/pwconv.8 \
+ 	man8/pwunconv.8 \
+-	man1/sg.1 \
+ 	man3/shadow.3 \
+ 	man5/shadow.5 \
+-	man1/su.1 \
+-	man5/suauth.5 \
+ 	man8/useradd.8 \
+ 	man8/userdel.8 \
+ 	man8/usermod.8 \
+diff --git a/man/fr/Makefile.am b/man/fr/Makefile.am
+index b030fc6..fbbfeb6 100644
+--- a/man/fr/Makefile.am
++++ b/man/fr/Makefile.am
+@@ -7,8 +7,6 @@ man_MANS = \
+ 	man8/chgpasswd.8 \
+ 	man8/chpasswd.8 \
+ 	man1/chsh.1 \
+-	man5/faillog.5 \
+-	man8/faillog.8 \
+ 	man3/getspnam.3 \
+ 	man1/gpasswd.1 \
+ 	man8/groupadd.8 \
+@@ -18,21 +16,15 @@ man_MANS = \
+ 	man8/grpconv.8 \
+ 	man8/grpunconv.8 \
+ 	man5/gshadow.5 \
+-	man1/login.1 \
+ 	man5/login.defs.5 \
+-	man1/newgrp.1 \
+ 	man8/newusers.8 \
+-	man8/nologin.8 \
+ 	man1/passwd.1 \
+ 	man5/passwd.5 \
+ 	man8/pwck.8 \
+ 	man8/pwconv.8 \
+ 	man8/pwunconv.8 \
+-	man1/sg.1 \
+ 	man3/shadow.3 \
+ 	man5/shadow.5 \
+-	man1/su.1 \
+-	man5/suauth.5 \
+ 	man8/useradd.8 \
+ 	man8/userdel.8 \
+ 	man8/usermod.8 \
+diff --git a/man/hu/Makefile.am b/man/hu/Makefile.am
+index 6bf68e8..2930da3 100644
+--- a/man/hu/Makefile.am
++++ b/man/hu/Makefile.am
+@@ -4,11 +4,8 @@ mandir = @mandir@/hu
+ man_MANS = \
+ 	man1/chsh.1 \
+ 	man1/gpasswd.1 \
+-	man1/login.1 \
+-	man1/newgrp.1 \
+ 	man1/passwd.1 \
+ 	man5/passwd.5 \
+-	man1/sg.1 \
+ 	man1/su.1
+ 
+ if ENABLE_LASTLOG
+diff --git a/man/id/Makefile.am b/man/id/Makefile.am
+index 21f3dbe..566fa8b 100644
+--- a/man/id/Makefile.am
++++ b/man/id/Makefile.am
+@@ -3,7 +3,6 @@ mandir = @mandir@/id
+ 
+ man_MANS = \
+ 	man1/chsh.1 \
+-	man1/login.1 \
+ 	man8/useradd.8
+ 
+ EXTRA_DIST = $(man_MANS)
+diff --git a/man/it/Makefile.am b/man/it/Makefile.am
+index 4c2adb2..87ca337 100644
+--- a/man/it/Makefile.am
++++ b/man/it/Makefile.am
+@@ -7,8 +7,6 @@ man_MANS = \
+ 	man8/chgpasswd.8 \
+ 	man8/chpasswd.8 \
+ 	man1/chsh.1 \
+-	man5/faillog.5 \
+-	man8/faillog.8 \
+ 	man3/getspnam.3 \
+ 	man1/gpasswd.1 \
+ 	man8/groupadd.8 \
+@@ -18,21 +16,15 @@ man_MANS = \
+ 	man8/grpconv.8 \
+ 	man8/grpunconv.8 \
+ 	man5/gshadow.5 \
+-	man1/login.1 \
+ 	man5/login.defs.5 \
+-	man1/newgrp.1 \
+ 	man8/newusers.8 \
+-	man8/nologin.8 \
+ 	man1/passwd.1 \
+ 	man5/passwd.5 \
+ 	man8/pwck.8 \
+ 	man8/pwconv.8 \
+ 	man8/pwunconv.8 \
+-	man1/sg.1 \
+ 	man3/shadow.3 \
+ 	man5/shadow.5 \
+-	man1/su.1 \
+-	man5/suauth.5 \
+ 	man8/useradd.8 \
+ 	man8/userdel.8 \
+ 	man8/usermod.8 \
+diff --git a/man/ja/Makefile.am b/man/ja/Makefile.am
+index 26c3c0c..9800aec 100644
+--- a/man/ja/Makefile.am
++++ b/man/ja/Makefile.am
+@@ -6,8 +6,6 @@ man_MANS = \
+ 	man1/chfn.1 \
+ 	man8/chpasswd.8 \
+ 	man1/chsh.1 \
+-	man5/faillog.5 \
+-	man8/faillog.8 \
+ 	man1/gpasswd.1 \
+ 	man8/groupadd.8 \
+ 	man8/groupdel.8 \
+@@ -15,19 +13,14 @@ man_MANS = \
+ 	man8/grpck.8 \
+ 	man8/grpconv.8 \
+ 	man8/grpunconv.8 \
+-	man1/login.1 \
+ 	man5/login.defs.5 \
+-	man1/newgrp.1 \
+ 	man8/newusers.8 \
+ 	man1/passwd.1 \
+ 	man5/passwd.5 \
+ 	man8/pwck.8 \
+ 	man8/pwconv.8 \
+ 	man8/pwunconv.8 \
+-	man1/sg.1 \
+ 	man5/shadow.5 \
+-	man1/su.1 \
+-	man5/suauth.5 \
+ 	man8/useradd.8 \
+ 	man8/userdel.8 \
+ 	man8/usermod.8 \
+diff --git a/man/ko/Makefile.am b/man/ko/Makefile.am
+index 4f73651..0f17a17 100644
+--- a/man/ko/Makefile.am
++++ b/man/ko/Makefile.am
+@@ -4,9 +4,7 @@ mandir = @mandir@/ko
+ man_MANS = \
+ 	man1/chfn.1 \
+ 	man1/chsh.1 \
+-	man1/login.1 \
+ 	man5/passwd.5 \
+-	man1/su.1 \
+ 	man8/vigr.8 \
+ 	man8/vipw.8
+ # newgrp.1 must be updated
+diff --git a/man/pl/Makefile.am b/man/pl/Makefile.am
+index 998bbc2..bd32a25 100644
+--- a/man/pl/Makefile.am
++++ b/man/pl/Makefile.am
+@@ -5,15 +5,11 @@ mandir = @mandir@/pl
+ man_MANS = \
+ 	man1/chage.1 \
+ 	man1/chsh.1 \
+-	man5/faillog.5 \
+-	man8/faillog.8 \
+ 	man3/getspnam.3 \
+ 	man8/groupadd.8 \
+ 	man8/groupdel.8 \
+ 	man8/groupmod.8 \
+ 	man8/grpck.8 \
+-	man1/newgrp.1 \
+-	man1/sg.1 \
+ 	man3/shadow.3 \
+ 	man8/userdel.8 \
+ 	man8/usermod.8 \
+diff --git a/man/ru/Makefile.am b/man/ru/Makefile.am
+index 69c43cf..0415ddf 100644
+--- a/man/ru/Makefile.am
++++ b/man/ru/Makefile.am
+@@ -7,8 +7,6 @@ man_MANS = \
+ 	man8/chgpasswd.8 \
+ 	man8/chpasswd.8 \
+ 	man1/chsh.1 \
+-	man5/faillog.5 \
+-	man8/faillog.8 \
+ 	man3/getspnam.3 \
+ 	man1/gpasswd.1 \
+ 	man8/groupadd.8 \
+@@ -18,9 +16,7 @@ man_MANS = \
+ 	man8/grpconv.8 \
+ 	man8/grpunconv.8 \
+ 	man5/gshadow.5 \
+-	man1/login.1 \
+ 	man5/login.defs.5 \
+-	man1/newgrp.1 \
+ 	man8/newusers.8 \
+ 	man8/nologin.8 \
+ 	man1/passwd.1 \
+@@ -28,11 +24,8 @@ man_MANS = \
+ 	man8/pwck.8 \
+ 	man8/pwconv.8 \
+ 	man8/pwunconv.8 \
+-	man1/sg.1 \
+ 	man3/shadow.3 \
+ 	man5/shadow.5 \
+-	man1/su.1 \
+-	man5/suauth.5 \
+ 	man8/useradd.8 \
+ 	man8/userdel.8 \
+ 	man8/usermod.8 \
+diff --git a/man/sv/Makefile.am b/man/sv/Makefile.am
+index 6881837..5fee991 100644
+--- a/man/sv/Makefile.am
++++ b/man/sv/Makefile.am
+@@ -4,22 +4,16 @@ mandir = @mandir@/sv
+ man_MANS = \
+ 	man1/chage.1 \
+ 	man1/chsh.1 \
+-	man5/faillog.5 \
+-	man8/faillog.8 \
+ 	man3/getspnam.3 \
+ 	man8/groupadd.8 \
+ 	man8/groupdel.8 \
+ 	man8/groupmod.8 \
+ 	man8/grpck.8 \
+ 	man5/gshadow.5 \
+-	man1/newgrp.1 \
+-	man8/nologin.8 \
+ 	man1/passwd.1 \
+ 	man5/passwd.5 \
+ 	man8/pwck.8 \
+-	man1/sg.1 \
+ 	man3/shadow.3 \
+-	man5/suauth.5 \
+ 	man8/userdel.8 \
+ 	man8/vigr.8 \
+ 	man8/vipw.8
+diff --git a/man/tr/Makefile.am b/man/tr/Makefile.am
+index 8d8b916..8b2aa2d 100644
+--- a/man/tr/Makefile.am
++++ b/man/tr/Makefile.am
+@@ -6,11 +6,9 @@ man_MANS = \
+ 	man8/groupadd.8 \
+ 	man8/groupdel.8 \
+ 	man8/groupmod.8 \
+-	man1/login.1 \
+ 	man1/passwd.1 \
+ 	man5/passwd.5 \
+ 	man5/shadow.5 \
+-	man1/su.1 \
+ 	man8/useradd.8 \
+ 	man8/userdel.8 \
+ 	man8/usermod.8
+diff --git a/man/uk/Makefile.am b/man/uk/Makefile.am
+index 60b6508..68c3caf 100644
+--- a/man/uk/Makefile.am
++++ b/man/uk/Makefile.am
+@@ -7,8 +7,6 @@ man_MANS = \
+ 	man8/chgpasswd.8 \
+ 	man8/chpasswd.8 \
+ 	man1/chsh.1 \
+-	man5/faillog.5 \
+-	man8/faillog.8 \
+ 	man3/getspnam.3 \
+ 	man1/gpasswd.1 \
+ 	man8/groupadd.8 \
+@@ -18,21 +16,16 @@ man_MANS = \
+ 	man8/grpconv.8 \
+ 	man8/grpunconv.8 \
+ 	man5/gshadow.5 \
+-	man1/login.1 \
+ 	man5/login.defs.5 \
+ 	man1/newgrp.1 \
+ 	man8/newusers.8 \
+-	man8/nologin.8 \
+ 	man1/passwd.1 \
+ 	man5/passwd.5 \
+ 	man8/pwck.8 \
+ 	man8/pwconv.8 \
+ 	man8/pwunconv.8 \
+-	man1/sg.1 \
+ 	man3/shadow.3 \
+ 	man5/shadow.5 \
+-	man1/su.1 \
+-	man5/suauth.5 \
+ 	man8/useradd.8 \
+ 	man8/userdel.8 \
+ 	man8/usermod.8 \
+diff --git a/man/zh_CN/Makefile.am b/man/zh_CN/Makefile.am
+index 1d5f7b4..f043fc3 100644
+--- a/man/zh_CN/Makefile.am
++++ b/man/zh_CN/Makefile.am
+@@ -7,8 +7,6 @@ man_MANS = \
+ 	man8/chgpasswd.8 \
+ 	man8/chpasswd.8 \
+ 	man1/chsh.1 \
+-	man5/faillog.5 \
+-	man8/faillog.8 \
+ 	man3/getspnam.3 \
+ 	man1/gpasswd.1 \
+ 	man8/groupadd.8 \
+@@ -18,21 +16,15 @@ man_MANS = \
+ 	man8/grpconv.8 \
+ 	man8/grpunconv.8 \
+ 	man5/gshadow.5 \
+-	man1/login.1 \
+ 	man5/login.defs.5 \
+-	man1/newgrp.1 \
+ 	man8/newusers.8 \
+-	man8/nologin.8 \
+ 	man1/passwd.1 \
+ 	man5/passwd.5 \
+ 	man8/pwck.8 \
+ 	man8/pwconv.8 \
+ 	man8/pwunconv.8 \
+-	man1/sg.1 \
+ 	man3/shadow.3 \
+ 	man5/shadow.5 \
+-	man1/su.1 \
+-	man5/suauth.5 \
+ 	man8/useradd.8 \
+ 	man8/userdel.8 \
+ 	man8/usermod.8 \
+diff --git a/man/zh_TW/Makefile.am b/man/zh_TW/Makefile.am
+index c36ed2c..6fb6a15 100644
+--- a/man/zh_TW/Makefile.am
++++ b/man/zh_TW/Makefile.am
+@@ -5,12 +5,10 @@ man_MANS = \
+ 	man1/chfn.1 \
+ 	man1/chsh.1 \
+ 	man8/chpasswd.8 \
+-	man1/newgrp.1 \
+ 	man8/groupadd.8 \
+ 	man8/groupdel.8 \
+ 	man8/groupmod.8 \
+ 	man5/passwd.5 \
+-	man1/su.1 \
+ 	man8/useradd.8 \
+ 	man8/userdel.8 \
+ 	man8/usermod.8
+diff --git a/src/Makefile.am b/src/Makefile.am
+index c935e05..4256dde 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -26,8 +26,8 @@ AM_CFLAGS = $(LIBBSD_CFLAGS)
+ # and installation would be much simpler (just two directories,
+ # $prefix/bin and $prefix/sbin, no install-data hacks...)
+ 
+-bin_PROGRAMS   = login
+-sbin_PROGRAMS  = nologin
++bin_PROGRAMS   =
++sbin_PROGRAMS  =
+ ubin_PROGRAMS  = faillog chage chfn chsh gpasswd newgrp passwd
+ if ENABLE_SUBIDS
+ ubin_PROGRAMS += newgidmap newuidmap
+@@ -57,7 +57,7 @@ usbin_PROGRAMS = \
+ 	vipw
+ 
+ # sulogin from sysvinit
+-noinst_PROGRAMS = sulogin
++noinst_PROGRAMS =
+ 
+ suidusbins     =
+ suidbins       =

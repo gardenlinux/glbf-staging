@@ -1,0 +1,22 @@
+Source: sed
+Section: utils
+Priority: required
+Maintainer: Clint Adams <clint@debian.org>
+Standards-Version: 4.7.4
+Build-Depends: texinfo <!nodoc>, gettext, libselinux-dev [linux-any], debhelper-compat (= 13), libacl1-dev
+Rules-Requires-Root: no
+Vcs-Git: https://salsa.debian.org/debian/sed.git
+Vcs-Browser: https://salsa.debian.org/debian/sed
+Homepage: https://www.gnu.org/software/sed/
+
+Package: sed
+Architecture: any
+Multi-Arch: foreign
+Essential: yes
+Pre-Depends: ${shlibs:Pre-Depends}
+Depends: ${misc:Depends}
+Description: GNU stream editor for filtering/transforming text
+ sed reads the specified files or the standard input if no
+ files are specified, makes editing changes according to a
+ list of commands, and writes the results to the standard
+ output.

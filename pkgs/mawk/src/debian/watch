@@ -1,0 +1,7 @@
+Version: 5
+
+Source: https://invisible-island.net/archives/mawk/
+Matching-Pattern: mawk-@ANY_VERSION@@ARCHIVE_EXT@
+Pgpmode: auto
+Update-Script: uupdate
+Uversionmangle: s/-/./

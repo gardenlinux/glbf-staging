@@ -1,0 +1,5 @@
+# Lintian is really bad at associating manpages
+systemd-coredump: spare-manual-page
+systemd-coredump: maintainer-script-calls-systemctl
+# Our units without [Install] are either event driven or statically enabled
+systemd-coredump: systemd-service-file-missing-install-key [*]

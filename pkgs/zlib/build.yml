@@ -1,0 +1,5 @@
+pkg_type: debian
+build_profiles: [nocheck, noudeb, nobiarch]
+build_options: [nocheck]
+runtime_depends:
+  zlib1g: [glibc:libc6]

@@ -1,0 +1,31 @@
+#!/bin/sh
+set -e
+# NB: -e is required.
+
+
+# These tests are taken from the "test" targets from the various Makefiles.
+# Unfortunately, it seems to be easier to just copy them here, rather than
+# patching up the Makefiles to work with binaries built for autopkgtest.
+
+
+TESTARCH=`dpkg-architecture -qDEB_HOST_MULTIARCH`
+TESTDIR="/usr/lib/${TESTARCH}/libcap2/tests"
+
+echo "@@@ Running upstream tests (root not required) @@@"
+
+echo "## Preparation ##"
+cp -f "${TESTDIR}"/* "$AUTOPKGTEST_TMP"/
+cd "$AUTOPKGTEST_TMP"
+
+echo "## libcap2 tests ##"
+# From <src>/libcap/Makefile
+./cap_test
+
+echo "## libpsx tests ##"
+# From <src>/tests/Makefile
+./psx_test
+./libcap_psx_test
+
+echo "## pam_cap tests ##"
+# From <src>/pam_cap/Makefile
+./test_pam_cap

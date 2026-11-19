@@ -1,0 +1,87 @@
+From: Sam Hartman <hartmans@debian.org>
+Date: Fri, 3 Jul 2026 15:28:31 -0600
+Subject: By default do not document usr/lib/pam.d
+
+---
+ doc/man/pam.7.xml      | 13 +++++++++++--
+ doc/man/pam.conf.5.xml |  2 +-
+ meson.build            |  8 ++++++++
+ meson_options.txt      |  2 ++
+ 4 files changed, 22 insertions(+), 3 deletions(-)
+
+diff --git a/doc/man/pam.7.xml b/doc/man/pam.7.xml
+index cb6a7d8..9e3fb12 100644
+--- a/doc/man/pam.7.xml
++++ b/doc/man/pam.7.xml
+@@ -48,7 +48,16 @@
+       <emphasis remap="I">ignore</emphasis> <filename>/etc/pam.conf</filename>.
+     </para>
+ 
+-    <para>
++    <para condition="without_usrlibpamd">
++      Vendor-supplied PAM configuration files might be installed in
++      a configurable vendor specific directory instead
++      of the machine configuration directory <filename>/etc/pam.d/</filename>.
++      If no machine configuration file is found, the vendor-supplied file
++      is used. All files in <filename>/etc/pam.d/</filename> override
++      files with the same name in other directories.
++    </para>
++
++    <para condition="with_usrlibpamd">
+       Vendor-supplied PAM configuration files might be installed in
+       the system directory <filename>/usr/lib/pam.d/</filename> or
+       a configurable vendor specific directory instead
+@@ -145,7 +154,7 @@ closing hook for modules to affect the services available to a user.</para>
+           </para>
+         </listitem>
+       </varlistentry>
+-      <varlistentry>
++      <varlistentry condition="with_usrlibpamd">
+         <term>/usr/lib/pam.d</term>
+         <listitem>
+           <para>
+diff --git a/doc/man/pam.conf.5.xml b/doc/man/pam.conf.5.xml
+index 997776b..62b0c10 100644
+--- a/doc/man/pam.conf.5.xml
++++ b/doc/man/pam.conf.5.xml
+@@ -43,7 +43,7 @@
+           </para>
+         </listitem>
+       </varlistentry>
+-      <varlistentry>
++      <varlistentry condition="with_usrlibpamd">
+         <term>/usr/lib/pam.d</term>
+         <listitem>
+           <para>
+diff --git a/meson.build b/meson.build
+index 871f26a..cad7feb 100644
+--- a/meson.build
++++ b/meson.build
+@@ -95,6 +95,14 @@ else
+   stringparam_profileconditions = 'with_vendordir'
+ endif
+ 
++usrlibpamd = get_option('usrlibpamd')
++if usrlibpamd.enabled()
++  cdata.set('SUPPORT_USR_LIB_PAM_D', 1)
++  stringparam_profileconditions += ';with_usrlibpamd'
++else
++  stringparam_profileconditions += ';without_usrlibpamd'
++endif
++
+ randomdev_option = get_option('randomdev')
+ if randomdev_option == '' or randomdev_option == 'yes'
+   cdata.set_quoted('PAM_PATH_RANDOMDEV', '/dev/urandom')
+diff --git a/meson_options.txt b/meson_options.txt
+index 914ab46..25c45b4 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -85,6 +85,8 @@ option('randomdev', type: 'string',
+        description: 'Random device to use instead of /dev/urandom')
+ option('vendordir', type: 'string',
+        description: 'Distribution provided configuration files directory')
++option('usrlibpamd', type: 'feature', value: 'disabled',
++       description: 'Use /usr/lib/pam.d as vendor configuration directory')
+ 
+ option('pam_userdb', type: 'feature', value: 'auto',
+        description: 'pam_userdb module')

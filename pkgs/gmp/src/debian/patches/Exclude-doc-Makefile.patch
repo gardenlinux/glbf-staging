@@ -1,0 +1,38 @@
+From: Bastian Germann <bage@debian.org>
+Date: Sat, 11 Jun 2022 22:37:49 +0200
+Subject: Exclude doc/Makefile
+
+Forwarded: not-needed
+
+Description: Exclude doc/Makefile
+---
+ Makefile.am  | 2 +-
+ configure.ac | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 03356e0..21daf69 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -113,7 +113,7 @@ LIBGMPXX_LT_REVISION = 0
+ LIBGMPXX_LT_AGE      = 7
+ 
+ 
+-SUBDIRS = tests mpn mpz mpq mpf printf scanf rand cxx demos tune doc
++SUBDIRS = tests mpn mpz mpq mpf printf scanf rand cxx demos tune
+ 
+ EXTRA_DIST = configfsf.guess configfsf.sub .gdbinit INSTALL.autoconf \
+ 	     COPYING.LESSERv3 COPYINGv2 COPYINGv3
+diff --git a/configure.ac b/configure.ac
+index 082077b..e801163 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -4077,7 +4077,7 @@ AC_OUTPUT(Makefile							\
+   tests/mpf/Makefile tests/mpn/Makefile tests/mpq/Makefile		\
+   tests/mpz/Makefile tests/rand/Makefile tests/misc/Makefile		\
+   tests/cxx/Makefile							\
+-  doc/Makefile tune/Makefile						\
++  tune/Makefile								\
+   demos/Makefile demos/calc/Makefile demos/expr/Makefile		\
+   gmp.h:gmp-h.in gmp.pc:gmp.pc.in gmpxx.pc:gmpxx.pc.in)
+ 

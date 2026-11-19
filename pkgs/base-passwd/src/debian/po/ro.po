@@ -1,0 +1,319 @@
+# Mesajele în limba română pentru pachetul base-passwd.
+# Romanian translation of base-passwd.
+# Copyright © 2023 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2023.
+#
+# Cronologia traducerii fișierului „base-passwd”:
+# Traducerea inițială, făcută de R-GC, pentru versiunea base-passwd 3.6.1.
+# Actualizare a traducerii pentru versiunea Y, făcută de X, Y(anul).
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: base-passwd 3.6.1\n"
+"Report-Msgid-Bugs-To: base-passwd@packages.debian.org\n"
+"POT-Creation-Date: 2014-01-05 13:38-0800\n"
+"PO-Revision-Date: 2023-02-08 12:29+0100\n"
+"Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
+"Language-Team: \n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n==0 || (n!=1 && n%100>=1 && "
+"n%100<=19) ? 1 : 2);\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#. Type: boolean
+#. Description
+#: ../templates:1001
+msgid "Do you want to move the user ${name}?"
+msgstr "Doriți să mutați utilizatorul ${name}?"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../templates:1001 ../templates:2001 ../templates:3001 ../templates:4001
+#: ../templates:5001 ../templates:6001 ../templates:7001 ../templates:8001
+#: ../templates:9001 ../templates:10001 ../templates:11001 ../templates:12001
+msgid ""
+"update-passwd has found a difference between your system accounts and the "
+"current Debian defaults.  It is advisable to allow update-passwd to change your "
+"system; without those changes some packages might not work correctly.  For more "
+"documentation on the Debian account policies, please see /usr/share/doc/base-"
+"passwd/README."
+msgstr ""
+"Instrumentul «update-passwd» a găsit o diferență între conturile dvs. de sistem "
+"și valorile implicite Debian actuale.  Este recomandabil să permiteți "
+"instrumentului «update-passwd» să vă modifice sistemul; fără aceste modificări, "
+"unele pachete ar putea să nu funcționeze corect.  Pentru o mai bună documentare "
+"despre politicile contului Debian, consultați „/usr/share/doc/base-passwd/"
+"README”."
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../templates:1001 ../templates:2001 ../templates:3001 ../templates:4001
+#: ../templates:5001 ../templates:6001 ../templates:7001 ../templates:8001
+#: ../templates:9001 ../templates:10001 ../templates:11001 ../templates:12001
+msgid "The proposed change is:"
+msgstr "Modificarea propusă este:"
+
+# R-GC, scrie:
+# inițial, am tradus acest mesaj, și
+# celelalte ce sunt asemănătoare, ca:
+# ”Mutați ...”
+# „Adăugați ...”
+# „Eliminați ...”
+# „Schimbați ...”
+# ******
+# Iar, la recitirea/revizuirea mesajelor,
+# am realizat că acestea sunt de fapt,
+# continuarea unui alt mesaj, adică:
+# „Modificarea propusă este:”
+# =====
+# Deci, ceea ce va vedea/citi
+# utilizatorul, va fi:
+# «„Modificarea propusă este:” ”Mutați/Adăugați/Eliminați/Schimbati ...”»
+# -------------------------------------------------------------------------------------------------------
+# Cred că sună mai bine( că e mai pe românește), formlarea:
+# «„Modificarea propusă este:” ”Mutarea/Adăugarea/Eliminarea/Schimbarea ...”»
+# ##################################
+# Opinii/Sugestii?
+#. Type: boolean
+#. Description
+#: ../templates:1001
+msgid "Move user \"${name}\" (${id}) to before the NIS compat \"+\" entry"
+msgstr ""
+"Mutați utilizatorul „${name}” (${id}) înainte de intrarea „+” de "
+"compatibilitate NIS"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../templates:1001 ../templates:2001 ../templates:3001 ../templates:4001
+#: ../templates:5001 ../templates:6001 ../templates:7001 ../templates:8001
+#: ../templates:9001 ../templates:10001 ../templates:11001 ../templates:12001
+msgid ""
+"If you allow this change, a backup of modified files will be made with the "
+"extension .org, which you can use if necessary to restore the current "
+"settings.  If you do not make this change now, you can make it later with the "
+"update-passwd utility."
+msgstr ""
+"Dacă permiteți această modificare, se va face o copie de rezervă a fișierelor "
+"modificate cu extensia .org, pe care o puteți utiliza dacă este necesar pentru "
+"a restabili configurările curente.  Dacă nu faceți această modificare acum, o "
+"puteți face mai târziu cu instrumentul „update-passwd”."
+
+#. Type: boolean
+#. Description
+#: ../templates:2001
+msgid "Do you want to move the group ${name}?"
+msgstr "Doriți să mutați grupul ${name}?"
+
+#. Type: boolean
+#. Description
+#: ../templates:2001
+msgid "Move group \"${name}\" (${id}) to before the NIS compat \"+\" entry"
+msgstr ""
+"Mutarea grupului „${name}” (${id}) înainte de intrarea „+” de compatibilitate "
+"NIS"
+
+#. Type: boolean
+#. Description
+#: ../templates:3001
+msgid "Do you want to add the user ${name}?"
+msgstr "Doriți să adăugați utilizatorul ${name}?"
+
+#. Type: boolean
+#. Description
+#: ../templates:3001
+msgid "Add user \"${name}\" (${id})"
+msgstr "Adăugarea utilizatorului „${name}” (${id})"
+
+#. Type: boolean
+#. Description
+#: ../templates:4001
+msgid "Do you want to add the group ${name}?"
+msgstr "Doriți să adăugați grupul ${name}?"
+
+#. Type: boolean
+#. Description
+#: ../templates:4001
+msgid "Add group \"${name}\" (${id})"
+msgstr "Adăugarea grupului „${name}” (${id})"
+
+#. Type: boolean
+#. Description
+#: ../templates:5001
+msgid "Do you want to remove the user ${name}?"
+msgstr "Doriți să eliminați utilizatorul ${name}?"
+
+#. Type: boolean
+#. Description
+#: ../templates:5001
+msgid "Remove user \"${name}\" (${id})"
+msgstr "Eliminarea utilizatorului „${name}” (${id})"
+
+#. Type: boolean
+#. Description
+#: ../templates:6001
+msgid "Do you want to remove the group ${name}?"
+msgstr "Doriți să eliminați grupul ${name}?"
+
+#. Type: boolean
+#. Description
+#: ../templates:6001
+msgid "Remove group \"${name}\" (${id})"
+msgstr "Eliminarea grupului „${name}” (${id})"
+
+#. Type: boolean
+#. Description
+#: ../templates:7001
+msgid "Do you want to change the UID of user ${name}?"
+msgstr "Doriți să schimbați UID-ul utilizatorului ${name}?"
+
+#. Type: boolean
+#. Description
+#: ../templates:7001
+msgid "Change the UID of user \"${name}\" from ${old_uid} to ${new_uid}"
+msgstr ""
+"Schimbarea numărului UID al utilizatorului „${name}” din ${old_uid} în "
+"${new_uid}"
+
+#. Type: boolean
+#. Description
+#: ../templates:8001
+msgid "Do you want to change the GID of user ${name}?"
+msgstr "Doriți să schimbați GID-ul utilizatorului ${name}?"
+
+#. Type: boolean
+#. Description
+#: ../templates:8001
+msgid ""
+"Change the GID of user \"${name}\" from ${old_gid} (${old_group}) to ${new_gid} "
+"(${new_group})"
+msgstr ""
+"Schimbarea numărului GID al utilizatorului „${name}” din ${old_gid} "
+"(${old_group}) în ${new_gid} (${new_group})"
+
+#. Type: boolean
+#. Description
+#: ../templates:9001
+msgid "Do you want to change the GECOS of user ${name}?"
+msgstr "Doriți să schimbați câmpul GECOS al utilizatorului ${name}?"
+
+#. Type: boolean
+#. Description
+#: ../templates:9001
+msgid ""
+"Change the GECOS of user \"${name}\" from \"${old_gecos}\" to \"${new_gecos}\""
+msgstr ""
+"Schimbarea câmpului GECOS al utilizatorului „${name}” din „${old_gecos}” în "
+"„${new_gecos}”"
+
+#. Type: boolean
+#. Description
+#: ../templates:10001
+msgid "Do you want to change the home directory of user ${name}?"
+msgstr ""
+"Doriți să schimbați directorul personal „Acasă” al utilizatorului ${name}?"
+
+#. Type: boolean
+#. Description
+#: ../templates:10001
+msgid ""
+"Change the home directory of user \"${name}\" from ${old_home} to ${new_home}"
+msgstr ""
+"Schimbarea directorului personal „Acasă” al utilizatorului „${name}” din "
+"${old_home} în ${new_home}"
+
+#. Type: boolean
+#. Description
+#: ../templates:11001
+msgid "Do you want to change the shell of user ${name}?"
+msgstr "Doriți să schimbați shell-ul utilizatorului ${name}?"
+
+#. Type: boolean
+#. Description
+#: ../templates:11001
+msgid "Change the shell of user \"${name}\" from ${old_shell} to ${new_shell}"
+msgstr ""
+"Schimbarea shell-ului utilizatorului „${name}” din ${old_shell} în ${new_shell}"
+
+#. Type: boolean
+#. Description
+#: ../templates:12001
+msgid "Do you want to change the GID of group ${name}?"
+msgstr "Doriți să schimbați GID-ul grupului ${name}?"
+
+#. Type: boolean
+#. Description
+#: ../templates:12001
+msgid "Change the GID of group \"${name}\" from ${old_gid} to ${new_gid}"
+msgstr ""
+"Schimbarea numărului GID al grupului „${name}” din ${old_gid} în ${new_gid}"

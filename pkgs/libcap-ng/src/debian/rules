@@ -1,0 +1,64 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# debian/rules file for libcap-ng
+# Written by Pierre Chifflier <pollux@debian.org>
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export DEB_PYTHON_INSTALL_LAYOUT = deb
+
+
+ifneq ($(filter nopython,$(DEB_BUILD_PROFILES)),)
+PY3VERS = dummy
+CONFIGURE_FLAGS = --without-python3
+else
+PY3VERS = $(shell py3versions --supported --version)
+CONFIGURE_FLAGS = --with-python3 PYTHON=/usr/bin/python$$V PYTHON3_CONFIG=/usr/bin/python$$V-config
+
+endif
+
+%:
+	dh $@
+
+execute_before_dh_autoreconf:
+	touch NEWS
+
+override_dh_auto_configure:
+	for V in $(PY3VERS); do \
+		dh_auto_configure --builddir=build-py$$V -- \
+			$(CONFIGURE_FLAGS); \
+	done
+
+override_dh_auto_build:
+	for V in $(PY3VERS); do \
+		dh_auto_build --builddir=build-py$$V; \
+	done
+
+override_dh_auto_install:
+	# Move Python files to separate folders so they don't overwrite
+	# each other at install time.
+	for V in $(PY3VERS); do \
+		dh_auto_install --builddir=build-py$$V; \
+		if test "$$V" != dummy; then \
+			mv ${CURDIR}/debian/tmp/usr/lib/python3 ${CURDIR}/debian/tmp/usr/lib/python$$V; \
+		fi; \
+	done
+
+	find $(CURDIR)/debian/tmp -name *.la -delete
+
+override_dh_auto_test:
+	for V in $(PY3VERS); do \
+		dh_auto_test --builddir=build-py$$V; \
+	done
+
+ifeq ($(filter nopython,$(DEB_BUILD_PROFILES)),)
+execute_after_dh_python3:
+	rm -rf debian/python3-cap-ng/usr/lib/python3.*
+endif
+
+override_dh_auto_clean:
+	for V in $(PY3VERS); do \
+		dh_auto_clean --builddir=build-py$$V; \
+	done

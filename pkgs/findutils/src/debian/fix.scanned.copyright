@@ -1,0 +1,14 @@
+# Add needed licenses
+#! copyright License:"GFDL-NIV-1.3"
+! copyright License:"GFDL-NIV-1.3+"
+
+# "or later is misdetected too, overriden in debian/fill.copyright.blanks.yml
+# instead
+#! Files:.foreach_match(.*\.texi)  Copyright=~"s/\@copyright\{\}/Copyright/"
+#
+! Files:.foreach_match(.*)  License short_name=~"s/GFDL-1/GFDL-NIV-1/"
+
+# Work around licensecheck not handling wrapped copyright statements
+! Files:.foreach_match(.*) Copyright=~"s/, Free Software Foundation,$/, Free Software Foundation, Inc./"
+! Files:.foreach_match(.*) Copyright=~"s/, Free Software$/, Free Software Foundation, Inc./"
+! Files:.foreach_match(.*) Copyright=~"s/, Free$/, Free Software Foundation, Inc./"
