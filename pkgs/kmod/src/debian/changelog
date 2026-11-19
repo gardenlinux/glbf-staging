@@ -1,3 +1,27 @@
+kmod (34.3-3) unstable; urgency=medium
+
+  * Fix the paths in kmod.initramfs-hook. This fixes #1103478 for real.
+
+ -- Marco d'Itri <md@linux.it>  Mon, 09 Nov 2026 05:40:34 +0100
+
+kmod (34.3-2) unstable; urgency=medium
+
+  * Fix the quoting in kmod.initramfs-hook. This fixes #1103478 for real.
+
+ -- Marco d'Itri <md@linux.it>  Mon, 09 Nov 2026 01:37:15 +0100
+
+kmod (34.3-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Backport an upstram bug fix for using modprobe --show-depends with
+    softdeps. (Closes: #1059518)
+  * When CONFIG_MODULE_DECOMPRESS=n on multiarch systems, copy the
+    correct version of the compression libraries to the initramfs.
+    (Closes: #1103478)
+  * Build-depend on different kernel headers on sh4. (Closes: #1124327)
+
+ -- Marco d'Itri <md@linux.it>  Sun, 08 Nov 2026 17:45:14 +0100
+
 kmod (34.2-2) unstable; urgency=medium
 
   * kmod.initramfs-hook: if compressed modules have been copied to the

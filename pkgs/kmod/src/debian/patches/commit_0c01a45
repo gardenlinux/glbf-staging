@@ -1,0 +1,47 @@
+From 0c01a453199e5e49fdb2de61c8ea9a5cbc9ec91d Mon Sep 17 00:00:00 2001
+From: Prabhakar Pujeri <prabhakar.pujeri@dell.com>
+Date: Sun, 30 Aug 2026 19:10:21 +0530
+Subject: [PATCH] libkmod: Merge all matching softdep and weakdep config
+ stanzas
+
+diff --git a/libkmod/libkmod-module.c b/libkmod/libkmod-module.c
+index 850807943..a685ccb40 100644
+--- a/libkmod/libkmod-module.c
++++ b/libkmod/libkmod-module.c
+@@ -1311,16 +1311,11 @@ KMOD_EXPORT int kmod_module_get_softdeps(const struct kmod_module *mod,
+ 		if (fnmatch(modname, mod->name, 0) != 0)
+ 			continue;
+ 
++		/* accumulate all the softdep stanzas matching this module */
+ 		array = kmod_softdep_get_pre(l, &count);
+-		*pre = lookup_dep(mod->ctx, array, count);
++		*pre = kmod_list_append_list(*pre, lookup_dep(mod->ctx, array, count));
+ 		array = kmod_softdep_get_post(l, &count);
+-		*post = lookup_dep(mod->ctx, array, count);
+-
+-		/*
+-		 * find only the first command, as modprobe from
+-		 * module-init-tools does
+-		 */
+-		break;
++		*post = kmod_list_append_list(*post, lookup_dep(mod->ctx, array, count));
+ 	}
+ 
+ 	return 0;
+@@ -1347,14 +1342,9 @@ KMOD_EXPORT int kmod_module_get_weakdeps(const struct kmod_module *mod,
+ 		if (fnmatch(modname, mod->name, 0) != 0)
+ 			continue;
+ 
++		/* accumulate all the weakdep stanzas matching this module */
+ 		array = kmod_weakdep_get_weak(l, &count);
+-		*weak = lookup_dep(mod->ctx, array, count);
+-
+-		/*
+-		 * find only the first command, as modprobe from
+-		 * module-init-tools does
+-		 */
+-		break;
++		*weak = kmod_list_append_list(*weak, lookup_dep(mod->ctx, array, count));
+ 	}
+ 
+ 	return 0;
