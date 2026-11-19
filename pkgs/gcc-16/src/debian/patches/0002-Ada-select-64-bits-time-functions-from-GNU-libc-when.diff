@@ -1,4 +1,4 @@
-PR ada/114065, patches v15
+PR ada/114065 version 22 patch 4/4
 
 --- a/src/gcc/ada/libgnarl/a-exetim__posix.adb
 +++ b/src/gcc/ada/libgnarl/a-exetim__posix.adb
@@ -7,8 +7,8 @@ PR ada/114065, patches v15
  
  with System.C_Time;
 +with System.OS_Constants;
- with System.Tasking;
  with System.OS_Interface; use System.OS_Interface;
+ with System.Tasking;
  with System.Task_Primitives.Operations; use System.Task_Primitives.Operations;
 @@ -115,7 +116,8 @@ package body Ada.Execution_Time is
          (clock_id : Interfaces.C.int;
@@ -147,25 +147,36 @@ PR ada/114065, patches v15
  
     Timeout_V : aliased System.C_Time.timeval;
     Timeout_A : access System.C_Time.timeval;
+--- a/src/gcc/ada/libgnat/s-optide.adb
++++ b/src/gcc/ada/libgnat/s-optide.adb
+@@ -31,6 +31,8 @@
+ 
+ --  This is the Posix, Posix2008, and LynxOS version of this procedure.
+ 
++with System.OS_Constants;
++
+ separate (System.OS_Primitives)
+ procedure Timed_Delay
+   (Time : Duration;
+@@ -39,7 +41,7 @@ is
+ 
+    function nanosleep (rqtp, rmtp : not null access C_Time.timespec)
+                        return Integer;
+-   pragma Import (C, nanosleep, "nanosleep");
++   pragma Import (C, nanosleep, OS_Constants.Y2038_nanosleep);
+ 
+    Request    : aliased C_Time.timespec;
+    Remaind    : aliased C_Time.timespec;
 --- a/src/gcc/ada/libgnat/s-osprim__posix.adb
 +++ b/src/gcc/ada/libgnat/s-osprim__posix.adb
 @@ -31,6 +31,7 @@
- 
  --  This version is for POSIX-like operating systems
+ 
  with System.C_Time;
 +with System.OS_Constants;
  
  package body System.OS_Primitives is
  
-@@ -41,7 +42,7 @@ package body System.OS_Primitives is
- 
-    function nanosleep (rqtp, rmtp : not null access C_Time.timespec)
-                       return Integer;
--   pragma Import (C, nanosleep, "nanosleep");
-+   pragma Import (C, nanosleep, OS_Constants.Y2038_nanosleep);
- 
-    -----------
-    -- Clock --
 @@ -56,7 +57,7 @@ package body System.OS_Primitives is
        function gettimeofday
          (Tv : access C_Time.timeval;
@@ -177,15 +188,6 @@ PR ada/114065, patches v15
        --  The return codes for gettimeofday are as follows (from man pages):
 --- a/src/gcc/ada/libgnat/s-osprim__posix2008.adb
 +++ b/src/gcc/ada/libgnat/s-osprim__posix2008.adb
-@@ -45,7 +45,7 @@ package body System.OS_Primitives is
- 
-    function nanosleep (rqtp, rmtp : not null access C_Time.timespec)
-                       return Integer;
--   pragma Import (C, nanosleep, "nanosleep");
-+   pragma Import (C, nanosleep, OS_Constants.Y2038_nanosleep);
- 
-    -----------
-    -- Clock --
 @@ -62,7 +62,7 @@ package body System.OS_Primitives is
        function clock_gettime
          (clock_id : clockid_t;
@@ -198,9 +200,11 @@ PR ada/114065, patches v15
 --- a/src/gcc/ada/s-oscons-tmplt.c
 +++ b/src/gcc/ada/s-oscons-tmplt.c
 @@ -1777,6 +1777,49 @@ CND(SIZEOF_tv_nsec, "tv_nsec");
+ CND(SIZEOF_tv_nsec, "tv_nsec");
+ }
  
- /*
- 
++/*
++
 +   --  On 32 bits architectures, glibc and musl also support representing time
 +   --  types on 64 bits.  The usual names are reserved symbols for the 32 bits
 +   --  function for backwards compatibility, so distinct symbols are necessary
@@ -242,8 +246,6 @@ PR ada/114065, patches v15
 +CST(Y2038_pthread_cond_wait, "")
 +CST(Y2038_select, "")
 +
-+/*
-+
-    --  Sizes of various data types
- */
+ /*
  
+    --  Sizes of various data types

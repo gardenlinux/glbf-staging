@@ -31,10 +31,8 @@ endif
 
 #	libstdc++-pic \
 
-
-#debian_patches += \
-#	0001-Ada-merge-all-timeval-and-timespec-definitions-and-c \
-#	0002-Ada-select-64-bits-time-functions-from-GNU-libc-when \
+debian_patches += \
+	0002-Ada-select-64-bits-time-functions-from-GNU-libc-when \
 
 debian_patches += \
 	gcc-textdomain \
@@ -71,10 +69,7 @@ debian_patches += \
 	libsanitizer-static-tls \
 	pr123853 \
 
-# see https://bugs.debian.org/1108322
-ifneq (,$(filter $(DEB_TARGET_ARCH),hppa m68k powerpc))
   debian_patches += ada-tv_nsec-size
-endif
 
 # not yet backported, m68k only
 ifneq (,$(filter $(DEB_TARGET_ARCH),m68k))
@@ -137,7 +132,7 @@ endif
 # it is convenient to concentrate on core languages, and refresh them
 # later when working on the specific language.
 ifeq ($(with_ada),yes)
-    # debian_patches += ada-gcc-name
+    debian_patches += ada-gcc-name
     debian_patches += ada-link-lib
     debian_patches += ada-gnattools-cross
     ifeq ($(with_gnatsjlj),yes)
@@ -196,8 +191,6 @@ debian_patches += \
 	m68k-lra-enable \
 
 ifeq ($(with_ada),yes)
-  # debian_patches += ada-verbose
-  # debian_patches += ada-gnat-name
   debian_patches += \
 	ada-armel-libatomic
 endif
