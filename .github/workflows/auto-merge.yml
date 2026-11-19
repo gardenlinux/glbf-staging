@@ -113,10 +113,14 @@ jobs:
             exit 0
           fi
 
-          # 6. All gates passed. Merge as the App (a merge commit, preserving the
-          #    import's upstream lineage — never squash/rebase) so the push to the
-          #    base branch attributes to the bot and triggers canonicalization.
-          echo "all gates passed; merging PR #$pr into $base"
+          # 6. All gates passed. Approve, then merge as the App (a merge commit,
+          #    preserving the import's upstream lineage — never squash/rebase) so
+          #    the push to the base branch attributes to the bot and triggers
+          #    canonicalization. The approval must come from a different identity
+          #    than the App bot that opened the PR (GitHub forbids self-approval),
+          #    so it uses the built-in github-actions[bot] token.
+          echo "all gates passed; approving and merging PR #$pr into $base"
+          GH_TOKEN="${{ secrets.GITHUB_TOKEN }}" gh pr review "$pr" --approve
           gh pr merge "$pr" --merge --delete-branch
           run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}"
           gh pr comment "$pr" --body "Build [${RUN_ID}](${run_url}) passed and auto-merge enabled; merged into \`$base\`"
