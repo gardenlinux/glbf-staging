@@ -1396,12 +1396,6 @@ endif
 	  install -m755 debian/bin-wrapper.in bin/$$i; \
 	done
 
-ifeq ($(with_ada),yes)
-	: # gnat still needs the unversioned gnatmake and gnatbind
-	ln -sf /usr/bin/$(GNATBIND) bin/gnatbind
-	ln -sf /usr/bin/$(GNATMAKE) bin/gnatmake
-endif
-
 	: # configure
 	if cd $(builddir) \
 	  && $(SET_PATH) \
@@ -1525,26 +1519,6 @@ endif
 	    > bootstrap-summary; \
 	fi
 
-ifeq ($(build_type),build-native)
-  ifeq ($(with_ada),yes)
-    ifneq (,$(findstring $(BASE_VERSION),$(GNAT)))
-	echo "checking ALIHASH ..."; \
-	p=gnat-$(BASE_VERSION)-$(subst _,-,$(TARGET_ALIAS)); \
-	old=$$(dpkg-query -W -f '$${Provides}' $$p); \
-	new=gnat-$(BASE_VERSION)-$$(debian/ada/libgnat_alihash | sed 's/.*=//'); \
-	if [ $$old = $$new ]; then \
-	  echo "  -> matching alihash ($$old)"; \
-	else \
-	  echo "  -> alihash mismatch: $$old (installed), $$new (built)"; \
-	  if [ x$(fail_on_alihash_mismatch) = xyes ]; then \
-	    exit 1; \
-	  fi; \
-	fi
-    else
-	@echo 'not checking ALIHASH, using $(GNAT) for the bootstrap'
-    endif
-  endif
-endif
 	touch $(build_stamp)
 	@echo === END $@ ===
 
@@ -3155,14 +3129,14 @@ endif
 	@set -e; \
 	pkgs="$$(sed 's/^/-p/;/-for-host/d' debian/arch_binaries | xargs)"; \
 	if [ -n "$$pkgs" ]; then \
-	    echo dh_gencontrol $$pkgs -- -v$(DEB_VERSION) $(common_substvars) $(shell debian/ada/libgnat_alihash); \
-	    dh_gencontrol $$pkgs -- -v$(DEB_VERSION) $(common_substvars) $(shell debian/ada/libgnat_alihash); \
+	    echo dh_gencontrol $$pkgs -- -v$(DEB_VERSION) $(common_substvars); \
+	    dh_gencontrol $$pkgs -- -v$(DEB_VERSION) $(common_substvars); \
 	fi
 	@set -e; \
 	pkgs="$$(sed -n 's/^/-p/;/-for-host/p' debian/arch_binaries | xargs)"; \
 	if [ -n "$$pkgs" ]; then \
-	    echo $(cross_gencontrol) dh_gencontrol $$pkgs -- -v$(DEB_VERSION) $(common_substvars) $(shell debian/ada/libgnat_alihash); \
-	    $(cross_gencontrol) dh_gencontrol $$pkgs -- -v$(DEB_VERSION) $(common_substvars) $(shell debian/ada/libgnat_alihash); \
+	    echo $(cross_gencontrol) dh_gencontrol $$pkgs -- -v$(DEB_VERSION) $(common_substvars); \
+	    $(cross_gencontrol) dh_gencontrol $$pkgs -- -v$(DEB_VERSION) $(common_substvars); \
 	fi
 	@set -e; \
 	pkgs='$(strip $(foreach p,$(shell echo `cat debian/arch_binaries.epoch`),-p$(p)))'; \

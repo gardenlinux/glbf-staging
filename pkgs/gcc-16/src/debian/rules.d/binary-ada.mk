@@ -149,8 +149,28 @@ ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTONS)))
 	  $(d_gnat_n)/$(gcc_lexec_dir)/gnat1
 endif
 	dh_strip -p$(p_gnat_n)
-	find $(d_gnat_n) -name '*.ali' | xargs $(sed_ali_strip_prefix_map)
-	find $(d_gnat_n) -name '*.ali' | xargs chmod 444
+	$(sed_ali_strip_prefix_map) $(d_gnat_n)/$(gcc_lib_dir)/adalib/*.ali
+	chmod 444 $(d_gnat_n)/$(gcc_lib_dir)/adalib/*.ali
+
+# Compute the alihash, store it for dh_gencontrol, report mismatches.
+# Should be in sync with dh_ada_library in the dh-ada-library package.
+	if [ -e debian/$(p_gnat_n).substvars ]; then \
+	  sed -i '/^libgnat:alihash=/d' debian/$(p_gnat_n).substvars; \
+	fi
+	set -e; \
+	new=$$(grep '^D ' $(d_gnat_n)/$(gcc_lib_dir)/adalib/*.ali \
+	       | cksum | xargs printf '%08x\c'); \
+	if [ $(build_type) != build-native ]; then \
+	  echo 'Not checking the alihash, build_type=$(build_type).'; \
+	elif [ -z '$(findstring $(GNAT_VERSION),$(GNAT))' ]; then \
+	  echo 'Not checking the alihash, using $(GNAT) for the bootstrap.'; \
+	elif [ $$(dpkg-query '-Wf$${Provides}' $(p_gnat_n)) != gnat-$(GNAT_VERSION)-$$new ]; then \
+	  echo 'error: alihash mismatch, a diff of libgnat sources follows.'; \
+	  ! diff -urN /$(gcc_lib_dir)/adainclude $(d_gnat_n)/$(gcc_lib_dir)/adainclude; \
+	  [ '$(fail_on_alihash_mismatch)' != yes ]; \
+	fi; \
+	echo "libgnat:alihash=$$new" >> debian/$(p_gnat_n).substvars
+
 	dh_shlibdeps -p$(p_gnat_n)
 	( \
 	  echo '$(p_gnat_n) binary: hardening-no-pie'; \
@@ -226,8 +246,8 @@ endif
 
 ifeq ($(with_gnatsjlj),yes)
 	dh_strip -p$(p_gnatsjlj)
-	find $(d_gnatsjlj) -name '*.ali' | xargs $(sed_ali_strip_prefix_map)
-	find $(d_gnatsjlj) -name '*.ali' | xargs chmod 444
+	$(sed_ali_strip_prefix_map) $(d_gnatsjlj)/$(gcc_lib_dir)/adalib/*.ali
+	chmod 444 $(d_gnatsjlj)/$(gcc_lib_dir)/adalib/*.ali
 	dh_shlibdeps -p$(p_gnatsjlj)
 	echo $(p_gnatsjlj) >> debian/arch_binaries
 endif
