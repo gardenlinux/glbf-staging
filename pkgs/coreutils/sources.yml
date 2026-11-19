@@ -1,6 +1,6 @@
 sources:
-    - file: coreutils_9.10.orig.tar.xz
-      sha256: 16535a9adf0b10037364e2d612aad3d9f4eca3a344949ced74d12faf4bd51d25
+    - file: coreutils_9.12.orig.tar.xz
+      sha256: a480198559733e9b3da999e90543ac6f888a2caa544d8d664c5a1f17e528e210
       urls:
-        - https://deb.debian.org/debian/pool/main/c/coreutils/coreutils_9.10.orig.tar.xz
-        - https://snapshot.debian.org/file/8b7c368651566705385560c22c22484b91f3dbe4/coreutils_9.10.orig.tar.xz
+        - https://deb.debian.org/debian/pool/main/c/coreutils/coreutils_9.12.orig.tar.xz
+        - https://snapshot.debian.org/file/ba149f3793d7078659c3cbc4942634e57df90bfa/coreutils_9.12.orig.tar.xz
