@@ -25,6 +25,7 @@ usr/bin/kernel-install
 usr/bin/localectl
 usr/bin/loginctl
 usr/bin/networkctl
+<pkg.systemd.upstream> usr/bin/ptyctl
 usr/bin/systemctl
 usr/bin/systemd-ac-power
 usr/bin/systemd-analyze
@@ -41,6 +42,7 @@ usr/bin/systemd-firstboot
 usr/bin/systemd-id128
 usr/bin/systemd-inhibit
 usr/bin/systemd-machine-id-setup
+<pkg.systemd.upstream> usr/bin/systemd-manifest
 usr/bin/systemd-mount
 usr/bin/systemd-mute-console
 usr/bin/systemd-notify
@@ -123,6 +125,7 @@ usr/lib/systemd/systemd-networkd
 usr/lib/systemd/systemd-networkd-wait-online
 usr/lib/systemd/systemd-network-generator
 usr/lib/systemd/systemd-pstore
+<pkg.systemd.upstream> usr/lib/systemd/systemd-ptybrokerd
 usr/lib/systemd/systemd-quotacheck
 usr/lib/systemd/systemd-random-seed
 usr/lib/systemd/systemd-remount-fs
@@ -139,9 +142,11 @@ usr/lib/systemd/systemd-sysctl
 usr/lib/systemd/systemd-sysroot-fstab-check
 usr/lib/systemd/systemd-timedated
 usr/lib/systemd/systemd-update-done
+<pkg.systemd.upstream> usr/lib/systemd/systemd-update-helper
 usr/lib/systemd/systemd-user-runtime-dir
 usr/lib/systemd/systemd-user-sessions
 usr/lib/systemd/systemd-validatefs
+[amd64 arm64 ppc64el riscv64 s390x] <pkg.systemd.upstream> usr/lib/systemd/systemd-varlink-monitord
 usr/lib/systemd/systemd-volatile-root
 usr/lib/systemd/systemd-xdg-autostart-condition
 usr/lib/systemd/system/emergency.service
@@ -239,6 +244,7 @@ usr/lib/systemd/system/sockets.target.wants/systemd-logind-varlink.socket
 usr/lib/systemd/system/sockets.target.wants/systemd-mute-console.socket
 usr/lib/systemd/system/sockets.target.wants/systemd-sysext.socket
 usr/lib/systemd/system/sockets.target.wants/systemd-sysinstall.socket
+[amd64 arm64 ppc64el riscv64 s390x] <pkg.systemd.upstream> usr/lib/systemd/system/sockets.target.wants/systemd-varlink-monitord.socket
 usr/lib/systemd/system/soft-reboot.target
 usr/lib/systemd/system/sound.target
 usr/lib/systemd/system/ssh-access.target
@@ -265,6 +271,7 @@ usr/lib/systemd/system/sysinit.target.wants/systemd-journal-catalog-update.servi
 usr/lib/systemd/system/sysinit.target.wants/systemd-journald.service
 usr/lib/systemd/system/sysinit.target.wants/systemd-journal-flush.service
 usr/lib/systemd/system/sysinit.target.wants/systemd-machine-id-commit.service
+<pkg.systemd.upstream> usr/lib/systemd/system/sysinit.target.wants/systemd-machine-tags.service
 usr/lib/systemd/system/sysinit.target.wants/systemd-random-seed.service
 usr/lib/systemd/system/sysinit.target.wants/systemd-sysctl.service
 usr/lib/systemd/system/sysinit.target.wants/systemd-sysusers.service
@@ -318,6 +325,7 @@ usr/lib/systemd/system/systemd-journalctl.socket
 usr/lib/systemd/system/systemd-journalctl@.service
 usr/lib/systemd/system/systemd-journald-audit.socket
 usr/lib/systemd/system/systemd-journald-dev-log.socket
+<pkg.systemd.upstream> usr/lib/systemd/system/systemd-journald-metrics.socket
 usr/lib/systemd/system/systemd-journald.service
 usr/lib/systemd/system/systemd-journald@.service
 usr/lib/systemd/system/systemd-journald.socket
@@ -328,10 +336,12 @@ usr/lib/systemd/system/systemd-journal-flush.service
 usr/lib/systemd/system/systemd-kexec.service
 usr/lib/systemd/system/systemd-localed.service
 usr/lib/systemd/system/systemd-logind.service
+<pkg.systemd.upstream> usr/lib/systemd/system/systemd-logind-metrics.socket
 usr/lib/systemd/system/systemd-logind-varlink.socket
 usr/lib/systemd/system/systemd-loop@.service
 usr/lib/systemd/system/systemd-machine-id-commit.service
 usr/lib/systemd/system/systemd-machine-tag@.service
+<pkg.systemd.upstream> usr/lib/systemd/system/systemd-machine-tags.service
 usr/lib/systemd/system/systemd-mute-console.socket
 usr/lib/systemd/system/systemd-mute-console@.service
 usr/lib/systemd/system/systemd-networkd*.service
@@ -339,6 +349,8 @@ usr/lib/systemd/system/systemd-networkd*.socket
 usr/lib/systemd/system/systemd-network-generator.service
 usr/lib/systemd/system/systemd-poweroff.service
 usr/lib/systemd/system/systemd-pstore.service
+<pkg.systemd.upstream> usr/lib/systemd/system/systemd-ptybrokerd.service
+<pkg.systemd.upstream> usr/lib/systemd/system/systemd-ptybrokerd.socket
 usr/lib/systemd/system/systemd-quotacheck*.service
 usr/lib/systemd/system/systemd-random-seed.service
 usr/lib/systemd/system/systemd-reboot.service
@@ -366,6 +378,8 @@ usr/lib/systemd/system/systemd-tmpfiles-setup.service
 usr/lib/systemd/system/systemd-update-done.service
 usr/lib/systemd/system/systemd-user-sessions.service
 usr/lib/systemd/system/systemd-validatefs@.service
+[amd64 arm64 ppc64el riscv64 s390x] <pkg.systemd.upstream> usr/lib/systemd/system/systemd-varlink-monitord.socket
+[amd64 arm64 ppc64el riscv64 s390x] <pkg.systemd.upstream> usr/lib/systemd/system/systemd-varlink-monitord@.service
 usr/lib/systemd/system/systemd-volatile-root.service
 usr/lib/systemd/system/system-systemd\x2dmute\x2dconsole.slice
 usr/lib/systemd/system/system-update-cleanup.service
@@ -405,12 +419,15 @@ usr/lib/systemd/user/smartcard.target
 usr/lib/systemd/user/sockets.target
 usr/lib/systemd/user/sockets.target.wants/systemd-ask-password.socket
 usr/lib/systemd/user/sockets.target.wants/systemd-journalctl.socket
+<pkg.systemd.upstream> usr/lib/systemd/user/sockets.target.wants/systemd-ptybrokerd.socket
 usr/lib/systemd/user/sound.target
 usr/lib/systemd/user/systemd-ask-password.socket
 usr/lib/systemd/user/systemd-ask-password@.service
 usr/lib/systemd/user/systemd-exit.service
 usr/lib/systemd/user/systemd-journalctl.socket
 usr/lib/systemd/user/systemd-journalctl@.service
+<pkg.systemd.upstream> usr/lib/systemd/user/systemd-ptybrokerd.service
+<pkg.systemd.upstream> usr/lib/systemd/user/systemd-ptybrokerd.socket
 usr/lib/systemd/user/systemd-tmpfiles-clean.service
 usr/lib/systemd/user/systemd-tmpfiles-clean.timer
 usr/lib/systemd/user/systemd-tmpfiles-setup.service
@@ -449,6 +466,7 @@ usr/share/bash-completion/completions/kernel-install
 usr/share/bash-completion/completions/localectl
 usr/share/bash-completion/completions/loginctl
 usr/share/bash-completion/completions/networkctl
+<pkg.systemd.upstream> usr/share/bash-completion/completions/ptyctl
 usr/share/bash-completion/completions/run0
 usr/share/bash-completion/completions/systemctl
 usr/share/bash-completion/completions/systemd-analyze
@@ -459,10 +477,12 @@ usr/share/bash-completion/completions/systemd-confext
 usr/share/bash-completion/completions/systemd-creds
 usr/share/bash-completion/completions/systemd-delta
 usr/share/bash-completion/completions/systemd-detect-virt
-usr/share/bash-completion/completions/systemd-dissect
 usr/share/bash-completion/completions/systemd-id128
+<pkg.systemd.upstream> usr/share/bash-completion/completions/systemd-manifest
+<pkg.systemd.upstream> usr/share/bash-completion/completions/systemd-notify
 usr/share/bash-completion/completions/systemd-sysinstall
 usr/share/bash-completion/completions/systemd-path
+<pkg.systemd.upstream> usr/share/bash-completion/completions/systemd-pty-forward
 usr/share/bash-completion/completions/systemd-run
 usr/share/bash-completion/completions/systemd-sysext
 usr/share/bash-completion/completions/systemd-vpick
@@ -485,6 +505,8 @@ usr/share/doc/systemd/
 usr/share/factory/
 usr/share/locale/
 usr/share/mime/packages/io.systemd.xml
+<pkg.systemd.upstream> usr/share/polkit-1/actions/io.systemd.PTYBroker.policy
+<pkg.systemd.upstream> usr/share/polkit-1/actions/io.systemd.VarlinkMonitor.policy
 usr/share/polkit-1/actions/io.systemd.ask-password.policy
 usr/share/polkit-1/actions/io.systemd.credentials.policy
 usr/share/polkit-1/actions/io.systemd.sysinstall.policy
@@ -508,6 +530,7 @@ usr/share/zsh/vendor-completions/_kernel-install
 usr/share/zsh/vendor-completions/_localectl
 usr/share/zsh/vendor-completions/_loginctl
 usr/share/zsh/vendor-completions/_networkctl
+<pkg.systemd.upstream> usr/share/zsh/vendor-completions/_ptyctl
 usr/share/zsh/vendor-completions/_run0
 usr/share/zsh/vendor-completions/_sd_bus_address
 usr/share/zsh/vendor-completions/_sd_hosts_or_user_at_host
@@ -519,10 +542,13 @@ usr/share/zsh/vendor-completions/_systemd-analyze
 usr/share/zsh/vendor-completions/_systemd-delta
 usr/share/zsh/vendor-completions/_systemd-id128
 usr/share/zsh/vendor-completions/_systemd-inhibit
+<pkg.systemd.upstream> usr/share/zsh/vendor-completions/_systemd-manifest
 usr/share/zsh/vendor-completions/_systemd-sysinstall
 usr/share/zsh/vendor-completions/_systemd-path
+<pkg.systemd.upstream> usr/share/zsh/vendor-completions/_systemd-pty-forward
 usr/share/zsh/vendor-completions/_systemd-run
 usr/share/zsh/vendor-completions/_systemd-tmpfiles
+<pkg.systemd.upstream> usr/share/zsh/vendor-completions/_systemd-vpick
 usr/share/zsh/vendor-completions/_timedatectl
 usr/share/zsh/vendor-completions/_userdbctl
 usr/share/zsh/vendor-completions/_varlinkctl

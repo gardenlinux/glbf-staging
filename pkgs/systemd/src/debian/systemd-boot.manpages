@@ -1,10 +1,14 @@
-usr/share/man/man5/loader.conf.5
-usr/share/man/man7/sd-boot.7
-usr/share/man/man7/sd-stub.7
-usr/share/man/man7/*.efi.stub.7
-usr/share/man/man7/systemd-boot.7
-usr/share/man/man7/systemd-stub.7
-usr/share/man/man8/systemd-bless-boot.8
-usr/share/man/man8/systemd-bless-boot-generator.8
-usr/share/man/man8/systemd-bless-boot.service.8
-usr/share/man/man8/systemd-boot-random-seed.service.8
+#!/usr/bin/dh-exec
+debian/tmp/usr/share/man/man5/loader.conf.5
+debian/tmp/usr/share/man/man7/linuxaa64.efi.stub.7
+debian/tmp/usr/share/man/man7/linuxia32.efi.stub.7
+debian/tmp/usr/share/man/man7/linuxx64.efi.stub.7
+debian/tmp/usr/share/man/man7/sd-boot.7
+debian/tmp/usr/share/man/man7/sd-stub.7
+debian/tmp/usr/share/man/man7/systemd-boot.7
+debian/tmp/usr/share/man/man7/systemd-stub.7
+debian/tmp/usr/share/man/man8/systemd-bless-boot.8
+debian/tmp/usr/share/man/man8/systemd-bless-boot-generator.8
+debian/tmp/usr/share/man/man8/systemd-bless-boot.service.8
+debian/tmp/usr/share/man/man8/systemd-boot-random-seed.service.8
+<pkg.systemd.upstream> debian/tmp/usr/share/man/man8/systemd-efivars-clear.service.8
