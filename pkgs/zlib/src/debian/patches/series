@@ -1,2 +1,4 @@
 minizip-headers.patch
 minizip-ldadd.patch
+Avoid-undefined-behavior-in-gzwrite.c.patch
+Fix-buffer-overflow-bug-in-non-blocking-gzwrite.patch
