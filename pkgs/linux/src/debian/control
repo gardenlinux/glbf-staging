@@ -77,62 +77,62 @@ Description: CPU frequency and voltage scaling tools for Linux (libraries)
  .
  This package contains the shared library.
 
-Package: linux-base-7.2.12+deb14-amd64
+Package: linux-base-7.3.4+deb14-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
 Depends: ${misc:Depends}
-Description: Linux 7.2.12 for 64-bit PCs (base files)
- This package contains files for Linux 7.2.12 on PCs with AMD64, Intel 64
- or VIA Nano processors that are used for both installing the kernel and
+Description: Linux 7.3.4 for 64-bit PCs (base files)
+ This package contains files for Linux 7.3.4 on PCs with AMD64, Intel 64 or
+ VIA Nano processors that are used for both installing the kernel and
  building additional modules.
 
-Package: linux-base-7.2.12+deb14-arm64
+Package: linux-base-7.3.4+deb14-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
 Depends: ${misc:Depends}
-Description: Linux 7.2.12 for 64-bit ARMv8 machines (base files)
- This package contains files for Linux 7.2.12 on 64-bit ARMv8 machines that
+Description: Linux 7.3.4 for 64-bit ARMv8 machines (base files)
+ This package contains files for Linux 7.3.4 on 64-bit ARMv8 machines that
  are used for both installing the kernel and building additional modules.
 
-Package: linux-base-7.2.12+deb14-arm64-16k
+Package: linux-base-7.3.4+deb14-arm64-16k
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
 Depends: ${misc:Depends}
-Description: Linux 7.2.12 for 64-bit ARMv8 machines with 16k pages (base files)
- This package contains files for Linux 7.2.12 on 64-bit ARMv8 machines with
+Description: Linux 7.3.4 for 64-bit ARMv8 machines with 16k pages (base files)
+ This package contains files for Linux 7.3.4 on 64-bit ARMv8 machines with
  16k pages that are used for both installing the kernel and building
  additional modules.
 
-Package: linux-base-7.2.12+deb14-cloud-amd64
+Package: linux-base-7.3.4+deb14-cloud-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
 Depends: ${misc:Depends}
-Description: Linux 7.2.12 for x86-64 cloud (base files)
- This package contains files for Linux 7.2.12 on cloud platforms including
+Description: Linux 7.3.4 for x86-64 cloud (base files)
+ This package contains files for Linux 7.3.4 on cloud platforms including
  Amazon EC2, Microsoft Azure, and Google Compute Engine that are used for
  both installing the kernel and building additional modules.
 
-Package: linux-base-7.2.12+deb14-cloud-arm64
+Package: linux-base-7.3.4+deb14-cloud-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
 Depends: ${misc:Depends}
-Description: Linux 7.2.12 for arm64 cloud (base files)
- This package contains files for Linux 7.2.12 on cloud platforms supporting
+Description: Linux 7.3.4 for arm64 cloud (base files)
+ This package contains files for Linux 7.3.4 on cloud platforms supporting
  arm64 virtual machines that are used for both installing the kernel and
  building additional modules.
 
-Package: linux-base-7.2.12+deb14-test
+Package: linux-base-7.3.4+deb14-test
 Architecture: amd64 arm64
 Build-Profiles: <pkg.linux.quick !pkg.linux.nokernel>
 Depends: ${misc:Depends}
-Description: Linux 7.2.12 for CI only (base files)
- This package contains files for Linux 7.2.12 on CI only that are used for
+Description: Linux 7.3.4 for CI only (base files)
+ This package contains files for Linux 7.3.4 on CI only that are used for
  both installing the kernel and building additional modules.
 
 Package: linux-base-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-amd64 (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-7.3.4+deb14-amd64 (= ${binary:Version}), ${misc:Depends}
 Description: Linux for 64-bit PCs (dummy package)
  This empty package is used to keep the installed versions of
  linux-headers-64-bit PCs and linux-image-64-bit PCs synchronised.
@@ -140,7 +140,7 @@ Description: Linux for 64-bit PCs (dummy package)
 Package: linux-base-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-arm64 (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-7.3.4+deb14-arm64 (= ${binary:Version}), ${misc:Depends}
 Description: Linux for 64-bit ARMv8 machines (dummy package)
  This empty package is used to keep the installed versions of
  linux-headers-64-bit ARMv8 machines and linux-image-64-bit ARMv8 machines
@@ -149,7 +149,7 @@ Description: Linux for 64-bit ARMv8 machines (dummy package)
 Package: linux-base-arm64-16k
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-arm64-16k (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-7.3.4+deb14-arm64-16k (= ${binary:Version}), ${misc:Depends}
 Description: Linux for 64-bit ARMv8 machines with 16k pages (dummy package)
  This empty package is used to keep the installed versions of
  linux-headers-64-bit ARMv8 machines with 16k pages and linux-image-64-bit
@@ -158,7 +158,7 @@ Description: Linux for 64-bit ARMv8 machines with 16k pages (dummy package)
 Package: linux-base-cloud-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-cloud-amd64 (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-7.3.4+deb14-cloud-amd64 (= ${binary:Version}), ${misc:Depends}
 Description: Linux for x86-64 cloud (dummy package)
  This empty package is used to keep the installed versions of
  linux-headers-x86-64 cloud and linux-image-x86-64 cloud synchronised.
@@ -166,7 +166,7 @@ Description: Linux for x86-64 cloud (dummy package)
 Package: linux-base-cloud-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-cloud-arm64 (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-7.3.4+deb14-cloud-arm64 (= ${binary:Version}), ${misc:Depends}
 Description: Linux for arm64 cloud (dummy package)
  This empty package is used to keep the installed versions of
  linux-headers-arm64 cloud and linux-image-arm64 cloud synchronised.
@@ -174,75 +174,75 @@ Description: Linux for arm64 cloud (dummy package)
 Package: linux-base-test
 Architecture: amd64 arm64
 Build-Profiles: <pkg.linux.quick !pkg.linux.nokernel !pkg.linux.nometa>
-Depends: linux-base-7.2.12+deb14-test (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-7.3.4+deb14-test (= ${binary:Version}), ${misc:Depends}
 Description: Linux for CI only (dummy package)
  This empty package is used to keep the installed versions of
  linux-headers-CI only and linux-image-CI only synchronised.
 
-Package: linux-binary-7.2.12+deb14-amd64
+Package: linux-binary-7.3.4+deb14-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-amd64 (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for 64-bit PCs (kernel image)
- This package contains the kernel image for Linux 7.2.12 on PCs with AMD64,
+Depends: linux-base-7.3.4+deb14-amd64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for 64-bit PCs (kernel image)
+ This package contains the kernel image for Linux 7.3.4 on PCs with AMD64,
  Intel 64 or VIA Nano processors.
  .
  This does not provide a complete kernel installation.  You should normally
- install linux-image-7.2.12+deb14-amd64.
+ install linux-image-7.3.4+deb14-amd64.
 
-Package: linux-binary-7.2.12+deb14-arm64
+Package: linux-binary-7.3.4+deb14-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-arm64 (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for 64-bit ARMv8 machines (kernel image)
- This package contains the kernel image for Linux 7.2.12 on 64-bit ARMv8
+Depends: linux-base-7.3.4+deb14-arm64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for 64-bit ARMv8 machines (kernel image)
+ This package contains the kernel image for Linux 7.3.4 on 64-bit ARMv8
  machines.
  .
  This does not provide a complete kernel installation.  You should normally
- install linux-image-7.2.12+deb14-arm64.
+ install linux-image-7.3.4+deb14-arm64.
 
-Package: linux-binary-7.2.12+deb14-arm64-16k
+Package: linux-binary-7.3.4+deb14-arm64-16k
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-arm64-16k (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for 64-bit ARMv8 machines with 16k pages (kernel image)
- This package contains the kernel image for Linux 7.2.12 on 64-bit ARMv8
+Depends: linux-base-7.3.4+deb14-arm64-16k (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for 64-bit ARMv8 machines with 16k pages (kernel image)
+ This package contains the kernel image for Linux 7.3.4 on 64-bit ARMv8
  machines with 16k pages.
  .
  This does not provide a complete kernel installation.  You should normally
- install linux-image-7.2.12+deb14-arm64-16k.
+ install linux-image-7.3.4+deb14-arm64-16k.
 
-Package: linux-binary-7.2.12+deb14-cloud-amd64
+Package: linux-binary-7.3.4+deb14-cloud-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-cloud-amd64 (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for x86-64 cloud (kernel image)
- This package contains the kernel image for Linux 7.2.12 on cloud platforms
+Depends: linux-base-7.3.4+deb14-cloud-amd64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for x86-64 cloud (kernel image)
+ This package contains the kernel image for Linux 7.3.4 on cloud platforms
  including Amazon EC2, Microsoft Azure, and Google Compute Engine.
  .
  This does not provide a complete kernel installation.  You should normally
- install linux-image-7.2.12+deb14-cloud-amd64.
+ install linux-image-7.3.4+deb14-cloud-amd64.
 
-Package: linux-binary-7.2.12+deb14-cloud-arm64
+Package: linux-binary-7.3.4+deb14-cloud-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-cloud-arm64 (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for arm64 cloud (kernel image)
- This package contains the kernel image for Linux 7.2.12 on cloud platforms
+Depends: linux-base-7.3.4+deb14-cloud-arm64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for arm64 cloud (kernel image)
+ This package contains the kernel image for Linux 7.3.4 on cloud platforms
  supporting arm64 virtual machines.
  .
  This does not provide a complete kernel installation.  You should normally
- install linux-image-7.2.12+deb14-cloud-arm64.
+ install linux-image-7.3.4+deb14-cloud-arm64.
 
-Package: linux-binary-7.2.12+deb14-test
+Package: linux-binary-7.3.4+deb14-test
 Architecture: amd64 arm64
 Build-Profiles: <pkg.linux.quick !pkg.linux.nokernel>
-Depends: linux-base-7.2.12+deb14-test (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for CI only (kernel image)
- This package contains the kernel image for Linux 7.2.12 on CI only.
+Depends: linux-base-7.3.4+deb14-test (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for CI only (kernel image)
+ This package contains the kernel image for Linux 7.3.4 on CI only.
  .
  This does not provide a complete kernel installation.  You should normally
- install linux-image-7.2.12+deb14-test.
+ install linux-image-7.3.4+deb14-test.
 
 Package: linux-bpf-dev
 Architecture: amd64 arm64
@@ -254,13 +254,13 @@ Description: Headers for BPF development
  The vmlinux.h header is provided to allow userspace to build BPF CO-RE
  programs targeting the packaged kernel.
 
-Package: linux-config-7.2
+Package: linux-config-7.3
 Architecture: linux-any
 Build-Profiles: <!pkg.linux.nosource>
 Depends: ${misc:Depends}
-Recommends: linux-source-7.2
+Recommends: linux-source-7.3
 Multi-Arch: same
-Description: Debian kernel configurations for Linux 7.2
+Description: Debian kernel configurations for Linux 7.3
  This package contains the configuration files used to build the official
  Debian kernel files, but without references to Debian's signing
  certificates.
@@ -283,117 +283,117 @@ Package: linux-doc
 Architecture: all
 Section: doc
 Build-Profiles: <!nodoc !pkg.linux.nometa !pkg.linux.quick>
-Depends: linux-doc-7.2 (= ${binary:Version}), ${misc:Depends}
+Depends: linux-doc-7.3 (= ${binary:Version}), ${misc:Depends}
 Description: Linux kernel specific documentation (meta-package)
  This package depends on the package containing the documentation for the
  latest Linux kernel.
 
-Package: linux-doc-7.2
+Package: linux-doc-7.3
 Architecture: all
 Section: doc
 Build-Profiles: <!nodoc !pkg.linux.quick>
 Built-Using: ${sphinxdoc:Built-Using}
 Depends: ${misc:Depends}, ${sphinxdoc:Depends}
 Multi-Arch: foreign
-Description: Linux kernel specific documentation for version 7.2
+Description: Linux kernel specific documentation for version 7.3
  This package provides the various README files and HTML documentation for
- the Linux kernel version 7.2.  Plenty of information, including the
+ the Linux kernel version 7.3.  Plenty of information, including the
  descriptions of various kernel subsystems, filesystems, driver-specific
  notes and the like.  An index to the documentation is installed as
- /usr/share/doc/linux-doc-7.2/html/index.html.
+ /usr/share/doc/linux-doc-7.3/html/index.html.
 
-Package: linux-headers-7.2.12+deb14-amd64
+Package: linux-headers-7.3.4+deb14-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: gcc-16-for-host, linux-base (>= 4.12~), linux-base-7.2.12+deb14-amd64 (= ${binary:Version}), linux-headers-7.2.12+deb14-common (= ${source:Version}), linux-kbuild-7.2.12+deb14, ${misc:Depends}
-Description: Linux 7.2.12 for 64-bit PCs (module development)
+Depends: gcc-16-for-host, linux-base (>= 4.12~), linux-base-7.3.4+deb14-amd64 (= ${binary:Version}), linux-headers-7.3.4+deb14-common (= ${source:Version}), linux-kbuild-7.3.4+deb14, ${misc:Depends}
+Description: Linux 7.3.4 for 64-bit PCs (module development)
  This package provides the architecture-specific kernel header files for
- Linux kernel 7.2.12+deb14-amd64, generally used for building out-of-tree
+ Linux kernel 7.3.4+deb14-amd64, generally used for building out-of-tree
  kernel modules.  These files are going to be installed into
- /usr/src/linux-headers-7.2.12+deb14-amd64, and can be used for building
+ /usr/src/linux-headers-7.3.4+deb14-amd64, and can be used for building
  modules that load into the kernel provided by the
- linux-image-7.2.12+deb14-amd64 package.
+ linux-image-7.3.4+deb14-amd64 package.
 
-Package: linux-headers-7.2.12+deb14-arm64
+Package: linux-headers-7.3.4+deb14-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: gcc-16-for-host, linux-base (>= 4.12~), linux-base-7.2.12+deb14-arm64 (= ${binary:Version}), linux-headers-7.2.12+deb14-common (= ${source:Version}), linux-kbuild-7.2.12+deb14, ${misc:Depends}
-Description: Linux 7.2.12 for 64-bit ARMv8 machines (module development)
+Depends: gcc-16-for-host, linux-base (>= 4.12~), linux-base-7.3.4+deb14-arm64 (= ${binary:Version}), linux-headers-7.3.4+deb14-common (= ${source:Version}), linux-kbuild-7.3.4+deb14, ${misc:Depends}
+Description: Linux 7.3.4 for 64-bit ARMv8 machines (module development)
  This package provides the architecture-specific kernel header files for
- Linux kernel 7.2.12+deb14-arm64, generally used for building out-of-tree
+ Linux kernel 7.3.4+deb14-arm64, generally used for building out-of-tree
  kernel modules.  These files are going to be installed into
- /usr/src/linux-headers-7.2.12+deb14-arm64, and can be used for building
+ /usr/src/linux-headers-7.3.4+deb14-arm64, and can be used for building
  modules that load into the kernel provided by the
- linux-image-7.2.12+deb14-arm64 package.
+ linux-image-7.3.4+deb14-arm64 package.
 
-Package: linux-headers-7.2.12+deb14-arm64-16k
+Package: linux-headers-7.3.4+deb14-arm64-16k
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: gcc-16-for-host, linux-base (>= 4.12~), linux-base-7.2.12+deb14-arm64-16k (= ${binary:Version}), linux-headers-7.2.12+deb14-common (= ${source:Version}), linux-kbuild-7.2.12+deb14, ${misc:Depends}
-Description: Linux 7.2.12 for 64-bit ARMv8 machines with 16k pages (module development)
+Depends: gcc-16-for-host, linux-base (>= 4.12~), linux-base-7.3.4+deb14-arm64-16k (= ${binary:Version}), linux-headers-7.3.4+deb14-common (= ${source:Version}), linux-kbuild-7.3.4+deb14, ${misc:Depends}
+Description: Linux 7.3.4 for 64-bit ARMv8 machines with 16k pages (module development)
  This package provides the architecture-specific kernel header files for
- Linux kernel 7.2.12+deb14-arm64-16k, generally used for building
+ Linux kernel 7.3.4+deb14-arm64-16k, generally used for building
  out-of-tree kernel modules.  These files are going to be installed into
- /usr/src/linux-headers-7.2.12+deb14-arm64-16k, and can be used for
- building modules that load into the kernel provided by the
- linux-image-7.2.12+deb14-arm64-16k package.
+ /usr/src/linux-headers-7.3.4+deb14-arm64-16k, and can be used for building
+ modules that load into the kernel provided by the
+ linux-image-7.3.4+deb14-arm64-16k package.
 
-Package: linux-headers-7.2.12+deb14-cloud-amd64
+Package: linux-headers-7.3.4+deb14-cloud-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: gcc-16-for-host, linux-base (>= 4.12~), linux-base-7.2.12+deb14-cloud-amd64 (= ${binary:Version}), linux-headers-7.2.12+deb14-common (= ${source:Version}), linux-kbuild-7.2.12+deb14, ${misc:Depends}
-Description: Linux 7.2.12 for x86-64 cloud (module development)
+Depends: gcc-16-for-host, linux-base (>= 4.12~), linux-base-7.3.4+deb14-cloud-amd64 (= ${binary:Version}), linux-headers-7.3.4+deb14-common (= ${source:Version}), linux-kbuild-7.3.4+deb14, ${misc:Depends}
+Description: Linux 7.3.4 for x86-64 cloud (module development)
  This package provides the architecture-specific kernel header files for
- Linux kernel 7.2.12+deb14-cloud-amd64, generally used for building
+ Linux kernel 7.3.4+deb14-cloud-amd64, generally used for building
  out-of-tree kernel modules.  These files are going to be installed into
- /usr/src/linux-headers-7.2.12+deb14-cloud-amd64, and can be used for
+ /usr/src/linux-headers-7.3.4+deb14-cloud-amd64, and can be used for
  building modules that load into the kernel provided by the
- linux-image-7.2.12+deb14-cloud-amd64 package.
+ linux-image-7.3.4+deb14-cloud-amd64 package.
 
-Package: linux-headers-7.2.12+deb14-cloud-arm64
+Package: linux-headers-7.3.4+deb14-cloud-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: gcc-16-for-host, linux-base (>= 4.12~), linux-base-7.2.12+deb14-cloud-arm64 (= ${binary:Version}), linux-headers-7.2.12+deb14-common (= ${source:Version}), linux-kbuild-7.2.12+deb14, ${misc:Depends}
-Description: Linux 7.2.12 for arm64 cloud (module development)
+Depends: gcc-16-for-host, linux-base (>= 4.12~), linux-base-7.3.4+deb14-cloud-arm64 (= ${binary:Version}), linux-headers-7.3.4+deb14-common (= ${source:Version}), linux-kbuild-7.3.4+deb14, ${misc:Depends}
+Description: Linux 7.3.4 for arm64 cloud (module development)
  This package provides the architecture-specific kernel header files for
- Linux kernel 7.2.12+deb14-cloud-arm64, generally used for building
+ Linux kernel 7.3.4+deb14-cloud-arm64, generally used for building
  out-of-tree kernel modules.  These files are going to be installed into
- /usr/src/linux-headers-7.2.12+deb14-cloud-arm64, and can be used for
+ /usr/src/linux-headers-7.3.4+deb14-cloud-arm64, and can be used for
  building modules that load into the kernel provided by the
- linux-image-7.2.12+deb14-cloud-arm64 package.
+ linux-image-7.3.4+deb14-cloud-arm64 package.
 
-Package: linux-headers-7.2.12+deb14-common
+Package: linux-headers-7.3.4+deb14-common
 Architecture: all
 Build-Profiles: <!pkg.linux.nokernel>
 Depends: ${misc:Depends}
 Multi-Arch: foreign
-Description: Common header files for Linux 7.2.12+deb14
+Description: Common header files for Linux 7.3.4+deb14
  This package provides the common kernel header files for Linux kernel
- version 7.2.12+deb14, generally used for building out-of-tree kernel
+ version 7.3.4+deb14, generally used for building out-of-tree kernel
  modules.  These files are going to be installed into
- /usr/src/linux-headers-7.2.12+deb14-common.
+ /usr/src/linux-headers-7.3.4+deb14-common.
  .
  To obtain a complete set of headers you also need to install the
- linux-headers-7.2.12+deb14-(flavour) package, matching the flavour of the
+ linux-headers-7.3.4+deb14-(flavour) package, matching the flavour of the
  kernel you intend the build for.
 
-Package: linux-headers-7.2.12+deb14-test
+Package: linux-headers-7.3.4+deb14-test
 Architecture: amd64 arm64
 Build-Profiles: <pkg.linux.quick !pkg.linux.nokernel>
-Depends: gcc-16-for-host, linux-base (>= 4.12~), linux-base-7.2.12+deb14-test (= ${binary:Version}), linux-headers-7.2.12+deb14-common (= ${source:Version}), linux-kbuild-7.2.12+deb14, ${misc:Depends}
-Description: Linux 7.2.12 for CI only (module development)
+Depends: gcc-16-for-host, linux-base (>= 4.12~), linux-base-7.3.4+deb14-test (= ${binary:Version}), linux-headers-7.3.4+deb14-common (= ${source:Version}), linux-kbuild-7.3.4+deb14, ${misc:Depends}
+Description: Linux 7.3.4 for CI only (module development)
  This package provides the architecture-specific kernel header files for
- Linux kernel 7.2.12+deb14-test, generally used for building out-of-tree
+ Linux kernel 7.3.4+deb14-test, generally used for building out-of-tree
  kernel modules.  These files are going to be installed into
- /usr/src/linux-headers-7.2.12+deb14-test, and can be used for building
+ /usr/src/linux-headers-7.3.4+deb14-test, and can be used for building
  modules that load into the kernel provided by the
- linux-image-7.2.12+deb14-test package.
+ linux-image-7.3.4+deb14-test package.
 
 Package: linux-headers-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
 Provides: linux-headers-generic
-Depends: linux-base-amd64 (= ${binary:Version}), linux-headers-7.2.12+deb14-amd64 (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-amd64 (= ${binary:Version}), linux-headers-7.3.4+deb14-amd64 (= ${binary:Version}), ${misc:Depends}
 Description: Linux for 64-bit PCs (module development meta-package)
  This package depends on the architecture-specific header files for the
  latest Linux kernel amd64 configuration.
@@ -402,7 +402,7 @@ Package: linux-headers-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
 Provides: linux-headers-generic
-Depends: linux-base-arm64 (= ${binary:Version}), linux-headers-7.2.12+deb14-arm64 (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-arm64 (= ${binary:Version}), linux-headers-7.3.4+deb14-arm64 (= ${binary:Version}), ${misc:Depends}
 Description: Linux for 64-bit ARMv8 machines (module development meta-package)
  This package depends on the architecture-specific header files for the
  latest Linux kernel arm64 configuration.
@@ -410,7 +410,7 @@ Description: Linux for 64-bit ARMv8 machines (module development meta-package)
 Package: linux-headers-arm64-16k
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
-Depends: linux-base-arm64-16k (= ${binary:Version}), linux-headers-7.2.12+deb14-arm64-16k (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-arm64-16k (= ${binary:Version}), linux-headers-7.3.4+deb14-arm64-16k (= ${binary:Version}), ${misc:Depends}
 Description: Linux for 64-bit ARMv8 machines with 16k pages (module development meta-package)
  This package depends on the architecture-specific header files for the
  latest Linux kernel arm64-16k configuration.
@@ -418,7 +418,7 @@ Description: Linux for 64-bit ARMv8 machines with 16k pages (module development 
 Package: linux-headers-cloud-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
-Depends: linux-base-cloud-amd64 (= ${binary:Version}), linux-headers-7.2.12+deb14-cloud-amd64 (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-cloud-amd64 (= ${binary:Version}), linux-headers-7.3.4+deb14-cloud-amd64 (= ${binary:Version}), ${misc:Depends}
 Description: Linux for x86-64 cloud (module development meta-package)
  This package depends on the architecture-specific header files for the
  latest Linux kernel cloud-amd64 configuration.
@@ -426,7 +426,7 @@ Description: Linux for x86-64 cloud (module development meta-package)
 Package: linux-headers-cloud-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
-Depends: linux-base-cloud-arm64 (= ${binary:Version}), linux-headers-7.2.12+deb14-cloud-arm64 (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-cloud-arm64 (= ${binary:Version}), linux-headers-7.3.4+deb14-cloud-arm64 (= ${binary:Version}), ${misc:Depends}
 Description: Linux for arm64 cloud (module development meta-package)
  This package depends on the architecture-specific header files for the
  latest Linux kernel cloud-arm64 configuration.
@@ -434,140 +434,140 @@ Description: Linux for arm64 cloud (module development meta-package)
 Package: linux-headers-test
 Architecture: amd64 arm64
 Build-Profiles: <pkg.linux.quick !pkg.linux.nokernel !pkg.linux.nometa>
-Depends: linux-base-test (= ${binary:Version}), linux-headers-7.2.12+deb14-test (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-test (= ${binary:Version}), linux-headers-7.3.4+deb14-test (= ${binary:Version}), ${misc:Depends}
 Description: Linux for CI only (module development meta-package)
  This package depends on the architecture-specific header files for the
  latest Linux kernel test configuration.
 
-Package: linux-image-7.2.12+deb14-amd64
+Package: linux-image-7.3.4+deb14-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-amd64 (= ${binary:Version}), linux-binary-7.2.12+deb14-amd64 (= ${binary:Version}), linux-modules-7.2.12+deb14-amd64 (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-7.3.4+deb14-amd64 (= ${binary:Version}), linux-binary-7.3.4+deb14-amd64 (= ${binary:Version}), linux-modules-7.3.4+deb14-amd64 (= ${binary:Version}), ${misc:Depends}
 Recommends: apparmor [amd64]
-Suggests: debian-kernel-handbook, firmware-linux-free, grub-pc [amd64] | grub-efi-amd64 [amd64] | extlinux [amd64], linux-doc-7.2
+Suggests: debian-kernel-handbook, firmware-linux-free, grub-pc [amd64] | grub-efi-amd64 [amd64] | extlinux [amd64], linux-doc-7.3
 Breaks: fwupdate (<< 12-7) [amd64], wireless-regdb (<< 2019.06.03-1~) [amd64]
-Description: Linux 7.2.12 for 64-bit PCs
- The Linux kernel 7.2.12 and modules for use on PCs with AMD64, Intel 64 or
+Description: Linux 7.3.4 for 64-bit PCs
+ The Linux kernel 7.3.4 and modules for use on PCs with AMD64, Intel 64 or
  VIA Nano processors.
 
-Package: linux-image-7.2.12+deb14-amd64-dbg
+Package: linux-image-7.3.4+deb14-amd64-dbg
 Architecture: amd64
 Section: debug
 Priority: optional
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nokerneldbg !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-amd64 (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for 64-bit PCs (debug symbols)
+Depends: linux-base-7.3.4+deb14-amd64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for 64-bit PCs (debug symbols)
  This package provides the detached debug symbols for the Linux kernel and
- modules in linux-image-7.2.12+deb14-amd64.
+ modules in linux-image-7.3.4+deb14-amd64.
 
-Package: linux-image-7.2.12+deb14-arm64
+Package: linux-image-7.3.4+deb14-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-arm64 (= ${binary:Version}), linux-binary-7.2.12+deb14-arm64 (= ${binary:Version}), linux-modules-7.2.12+deb14-arm64 (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-7.3.4+deb14-arm64 (= ${binary:Version}), linux-binary-7.3.4+deb14-arm64 (= ${binary:Version}), linux-modules-7.3.4+deb14-arm64 (= ${binary:Version}), ${misc:Depends}
 Recommends: apparmor [arm64]
-Suggests: debian-kernel-handbook, firmware-linux-free, linux-doc-7.2
+Suggests: debian-kernel-handbook, firmware-linux-free, linux-doc-7.3
 Breaks: flash-kernel (<< 3.110~) [arm64], fwupdate (<< 12-7) [arm64], reform-tools (<< 1.83~) [arm64], u-boot-efi-dtb (<< 5~) [arm64], wireless-regdb (<< 2019.06.03-1~) [arm64]
-Description: Linux 7.2.12 for 64-bit ARMv8 machines
- The Linux kernel 7.2.12 and modules for use on 64-bit ARMv8 machines.
+Description: Linux 7.3.4 for 64-bit ARMv8 machines
+ The Linux kernel 7.3.4 and modules for use on 64-bit ARMv8 machines.
 
-Package: linux-image-7.2.12+deb14-arm64-16k
+Package: linux-image-7.3.4+deb14-arm64-16k
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-arm64-16k (= ${binary:Version}), linux-binary-7.2.12+deb14-arm64-16k (= ${binary:Version}), linux-modules-7.2.12+deb14-arm64-16k (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-7.3.4+deb14-arm64-16k (= ${binary:Version}), linux-binary-7.3.4+deb14-arm64-16k (= ${binary:Version}), linux-modules-7.3.4+deb14-arm64-16k (= ${binary:Version}), ${misc:Depends}
 Recommends: apparmor [arm64]
-Suggests: debian-kernel-handbook, firmware-linux-free, linux-doc-7.2
+Suggests: debian-kernel-handbook, firmware-linux-free, linux-doc-7.3
 Breaks: flash-kernel (<< 3.110~) [arm64], fwupdate (<< 12-7) [arm64], reform-tools (<< 1.83~) [arm64], u-boot-efi-dtb (<< 5~) [arm64], wireless-regdb (<< 2019.06.03-1~) [arm64]
-Description: Linux 7.2.12 for 64-bit ARMv8 machines with 16k pages
- The Linux kernel 7.2.12 and modules for use on 64-bit ARMv8 machines with
+Description: Linux 7.3.4 for 64-bit ARMv8 machines with 16k pages
+ The Linux kernel 7.3.4 and modules for use on 64-bit ARMv8 machines with
  16k pages.
 
-Package: linux-image-7.2.12+deb14-arm64-16k-dbg
+Package: linux-image-7.3.4+deb14-arm64-16k-dbg
 Architecture: arm64
 Section: debug
 Priority: optional
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nokerneldbg !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-arm64-16k (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for 64-bit ARMv8 machines with 16k pages (debug symbols)
+Depends: linux-base-7.3.4+deb14-arm64-16k (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for 64-bit ARMv8 machines with 16k pages (debug symbols)
  This package provides the detached debug symbols for the Linux kernel and
- modules in linux-image-7.2.12+deb14-arm64-16k.
+ modules in linux-image-7.3.4+deb14-arm64-16k.
 
-Package: linux-image-7.2.12+deb14-arm64-dbg
+Package: linux-image-7.3.4+deb14-arm64-dbg
 Architecture: arm64
 Section: debug
 Priority: optional
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nokerneldbg !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-arm64 (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for 64-bit ARMv8 machines (debug symbols)
+Depends: linux-base-7.3.4+deb14-arm64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for 64-bit ARMv8 machines (debug symbols)
  This package provides the detached debug symbols for the Linux kernel and
- modules in linux-image-7.2.12+deb14-arm64.
+ modules in linux-image-7.3.4+deb14-arm64.
 
-Package: linux-image-7.2.12+deb14-cloud-amd64
+Package: linux-image-7.3.4+deb14-cloud-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-cloud-amd64 (= ${binary:Version}), linux-binary-7.2.12+deb14-cloud-amd64 (= ${binary:Version}), linux-modules-7.2.12+deb14-cloud-amd64 (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-7.3.4+deb14-cloud-amd64 (= ${binary:Version}), linux-binary-7.3.4+deb14-cloud-amd64 (= ${binary:Version}), linux-modules-7.3.4+deb14-cloud-amd64 (= ${binary:Version}), ${misc:Depends}
 Recommends: apparmor [amd64]
-Suggests: debian-kernel-handbook, firmware-linux-free, grub-pc [amd64] | grub-efi-amd64 [amd64] | extlinux [amd64], linux-doc-7.2
+Suggests: debian-kernel-handbook, firmware-linux-free, grub-pc [amd64] | grub-efi-amd64 [amd64] | extlinux [amd64], linux-doc-7.3
 Breaks: fwupdate (<< 12-7) [amd64], wireless-regdb (<< 2019.06.03-1~) [amd64]
-Description: Linux 7.2.12 for x86-64 cloud
- The Linux kernel 7.2.12 and modules for use on cloud platforms including
+Description: Linux 7.3.4 for x86-64 cloud
+ The Linux kernel 7.3.4 and modules for use on cloud platforms including
  Amazon EC2, Microsoft Azure, and Google Compute Engine.
 
-Package: linux-image-7.2.12+deb14-cloud-amd64-dbg
+Package: linux-image-7.3.4+deb14-cloud-amd64-dbg
 Architecture: amd64
 Section: debug
 Priority: optional
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nokerneldbg !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-cloud-amd64 (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for x86-64 cloud (debug symbols)
+Depends: linux-base-7.3.4+deb14-cloud-amd64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for x86-64 cloud (debug symbols)
  This package provides the detached debug symbols for the Linux kernel and
- modules in linux-image-7.2.12+deb14-cloud-amd64.
+ modules in linux-image-7.3.4+deb14-cloud-amd64.
 
-Package: linux-image-7.2.12+deb14-cloud-arm64
+Package: linux-image-7.3.4+deb14-cloud-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-cloud-arm64 (= ${binary:Version}), linux-binary-7.2.12+deb14-cloud-arm64 (= ${binary:Version}), linux-modules-7.2.12+deb14-cloud-arm64 (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-7.3.4+deb14-cloud-arm64 (= ${binary:Version}), linux-binary-7.3.4+deb14-cloud-arm64 (= ${binary:Version}), linux-modules-7.3.4+deb14-cloud-arm64 (= ${binary:Version}), ${misc:Depends}
 Recommends: apparmor [arm64]
-Suggests: debian-kernel-handbook, firmware-linux-free, linux-doc-7.2
+Suggests: debian-kernel-handbook, firmware-linux-free, linux-doc-7.3
 Breaks: flash-kernel (<< 3.110~) [arm64], fwupdate (<< 12-7) [arm64], reform-tools (<< 1.83~) [arm64], u-boot-efi-dtb (<< 5~) [arm64], wireless-regdb (<< 2019.06.03-1~) [arm64]
-Description: Linux 7.2.12 for arm64 cloud
- The Linux kernel 7.2.12 and modules for use on cloud platforms supporting
+Description: Linux 7.3.4 for arm64 cloud
+ The Linux kernel 7.3.4 and modules for use on cloud platforms supporting
  arm64 virtual machines.
 
-Package: linux-image-7.2.12+deb14-cloud-arm64-dbg
+Package: linux-image-7.3.4+deb14-cloud-arm64-dbg
 Architecture: arm64
 Section: debug
 Priority: optional
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nokerneldbg !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-cloud-arm64 (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for arm64 cloud (debug symbols)
+Depends: linux-base-7.3.4+deb14-cloud-arm64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for arm64 cloud (debug symbols)
  This package provides the detached debug symbols for the Linux kernel and
- modules in linux-image-7.2.12+deb14-cloud-arm64.
+ modules in linux-image-7.3.4+deb14-cloud-arm64.
 
-Package: linux-image-7.2.12+deb14-test
+Package: linux-image-7.3.4+deb14-test
 Architecture: amd64 arm64
 Build-Profiles: <pkg.linux.quick !pkg.linux.nokernel>
-Depends: linux-base-7.2.12+deb14-test (= ${binary:Version}), linux-binary-7.2.12+deb14-test (= ${binary:Version}), linux-modules-7.2.12+deb14-test (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-7.3.4+deb14-test (= ${binary:Version}), linux-binary-7.3.4+deb14-test (= ${binary:Version}), linux-modules-7.3.4+deb14-test (= ${binary:Version}), ${misc:Depends}
 Recommends: apparmor [amd64 arm64]
-Suggests: debian-kernel-handbook, firmware-linux-free, grub-pc [amd64] | grub-efi-amd64 [amd64] | extlinux [amd64], linux-doc-7.2
+Suggests: debian-kernel-handbook, firmware-linux-free, grub-pc [amd64] | grub-efi-amd64 [amd64] | extlinux [amd64], linux-doc-7.3
 Breaks: flash-kernel (<< 3.110~) [arm64], fwupdate (<< 12-7) [amd64 arm64], reform-tools (<< 1.83~) [arm64], u-boot-efi-dtb (<< 5~) [arm64], wireless-regdb (<< 2019.06.03-1~) [amd64 arm64]
-Description: Linux 7.2.12 for CI only
- The Linux kernel 7.2.12 and modules for use on CI only.
+Description: Linux 7.3.4 for CI only
+ The Linux kernel 7.3.4 and modules for use on CI only.
 
-Package: linux-image-7.2.12+deb14-test-dbg
+Package: linux-image-7.3.4+deb14-test-dbg
 Architecture: amd64 arm64
 Section: debug
 Priority: optional
 Build-Profiles: <pkg.linux.quick !pkg.linux.nokernel !pkg.linux.nokerneldbg !pkg.linux.quick>
-Depends: linux-base-7.2.12+deb14-test (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for CI only (debug symbols)
+Depends: linux-base-7.3.4+deb14-test (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for CI only (debug symbols)
  This package provides the detached debug symbols for the Linux kernel and
- modules in linux-image-7.2.12+deb14-test.
+ modules in linux-image-7.3.4+deb14-test.
 
 Package: linux-image-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
-Provides: linux-image-generic, linux-latest-modules-7.2.12+deb14-amd64, virtualbox-guest-modules [amd64], wireguard-modules (= 1.0.0)
-Depends: linux-base-amd64 (= ${binary:Version}), linux-image-7.2.12+deb14-amd64 (= ${binary:Version}), ${misc:Depends}
+Provides: linux-image-generic, linux-latest-modules-7.3.4+deb14-amd64, virtualbox-guest-modules [amd64], wireguard-modules (= 1.0.0)
+Depends: linux-base-amd64 (= ${binary:Version}), linux-image-7.3.4+deb14-amd64 (= ${binary:Version}), linux-modules-amd64 (= ${binary:Version}), ${misc:Depends}
 Description: Linux for 64-bit PCs (meta-package)
  This package depends on the latest Linux kernel and modules for use on PCs
  with AMD64, Intel 64 or VIA Nano processors.
@@ -576,7 +576,7 @@ Package: linux-image-amd64-dbg
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nokerneldbg !pkg.linux.nometa !pkg.linux.quick>
 Provides: linux-latest-image-dbg
-Depends: linux-base-amd64 (= ${binary:Version}), linux-image-7.2.12+deb14-amd64-dbg (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-amd64 (= ${binary:Version}), linux-image-7.3.4+deb14-amd64-dbg (= ${binary:Version}), ${misc:Depends}
 Description: Linux for 64-bit PCs (debug symbols meta-package)
  This package depends on the detached debugging symbols for the latest
  Linux kernel amd64 configuration.
@@ -584,8 +584,8 @@ Description: Linux for 64-bit PCs (debug symbols meta-package)
 Package: linux-image-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
-Provides: linux-image-generic, linux-latest-modules-7.2.12+deb14-arm64, virtualbox-guest-modules [amd64], wireguard-modules (= 1.0.0)
-Depends: linux-base-arm64 (= ${binary:Version}), linux-image-7.2.12+deb14-arm64 (= ${binary:Version}), ${misc:Depends}
+Provides: linux-image-generic, linux-latest-modules-7.3.4+deb14-arm64, virtualbox-guest-modules [amd64], wireguard-modules (= 1.0.0)
+Depends: linux-base-arm64 (= ${binary:Version}), linux-image-7.3.4+deb14-arm64 (= ${binary:Version}), linux-modules-arm64 (= ${binary:Version}), ${misc:Depends}
 Description: Linux for 64-bit ARMv8 machines (meta-package)
  This package depends on the latest Linux kernel and modules for use on
  64-bit ARMv8 machines.
@@ -593,8 +593,8 @@ Description: Linux for 64-bit ARMv8 machines (meta-package)
 Package: linux-image-arm64-16k
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
-Provides: linux-latest-modules-7.2.12+deb14-arm64-16k, virtualbox-guest-modules [amd64], wireguard-modules (= 1.0.0)
-Depends: linux-base-arm64-16k (= ${binary:Version}), linux-image-7.2.12+deb14-arm64-16k (= ${binary:Version}), ${misc:Depends}
+Provides: linux-latest-modules-7.3.4+deb14-arm64-16k, virtualbox-guest-modules [amd64], wireguard-modules (= 1.0.0)
+Depends: linux-base-arm64-16k (= ${binary:Version}), linux-image-7.3.4+deb14-arm64-16k (= ${binary:Version}), linux-modules-arm64-16k (= ${binary:Version}), ${misc:Depends}
 Description: Linux for 64-bit ARMv8 machines with 16k pages (meta-package)
  This package depends on the latest Linux kernel and modules for use on
  64-bit ARMv8 machines with 16k pages.
@@ -603,7 +603,7 @@ Package: linux-image-arm64-16k-dbg
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nokerneldbg !pkg.linux.nometa !pkg.linux.quick>
 Provides: linux-latest-image-dbg
-Depends: linux-base-arm64-16k (= ${binary:Version}), linux-image-7.2.12+deb14-arm64-16k-dbg (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-arm64-16k (= ${binary:Version}), linux-image-7.3.4+deb14-arm64-16k-dbg (= ${binary:Version}), ${misc:Depends}
 Description: Linux for 64-bit ARMv8 machines with 16k pages (debug symbols meta-package)
  This package depends on the detached debugging symbols for the latest
  Linux kernel arm64-16k configuration.
@@ -612,7 +612,7 @@ Package: linux-image-arm64-dbg
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nokerneldbg !pkg.linux.nometa !pkg.linux.quick>
 Provides: linux-latest-image-dbg
-Depends: linux-base-arm64 (= ${binary:Version}), linux-image-7.2.12+deb14-arm64-dbg (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-arm64 (= ${binary:Version}), linux-image-7.3.4+deb14-arm64-dbg (= ${binary:Version}), ${misc:Depends}
 Description: Linux for 64-bit ARMv8 machines (debug symbols meta-package)
  This package depends on the detached debugging symbols for the latest
  Linux kernel arm64 configuration.
@@ -620,8 +620,8 @@ Description: Linux for 64-bit ARMv8 machines (debug symbols meta-package)
 Package: linux-image-cloud-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
-Provides: linux-latest-modules-7.2.12+deb14-cloud-amd64, virtualbox-guest-modules [amd64], wireguard-modules (= 1.0.0)
-Depends: linux-base-cloud-amd64 (= ${binary:Version}), linux-image-7.2.12+deb14-cloud-amd64 (= ${binary:Version}), ${misc:Depends}
+Provides: linux-latest-modules-7.3.4+deb14-cloud-amd64, virtualbox-guest-modules [amd64], wireguard-modules (= 1.0.0)
+Depends: linux-base-cloud-amd64 (= ${binary:Version}), linux-image-7.3.4+deb14-cloud-amd64 (= ${binary:Version}), linux-modules-cloud-amd64 (= ${binary:Version}), ${misc:Depends}
 Description: Linux for x86-64 cloud (meta-package)
  This package depends on the latest Linux kernel and modules for use on
  cloud platforms including Amazon EC2, Microsoft Azure, and Google Compute
@@ -631,7 +631,7 @@ Package: linux-image-cloud-amd64-dbg
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nokerneldbg !pkg.linux.nometa !pkg.linux.quick>
 Provides: linux-latest-image-dbg
-Depends: linux-base-cloud-amd64 (= ${binary:Version}), linux-image-7.2.12+deb14-cloud-amd64-dbg (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-cloud-amd64 (= ${binary:Version}), linux-image-7.3.4+deb14-cloud-amd64-dbg (= ${binary:Version}), ${misc:Depends}
 Description: Linux for x86-64 cloud (debug symbols meta-package)
  This package depends on the detached debugging symbols for the latest
  Linux kernel cloud-amd64 configuration.
@@ -639,8 +639,8 @@ Description: Linux for x86-64 cloud (debug symbols meta-package)
 Package: linux-image-cloud-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
-Provides: linux-latest-modules-7.2.12+deb14-cloud-arm64, virtualbox-guest-modules [amd64], wireguard-modules (= 1.0.0)
-Depends: linux-base-cloud-arm64 (= ${binary:Version}), linux-image-7.2.12+deb14-cloud-arm64 (= ${binary:Version}), ${misc:Depends}
+Provides: linux-latest-modules-7.3.4+deb14-cloud-arm64, virtualbox-guest-modules [amd64], wireguard-modules (= 1.0.0)
+Depends: linux-base-cloud-arm64 (= ${binary:Version}), linux-image-7.3.4+deb14-cloud-arm64 (= ${binary:Version}), linux-modules-cloud-arm64 (= ${binary:Version}), ${misc:Depends}
 Description: Linux for arm64 cloud (meta-package)
  This package depends on the latest Linux kernel and modules for use on
  cloud platforms supporting arm64 virtual machines.
@@ -649,7 +649,7 @@ Package: linux-image-cloud-arm64-dbg
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nokerneldbg !pkg.linux.nometa !pkg.linux.quick>
 Provides: linux-latest-image-dbg
-Depends: linux-base-cloud-arm64 (= ${binary:Version}), linux-image-7.2.12+deb14-cloud-arm64-dbg (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-cloud-arm64 (= ${binary:Version}), linux-image-7.3.4+deb14-cloud-arm64-dbg (= ${binary:Version}), ${misc:Depends}
 Description: Linux for arm64 cloud (debug symbols meta-package)
  This package depends on the detached debugging symbols for the latest
  Linux kernel cloud-arm64 configuration.
@@ -657,8 +657,8 @@ Description: Linux for arm64 cloud (debug symbols meta-package)
 Package: linux-image-test
 Architecture: amd64 arm64
 Build-Profiles: <pkg.linux.quick !pkg.linux.nokernel !pkg.linux.nometa>
-Provides: linux-latest-modules-7.2.12+deb14-test, virtualbox-guest-modules [amd64], wireguard-modules (= 1.0.0)
-Depends: linux-base-test (= ${binary:Version}), linux-image-7.2.12+deb14-test (= ${binary:Version}), ${misc:Depends}
+Provides: linux-latest-modules-7.3.4+deb14-test, virtualbox-guest-modules [amd64], wireguard-modules (= 1.0.0)
+Depends: linux-base-test (= ${binary:Version}), linux-image-7.3.4+deb14-test (= ${binary:Version}), linux-modules-test (= ${binary:Version}), ${misc:Depends}
 Description: Linux for CI only (meta-package)
  This package depends on the latest Linux kernel and modules for use on CI
  only.
@@ -667,19 +667,19 @@ Package: linux-image-test-dbg
 Architecture: amd64 arm64
 Build-Profiles: <pkg.linux.quick !pkg.linux.nokernel !pkg.linux.nokerneldbg !pkg.linux.nometa !pkg.linux.quick>
 Provides: linux-latest-image-dbg
-Depends: linux-base-test (= ${binary:Version}), linux-image-7.2.12+deb14-test-dbg (= ${binary:Version}), ${misc:Depends}
+Depends: linux-base-test (= ${binary:Version}), linux-image-7.3.4+deb14-test-dbg (= ${binary:Version}), ${misc:Depends}
 Description: Linux for CI only (debug symbols meta-package)
  This package depends on the detached debugging symbols for the latest
  Linux kernel test configuration.
 
-Package: linux-kbuild-7.2.12+deb14
+Package: linux-kbuild-7.3.4+deb14
 Architecture: linux-any
 Build-Profiles: <!pkg.linux.notools>
 Depends: pahole, ${misc:Depends}, ${python3:Depends}, ${shlibs:Depends}
 Multi-Arch: foreign
-Description: Kbuild infrastructure for Linux 7.2.12+deb14
+Description: Kbuild infrastructure for Linux 7.3.4+deb14
  This package provides the kbuild infrastructure for the headers packages
- for Linux kernel version 7.2.
+ for Linux kernel version 7.3.
 
 Package: linux-libc-dev
 Architecture: all
@@ -726,101 +726,148 @@ Description: miscellaneous tools from the Linux source tree
  Create profile of thermal zones * tmon: Monitor and test thermal
  management
 
-Package: linux-modules-7.2.12+deb14-amd64
+Package: linux-modules-7.3.4+deb14-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: kmod, linux-base-7.2.12+deb14-amd64 (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for 64-bit PCs (modules)
- This contains the kernel modules for Linux 7.2.12 on PCs with AMD64, Intel
+Depends: kmod, linux-base-7.3.4+deb14-amd64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for 64-bit PCs (modules)
+ This contains the kernel modules for Linux 7.3.4 on PCs with AMD64, Intel
  64 or VIA Nano processors.
  .
  This does not provide a complete kernel installation.  You should normally
- install linux-image-7.2.12+deb14-amd64.
+ install linux-image-7.3.4+deb14-amd64.
 
-Package: linux-modules-7.2.12+deb14-arm64
+Package: linux-modules-7.3.4+deb14-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: kmod, linux-base-7.2.12+deb14-arm64 (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for 64-bit ARMv8 machines (modules)
- This contains the kernel modules for Linux 7.2.12 on 64-bit ARMv8
- machines.
+Depends: kmod, linux-base-7.3.4+deb14-arm64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for 64-bit ARMv8 machines (modules)
+ This contains the kernel modules for Linux 7.3.4 on 64-bit ARMv8 machines.
  .
  This does not provide a complete kernel installation.  You should normally
- install linux-image-7.2.12+deb14-arm64.
+ install linux-image-7.3.4+deb14-arm64.
 
-Package: linux-modules-7.2.12+deb14-arm64-16k
+Package: linux-modules-7.3.4+deb14-arm64-16k
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: kmod, linux-base-7.2.12+deb14-arm64-16k (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for 64-bit ARMv8 machines with 16k pages (modules)
- This contains the kernel modules for Linux 7.2.12 on 64-bit ARMv8 machines
+Depends: kmod, linux-base-7.3.4+deb14-arm64-16k (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for 64-bit ARMv8 machines with 16k pages (modules)
+ This contains the kernel modules for Linux 7.3.4 on 64-bit ARMv8 machines
  with 16k pages.
  .
  This does not provide a complete kernel installation.  You should normally
- install linux-image-7.2.12+deb14-arm64-16k.
+ install linux-image-7.3.4+deb14-arm64-16k.
 
-Package: linux-modules-7.2.12+deb14-cloud-amd64
+Package: linux-modules-7.3.4+deb14-cloud-amd64
 Architecture: amd64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: kmod, linux-base-7.2.12+deb14-cloud-amd64 (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for x86-64 cloud (modules)
- This contains the kernel modules for Linux 7.2.12 on cloud platforms
+Depends: kmod, linux-base-7.3.4+deb14-cloud-amd64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for x86-64 cloud (modules)
+ This contains the kernel modules for Linux 7.3.4 on cloud platforms
  including Amazon EC2, Microsoft Azure, and Google Compute Engine.
  .
  This does not provide a complete kernel installation.  You should normally
- install linux-image-7.2.12+deb14-cloud-amd64.
+ install linux-image-7.3.4+deb14-cloud-amd64.
 
-Package: linux-modules-7.2.12+deb14-cloud-arm64
+Package: linux-modules-7.3.4+deb14-cloud-arm64
 Architecture: arm64
 Build-Profiles: <!pkg.linux.nokernel !pkg.linux.quick>
-Depends: kmod, linux-base-7.2.12+deb14-cloud-arm64 (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for arm64 cloud (modules)
- This contains the kernel modules for Linux 7.2.12 on cloud platforms
+Depends: kmod, linux-base-7.3.4+deb14-cloud-arm64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for arm64 cloud (modules)
+ This contains the kernel modules for Linux 7.3.4 on cloud platforms
  supporting arm64 virtual machines.
  .
  This does not provide a complete kernel installation.  You should normally
- install linux-image-7.2.12+deb14-cloud-arm64.
+ install linux-image-7.3.4+deb14-cloud-arm64.
 
-Package: linux-modules-7.2.12+deb14-test
+Package: linux-modules-7.3.4+deb14-test
 Architecture: amd64 arm64
 Build-Profiles: <pkg.linux.quick !pkg.linux.nokernel>
-Depends: kmod, linux-base-7.2.12+deb14-test (= ${binary:Version}), ${misc:Depends}
-Description: Linux 7.2.12 for CI only (modules)
- This contains the kernel modules for Linux 7.2.12 on CI only.
+Depends: kmod, linux-base-7.3.4+deb14-test (= ${binary:Version}), ${misc:Depends}
+Description: Linux 7.3.4 for CI only (modules)
+ This contains the kernel modules for Linux 7.3.4 on CI only.
  .
  This does not provide a complete kernel installation.  You should normally
- install linux-image-7.2.12+deb14-test.
+ install linux-image-7.3.4+deb14-test.
+
+Package: linux-modules-amd64
+Architecture: amd64
+Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
+Depends: linux-base-amd64 (= ${binary:Version}), linux-modules-7.3.4+deb14-amd64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux modules for 64-bit PCs (meta-package)
+ This package depends on the latest Linux modules for use on PCs with
+ AMD64, Intel 64 or VIA Nano processors.
+
+Package: linux-modules-arm64
+Architecture: arm64
+Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
+Depends: linux-base-arm64 (= ${binary:Version}), linux-modules-7.3.4+deb14-arm64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux modules for 64-bit ARMv8 machines (meta-package)
+ This package depends on the latest Linux modules for use on 64-bit ARMv8
+ machines.
+
+Package: linux-modules-arm64-16k
+Architecture: arm64
+Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
+Depends: linux-base-arm64-16k (= ${binary:Version}), linux-modules-7.3.4+deb14-arm64-16k (= ${binary:Version}), ${misc:Depends}
+Description: Linux modules for 64-bit ARMv8 machines with 16k pages (meta-package)
+ This package depends on the latest Linux modules for use on 64-bit ARMv8
+ machines with 16k pages.
+
+Package: linux-modules-cloud-amd64
+Architecture: amd64
+Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
+Depends: linux-base-cloud-amd64 (= ${binary:Version}), linux-modules-7.3.4+deb14-cloud-amd64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux modules for x86-64 cloud (meta-package)
+ This package depends on the latest Linux modules for use on cloud
+ platforms including Amazon EC2, Microsoft Azure, and Google Compute
+ Engine.
+
+Package: linux-modules-cloud-arm64
+Architecture: arm64
+Build-Profiles: <!pkg.linux.nokernel !pkg.linux.nometa !pkg.linux.quick>
+Depends: linux-base-cloud-arm64 (= ${binary:Version}), linux-modules-7.3.4+deb14-cloud-arm64 (= ${binary:Version}), ${misc:Depends}
+Description: Linux modules for arm64 cloud (meta-package)
+ This package depends on the latest Linux modules for use on cloud
+ platforms supporting arm64 virtual machines.
+
+Package: linux-modules-test
+Architecture: amd64 arm64
+Build-Profiles: <pkg.linux.quick !pkg.linux.nokernel !pkg.linux.nometa>
+Depends: linux-base-test (= ${binary:Version}), linux-modules-7.3.4+deb14-test (= ${binary:Version}), ${misc:Depends}
+Description: Linux modules for CI only (meta-package)
+ This package depends on the latest Linux modules for use on CI only.
 
 Package: linux-perf
 Architecture: alpha amd64 arm64 armel armhf hppa i386 loong64 mips mips64 mips64el mips64r6 mips64r6el mipsel mipsn32 mipsn32el mipsn32r6 mipsn32r6el mipsr6 mipsr6el powerpc ppc64 ppc64el riscv64 s390 s390x sh4 sparc sparc64
 Section: devel
 Build-Profiles: <!nopython !pkg.linux.mintools !pkg.linux.notools>
-Provides: linux-tools-7.2
+Provides: linux-tools-7.3
 Depends: ${misc:Depends}, ${perl:Depends}, ${python3:Depends}, ${shlibs:Depends}
-Suggests: linux-doc-7.2
-Replaces: linux-tools-7.2
-Conflicts: linux-tools-7.2
+Suggests: linux-doc-7.3
+Replaces: linux-tools-7.3
+Conflicts: linux-tools-7.3
 Description: Performance analysis tools for Linux
  This package contains the 'perf' performance analysis tools for Linux.
 
 Package: linux-source
 Architecture: all
 Build-Profiles: <!pkg.linux.nometa !pkg.linux.nosource !pkg.linux.quick>
-Depends: linux-source-7.2 (= ${binary:Version}), ${misc:Depends}
+Depends: linux-source-7.3 (= ${binary:Version}), ${misc:Depends}
 Description: Linux kernel source (meta-package)
  This package depends on packages containing the sources of the latest
  Linux kernel.
 
-Package: linux-source-7.2
+Package: linux-source-7.3
 Architecture: all
 Section: kernel
 Build-Profiles: <!pkg.linux.nosource !pkg.linux.quick>
 Depends: binutils, xz-utils, ${misc:Depends}
-Recommends: bc, bison, build-essential, cpio, flex, kmod, libelf-dev, libssl-dev, linux-config-7.2, rsync
+Recommends: bc, bison, build-essential, cpio, flex, kmod, libelf-dev, libssl-dev, linux-config-7.3, rsync
 Suggests: libncurses-dev | ncurses-dev, pkgconf, qtbase5-dev
 Multi-Arch: foreign
-Description: Linux kernel source for version 7.2 with Debian patches
- This package provides source code for the Linux kernel version 7.2. This
+Description: Linux kernel source for version 7.3 with Debian patches
+ This package provides source code for the Linux kernel version 7.3. This
  source closely tracks official Linux kernel releases.  Debian's
  modifications to that source consist of security fixes, bug fixes, and
  features that have already been (or are believed to be) accepted by the
@@ -858,347 +905,347 @@ Description: USB device sharing system over IP network
  This package provides the server component 'usbipd' and the client tool
  'usbip'.
 
-Package: ata-modules-7.2.12+deb14-amd64-di
+Package: ata-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: ata-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, scsi-core-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, scsi-core-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: ATA disk modules
  This package contains core ATA disk modules used by both PATA and SATA
  disk drivers.
 
-Package: ata-modules-7.2.12+deb14-arm64-di
+Package: ata-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: ata-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, scsi-core-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, scsi-core-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: ATA disk modules
  This package contains core ATA disk modules used by both PATA and SATA
  disk drivers.
 
-Package: base-modules-7.2.12+deb14-amd64-di
+Package: base-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: base-modules, efi-modules
-Depends: linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: Base drivers
  This packages contains some base drivers for the kernel.
 
-Package: base-modules-7.2.12+deb14-arm64-di
+Package: base-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: base-modules, drm-core-modules, efi-modules, mmc-core-modules, mtd-core-modules
-Depends: linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: Base drivers
  This packages contains some base drivers for the kernel.
 
-Package: btrfs-modules-7.2.12+deb14-amd64-di
+Package: btrfs-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: btrfs-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, md-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, md-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: BTRFS filesystem support
  This package contains the BTRFS filesystem module for the kernel.
 
-Package: btrfs-modules-7.2.12+deb14-arm64-di
+Package: btrfs-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: btrfs-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, md-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, md-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: BTRFS filesystem support
  This package contains the BTRFS filesystem module for the kernel.
 
-Package: cdrom-core-modules-7.2.12+deb14-amd64-di
+Package: cdrom-core-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: cdrom-core-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, scsi-core-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, scsi-core-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: CDROM support
  This package contains core CDROM support for the kernel.
 
-Package: cdrom-core-modules-7.2.12+deb14-arm64-di
+Package: cdrom-core-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: cdrom-core-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, scsi-core-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, scsi-core-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: CDROM support
  This package contains core CDROM support for the kernel.
 
-Package: crypto-dm-modules-7.2.12+deb14-amd64-di
+Package: crypto-dm-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: crypto-dm-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, md-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, md-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: devicemapper crypto module
  This package contains the devicemapper crypto (dm-crypt) module.
 
-Package: crypto-dm-modules-7.2.12+deb14-arm64-di
+Package: crypto-dm-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: crypto-dm-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, md-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, md-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: devicemapper crypto module
  This package contains the devicemapper crypto (dm-crypt) module.
 
-Package: crypto-modules-7.2.12+deb14-amd64-di
+Package: crypto-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: crypto-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: crypto modules
  This package contains crypto modules.
 
-Package: crypto-modules-7.2.12+deb14-arm64-di
+Package: crypto-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: crypto-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: crypto modules
  This package contains crypto modules.
 
-Package: drm-core-modules-7.2.12+deb14-amd64-di
+Package: drm-core-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: drm-core-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: Frame buffer support
  This package contains core DRM modules for the kernel.
 
-Package: ext4-modules-7.2.12+deb14-amd64-di
+Package: ext4-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: ext2-modules, ext3-modules, ext4-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: ext2/ext3/ext4 filesystem support
  This package contains the ext4 filesystem module for the kernel, which
  also supports ext2 and ext3.
 
-Package: ext4-modules-7.2.12+deb14-arm64-di
+Package: ext4-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: ext2-modules, ext3-modules, ext4-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: ext2/ext3/ext4 filesystem support
  This package contains the ext4 filesystem module for the kernel, which
  also supports ext2 and ext3.
 
-Package: f2fs-modules-7.2.12+deb14-amd64-di
+Package: f2fs-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: f2fs-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: f2fs filesystem support
  This package contains the f2fs (Flash-Friendly Filesystem) module.
 
-Package: f2fs-modules-7.2.12+deb14-arm64-di
+Package: f2fs-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: f2fs-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: f2fs filesystem support
  This package contains the f2fs (Flash-Friendly Filesystem) module.
 
-Package: fat-modules-7.2.12+deb14-amd64-di
+Package: fat-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: fat-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: FAT filesystem support
  This package contains the FAT and VFAT filesystem modules for the kernel.
 
-Package: fat-modules-7.2.12+deb14-arm64-di
+Package: fat-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: fat-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: FAT filesystem support
  This package contains the FAT and VFAT filesystem modules for the kernel.
 
-Package: fb-modules-7.2.12+deb14-amd64-di
+Package: fb-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: fb-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, drm-core-modules-7.2.12+deb14-amd64-di, input-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, drm-core-modules-7.3.4+deb14-amd64-di, input-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: Frame buffer support
  This package contains Frame buffer drivers for the kernel.
 
-Package: fb-modules-7.2.12+deb14-arm64-di
+Package: fb-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: fb-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, input-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, input-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: Frame buffer support
  This package contains Frame buffer drivers for the kernel.
 
-Package: firewire-core-modules-7.2.12+deb14-amd64-di
+Package: firewire-core-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: firewire-core-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, scsi-core-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, scsi-core-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: Core FireWire drivers
  This package contains core FireWire drivers for the kernel.
 
-Package: input-modules-7.2.12+deb14-amd64-di
+Package: input-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: input-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, rfkill-modules-7.2.12+deb14-amd64-di, usb-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, rfkill-modules-7.3.4+deb14-amd64-di, usb-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: Input devices support
  This package contains input device drivers for the kernel.
 
-Package: input-modules-7.2.12+deb14-arm64-di
+Package: input-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: input-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, usb-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, usb-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: Input devices support
  This package contains input device drivers for the kernel.
 
-Package: isofs-modules-7.2.12+deb14-amd64-di
+Package: isofs-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: isofs-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, cdrom-core-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, cdrom-core-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: ISOFS filesystem support
  This package contains the ISOFS filesystem module for the kernel.
 
-Package: isofs-modules-7.2.12+deb14-arm64-di
+Package: isofs-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: isofs-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, cdrom-core-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, cdrom-core-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: ISOFS filesystem support
  This package contains the ISOFS filesystem module for the kernel.
 
-Package: jfs-modules-7.2.12+deb14-amd64-di
+Package: jfs-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: jfs-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: JFS filesystem support
  This package contains the JFS filesystem module for the kernel.
 
-Package: jfs-modules-7.2.12+deb14-arm64-di
+Package: jfs-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: jfs-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: JFS filesystem support
  This package contains the JFS filesystem module for the kernel.
 
-Package: linux-base-7.2.12+deb14-amd64-di
+Package: linux-base-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
@@ -1208,7 +1255,7 @@ Description: Linux for the Debian installer (module metadata)
  This package contains the modules.* files generated by the kernel build
  process.
 
-Package: linux-base-7.2.12+deb14-arm64-di
+Package: linux-base-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
@@ -1218,7 +1265,7 @@ Description: Linux for the Debian installer (module metadata)
  This package contains the modules.* files generated by the kernel build
  process.
 
-Package: linux-base-7.2.12+deb14-test-di
+Package: linux-base-7.3.4+deb14-test-di
 Architecture: amd64 arm64
 Section: debian-installer
 Priority: standard
@@ -1228,703 +1275,703 @@ Description: Linux for the Debian installer (module metadata)
  This package contains the modules.* files generated by the kernel build
  process.
 
-Package: linux-binary-7.2.12+deb14-amd64-di
+Package: linux-binary-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
-Provides: kernel-image, kernel-image-7.2.12+deb14-amd64-di
-Depends: linux-base-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Provides: kernel-image, kernel-image-7.3.4+deb14-amd64-di
+Depends: linux-base-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: Linux for the Debian installer (kernel image)
  This package contains the kernel image for the Debian installer boot
  images.  It does _not_ provide a usable kernel for your full Debian
  system.
 
-Package: linux-binary-7.2.12+deb14-arm64-di
+Package: linux-binary-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
-Provides: kernel-image, kernel-image-7.2.12+deb14-arm64-di
-Depends: linux-base-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Provides: kernel-image, kernel-image-7.3.4+deb14-arm64-di
+Depends: linux-base-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: Linux for the Debian installer (kernel image)
  This package contains the kernel image for the Debian installer boot
  images.  It does _not_ provide a usable kernel for your full Debian
  system.
 
-Package: linux-binary-7.2.12+deb14-test-di
+Package: linux-binary-7.3.4+deb14-test-di
 Architecture: amd64 arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <pkg.linux.quick !noudeb !pkg.linux.nokernel>
-Provides: kernel-image, kernel-image-7.2.12+deb14-test-di
-Depends: linux-base-7.2.12+deb14-test-di
-Kernel-Version: 7.2.12+deb14-test
+Provides: kernel-image, kernel-image-7.3.4+deb14-test-di
+Depends: linux-base-7.3.4+deb14-test-di
+Kernel-Version: 7.3.4+deb14-test
 Description: Linux for the Debian installer (kernel image)
  This package contains the kernel image for the Debian installer boot
  images.  It does _not_ provide a usable kernel for your full Debian
  system.
 
-Package: loop-modules-7.2.12+deb14-amd64-di
+Package: loop-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: loop-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: Loopback filesystem support
  This package contains loopback filesystem support for the kernel.
 
-Package: loop-modules-7.2.12+deb14-arm64-di
+Package: loop-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: loop-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: Loopback filesystem support
  This package contains loopback filesystem support for the kernel.
 
-Package: md-modules-7.2.12+deb14-amd64-di
+Package: md-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: md-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: RAID and LVM support
  This package contains RAID and LVM modules for the kernel.
 
-Package: md-modules-7.2.12+deb14-arm64-di
+Package: md-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: md-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: RAID and LVM support
  This package contains RAID and LVM modules for the kernel.
 
-Package: mmc-core-modules-7.2.12+deb14-amd64-di
+Package: mmc-core-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: mmc-core-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: MMC/SD/SDIO core modules
  This package contains core modules for MMC/SD/SDIO support.
 
-Package: mmc-modules-7.2.12+deb14-amd64-di
+Package: mmc-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: mmc-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, mmc-core-modules-7.2.12+deb14-amd64-di, usb-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, mmc-core-modules-7.3.4+deb14-amd64-di, usb-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: MMC/SD card modules
  This package contains modules needed to support MMC (multimedia) and SD
  cards.
 
-Package: mmc-modules-7.2.12+deb14-arm64-di
+Package: mmc-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: mmc-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, usb-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, usb-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: MMC/SD card modules
  This package contains modules needed to support MMC (multimedia) and SD
  cards.
 
-Package: mtd-core-modules-7.2.12+deb14-amd64-di
+Package: mtd-core-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: mtd-core-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: MTD core
  This package contains the MTD core.
 
-Package: multipath-modules-7.2.12+deb14-amd64-di
+Package: multipath-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: multipath-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, md-modules-7.2.12+deb14-amd64-di, scsi-core-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, md-modules-7.3.4+deb14-amd64-di, scsi-core-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: Multipath support
  This package contains DM-Multipath modules for the kernel.
 
-Package: multipath-modules-7.2.12+deb14-arm64-di
+Package: multipath-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: multipath-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, md-modules-7.2.12+deb14-arm64-di, scsi-core-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, md-modules-7.3.4+deb14-arm64-di, scsi-core-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: Multipath support
  This package contains DM-Multipath modules for the kernel.
 
-Package: nbd-modules-7.2.12+deb14-amd64-di
+Package: nbd-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: nbd-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: Network Block Device modules
  This package contains the modules required for support of the Network
  Block Device
 
-Package: nbd-modules-7.2.12+deb14-arm64-di
+Package: nbd-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: nbd-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: Network Block Device modules
  This package contains the modules required for support of the Network
  Block Device
 
-Package: nic-modules-7.2.12+deb14-amd64-di
+Package: nic-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: nic-extra-modules, nic-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, mtd-core-modules-7.2.12+deb14-amd64-di, nic-shared-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, mtd-core-modules-7.3.4+deb14-amd64-di, nic-shared-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: NIC drivers
  This package contains Ethernet and some paravirtualised network drivers
  for the kernel.
 
-Package: nic-modules-7.2.12+deb14-arm64-di
+Package: nic-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: nic-extra-modules, nic-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, nic-shared-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, nic-shared-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: NIC drivers
  This package contains Ethernet and some paravirtualised network drivers
  for the kernel.
 
-Package: nic-pcmcia-modules-7.2.12+deb14-amd64-di
+Package: nic-pcmcia-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: nic-pcmcia-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, mmc-core-modules-7.2.12+deb14-amd64-di, nic-shared-modules-7.2.12+deb14-amd64-di, nic-wireless-modules-7.2.12+deb14-amd64-di, pcmcia-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, mmc-core-modules-7.3.4+deb14-amd64-di, nic-shared-modules-7.3.4+deb14-amd64-di, nic-wireless-modules-7.3.4+deb14-amd64-di, pcmcia-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: Common PCMCIA NIC drivers
  This package contains common PCMCIA NIC drivers for the kernel.
 
-Package: nic-shared-modules-7.2.12+deb14-amd64-di
+Package: nic-shared-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: nic-shared-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, crypto-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, crypto-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: Shared NIC drivers
  This package contains NIC drivers needed by combinations of nic-modules,
  nic-pcmcia-modules, nic-usb-modules and nic-wireless-modules.
 
-Package: nic-shared-modules-7.2.12+deb14-arm64-di
+Package: nic-shared-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: nic-shared-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, crypto-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, crypto-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: Shared NIC drivers
  This package contains NIC drivers needed by combinations of nic-modules,
  nic-pcmcia-modules, nic-usb-modules and nic-wireless-modules.
 
-Package: nic-usb-modules-7.2.12+deb14-amd64-di
+Package: nic-usb-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: nic-usb-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, nic-shared-modules-7.2.12+deb14-amd64-di, nic-wireless-modules-7.2.12+deb14-amd64-di, usb-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, nic-shared-modules-7.3.4+deb14-amd64-di, nic-wireless-modules-7.3.4+deb14-amd64-di, usb-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: USB NIC drivers
  This package contains USB network adapter drivers for the kernel.
 
-Package: nic-usb-modules-7.2.12+deb14-arm64-di
+Package: nic-usb-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: nic-usb-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, nic-shared-modules-7.2.12+deb14-arm64-di, nic-wireless-modules-7.2.12+deb14-arm64-di, usb-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, nic-shared-modules-7.3.4+deb14-arm64-di, nic-wireless-modules-7.3.4+deb14-arm64-di, usb-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: USB NIC drivers
  This package contains USB network adapter drivers for the kernel.
 
-Package: nic-wireless-modules-7.2.12+deb14-amd64-di
+Package: nic-wireless-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: nic-wireless-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, crypto-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, mmc-core-modules-7.2.12+deb14-amd64-di, nic-shared-modules-7.2.12+deb14-amd64-di, pcmcia-modules-7.2.12+deb14-amd64-di, rfkill-modules-7.2.12+deb14-amd64-di, usb-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, crypto-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, mmc-core-modules-7.3.4+deb14-amd64-di, nic-shared-modules-7.3.4+deb14-amd64-di, pcmcia-modules-7.3.4+deb14-amd64-di, rfkill-modules-7.3.4+deb14-amd64-di, usb-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: Wireless NIC drivers
  This package contains wireless NIC drivers for the kernel.  Includes
  crypto modules only needed for wireless (WEP, WPA).
 
-Package: nic-wireless-modules-7.2.12+deb14-arm64-di
+Package: nic-wireless-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: nic-wireless-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, crypto-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, nic-shared-modules-7.2.12+deb14-arm64-di, usb-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, crypto-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, nic-shared-modules-7.3.4+deb14-arm64-di, usb-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: Wireless NIC drivers
  This package contains wireless NIC drivers for the kernel.  Includes
  crypto modules only needed for wireless (WEP, WPA).
 
-Package: pata-modules-7.2.12+deb14-amd64-di
+Package: pata-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: pata-modules
-Depends: ata-modules-7.2.12+deb14-amd64-di, base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: ata-modules-7.3.4+deb14-amd64-di, base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: PATA drivers
  This package contains PATA drivers for the kernel.
 
-Package: pcmcia-modules-7.2.12+deb14-amd64-di
+Package: pcmcia-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: pcmcia-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: Common PCMCIA drivers
  This package contains common PCMCIA drivers for the kernel.
 
-Package: pcmcia-storage-modules-7.2.12+deb14-amd64-di
+Package: pcmcia-storage-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: pcmcia-storage-modules
-Depends: ata-modules-7.2.12+deb14-amd64-di, base-modules-7.2.12+deb14-amd64-di, cdrom-core-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, pcmcia-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: ata-modules-7.3.4+deb14-amd64-di, base-modules-7.3.4+deb14-amd64-di, cdrom-core-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, pcmcia-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: PCMCIA storage drivers
  This package contains PCMCIA storage drivers for the kernel.
 
-Package: ppp-modules-7.2.12+deb14-amd64-di
+Package: ppp-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: ppp-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, serial-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, serial-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: PPP drivers
  This package contains PPP drivers for the kernel.
 
-Package: ppp-modules-7.2.12+deb14-arm64-di
+Package: ppp-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: ppp-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: PPP drivers
  This package contains PPP drivers for the kernel.
 
-Package: rfkill-modules-7.2.12+deb14-amd64-di
+Package: rfkill-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: rfkill-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: rfkill modules
  This package contains the rfkill module.
 
-Package: sata-modules-7.2.12+deb14-amd64-di
+Package: sata-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: sata-modules
-Depends: ata-modules-7.2.12+deb14-amd64-di, base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, scsi-core-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: ata-modules-7.3.4+deb14-amd64-di, base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, scsi-core-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: SATA drivers
  This package contains SATA drivers for the kernel.
 
-Package: sata-modules-7.2.12+deb14-arm64-di
+Package: sata-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: sata-modules
-Depends: ata-modules-7.2.12+deb14-arm64-di, base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, scsi-core-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: ata-modules-7.3.4+deb14-arm64-di, base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, scsi-core-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: SATA drivers
  This package contains SATA drivers for the kernel.
 
-Package: scsi-core-modules-7.2.12+deb14-amd64-di
+Package: scsi-core-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: scsi-core-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: Core SCSI subsystem
  This package contains the core SCSI subsystem for the kernel.
 
-Package: scsi-core-modules-7.2.12+deb14-arm64-di
+Package: scsi-core-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: scsi-core-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: Core SCSI subsystem
  This package contains the core SCSI subsystem for the kernel.
 
-Package: scsi-modules-7.2.12+deb14-amd64-di
+Package: scsi-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: scsi-modules
-Depends: ata-modules-7.2.12+deb14-amd64-di, base-modules-7.2.12+deb14-amd64-di, cdrom-core-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, scsi-core-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: ata-modules-7.3.4+deb14-amd64-di, base-modules-7.3.4+deb14-amd64-di, cdrom-core-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, scsi-core-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: SCSI drivers
  This package contains SCSI drivers for the kernel.
 
-Package: scsi-modules-7.2.12+deb14-arm64-di
+Package: scsi-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: scsi-modules
-Depends: ata-modules-7.2.12+deb14-arm64-di, base-modules-7.2.12+deb14-arm64-di, cdrom-core-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, scsi-core-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: ata-modules-7.3.4+deb14-arm64-di, base-modules-7.3.4+deb14-arm64-di, cdrom-core-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, scsi-core-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: SCSI drivers
  This package contains SCSI drivers for the kernel.
 
-Package: scsi-nic-modules-7.2.12+deb14-amd64-di
+Package: scsi-nic-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: scsi-nic-modules
-Depends: linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, nic-modules-7.2.12+deb14-amd64-di, scsi-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, nic-modules-7.3.4+deb14-amd64-di, scsi-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: SCSI drivers for converged NICs
  This package contains SCSI drivers that depend on net drivers.
 
-Package: scsi-nic-modules-7.2.12+deb14-arm64-di
+Package: scsi-nic-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: scsi-nic-modules
-Depends: linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, nic-modules-7.2.12+deb14-arm64-di, scsi-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, nic-modules-7.3.4+deb14-arm64-di, scsi-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: SCSI drivers for converged NICs
  This package contains SCSI drivers that depend on net drivers.
 
-Package: serial-modules-7.2.12+deb14-amd64-di
+Package: serial-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: serial-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, pcmcia-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, pcmcia-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: Serial drivers
  This package contains serial drivers for the kernel.
 
-Package: sound-modules-7.2.12+deb14-amd64-di
+Package: sound-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: sound-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, firewire-core-modules-7.2.12+deb14-amd64-di, input-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, pcmcia-modules-7.2.12+deb14-amd64-di, usb-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, firewire-core-modules-7.3.4+deb14-amd64-di, input-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, pcmcia-modules-7.3.4+deb14-amd64-di, usb-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: sound support
  This package contains sound modules.
 
-Package: sound-modules-7.2.12+deb14-arm64-di
+Package: sound-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: sound-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, input-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, usb-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, input-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, usb-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: sound support
  This package contains sound modules.
 
-Package: speakup-modules-7.2.12+deb14-amd64-di
+Package: speakup-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: speakup-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: speakup modules
  This package contains speakup modules.
 
-Package: speakup-modules-7.2.12+deb14-arm64-di
+Package: speakup-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: speakup-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: speakup modules
  This package contains speakup modules.
 
-Package: squashfs-modules-7.2.12+deb14-amd64-di
+Package: squashfs-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: squashfs-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: squashfs modules
  This package contains squashfs modules.
 
-Package: squashfs-modules-7.2.12+deb14-arm64-di
+Package: squashfs-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: squashfs-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: squashfs modules
  This package contains squashfs modules.
 
-Package: udf-modules-7.2.12+deb14-amd64-di
+Package: udf-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: udf-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, cdrom-core-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, cdrom-core-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: UDF modules
  This package contains the UDF filesystem module.
 
-Package: udf-modules-7.2.12+deb14-arm64-di
+Package: udf-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: udf-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, cdrom-core-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, cdrom-core-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: UDF modules
  This package contains the UDF filesystem module.
 
-Package: uinput-modules-7.2.12+deb14-amd64-di
+Package: uinput-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: uinput-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: uinput support
  This package contains the uinput module.
 
-Package: uinput-modules-7.2.12+deb14-arm64-di
+Package: uinput-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: uinput-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: uinput support
  This package contains the uinput module.
 
-Package: usb-modules-7.2.12+deb14-amd64-di
+Package: usb-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: usb-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: USB support
  This package contains core USB drivers for the kernel.
 
-Package: usb-modules-7.2.12+deb14-arm64-di
+Package: usb-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: usb-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: USB support
  This package contains core USB drivers for the kernel.
 
-Package: usb-serial-modules-7.2.12+deb14-amd64-di
+Package: usb-serial-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: usb-serial-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, usb-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, usb-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: USB serial drivers
  This package contains USB serial drivers for the kernel.
 
-Package: usb-serial-modules-7.2.12+deb14-arm64-di
+Package: usb-serial-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: optional
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: usb-serial-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, usb-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, usb-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: USB serial drivers
  This package contains USB serial drivers for the kernel.
 
-Package: usb-storage-modules-7.2.12+deb14-amd64-di
+Package: usb-storage-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: usb-storage-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di, scsi-core-modules-7.2.12+deb14-amd64-di, usb-modules-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di, scsi-core-modules-7.3.4+deb14-amd64-di, usb-modules-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: USB storage support
  This package contains the USB storage driver for the kernel.
 
-Package: usb-storage-modules-7.2.12+deb14-arm64-di
+Package: usb-storage-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: usb-storage-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di, scsi-core-modules-7.2.12+deb14-arm64-di, usb-modules-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di, scsi-core-modules-7.3.4+deb14-arm64-di, usb-modules-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: USB storage support
  This package contains the USB storage driver for the kernel.
 
-Package: xfs-modules-7.2.12+deb14-amd64-di
+Package: xfs-modules-7.3.4+deb14-amd64-di
 Architecture: amd64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: xfs-modules
-Depends: base-modules-7.2.12+deb14-amd64-di, linux-base-7.2.12+deb14-amd64-di, linux-binary-7.2.12+deb14-amd64-di
-Kernel-Version: 7.2.12+deb14-amd64
+Depends: base-modules-7.3.4+deb14-amd64-di, linux-base-7.3.4+deb14-amd64-di, linux-binary-7.3.4+deb14-amd64-di
+Kernel-Version: 7.3.4+deb14-amd64
 Description: XFS filesystem support
  This package contains the XFS filesystem module for the kernel.
 
-Package: xfs-modules-7.2.12+deb14-arm64-di
+Package: xfs-modules-7.3.4+deb14-arm64-di
 Architecture: arm64
 Section: debian-installer
 Priority: standard
 Package-Type: udeb
 Build-Profiles: <!noudeb !pkg.linux.nokernel !pkg.linux.quick>
 Provides: xfs-modules
-Depends: base-modules-7.2.12+deb14-arm64-di, linux-base-7.2.12+deb14-arm64-di, linux-binary-7.2.12+deb14-arm64-di
-Kernel-Version: 7.2.12+deb14-arm64
+Depends: base-modules-7.3.4+deb14-arm64-di, linux-base-7.3.4+deb14-arm64-di, linux-binary-7.3.4+deb14-arm64-di
+Kernel-Version: 7.3.4+deb14-arm64
 Description: XFS filesystem support
  This package contains the XFS filesystem module for the kernel.
 

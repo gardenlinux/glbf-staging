@@ -1,5 +1,5 @@
-4294a08cbc27cfd7b99040ea70389924  debian/bin/gencontrol.py
-a3afb603c658aa950170a35f985c0ef5  debian/build/version-info
+1e5c8ddf3ef10e7112c01ad5209ad95c  debian/bin/gencontrol.py
+0234ff05abd267e951ce68961c2512dc  debian/build/version-info
 e5a8dda3c507a2161ca87e39c982a0a9  debian/config/alpha/defines.toml
 e246955e198088c1634e702f47fcd8ad  debian/config/amd64/defines.toml
 6bd12c27836e1aa542204036f71db1af  debian/config/arm64/defines.toml
@@ -35,9 +35,6 @@ d41d8cd98f00b204e9800998ecf8427e  debian/templates/extra.control.in
 4200f5c2e15610a77d3a6b396d45e062  debian/templates/image-dbg.meta.control.in
 ecec9b1808743ce6dd807a7bbdb293d1  debian/templates/image-dbg.meta.maintscript.in
 11dd6baba7f08d65f2e0965e5b4e4add  debian/templates/image-extra-dev.control.in
-01ceeea86de4a087f3fbe9104e21624d  debian/templates/image.control.in
-769a43efb579711359e12554e34d0baa  debian/templates/image.meta.bug-presubj.in
-15e98dd33b3bb098bf9f25114c8371c2  debian/templates/image.meta.maintscript.in
 776cdbc63661d30806160aba2fa7cdcd  debian/templates/image.postinst.in
 3aac21d4fe0077cf50c716bdcf354cc6  debian/templates/image.postrm.in
 5344a14c92dc835312653f6a9cd40593  debian/templates/image.preinst.in
@@ -47,7 +44,7 @@ ecec9b1808743ce6dd807a7bbdb293d1  debian/templates/image-dbg.meta.maintscript.in
 d41d8cd98f00b204e9800998ecf8427e  debian/templates/main.control.in
 d6610909930c627b4a4c63f20b7d9533  debian/templates/main.tests-control.in
 57f660778a30b1cf968a236907f93d8c  debian/templates/modules.control.in
-5328d6c4263799271ec7ba37cccfcb24  debian/templates/signed-template.control.in
+c094544013db07aa4629593ed97ea1da  debian/templates/signed-template.control.in
 1f10718cdf52cf779eeb26a8b5abe5c1  debian/templates/signed-template.lintian-overrides.in
 2bef380b2dbcc2787c2da40943c58178  debian/templates/signed.binary.control.in
 c73ff8d70d4ecc4b54c256736f0142ba  debian/templates/signed.binary.lintian-overrides.in

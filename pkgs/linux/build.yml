@@ -7,13 +7,13 @@ signing:
     private_key_file: keys/kernel-sign.key
     cert_file: keys/kernel-sign.crt
 runtime_depends:
-  linux-image-7.2+unreleased-cloud-%ARCH%:
-    - linux:linux-base-7.2+unreleased-cloud-%ARCH%
-    - linux:linux-binary-7.2+unreleased-cloud-%ARCH%
-    - linux:linux-modules-7.2+unreleased-cloud-%ARCH%
+  linux-image-7.3+unreleased-cloud-%ARCH%:
+    - linux:linux-base-7.3+unreleased-cloud-%ARCH%
+    - linux:linux-binary-7.3+unreleased-cloud-%ARCH%
+    - linux:linux-modules-7.3+unreleased-cloud-%ARCH%
     - kmod:kmod
-  linux-binary-7.2+unreleased-cloud-%ARCH%:
-    - linux:linux-base-7.2+unreleased-cloud-%ARCH%
-  linux-modules-7.2+unreleased-cloud-%ARCH%:
-    - linux:linux-base-7.2+unreleased-cloud-%ARCH%
+  linux-binary-7.3+unreleased-cloud-%ARCH%:
+    - linux:linux-base-7.3+unreleased-cloud-%ARCH%
+  linux-modules-7.3+unreleased-cloud-%ARCH%:
+    - linux:linux-base-7.3+unreleased-cloud-%ARCH%
     - kmod:kmod
