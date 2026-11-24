@@ -1,1 +1,1 @@
-dir_to_symlink /usr/share/bug/linux-image-m68k linux-base-7.3.4+deb14-m68k 7.3-1~exp1 linux-image-m68k
+dir_to_symlink /usr/share/bug/linux-image-m68k linux-base-7.3.5+deb14-m68k 7.3-1~exp1 linux-image-m68k

@@ -1,11 +1,11 @@
 {
   "packages": {
-    "linux-binary-unsigned-7.3.4+deb14-test": {
+    "linux-binary-unsigned-7.3.5+deb14-test": {
       "trusted_certs": [],
       "files": [
         {
           "sig_type": "efi",
-          "file": "usr/lib/modules/7.3.4+deb14-test/vmlinuz.unsigned"
+          "file": "usr/lib/modules/7.3.5+deb14-test/vmlinuz.unsigned"
         }
       ]
     }

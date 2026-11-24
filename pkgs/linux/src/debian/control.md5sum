@@ -1,5 +1,5 @@
 1e5c8ddf3ef10e7112c01ad5209ad95c  debian/bin/gencontrol.py
-0234ff05abd267e951ce68961c2512dc  debian/build/version-info
+50531e9443216606e15399d07c69abbf  debian/build/version-info
 e5a8dda3c507a2161ca87e39c982a0a9  debian/config/alpha/defines.toml
 e246955e198088c1634e702f47fcd8ad  debian/config/amd64/defines.toml
 6bd12c27836e1aa542204036f71db1af  debian/config/arm64/defines.toml

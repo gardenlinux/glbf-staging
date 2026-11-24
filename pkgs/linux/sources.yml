@@ -1,6 +1,6 @@
 sources:
-    - file: linux_7.3.4.orig.tar.xz
-      sha256: 9894ebada187044287613061502d9131dfd600ea4cd03f7028541d7cf44000df
+    - file: linux_7.3.5.orig.tar.xz
+      sha256: 4dea99fa9a78e2183aee4f51ea6db3c52853a73eb1c1a85ce72950ad3ea8977f
       urls:
-        - https://deb.debian.org/debian/pool/main/l/linux/linux_7.3.4.orig.tar.xz
-        - https://snapshot.debian.org/file/527c2ecd449a9bea31c650c0aef2e819841456d4/linux_7.3.4.orig.tar.xz
+        - https://deb.debian.org/debian/pool/main/l/linux/linux_7.3.5.orig.tar.xz
+        - https://snapshot.debian.org/file/0e93d23190a1900453e3f638059c2ac5c0adbf60/linux_7.3.5.orig.tar.xz
