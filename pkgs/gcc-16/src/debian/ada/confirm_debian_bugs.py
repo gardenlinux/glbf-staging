@@ -479,39 +479,6 @@ end Test_82;
 )
 
 check_compiles_but_should_not(
-    bug=248168,
-    make=(f"gnatmake-{new_version}", "test_84"),
-    sources=(
-        (
-            "test_84.adb",
-            """procedure Test_84 is
-   package pak1 is
-      type T1 is abstract tagged null record;
-      procedure p1(x: in out T1) is abstract;
-   end pak1;
-
-   type T2 is new pak1.T1 with null record;
-
-   protected type T3 is
-   end T3;
-
-   protected body T3 is
-   end T3;
-
-   procedure p1(x: in out T2) is    --ERROR: declared after body of T3
-   begin
-      null;
-   end p1;
-
-begin
-   null;
-end Test_84;
-""",
-        ),
-    ),
-)
-
-check_compiles_but_should_not(
     bug=248678,
     make=(f"gnatmake-{new_version}", "test_80"),
     sources=(

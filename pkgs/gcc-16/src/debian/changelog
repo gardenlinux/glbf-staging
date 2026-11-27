@@ -1,3 +1,53 @@
+gcc-16 (16.2.0-5) unstable; urgency=medium
+
+  * Update to git 20261220 from the gcc-16 branch.
+    - Fix PR tree-optimization/126465, PR tree-optimization/126961,
+      PR tree-optimization/126592, PR tree-optimization/126593,
+      PR target/128665 (AArch64), PR target/126063 (AArch64),
+      PR tree-optimization/128095, PR tree-optimization/128095,
+      PR target/127908 (RISCV), PR rtl-optimization/128738,
+      PR target/128373 (x86), PR target/128437 (x86), PR target/125932 (x86),
+      PR target/128640 (x86), PR modula2/128293, PR modula2/126174,
+      PR modula2/125129, PR target/128440 (bpf), PR ipa/127967,
+      PR target/128409 (x86), PR target/128373 (x86), PR target/128360 (x86),
+      PR target/128283 (x86), PR modula2/120189, PR tree-optimization/128069,
+      PR tree-optimization/128054, PR tree-optimization/128051,
+      PR tree-optimization/128008, PR tree-optimization/127978,
+      PR tree-optimization/127975, PR tree-optimization/127966,
+      PR tree-optimization/127924, PR lto/127922, PR tree-optimization/127877,
+      PR tree-optimization/127876, PR target/128440 (bpf),
+      PR target/127274 (PPC), PR tree-optimization/127899,
+      PR tree-optimization/127475, PR target/128388 (x86),
+      PR target/128310 (x86), PR target/128270 (x86), PR target/128271 (x86),
+      PR tree-optimization/128003, PR tree-optimization/127965,
+      PR tree-optimization/127905, PR target/128015 (x86),
+      PR tree-optimization/127904, PR middle-end/127848,
+      PR tree-optimization/127853, PR rtl-optimization/127852,
+      PR target/127459 (x86), PR tree-optimization/127858,
+      PR tree-optimization/127814, PR tree-optimization/127764,
+      PR tree-optimization/127762, PR tree-optimization/127601,
+      PR tree-optimization/127600, PR tree-optimization/127588,
+      PR tree-optimization/127521, PR tree-optimization/127407,
+      PR tree-optimization/127405, PR tree-optimization/126563,
+      PR tree-optimization/127784, PR ipa/127917, PR target/127897 (x86),
+      PR middle-end/127785, PR ada/128723, PR ada/128693, PR ada/128457,
+      PR ada/114065, PR ada/114065, PR ada/114065, PR c/128518, PR c++/127766,
+      PR fortran/128664, PR fortran/128042, PR fortran/127892,
+      PR fortran/124975, PR fortran/128067, PR fortran/127881,
+      PR fortran/128124, PR modula2/127991, PR modula2/127657,
+      PR modula2/127622, PR modula2/127567, PR modula2/127554,
+      PR modula2/127469, PR modula2/126847, PR modula2/126174,
+      PR modula2/126911, PR modula2/125129, PR modula2/125512,
+      PR modula2/125544, PR libfortran/127893, PR modula2/126847,
+      PR modula2/125129, PR modula2/126863, PR modula2/125129,
+      PR modula2/127359, PR libstdc++/126274, PR libstdc++/88947, 
+      PR libstdc++/128413, PR libstdc++/127815, PR libstdc++/118099,
+      PR libstdc++/127476, PR libstdc++/127675.
+    - Addresses CVE-2026-114690, buffer overrun in __gnu_parallel search.
+    - Addresses CVE-2026-114691, overflow in std::vector<bool> constructors.
+
+ -- Matthias Klose <doko@debian.org>  Fri, 20 Nov 2026 08:21:25 +0100
+
 gcc-16 (16.2.0-4) unstable; urgency=medium
 
   * Update to git 20261024 from the gcc-16 branch.
@@ -26,6 +76,8 @@ gcc-16 (16.2.0-4) unstable; urgency=medium
       PR libstdc++/115955, PR libstdc++/124370, PR libstdc++/125785,
       PR libstdc++/127666, PR libstdc++/126364, PR libstdc++/114400,
       PR libstdc++/127656, PR libstdc++/123409, PR libstdc++/126786.
+    - Addresses CVE-2026-102010, PR libstdc++/127656.
+    - Addresses CVE-2026-115455, PR libstdc++/124370.
 
   [ Matthias Klose ]
   * Update libstdc++ (all archs) and libgcc (armhf, arm64) symbols files.
