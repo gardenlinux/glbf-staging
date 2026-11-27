@@ -1,7 +1,7 @@
-# DP: updates from the 16 branch upto 20261024 (documentation).
+# DP: updates from the 16 branch upto 20261120 (documentation).
 
 LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
-	78d4ac73dd391005b895a6148cd9831e28e1208b f2a06b6c0d7705b06d6a801003f941a5509a0c11 \
+	78d4ac73dd391005b895a6148cd9831e28e1208b 74d2eb1715bd02219b0690f22b85bb5351f4b491 \
 	| awk '/^diff .*\.texi/ {skip=0; print; next} /^diff / {skip=1; next} skip==0' \
         | grep -v -E '^(diff|index)'
 
@@ -25,9 +25,133 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  applying to functions.
  
  An @dfn{attribute specifier} is of the form
+--- a/src/gcc/doc/gm2.texi
++++ b/src/gcc/doc/gm2.texi
+@@ -230,8 +230,8 @@ such as the AVR and the ARM).
+ * Semantic checking::     How to detect run time problems at compile time.
+ * Extensions::            GNU Modula-2 language extensions.
+ * Type compatibility::    Data type compatibility.
+-* Unbounded by reference::Explanation of a language optimization.
+ * Exception handling::    Example of exception handling.
++* Unbounded by reference::Explanation of a language optimization.
+ * Building a shared library:: How to build a shared library.
+ * Interface for Python::  How to produce swig interface files.
+ * Producing a Python module::  How to produce a Python module.
+@@ -406,6 +406,10 @@ The default implementation and module filename suffix is @file{.def}.
+ If this option is used GNU Modula-2 will still fall back to this
+ default if a requested definition module is not found.
+ 
++@item -fdump-builtins
++Display all builtin procedure functions.
++This is an internal command line option.
++
+ @item -fdump-system-exports
+ display all inbuilt system items.
+ This is an internal command line option.
+@@ -1493,7 +1497,7 @@ the following pairs of options:
+ The option @samp{-fsources} will show the source module, path and
+ pathname for each module parsed.
+ 
+-@node Exceptions, Semantic checking, Dialect, Using
++@node Exceptions, Semantic checking, Module Search Path, Using
+ @section Exception implementation
+ 
+ This section describes how exceptions are implemented in GNU Modula-2
+@@ -2303,10 +2307,74 @@ intersect.
+ @section Building a shared library
+ 
+ This section describes building a tiny shared library implemented in
+-Modula-2 and built with @file{libtool}.  Suppose a project consists of
+-three definition modules and three implementation modules
+-@file{a.def}, @file{a.mod}, @file{b.def}, @file{b.mod} and
+-@file{c.mod}.  The first step is to compile the modules using position
++Modula-2 and built with @file{libtool}.  Consider a project consisting
++of three definition modules and three implementation modules
++@file{a.def}, @file{a.mod}, @file{b.def}, @file{b.mod}, @file{c.def}
++and @file{c.mod}.
++
++@example
++DEFINITION MODULE a ;
++
++END a.
++@end example
++
++@example
++IMPLEMENTATION MODULE a ;
++
++FROM libc IMPORT printf ;
++
++BEGIN
++   printf ("init: module a\n")
++FINALLY
++   printf ("finish: module a\n")
++END a.
++@end example
++
++Module @code{b} is almost identical, but it imports module @code{a}.
++
++@example
++DEFINITION MODULE b ;
++
++END b.
++@end example
++
++@example
++IMPLEMENTATION MODULE b ;
++
++IMPORT a ;
++FROM libc IMPORT printf ;
++
++
++BEGIN
++   printf ("init: module b\n")
++FINALLY
++   printf ("finish: module b\n")
++END b.
++@end example
++
++Likewise Module @code{c} is almost identical, but it imports from
++module @code{b}.
++
++@example
++DEFINITION MODULE c ;
++
++END c.
++@end example
++
++@example
++IMPLEMENTATION MODULE c ;
++
++IMPORT b ;
++FROM libc IMPORT printf ;
++
++BEGIN
++   printf ("init: module c\n")
++FINALLY
++   printf ("finish: module c\n")
++END c.
++@end example
++
++The first step is to compile the modules using position
+ independent code.  This can be achieved by the following three
+ commands:
+ 
 --- a/src/gcc/doc/install.texi
 +++ b/src/gcc/doc/install.texi
-@@ -2492,7 +2492,7 @@ Linux systems and on big endian 64-bit systems where the default cpu
+@@ -346,6 +346,12 @@ documentation including the target @code{SYSTEM} definition module.
+ If Python3 is unavailable Modula-2 documentation will include a target
+ independent version of the SYSTEM modules.
+ 
++If plugins are enabled a compile time call flow analysis shared
++library @file{m2rte.so} is built.  This plugin performs a limited
++amount of compile time static analysis in an attempt to detect runtime
++Modula-2 exceptions at compile time.  The plugin @file{m2rte.so}
++depends upon @file{-lstdc++}.
++
+ @item @anchor{gccrs-prerequisite}gccrs
+ 
+ The official Rust compiler and Rust build system (cargo) are required for
+@@ -2492,7 +2498,7 @@ Linux systems and on big endian 64-bit systems where the default cpu
  is at least power7 (i.e.@: @option{--with-cpu=power7},
  @option{--with-cpu=power8}, or @option{--with-cpu=power9} is used).
  
@@ -36,6 +160,92 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  the @option{--with-long-double-format=ibm} and
  @option{--with-long-double-format=ieee} options are ignored.
  
+--- a/src/gcc/doc/invoke.texi
++++ b/src/gcc/doc/invoke.texi
+@@ -36639,11 +36639,13 @@ all of the reciprocal approximations, except for square root.
+ Specifies the ABI type to use for vectorizing intrinsics using an external
+ library.  Supported values for @var{type} are @samp{svml} for the Intel short
+ vector math library, @samp{aocl} for the math library (LibM) from AMD
+-Optimizing CPU Libraries (AOCL) and @samp{acml} for the end-of-life AMD core
+-math library (to which AOCL-LibM is the successor).
++Optimizing CPU Libraries (AOCL), @samp{acml} for the end-of-life AMD core
++math library (to which AOCL-LibM is the successor), and @samp{hvml} for the
++HYGON vector math library (HVML).
+ To use this option, both @option{-ftree-vectorize} and
+-@option{-funsafe-math-optimizations} have to be enabled, and an SVML or ACML
+-ABI-compatible library must be specified at link time.
++@option{-funsafe-math-optimizations} have to be enabled, and an SVML, ACML,
++AOCL, or HVML ABI-compatible library must be specified at link time.
++ACML, AOCL, and HVML are supported only on 64-bit targets.
+ 
+ GCC currently emits calls to @code{vmldExp2}, @code{vmldLn2},
+ @code{vmldLog102}, @code{vmldPow2}, @code{vmldTanh2}, @code{vmldTan2},
+@@ -36686,7 +36688,64 @@ type when @option{-mveclibabi=aocl} is used, and @code{__vrd2_sin},
+ @code{__vrd2_log10}, @code{__vrs4_sinf}, @code{__vrs4_cosf},
+ @code{__vrs4_expf}, @code{__vrs4_logf}, @code{__vrs4_log2f},
+ @code{__vrs4_log10f} and @code{__vrs4_powf} for the corresponding function type
+-when @option{-mveclibabi=acml} is used.
++when @option{-mveclibabi=acml} is used, and @code{hvml_vs4_acos},
++@code{hvml_vs8_acos}, @code{hvml_vd2_acos}, @code{hvml_vd4_acos},
++@code{hvml_vd8_acos}, @code{hvml_vs4_acosh}, @code{hvml_vs8_acosh},
++@code{hvml_vd2_acosh}, @code{hvml_vd4_acosh}, @code{hvml_vs4_asin},
++@code{hvml_vs8_asin}, @code{hvml_vs16_asin}, @code{hvml_vd2_asin},
++@code{hvml_vd4_asin}, @code{hvml_vd8_asin}, @code{hvml_vs4_asinh},
++@code{hvml_vs8_asinh}, @code{hvml_vd2_asinh}, @code{hvml_vd4_asinh},
++@code{hvml_vs4_atan}, @code{hvml_vs8_atan}, @code{hvml_vs16_atan},
++@code{hvml_vd2_atan}, @code{hvml_vd4_atan}, @code{hvml_vd8_atan},
++@code{hvml_vs4_atan2}, @code{hvml_vs8_atan2}, @code{hvml_vs16_atan2},
++@code{hvml_vd2_atan2}, @code{hvml_vd4_atan2}, @code{hvml_vd8_atan2},
++@code{hvml_vs4_atanh}, @code{hvml_vs8_atanh}, @code{hvml_vs16_atanh},
++@code{hvml_vd2_atanh}, @code{hvml_vd4_atanh}, @code{hvml_vd8_atanh},
++@code{hvml_vs4_cbrt}, @code{hvml_vs8_cbrt}, @code{hvml_vs16_cbrt},
++@code{hvml_vd2_cbrt}, @code{hvml_vd4_cbrt}, @code{hvml_vd8_cbrt},
++@code{hvml_vs4_cos}, @code{hvml_vs8_cos}, @code{hvml_vs16_cos},
++@code{hvml_vd2_cos}, @code{hvml_vd4_cos}, @code{hvml_vd8_cos},
++@code{hvml_vs4_cosh}, @code{hvml_vs8_cosh}, @code{hvml_vs16_cosh},
++@code{hvml_vd2_cosh}, @code{hvml_vd4_cosh}, @code{hvml_vd8_cosh},
++@code{hvml_vs4_erf}, @code{hvml_vs16_erf}, @code{hvml_vd2_erf},
++@code{hvml_vd4_erf}, @code{hvml_vs4_erfc}, @code{hvml_vs8_erfc},
++@code{hvml_vd2_erfc}, @code{hvml_vd4_erfc}, @code{hvml_vs4_exp},
++@code{hvml_vs8_exp}, @code{hvml_vs16_exp}, @code{hvml_vd2_exp},
++@code{hvml_vd4_exp}, @code{hvml_vd8_exp}, @code{hvml_vs4_exp2},
++@code{hvml_vs8_exp2}, @code{hvml_vd2_exp2}, @code{hvml_vd4_exp2},
++@code{hvml_vd8_exp2}, @code{hvml_vs4_exp10}, @code{hvml_vs8_exp10},
++@code{hvml_vd2_exp10}, @code{hvml_vd4_exp10}, @code{hvml_vs4_expm1},
++@code{hvml_vs8_expm1}, @code{hvml_vs16_expm1}, @code{hvml_vd2_expm1},
++@code{hvml_vd4_expm1}, @code{hvml_vd8_expm1}, @code{hvml_vs4_fdim},
++@code{hvml_vs8_fdim}, @code{hvml_vd2_fdim}, @code{hvml_vd4_fdim},
++@code{hvml_vs4_fmod}, @code{hvml_vs8_fmod}, @code{hvml_vd2_fmod},
++@code{hvml_vd4_fmod}, @code{hvml_vd8_fmod}, @code{hvml_vs4_hypot},
++@code{hvml_vs8_hypot}, @code{hvml_vd2_hypot}, @code{hvml_vd4_hypot},
++@code{hvml_vs4_ln}, @code{hvml_vs8_ln}, @code{hvml_vs16_ln},
++@code{hvml_vd2_ln}, @code{hvml_vd4_ln}, @code{hvml_vd8_ln},
++@code{hvml_vs4_log1p}, @code{hvml_vs8_log1p}, @code{hvml_vs16_log1p},
++@code{hvml_vd2_log1p}, @code{hvml_vd4_log1p}, @code{hvml_vd8_log1p},
++@code{hvml_vs4_log2}, @code{hvml_vs8_log2}, @code{hvml_vd2_log2},
++@code{hvml_vd4_log2}, @code{hvml_vd8_log2}, @code{hvml_vs4_log10},
++@code{hvml_vs8_log10}, @code{hvml_vs16_log10}, @code{hvml_vd2_log10},
++@code{hvml_vd4_log10}, @code{hvml_vd8_log10}, @code{hvml_vs4_logb},
++@code{hvml_vs8_logb}, @code{hvml_vd2_logb}, @code{hvml_vd4_logb},
++@code{hvml_vs4_nextafter}, @code{hvml_vs8_nextafter},
++@code{hvml_vd2_nextafter}, @code{hvml_vd4_nextafter}, @code{hvml_vs4_pow},
++@code{hvml_vs8_pow}, @code{hvml_vs16_pow}, @code{hvml_vd2_pow},
++@code{hvml_vd4_pow}, @code{hvml_vd8_pow}, @code{hvml_vs4_remainder},
++@code{hvml_vs8_remainder}, @code{hvml_vd2_remainder},
++@code{hvml_vd4_remainder}, @code{hvml_vs4_sin}, @code{hvml_vs8_sin},
++@code{hvml_vs16_sin}, @code{hvml_vd2_sin}, @code{hvml_vd4_sin},
++@code{hvml_vd8_sin}, @code{hvml_vs4_sinh}, @code{hvml_vs8_sinh},
++@code{hvml_vs16_sinh}, @code{hvml_vd2_sinh}, @code{hvml_vd4_sinh},
++@code{hvml_vd8_sinh}, @code{hvml_vs4_tan}, @code{hvml_vs8_tan},
++@code{hvml_vs16_tan}, @code{hvml_vd2_tan}, @code{hvml_vd4_tan},
++@code{hvml_vd8_tan}, @code{hvml_vs4_tanh}, @code{hvml_vs8_tanh},
++@code{hvml_vs16_tanh}, @code{hvml_vd2_tanh}, @code{hvml_vd4_tanh},
++@code{hvml_vd8_tanh}, @code{hvml_vs4_tgamma}, @code{hvml_vs8_tgamma},
++@code{hvml_vd2_tgamma} and @code{hvml_vd4_tgamma} for the corresponding
++function type when @option{-mveclibabi=hvml} is used.
+ 
+ @opindex mabi
+ @item -mabi=@var{name}
 --- a/src/gcc/doc/md.texi
 +++ b/src/gcc/doc/md.texi
 @@ -7391,7 +7391,7 @@ The operation is equivalent to:
@@ -272,3 +482,93 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  ARM Target supports executing the Armv8.1-M Mainline Low Overhead Loop
  instructions @code{DLS} and @code{LE}.
  Some multilibs may be incompatible with these options.
+--- a/src/gcc/fortran/gfortran.texi
++++ b/src/gcc/fortran/gfortran.texi
+@@ -2622,6 +2622,7 @@ The following intrinsics take unsigned arguments:
+ @item @code{IPARITY}, @pxref{IPARITY}
+ @item @code{ISHFT}, @pxref{ISHFT}
+ @item @code{ISHFTC}, @pxref{ISHFTC}
++@item @code{LEADZ}, @pxref{LEADZ}
+ @item @code{MATMUL}, @pxref{MATMUL}
+ @item @code{MAX}, @pxref{MAX}
+ @item @code{MAXLOC}, @pxref{MAXLOC}
+@@ -2636,6 +2637,8 @@ The following intrinsics take unsigned arguments:
+ @item @code{MVBITS}, @pxref{MVBITS}
+ @item @code{NOT}, @pxref{NOT}
+ @item @code{OUT_OF_RANGE}, @pxref{OUT_OF_RANGE}
++@item @code{POPCNT}, @pxref{POPCNT}
++@item @code{POPPAR}, @pxref{POPPAR}
+ @item @code{PRODUCT}, @pxref{PRODUCT}
+ @item @code{RANDOM_NUMBER}, @pxref{RANDOM_NUMBER}
+ @item @code{RANGE}, @pxref{RANGE}
+@@ -2644,6 +2647,7 @@ The following intrinsics take unsigned arguments:
+ @item @code{SHIFTL}, @pxref{SHIFTL}
+ @item @code{SHIFTR}, @pxref{SHIFTR}
+ @item @code{SUM}, @pxref{SUM}
++@item @code{TRAILZ}, @pxref{TRAILZ}
+ @item @code{TRANSPOSE}, @pxref{TRANSPOSE}
+ @item @code{TRANSFER}, @pxref{TRANSFER}
+ @end itemize
+--- a/src/gcc/fortran/intrinsic.texi
++++ b/src/gcc/fortran/intrinsic.texi
+@@ -9629,7 +9629,7 @@ Elemental function
+ 
+ @item @emph{Arguments}:
+ @multitable @columnfractions .15 .70
+-@item @var{I} @tab Shall be of type @code{INTEGER}.
++@item @var{I} @tab Shall be of type @code{INTEGER} or @code{UNSIGNED}.
+ @end multitable
+ 
+ @item @emph{Return value}:
+@@ -12120,7 +12120,7 @@ Elemental function
+ 
+ @item @emph{Arguments}:
+ @multitable @columnfractions .15 .70
+-@item @var{I} @tab Shall be of type @code{INTEGER}.
++@item @var{I} @tab Shall be of type @code{INTEGER} or @code{UNSIGNED}.
+ @end multitable
+ 
+ @item @emph{Return value}:
+@@ -12168,7 +12168,7 @@ Elemental function
+ 
+ @item @emph{Arguments}:
+ @multitable @columnfractions .15 .70
+-@item @var{I} @tab Shall be of type @code{INTEGER}.
++@item @var{I} @tab Shall be of type @code{INTEGER} or @code{UNSIGNED}.
+ @end multitable
+ 
+ @item @emph{Return value}:
+@@ -15292,7 +15292,7 @@ Elemental function
+ 
+ @item @emph{Arguments}:
+ @multitable @columnfractions .15 .70
+-@item @var{I} @tab Shall be of type @code{INTEGER}.
++@item @var{I} @tab Shall be of type @code{INTEGER} or @code{UNSIGNED}.
+ @end multitable
+ 
+ @item @emph{Return value}:
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/m2/gm2-libs-cor-common/README.texi
+@@ -0,0 +1,2 @@
++The @code{SYSTEM} module will have additional size based data types if
++they are supported by the target.
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/m2/gm2-libs-iso-common/README.texi
+@@ -0,0 +1,5 @@
++The modules @code{ComplexMath}, @code{LongComplexMath} and
++@code{ShortComplexMath} will have instrinic procedure functions
++enabled if the target supports the required GCC builtins.  The
++@code{SYSTEM} module will have additional size based data types if
++they are supported by the target.
+new file mode 100644
+--- /dev/null
++++ b/src/gcc/m2/gm2-libs-pim-common/README.texi
+@@ -0,0 +1,6 @@
++These library modules contain access to functionality which is enabled
++if there is support in the GCC builtins.  The module
++@code{Builtins} contains access to many of the instrinsic
++procedure functions supported by GCC.  The @code{SYSTEM} module
++has been extended to include target supported data types (for example
++fixed sized @code{CARDINAL}, @code{INTEGER} and @code{REAL} types).
