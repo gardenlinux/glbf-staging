@@ -69,8 +69,6 @@ debian_patches += \
 	libsanitizer-static-tls \
 	pr123853 \
 
-  debian_patches += ada-tv_nsec-size
-
 # not yet backported, m68k only
 ifneq (,$(filter $(DEB_TARGET_ARCH),m68k))
   debian_patches += pr120165
