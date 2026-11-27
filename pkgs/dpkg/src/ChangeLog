@@ -1,3 +1,1003 @@
+commit f78cedcdcbbf25b27f3104b99ac3d2832e19d0cc
+Author: Guillem Jover <guillem@debian.org>
+Date:   Fri Nov 13 07:43:21 2026 +0100
+
+    Release 1.23.12
+
+ debian/changelog | 92 ++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 89 insertions(+), 3 deletions(-)
+
+commit 269fceb5b42acc3840fa3c8ab35fbe1bcbf4662f
+Author: Guillem Jover <guillem@debian.org>
+Date:   Fri Nov 13 07:37:28 2026 +0100
+
+    po: Regenerate .pot files and merge .po files with them
+
+ dselect/po/dselect.pot  |   4 +-
+ man/po/de.po            | 151 ++++++++++++++++---------
+ man/po/dpkg-man.pot     | 114 ++++++++++++-------
+ man/po/es.po            | 136 ++++++++++++++--------
+ man/po/fr.po            | 148 +++++++++++++++---------
+ man/po/hu.po            | 126 +++++++++++++--------
+ man/po/it.po            | 136 ++++++++++++++--------
+ man/po/ja.po            | 136 ++++++++++++++--------
+ man/po/pl.po            | 136 ++++++++++++++--------
+ man/po/pt_BR.po         | 127 +++++++++++++--------
+ man/po/ru.po            | 127 +++++++++++++--------
+ man/po/sv.po            | 151 ++++++++++++++++---------
+ man/po/zh_CN.po         | 132 ++++++++++++++--------
+ po/dpkg.pot             | 291 +++++++++++++++++++++++++++---------------------
+ scripts/po/dpkg-dev.pot | 101 ++++++++++++++++-
+ 15 files changed, 1304 insertions(+), 712 deletions(-)
+
+commit cb3490e50c495f0963e20c1f2e7ab5ec8f406291
+Author: Guillem Jover <guillem@debian.org>
+Date:   Tue Nov 10 04:40:46 2026 +0100
+
+    dpkg-deb: Check for directory traversal symlinks in control.tar deb member
+    
+    The code was not rejecting symlinks inside the control.tar deb member
+    that tried to perform directory traversals. This meant that a .deb package
+    could contain such control files as a symlink to some other filesystem
+    file, which could then be accessed with «dpkg-deb --info» to exfiltrate
+    user controlled secrets, for example from automated CI or test systems.
+    
+    While symlinks in the control member are a weird construct, they have
+    been explicitly allowed up to now, and rejecting them completely has a
+    risk for regressions for out of distribution packages. Accept them for
+    now, but check that they are neither ".." nor contain "/", to force them
+    to be local. In the future we will probably start a deprecation process.
+    
+    Reported-by: Thai Duong <thai@calif.io>
+    Detected-by: Anthropic LLM, verified by humans at Calif.io
+    Stable-Candidate: 1.20.x 1.21.x 1.22.x
+
+ src/at/deb-content.at | 34 ++++++++++++++++++++++++++++++++++
+ src/deb/build.c       | 10 ++++++----
+ src/deb/dpkg-deb.h    |  5 +++++
+ src/deb/info.c        | 35 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 80 insertions(+), 4 deletions(-)
+
+commit 50fb8e7fe20cee0d5b14000c32ca8c31f3bf0574
+Author: Guillem Jover <guillem@debian.org>
+Date:   Mon Sep 7 01:03:12 2026 +0200
+
+    Dpkg::Source::Package::V3::Quilt: Remove database dir on unpack
+    
+    Before applying the patches, after having unpacked a source archive,
+    we should make sure we have no quilt db around, as that is coming
+    from a potentially untrusted origin, and might contain hostile contents
+    to cause directory traversal issues.
+    
+    We are already filtering the quilt db directory during extraction, so
+    this code should not trigger, but we add it for defense in depth and out
+    of robustness.
+    
+    Reported-by: Thai Duong <thai@calif.io>
+    Detected-by: Anthropic LLM, verified by humans at Calif.io
+    Fixes: CVE-2026-91094
+    Stable-Candidate: 1.20.x 1.21.x 1.22.x
+
+ scripts/Dpkg/Source/Package/V3/Quilt.pm | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+commit 2a31760bc2a968878700476c1de5b8ea7809e460
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sat Sep 5 23:42:20 2026 +0200
+
+    Dpkg::Source::Package::V2: Pass the same tar exclusion options for debian.tar
+    
+    This fixes a directory traversal bug, where the debian.tar part of the
+    source package can contain a hostile .pc/ directory with symlink files
+    pointing outside the current source tree root.
+    
+    Reported-by: Thai Duong <thai@calif.io>
+    Analysis-by: Anthropic LLM, verified by humans at Calif.io
+    Fixes: CVE-2026-91094
+    Stable-Candidate: 1.20.x 1.21.x 1.22.x
+
+ scripts/Dpkg/Source/Package/V2.pm | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 314abb9f28c247c61f6cde753b9c2491fabfc02f
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sat Sep 5 23:41:55 2026 +0200
+
+    Dpkg::Source::Package::V2: Move tar options into a variable
+    
+    We will be using these options for other tar invocations.
+    
+    Stable-Candidate: 1.20.x 1.21.x 1.22.x
+
+ scripts/Dpkg/Source/Package/V2.pm | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
+
+commit 1a4a44e8c0c93b68082cc9663741f7e627fcb8fe
+Author: Andriy Pysyk <ep.nestor@gmail.com>
+Date:   Thu Nov 12 03:45:31 2026 +0100
+
+    po: Update Ukrainian translations
+    
+    Closes: #1137427, #1152021, #1153538
+    Signed-off-by: Guillem Jover <guillem@debian.org>
+
+ dselect/po/uk.po |  524 ++++---
+ po/uk.po         | 4252 ++++++++++++++++++++++++++++++++++----------------
+ scripts/po/uk.po | 4587 +++++++++++++++++++++++++++++++++++++++---------------
+ 3 files changed, 6504 insertions(+), 2859 deletions(-)
+
+commit 4fbafca0b92445e5c413aee20746db4daeebfe27
+Author: Frans Spiesschaert <Frans.Spiesschaert@yucom.be>
+Date:   Thu Nov 12 03:30:29 2026 +0100
+
+    po: Update Dutch translations
+    
+    Closes: #1152941, #1153834
+    Signed-off-by: Guillem Jover <guillem@debian.org>
+
+ man/po/nl.po     | 6232 +++++++++++++++---------------------------------------
+ scripts/po/nl.po |   69 +-
+ 2 files changed, 1757 insertions(+), 4544 deletions(-)
+
+commit e01a490bd5d83d4b86cd68dbc05aac8cb4e7627d
+Author: Américo Monteiro <a_monteiro@gmx.com>
+Date:   Thu Nov 12 03:26:20 2026 +0100
+
+    po: Update Portuguese man pages translation
+    
+    Closes: #1149150
+    Signed-off-by: Guillem Jover <guillem@debian.org>
+
+ man/po/pt.po | 5538 +++++++++++++++++-----------------------------------------
+ 1 file changed, 1567 insertions(+), 3971 deletions(-)
+
+commit 07aaca91994b905bfd3cdaa4c49ff03ea17ee929
+Author: Guillem Jover <guillem@debian.org>
+Date:   Thu Nov 12 02:23:56 2026 +0100
+
+    dpkg-buildpackage: Accept --sign-command auto and none arguments
+    
+    These option arguments are supported internally, and while 'auto'
+    is the default, we should accept both as a valid arguments, for
+    example so that users can override previous instances of the same
+    option, or set it to no command at all.
+    
+    Ref: #1061450
+    Reported-by: Cheng Li <shiptux@gmail.com>
+
+ scripts/dpkg-buildpackage.pl | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit d7ecf8b57fe4633ae5c05c75d8cd3e60bd459382
+Author: Cheng Li <shiptux@gmail.com>
+Date:   Fri Oct 30 20:44:02 2026 +0900
+
+    dpkg-buildpackage: Fix --sign-pause long option name
+    
+    The long options were added in dpkg 1.18.8, where the --help output
+    documented this one as --sign-pause, while the parser was written as
+    --sign-pausa.  The documented spelling has therefore never been
+    accepted, and the accepted spelling has never been documented, neither
+    in --help nor in the man page.
+    
+    Correct the parser to use the documented and intended spelling.  Do not
+    keep the misspelling as a deprecated alias, as it was never part of the
+    documented interface, and the short -ap option has always worked; it now
+    gets the usual unknown option error, which names the offending option.
+    
+    Document the option in the man page, which has been missing an entry for
+    it all along.
+    
+    Fixes: commit 293bd243a19149165fc4fd8830b16a51d471a5e9
+    Signed-off-by: Guillem Jover <guillem@debian.org>
+
+ man/dpkg-buildpackage.pod     |  7 +++++++
+ scripts/dpkg-buildpackage.pl  |  2 +-
+ scripts/t/dpkg_buildpackage.t | 17 ++++++++++++++++-
+ 3 files changed, 24 insertions(+), 2 deletions(-)
+
+commit 0223b032abe1596213aed7be98ab78dadb880a5e
+Author: Cheng Li <shiptux@gmail.com>
+Date:   Tue Nov 3 17:38:38 2026 +0900
+
+    build: Anchor .gitignore entries for generated files
+    
+    All the entries in these four directories name files generated at the
+    top level of the directory, but none of them is anchored, so they also
+    match any file with the same name in a subdirectory.
+    
+    The bash completion files are named after the programs they complete and
+    live in <dir>/completion/bash/, so each of them is currently matched by
+    the entry for its own generated program.  Adding a new completion file
+    needs git add -f, and git add -A skips it silently.
+    
+    Anchor every entry with a leading "/" so that it only matches the
+    generated file it is meant to match.
+    
+    Ref: #1061450
+    Signed-off-by: Guillem Jover <guillem@debian.org>
+
+ dselect/.gitignore |  6 +++---
+ scripts/.gitignore | 48 ++++++++++++++++++++++++------------------------
+ src/.gitignore     | 24 ++++++++++++------------
+ utils/.gitignore   |  8 ++++----
+ 4 files changed, 43 insertions(+), 43 deletions(-)
+
+commit 7755d50500a7d047c30fadb63ec9c4069608517b
+Author: Guillem Jover <guillem@debian.org>
+Date:   Thu Oct 29 02:29:25 2026 +0100
+
+    man: Rename "old-postinst" to "postinst" for abort-remove in deb-postinst(5)
+    
+    The abort-remove case does not involve an old and new maintainer
+    scripts, so using "old-postinst" is confusing.
+
+ man/deb-postinst.pod | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 5d18f9b5830d4c476fb325a58e8a21ab25e13f79
+Author: Guillem Jover <guillem@debian.org>
+Date:   Thu Oct 29 02:21:50 2026 +0100
+
+    dpkg: Use "installed" instead of "old" for maintscript error with no "new"
+    
+    While trying to unify the maintainer script error messages, the
+    "installed" string was turned into "old" for symmetry with "new".
+    
+    The problem is that the vmaintscript_run_old() is predominantly
+    called from code that handles maintainer script invocations that do
+    not involve an "old" vs "new" maintainer scripts, which makes the "old"
+    name very confusing.
+    
+    Revert back to use "installed", because even though it is not symmetric
+    with "new" it is always going to be correct when referring to the
+    installed maintscript.
+    
+    Fixes: commit 02c3c45c6d025004c2f0cbf37260eb828ed2a357
+    Closes: #1151270
+
+ src/main/script.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+commit 56d434996f94aa40c607d37de00a1f9ef87c7c53
+Author: Guillem Jover <guillem@debian.org>
+Date:   Tue Oct 27 09:56:26 2026 +0100
+
+    Dpkg::Source::Package::V3::Git: Fix chdir usage
+    
+    Do not change the current directory for the main process, instead change
+    it only for the spawn() processes, and switch to use the correct path
+    for the files we are handling.
+    
+    This makes the locations more clear and makes it possible for the code
+    to be independent of the current working directory on entry.
+    
+    Closes: #1152228
+
+ scripts/Dpkg/Source/Package/V3/Git.pm | 34 +++++++++++++++-------------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
+
+commit cbd21753072d5efc49cdff41f0489124f6ea1d8a
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sun Oct 29 16:44:30 2017 +0100
+
+    perl: Switch directory from within the spawn() call
+    
+    This avoids changing the global current directory.
+
+ scripts/Dpkg/Source/Package/V3/Bzr.pm | 13 ++-----------
+ scripts/t/dpkg_buildpackage.t         |  3 +--
+ 2 files changed, 3 insertions(+), 13 deletions(-)
+
+commit b01a5ce64bf9431e71cd7e9ecf6f33bbcd4c6e56
+Author: Guillem Jover <guillem@debian.org>
+Date:   Thu Apr 23 05:48:18 2026 +0200
+
+    scripts: Use spawn() instead of system() when not needing a shell
+    
+    The spawn() interface provides more control over what is getting
+    executed and its inputs and outputs. Whenever we do not need a
+    shell interpreter, we should be using the spawn() interface.
+
+ scripts/Dpkg/BuildDriver/DebianRules.pm |  7 ++-
+ scripts/Dpkg/Source/Functions.pm        | 12 +++--
+ scripts/Dpkg/Source/Package/V1.pm       |  9 +++-
+ scripts/Dpkg/Source/Package/V2.pm       | 13 ++++--
+ scripts/Dpkg/Source/Package/V3/Bzr.pm   | 28 ++++++++----
+ scripts/Dpkg/Source/Package/V3/Git.pm   | 81 +++++++++++++++++++++------------
+ scripts/dpkg-buildpackage.pl            | 12 +++--
+ scripts/t/mk.t                          |  7 ++-
+ 8 files changed, 116 insertions(+), 53 deletions(-)
+
+commit 0957ef154db7afdc052245373e8c8e3bc5be28d5
+Author: Guillem Jover <guillem@debian.org>
+Date:   Thu Apr 23 05:48:18 2026 +0200
+
+    Dpkg::Source::Package::V3::Git: Use spawn() instead of qx()
+    
+    This way we can more easily control what output we get, and the
+    environment we will execute git in.
+
+ scripts/Dpkg/Source/Package/V3/Git.pm | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+commit a7e5051a4804660b68a69349e994a89037426b0b
+Author: Guillem Jover <guillem@debian.org>
+Date:   Fri Nov 13 01:57:09 2026 +0100
+
+    dpkg-name: Honor --overwrite with --symlink
+    
+    We need to remove the destination file in case we have been requested to
+    overwrite it when creating the symlink, as the latter will not overwrite
+    the destination by itself if something exists there.
+
+ scripts/dpkg-name.pl | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+commit d3649b8c2fa4cf1bef442a0cb8ce0178345dfea7
+Author: Guillem Jover <guillem@debian.org>
+Date:   Fri Nov 13 00:28:30 2026 +0100
+
+    scripts: Use Perl functions instead of simple ln, cp, mv commands
+    
+    Whenever possible use native Perl functions instead of invoking external
+    commands to perform these basic operations.
+    
+    We do not switch instances where command arguments are not easily
+    replicated with native Perl functions.
+
+ scripts/Dpkg/Source/Package/V3/Git.pm | 12 ++++++++----
+ scripts/dpkg-name.pl                  | 12 ++++--------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
+
+commit 66df24f5c2bf8093e75c1438117fa26ff79415d4
+Author: Guillem Jover <guillem@debian.org>
+Date:   Fri Nov 13 03:33:09 2026 +0100
+
+    Dpkg::OpenPGP: Remove unused Dpkg::IPC import
+    
+    We stopped using this module when the implementations got moved into the
+    backend modules.
+    
+    Fixes: commit 4af4a46fa12221e8e7ea7d525619a2dbc89f7786
+
+ scripts/Dpkg/OpenPGP.pm | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 57dcb1aab0a8afed934de577272ae13786ead369
+Author: Guillem Jover <guillem@debian.org>
+Date:   Fri Nov 13 00:27:19 2026 +0100
+
+    dpkg-name: Rename move() function to rename_archive()
+    
+    Use a more concrete name that does not clash with the more generic
+    function name from File::Copy.
+
+ scripts/dpkg-name.pl | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 1754c00cc0cdf19b6f9a8d5e30074d996d5e3e76
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sat Oct 31 19:00:47 2026 +0100
+
+    Test::Dpkg: Add completion/bash directories to all_shell_files
+    
+    We were not checking any of the bash completion files with shellcheck.
+    
+    Ref: #1061450
+    Reported-by: Cheng Li <shiptux@gmail.com>
+
+ scripts/Test/Dpkg.pm | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 3a085185507e8b57d2335edc9cb38dc9cca3d6ca
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sat Oct 31 19:06:41 2026 +0100
+
+    completion: Add quotes around variable expansion
+    
+    Warned-by: shellcheck
+
+ src/completion/bash/dpkg-deb | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 7492eb3d9b1e4f325bd4845614eaf126240ba8c7
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sun Oct 11 07:53:34 2026 +0200
+
+    build: Bump -Wstrict-overflow from level 2 to 3
+    
+    The only code emitting a warning under level 3 was just fixed, so we can
+    switch to this more strict level now.
+
+ m4/dpkg-compiler.m4 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 9b8b5d4a0b25a5fa702959d75cae7d1da1314d0e
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sun Oct 11 07:49:17 2026 +0200
+
+    libdpkg: Make sure we do not overflow when growing command argv
+    
+    Make sure argv_size is equal or larger than argc, otherwise the
+    subtraction might underflow.
+    
+    Warned-by: gcc -Wstrict-overflow=3
+
+ lib/dpkg/command.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 0d9e674c71aba75aa321c5083b54e35e343d7c3c
+Author: Guillem Jover <guillem@debian.org>
+Date:   Fri Oct 2 00:05:37 2026 +0200
+
+    scripts: Remove redundant imports
+    
+    These imports are redundant with us having declared the same as our
+    parent.
+
+ scripts/Dpkg/Changelog/Debian.pm       | 1 -
+ scripts/Dpkg/Changelog/Entry/Debian.pm | 1 -
+ scripts/Dpkg/Control.pm                | 1 -
+ scripts/Dpkg/Control/Changelog.pm      | 1 -
+ scripts/Dpkg/Control/Tests.pm          | 1 -
+ scripts/Dpkg/Control/Tests/Entry.pm    | 1 -
+ 6 files changed, 6 deletions(-)
+
+commit c66b661d676d5ea284d2dfa027363a2cc2dc14c0
+Author: Guillem Jover <guillem@debian.org>
+Date:   Fri Oct 2 00:06:51 2026 +0200
+
+    scripts: Explicitly import Dpkg::Control::Types module
+    
+    We are using the control types from this module, explicitly import it so
+    that we do not rely on other modules pulling it in.
+
+ scripts/Dpkg/Changelog/Entry/Debian.pm | 1 +
+ scripts/Dpkg/Control/Changelog.pm      | 1 +
+ scripts/Dpkg/Control/Tests/Entry.pm    | 1 +
+ 3 files changed, 3 insertions(+)
+
+commit 76563d4991a44d5182b3c108d7ad751896264e02
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sat Sep 26 11:49:54 2026 +0200
+
+    scripts: Remove /o modifier from regular expressions
+    
+    This modifier is generally discouraged as unnecessary. And in our case
+    it also prevents one of the variables to be modified during the module
+    lifetime, which can have very surprising and unexpected results.
+
+ scripts/Dpkg/Changelog/Debian.pm      | 10 +++++-----
+ scripts/Dpkg/Package.pm               |  4 ++--
+ scripts/Dpkg/Source/Package/V3/Bzr.pm |  2 +-
+ scripts/Dpkg/Source/Package/V3/Git.pm |  2 +-
+ scripts/Dpkg/Source/Patch.pm          |  2 +-
+ scripts/Dpkg/Version.pm               |  2 +-
+ 6 files changed, 11 insertions(+), 11 deletions(-)
+
+commit 69788e7bafbbfe953bfbb568db4ed42295255c25
+Author: Guillem Jover <guillem@debian.org>
+Date:   Thu Sep 17 23:43:34 2026 +0200
+
+    dpkg: Split available db update and clear actions into different functions
+    
+    These perform actions that are more distinct than equal, by splitting
+    the logic, we reduce the amount of conditionals, and simplify the code,
+    at the cost of little duplication.
+    
+    Changelog: internal
+
+ src/main/main.c   |  6 ++---
+ src/main/main.h   |  4 ++-
+ src/main/update.c | 76 ++++++++++++++++++++++++++++++++-----------------------
+ 3 files changed, 50 insertions(+), 36 deletions(-)
+
+commit 638335709edc6ef1ef0f93112b5d66b481c6674c
+Author: Guillem Jover <guillem@debian.org>
+Date:   Mon Oct 12 19:51:21 2026 +0200
+
+    dpkg: Parse the --*-avail arguments before initializing the database
+    
+    We should first check the arguments, before we do any database
+    initialization, so that there are less chances for error while unwinding
+    on errors.
+
+ src/main/update.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 33ef594d6bbc1c02139484e36ba73ae1031b7d85
+Author: Guillem Jover <guillem@debian.org>
+Date:   Thu Sep 17 23:36:18 2026 +0200
+
+    dpkg: Refactor db_available_check_access() function
+    
+    Changelog: internal
+
+ src/main/update.c | 29 +++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
+
+commit a19ddf008c9f3fe6bfde8c4997fb2343a4be2ad6
+Author: Guillem Jover <guillem@debian.org>
+Date:   Thu Sep 17 21:53:43 2026 +0200
+
+    dpkg-source: Clarify warning about duplicate address in Uploader field
+    
+    The message was not clear that the address is duplicated between the
+    Uploaders and Maintainer fields.
+    
+    Changelog: output
+
+ scripts/dpkg-source.pl | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit f93cf6de533ce91c8e9cda7a62baa738aba0218b
+Author: Guillem Jover <guillem@debian.org>
+Date:   Tue Sep 15 02:48:39 2026 +0200
+
+    dpkg: Make execbackend() static and move it to its declaration location
+    
+    There is no need for this function to be extern, when it is only used
+    in this file.
+    
+    Changelog: internal
+
+ src/main/main.c | 36 +++++++++++++++++-------------------
+ 1 file changed, 17 insertions(+), 19 deletions(-)
+
+commit d0dd729dee865e6adb55f4e73bd716afde072268
+Author: Guillem Jover <guillem@debian.org>
+Date:   Tue Sep 15 02:39:00 2026 +0200
+
+    dpkg: Deprecate ancient alias for --selected-only
+    
+    The --no-also-select alias has been long marked for removal, but never
+    acted on. Start the deprecation process so that we can remove the option
+    in the next major version cycle.
+
+ doc/README.feature-removal-schedule |  9 +++++++++
+ src/main/main.c                     | 13 +++++++++++--
+ 2 files changed, 20 insertions(+), 2 deletions(-)
+
+commit a81963d9b971dd89d2e80fd537d2ae101a3d807f
+Author: Guillem Jover <guillem@debian.org>
+Date:   Tue Sep 15 02:25:01 2026 +0200
+
+    dpkg: Rename yet-to-unpack functions
+    
+    This code uses functions with no word separators, and contractions which
+    makes reading them and looking for them harder.
+    
+    Changelog: internal
+
+ src/common/actions.h | 2 +-
+ src/main/enquiry.c   | 6 +++---
+ src/main/main.c      | 2 +-
+ src/main/main.h      | 2 +-
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+commit d500c7e8b394c7c31bffd5eea9ead6af3643281b
+Author: Guillem Jover <guillem@debian.org>
+Date:   Mon Sep 14 15:10:52 2026 +0200
+
+    dpkg: Add support for auditing the database contents
+    
+    We should load all the databases so that we can trigger their parsing,
+    to be able to report errors.
+    
+    Closes: #1016143
+
+ src/main/audit.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+commit 7f68f0e0f26ff451e0352e3c4bd71abde80e8c38
+Author: Guillem Jover <guillem@debian.org>
+Date:   Mon Sep 14 15:10:21 2026 +0200
+
+    libdpkg: Refactor files list file loading from a package array visitor function
+    
+    Add a generic visitor function to load the pkg files list file.
+
+ lib/dpkg/db-fsys-files.c | 6 ++++++
+ lib/dpkg/db-fsys.h       | 3 +++
+ lib/dpkg/libdpkg.map     | 1 +
+ src/query/main.c         | 8 +-------
+ 4 files changed, 11 insertions(+), 7 deletions(-)
+
+commit 7572b706417929e1f220bcabd801a7b5f5236f63
+Author: Guillem Jover <guillem@debian.org>
+Date:   Tue Oct 13 00:13:21 2026 +0200
+
+    libdpkg: Move pkg function typedefs to pkg.h
+    
+    These are generic function types that are pkg specific, not pkg_array
+    specific.
+
+ lib/dpkg/pkg-array.h | 3 ---
+ lib/dpkg/pkg.h       | 2 ++
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+commit c9cadadb6192daf589bdba93b409f1f33bd4895f
+Author: Guillem Jover <guillem@debian.org>
+Date:   Tue Oct 13 00:11:29 2026 +0200
+
+    libdpkg: Change pkg_array_visitor_func() to pkg_visitor_func()
+    
+    Generalize the visitor function and avoid the now unnecessary pkg_array
+    argument.
+
+ lib/dpkg/pkg-array.c |  4 ++--
+ lib/dpkg/pkg-array.h |  5 ++---
+ src/query/main.c     | 11 ++++-------
+ 3 files changed, 8 insertions(+), 12 deletions(-)
+
+commit 8b3db7da26886d6cc44d2eaa7903663b5407e53a
+Author: Guillem Jover <guillem@debian.org>
+Date:   Tue Oct 13 00:05:14 2026 +0200
+
+    dpkg-query: Move list_format_init() outside of the pkg_array visitor
+    
+    We only need to initialize it once, and having the call within the
+    visitor forces us to have to pass the array pointer to the visitor,
+    which does not make much sense as an API.
+    
+    Changelog: internal
+
+ src/query/main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 69d49dc700b30688adaaaf6a37cbafe1b715f988
+Author: Guillem Jover <guillem@debian.org>
+Date:   Mon Sep 14 23:33:17 2026 +0200
+
+    dpkg: Add minimal database structure audit support
+    
+    This replaces the ad-hoc test that was introduced as part of the u-a
+    fix-up code, which got then removed once the upgrade had been
+    guaranteed.
+
+ src/main/audit.c | 111 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 111 insertions(+)
+
+commit 3e4201221251cea7f0e800c08a054a90a61e84ff
+Author: Guillem Jover <guillem@debian.org>
+Date:   Mon Sep 14 23:33:14 2026 +0200
+
+    dpkg: Split database audit code into its own module
+    
+    We are going to grow the audit capabilities, and the command has a
+    clearly delineated surface that makes sense to split into its own
+    module.
+    
+    Changelog: internal
+
+ po/POTFILES.in     |   1 +
+ src/Makefile.am    |   1 +
+ src/main/audit.c   | 243 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ src/main/enquiry.c | 182 ---------------------------------------
+ 4 files changed, 245 insertions(+), 182 deletions(-)
+
+commit 3e4ee26d4746598f3f36d508493a2727bf7fbdcf
+Author: Guillem Jover <guillem@debian.org>
+Date:   Tue Sep 15 02:10:57 2026 +0200
+
+    dpkg: Indent package names in --audit and --yet-to-unpack with two spaces
+    
+    One space is too small of a width to make it easily distinguishable
+    from the problem description paragraph.
+    
+    Changelog: output
+
+ src/main/enquiry.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 8e2b8134e6d139023ab28f13c7a51023c4c12bd1
+Author: Guillem Jover <guillem@debian.org>
+Date:   Mon Sep 14 23:31:28 2026 +0200
+
+    dpkg: Print only the package name in --audit and --yet-to-unpack
+    
+    Printing the synopsis for packages in both of these options does not
+    seem very helpful, and distracts from the more important part which is
+    the actual package name.
+    
+    As a side effect, this will avoid having to refactor the now removed
+    describebriefly() function once we split the audit code into its own
+    module.
+    
+    Changelog: output
+
+ src/main/enquiry.c | 21 ++-------------------
+ 1 file changed, 2 insertions(+), 19 deletions(-)
+
+commit bfb3e3f0fc4842e6857e35e31dd7fadba673cc13
+Author: Guillem Jover <guillem@debian.org>
+Date:   Mon Sep 14 03:29:19 2026 +0200
+
+    libdpkg: Rename and namespace database file and directory macros
+    
+    Prefix them with DPKG_DB_ to make it obvious these are related to the
+    dpkg database. Unify their naming, and split words with underscores for
+    clarity.
+
+ dselect/method.cc           |  2 +-
+ dselect/methparse.cc        |  2 +-
+ lib/dpkg/db-ctrl-format.c   |  4 ++--
+ lib/dpkg/db-ctrl-upgrade.c  |  2 +-
+ lib/dpkg/db-fsys-divert.c   |  2 +-
+ lib/dpkg/db-fsys-override.c |  2 +-
+ lib/dpkg/dbmodify.c         | 32 ++++++++++++++++----------------
+ lib/dpkg/dpkg-db.h          | 44 ++++++++++++++++++++++----------------------
+ lib/dpkg/trigdeferred.c     |  9 +++++----
+ lib/dpkg/triglib.c          |  4 ++--
+ src/divert/main.c           |  2 +-
+ src/main/unpack.c           |  6 +++---
+ src/main/update.c           |  2 +-
+ src/split/main.c            |  4 ++--
+ src/statoverride/main.c     |  2 +-
+ 15 files changed, 60 insertions(+), 59 deletions(-)
+
+commit f10d3274ac840c62f396b8965c1ed70b454528cf
+Author: Guillem Jover <guillem@debian.org>
+Date:   Mon Sep 14 23:33:12 2026 +0200
+
+    libdpkg: Move database pathname macros to dpkg-db.h
+    
+    Centralize all file and directory pathnames that can be found in the
+    dpkg database into dpkg-db.h, where they belong, so that we can reference
+    them from other places.
+
+ dselect/method.h       |  5 -----
+ lib/dpkg/arch.c        |  3 ---
+ lib/dpkg/dpkg-db.h     | 34 ++++++++++++++++++++++++++++++++++
+ lib/dpkg/dpkg.h        | 19 -------------------
+ src/split/dpkg-split.h |  2 --
+ 5 files changed, 34 insertions(+), 29 deletions(-)
+
+commit 47e6964450966be358bd389e5ae98bc756bdd8e5
+Author: Guillem Jover <guillem@debian.org>
+Date:   Mon Sep 14 03:41:11 2026 +0200
+
+    Split dselect methods libdir macro usage from database dir macro
+    
+    While the directory component name matches for both the methods libdir
+    and the database methods state dir, they serve different purposes, and
+    should use two independent macros.
+    
+    Changelog: internal
+
+ dselect/method.cc | 4 ++--
+ lib/dpkg/dpkg.h   | 2 ++
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+commit df34a189e82dc0abe49bf90b6293cc3469a43040
+Author: Guillem Jover <guillem@debian.org>
+Date:   Mon Sep 14 02:05:08 2026 +0200
+
+    man: Document backport markers handling in dpkg-mergechangelogs(1)
+    
+    Explain in a generic way how these are handled depending on the vendor.
+    
+    Closes: #1079138
+
+ man/dpkg-mergechangelogs.pod | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit b179e82b37164bf40102d2012d5fc5da2bbb3efb
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sun Sep 13 01:26:03 2026 +0200
+
+    man: Fix format of some "since version" sentences
+
+ man/deb-buildinfo.pod  | 2 +-
+ man/dpkg-build-api.pod | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+commit 4f110ef03d947b2d24b2f93d8491e490b7416812
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sat Sep 12 20:50:44 2026 +0200
+
+    dpkg-source: Add support for --robot for --version output
+    
+    This makes it possible for other tools to get the exact version of the
+    Perl based tools, w/o needing to parse the human readable --version
+    output, which is susceptible to changes.
+
+ man/dpkg-source.pod    | 16 ++++++++++++++++
+ scripts/dpkg-source.pl |  8 +++++++-
+ 2 files changed, 23 insertions(+), 1 deletion(-)
+
+commit 393e248e47ccc72c56cfaa5734f1a5fa0335c429
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sat Sep 12 20:50:21 2026 +0200
+
+    dpkg-source: Handle --help and --version as commands
+    
+    These were currently being acted on immediately when found during CLI
+    parsing. Which means we could not apply any modifier options to them.
+    
+    To be able to add --robot support, we need to handle them like any other
+    proper action, which is really what these are anyway.
+
+ scripts/dpkg-source.pl | 34 ++++++++++++++++++++--------------
+ 1 file changed, 20 insertions(+), 14 deletions(-)
+
+commit 9168bcec73c90f943a0e3fd5fecbc877c72001dd
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sat Sep 12 20:49:27 2026 +0200
+
+    Switch to libdpkg print_version()
+    
+    Use the new function from libdpkg, instead of duplicating the same code
+    on each program.
+    
+    Changelog: internal
+
+ src/deb/main.c                 | 16 +---------------
+ src/divert/main.c              | 17 +----------------
+ src/dpkg-maintscript-helper.sh |  5 +----
+ src/main/main.c                |  6 +-----
+ src/query/main.c               | 16 +---------------
+ src/realpath/main.c            |  9 +--------
+ src/split/main.c               | 17 +----------------
+ src/statoverride/main.c        | 17 +----------------
+ src/trigger/main.c             | 17 +----------------
+ 9 files changed, 9 insertions(+), 111 deletions(-)
+
+commit 08f8d07afbb5852c3b0dabe319f01a690b3ad320
+Author: Guillem Jover <guillem@debian.org>
+Date:   Mon Sep 21 04:42:01 2026 +0200
+
+    dpkg-ar: Add missing paragraph separator in --help output
+
+ scripts/dpkg-ar.pl | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 573f71bf882f70e463d34b621346615969c46f73
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sat Sep 12 20:44:32 2026 +0200
+
+    Add missing program synopsis to new field in --help output
+    
+    Most of the packages did not print a synopsis in their --version output.
+    Add it explicitly to their --help output with the new infrastructure.
+
+ scripts/dpkg-ar.pl              | 7 +++++++
+ scripts/dpkg-architecture.pl    | 7 +++++++
+ scripts/dpkg-buildapi.pl        | 7 +++++++
+ scripts/dpkg-buildflags.pl      | 7 +++++++
+ scripts/dpkg-buildpackage.pl    | 7 +++++++
+ scripts/dpkg-buildtree.pl       | 7 +++++++
+ scripts/dpkg-checkbuilddeps.pl  | 7 +++++++
+ scripts/dpkg-distaddfile.pl     | 7 +++++++
+ scripts/dpkg-genbuildinfo.pl    | 7 +++++++
+ scripts/dpkg-genchanges.pl      | 7 +++++++
+ scripts/dpkg-gencontrol.pl      | 6 ++++++
+ scripts/dpkg-gensymbols.pl      | 7 +++++++
+ scripts/dpkg-mergechangelogs.pl | 7 +++++++
+ scripts/dpkg-name.pl            | 7 +++++++
+ scripts/dpkg-parsechangelog.pl  | 7 +++++++
+ scripts/dpkg-scanpackages.pl    | 7 +++++++
+ scripts/dpkg-scansources.pl     | 7 +++++++
+ scripts/dpkg-shlibdeps.pl       | 7 +++++++
+ scripts/dpkg-source.pl          | 7 +++++++
+ scripts/dpkg-vendor.pl          | 7 +++++++
+ src/divert/main.c               | 6 ++++++
+ src/realpath/main.c             | 6 ++++++
+ src/statoverride/main.c         | 6 ++++++
+ 23 files changed, 157 insertions(+)
+
+commit 2fe6440f357ac6a2b66355875c1bc0fc74a1ba62
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sat Sep 12 20:44:32 2026 +0200
+
+    Move program synopsis from --version to a new field in --help output
+    
+    The short program description for a program makes more sense in the
+    --help output than in the --version output. Move it into a new field
+    after the Usage: one.
+
+ src/deb/main.c     | 8 +++++++-
+ src/main/main.c    | 9 ++++++++-
+ src/query/main.c   | 8 +++++++-
+ src/split/main.c   | 9 ++++++++-
+ src/trigger/main.c | 8 +++++++-
+ 5 files changed, 37 insertions(+), 5 deletions(-)
+
+commit a1ff7f8fd2641a631606b7d8b3d18014e8339599
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sun Sep 20 20:54:47 2026 +0200
+
+    Dpkg::Getopt: Add print_synopsis() function
+    
+    This adds this new output so that we can print a short description for
+    each program on their --help output, to give a bit of context on what
+    the tool is intended to do.
+
+ scripts/Dpkg/Getopt.pm | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit d42816d398b5ba21e8e8c29257900dd1114ceeb2
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sat Sep 12 20:40:20 2026 +0200
+
+    Dpkg::Getopt: Add a function to print the version in robot format
+    
+    We have similar functionality in dpkg itself, and this makes it possible
+    to add the same for one of the Perl programs, so that users can obtain
+    the program version in a machine readable way.
+
+ scripts/Dpkg/Getopt.pm | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 825e19e1a6a71343ab3f6ec40ab567347f6df956
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sat Sep 12 20:39:56 2026 +0200
+
+    libdpkg: Add print_synopsis() function
+    
+    This adds this new output so that we can move it out from some current
+    program --version output into a uniform location in the --help output,
+    where it is in context and makes more sense.
+
+ lib/dpkg/libdpkg.map | 1 +
+ lib/dpkg/options.c   | 6 ++++++
+ lib/dpkg/options.h   | 2 ++
+ 3 files changed, 9 insertions(+)
+
+commit 3a7e0c846aaeb3351f76ecafe85ca362c4f85c2f
+Author: Guillem Jover <guillem@debian.org>
+Date:   Sat Sep 12 20:39:56 2026 +0200
+
+    libdpkg: Add print_version() function
+    
+    This way we can centralize program version printing and have a unified
+    formatting for all programs. The output format matches the current
+    format from the Perl programs.
+
+ lib/dpkg/libdpkg.map |  1 +
+ lib/dpkg/options.c   | 10 ++++++++++
+ lib/dpkg/options.h   |  3 +++
+ 3 files changed, 14 insertions(+)
+
+commit 8efc494f0e789fde0c1631d5490a88d421fe433e
+Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Date:   Thu Sep 10 11:13:50 2026 +0200
+
+    libdpkg: Add missing included header
+    
+    Building is failing with some compilers, as free() is not declared. Add
+    the missing <stdlib.h> include.
+    
+    Fixes: commit 322edb2f8c5325493f1feb1d0eb5edf451952d8c
+    Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+    Signed-off-by: Guillem Jover <guillem@debian.org>
+
+ lib/dpkg/log.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 2d4ded4470b4802df538489ddb0e5c4f2bfdf1c8
+Author: Guillem Jover <guillem@debian.org>
+Date:   Thu Sep 24 23:59:34 2026 +0200
+
+    test: Skip hop 0.26.1 from tests as it was a buggy release
+    
+    This hop release makes the dpkg test suite and autopkgtests fail, which
+    implies that the CI and distribution migrations will fail. Skip the
+    backend if we have this specific version.
+
+ scripts/Test/Dpkg.pm | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+commit d0dbbb454332e57c4e713d2a4a61b547a0f9232c
+Author: Guillem Jover <guillem@debian.org>
+Date:   Wed Sep 9 16:36:24 2026 +0200
+
+    Bump version to 1.23.12
+
+ debian/changelog | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
 commit c32c7e899b28627a2b2e9aa260ff09ca585141c3
 Author: Guillem Jover <guillem@debian.org>
 Date:   Wed Sep 9 16:22:19 2026 +0200

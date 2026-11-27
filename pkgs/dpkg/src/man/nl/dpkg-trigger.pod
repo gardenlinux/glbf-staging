@@ -60,9 +60,9 @@ De locatie van de database van B<dpkg> wijzigen. De standaardlocatie is I<%ADMIN
 
 =item B<--root=>I<map>
 
-Set the root directory to I<directory>, which sets the administrative directory to «I<directory>%ADMINDIR%».
+De hoofdmap instellen op I<map>, hetgeen de administratieve map instelt op «I<map>%ADMINDIR%».
 
-Supported since dpkg 1.21.0.
+Ondersteund sinds dpkg 1.21.0.
 
 =item B<--by-package=>I<pakket>
 
@@ -74,13 +74,13 @@ Deze optie zorgt ervoor dat het (eventuele) aanroepende pakket I<T> niet moet wa
 
 =item B<--await>
 
-This option does the inverse of B<--no-await>.  If the interested package has declared a “noawait” directive, then this option will not be effective. It is currently the default behavior.
+Deze optie doet het tegenovergestelde van B<--no-await>. Indien het belanghebbende pakket een “noawait”-opdracht gedeclareerd heeft, zal deze optie geen effect hebben. Dit is momenteel het standaardgedrag.
 
-Supported since dpkg 1.17.21.
+Ondersteund sinds dpkg 1.17.21.
 
 =item B<--no-act>
 
-De zaak enkel uittesten, maar geen enkele effectieve wijziging doorvoeren.
+De zaak alleen uittesten, maar geen alleene effectieve wijziging doorvoeren.
 
 =back
 
@@ -108,9 +108,9 @@ Fatale of onherstelbare fout die te wijten is aan ongeldig gebruik van de comman
 
 =item B<DPKG_ROOT>
 
-If set and the B<--root> option has not been specified, it will be used as the filesystem root directory.
+Indien dit ingesteld is en de optie B<--root> niet opgegeven werd, zal dit gebruikt worden als de hoofdmap voor het bestandssysteem.
 
-Supported since dpkg 1.21.0.
+Ondersteund sinds dpkg 1.21.0.
 
 =item B<DPKG_ADMINDIR>
 
@@ -118,15 +118,15 @@ Indien dit ingesteld werd en de optie B<--admindir> niet gebruikt werd, zal dit 
 
 =item B<DPKG_DEBUG>
 
-Sets the debug mask from an octal value.  The currently accepted flags are described in the B<dpkg --debug> option, but not all these flags might have an effect on this program.
+Stelt het foutopsporingsmasker in vanaf een octale waarde. De momenteel geaccepteerde vlaggen worden beschreven in de optie B<dpkg --debug>, maar mogelijk hebben niet al deze vlaggen effect op dit programma.
 
-Supported since dpkg 1.21.10.
+Ondersteund sinds dpkg 1.21.10.
 
 =item B<DPKG_COLORS>
 
 Stelt de kleurmodus in. Waarden die momenteel gebruikt mogen worden zijn: B<auto> (standaard), B<always> en B<never>.
 
-Supported since dpkg 1.18.5.
+Ondersteund sinds dpkg 1.18.5.
 
 =item B<DPKG_NLS>
 

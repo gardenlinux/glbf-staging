@@ -24,9 +24,9 @@ B<dpkg-trigger> [I<option>...] I<command>
 
 =head1 DESCRIÇÃO
 
-B<dpkg-trigger> é uma ferramenta para activar explicitamente triggers e verificar o seu suporte no B<dpkg> em execução.
+B<dpkg-trigger> é uma ferramenta para ativar explicitamente triggers e verificar o seu suporte no B<dpkg> em execução.
 
-Isto pode ser usado pelos scripts do maintainer em situações complexas e condicionais onde os gatilhos do ficheiro, ou a directiva de ficheiro declarativa de gatilhos B<activate>, sejam insuficientemente ricos. Também pode ser usado para testes e por administradores de sistema (mas note que os gatilhos não serão realmente corridos pelo B<dpkg-trigger>).
+Isto pode ser usado pelos scripts do maintainer em situações complexas e condicionais onde os gatilhos do ficheiro, ou a diretiva de ficheiro declarativa de gatilhos B<activate>, sejam insuficientemente ricos. Também pode ser usado para testes e por administradores de sistema (mas note que os gatilhos não serão realmente corridos pelo B<dpkg-trigger>).
 
 Sintaxes de nome de trigger não reconhecidas são um erro para o B<dpkg-trigger>.
 
@@ -38,7 +38,7 @@ Este programa foi introduzido no dpkg 1.14.17.
 
 =item B<--check-supported>
 
-Verifica se o B<dpkg> a correr suporta gatilhos (geralmente chamados a partir de um postinst). Irá terminar com B<0> se correu um B<dpkg> com capacidade-de-gatilhos, ou B<1> com uma mensagem de erro para o stderr se não. No entanto, é normalmente melhor apenas activar o gatilho desejado com B<dpkg-trigger>.
+Verifica se o B<dpkg> a correr suporta gatilhos (geralmente chamados a partir de um postinst). Irá terminar com B<0> se correu um B<dpkg> com capacidade-de-gatilhos, ou B<1> com uma mensagem de erro para o stderr se não. No entanto, é normalmente melhor apenas ativar o gatilho desejado com B<dpkg-trigger>.
 
 =item B<-?>, B<--help>
 
@@ -60,9 +60,9 @@ Altera a localização da base de dados do B<dpkg>. A predefinição é I<%ADMIN
 
 =item B<--root=>I<directory>
 
-Set the root directory to I<directory>, which sets the administrative directory to «I<directory>%ADMINDIR%».
+Define o directório raiz para I<directory>, o que define o directório administrativo para «I<directory>%ADMINDIR%».
 
-Supported since dpkg 1.21.0.
+Suportado desde dpkg 1.21.0.
 
 =item B<--by-package=>I<package>
 
@@ -74,9 +74,9 @@ Esta opção faz com que o pacote chamador I<T> (se existir) não precisa de esp
 
 =item B<--await>
 
-This option does the inverse of B<--no-await>.  If the interested package has declared a “noawait” directive, then this option will not be effective. It is currently the default behavior.
+Esta opção faz o inverso de B<--no-await>. Se o pacote interessado declarou uma diretiva “noawait”, então esta opção não será efetiva. Actualmente é o comportamento predefinido.
 
-Supported since dpkg 1.17.21.
+Suportado desde dpkg 1.17.21.
 
 =item B<--no-act>
 
@@ -84,7 +84,7 @@ Apenas testa, na realidade não alterada nada.
 
 =back
 
-=head1 ESTADO À SAÍDA
+=head1 ESTADO DE SAÍDA
 
 =over 
 
@@ -108,9 +108,9 @@ Erro fatal ou irrecuperável devido a utilização de linha de comandos inválid
 
 =item B<DPKG_ROOT>
 
-If set and the B<--root> option has not been specified, it will be used as the filesystem root directory.
+Se definido e a opção B<--root> não foi especificada, será usado como o directório raiz do sistema de ficheiros.
 
-Supported since dpkg 1.21.0.
+Suportado desde dpkg 1.21.0.
 
 =item B<DPKG_ADMINDIR>
 
@@ -118,19 +118,19 @@ Se definido e a opção B<--admindir> não for especificada, será usado como o 
 
 =item B<DPKG_DEBUG>
 
-Sets the debug mask from an octal value.  The currently accepted flags are described in the B<dpkg --debug> option, but not all these flags might have an effect on this program.
+Define a máscara de depuração a partir dum valor octal. As bandeiras presentemente aceites estão descritas na opção B<dpkg --debug>, mas nem todas estas bandeiras podem ter um efeito neste programa.
 
-Supported since dpkg 1.21.10.
+Suportado desde dpkg 1.21.10.
 
 =item B<DPKG_COLORS>
 
 Define o modo de cor. Os valores actualmente aceites são: B<auto> (predefinido), B<always> e B<never>.
 
-Supported since dpkg 1.18.5.
+Suportado desde dpkg 1.18.5.
 
 =item B<DPKG_NLS>
 
-Se definida, será usada para decidir se deve activar o Suporte a Linguagem Nativa. Também como conhecido como suporte de internacionalização (ou i18n). Os valores aceites são B<0> e B<1> (predefinição).
+Se definida, será usada para decidir se deve ativar o Suporte a Linguagem Nativa. Também como conhecido como suporte de internacionalização (ou i18n). Os valores aceites são B<0> e B<1> (predefinição).
 
 Suportado desde dpkg 1.22.7
 

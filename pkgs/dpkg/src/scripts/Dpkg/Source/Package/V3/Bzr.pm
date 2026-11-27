@@ -43,6 +43,7 @@ use File::Temp;
 use Dpkg::Gettext;
 use Dpkg::Compression;
 use Dpkg::ErrorHandling;
+use Dpkg::IPC;
 use Dpkg::Source::Archive;
 use Dpkg::Exit qw(push_exit_handler pop_exit_handler);
 use Dpkg::Path qw(find_command);
@@ -114,32 +115,33 @@ sub do_build {
 
     _check_workdir($dir);
 
-    my $old_cwd = getcwd();
-    chdir $dir or syserr(g_("cannot change directory to '%s'"), $dir);
-
     local $_;
 
     # Check for uncommitted files.
     # To support «dpkg-source -i», remove any ignored files from the
     # output of bzr status.
-    open(my $bzr_status_fh, '-|', 'bzr', 'status')
-        or subprocerr('bzr status');
+    my $bzr_status_fh;
+    my $bzr_status_pid = spawn(
+        exec => [ 'bzr', 'status' ],
+        chdir => $dir,
+        to_pipe => \$bzr_status_fh,
+    );
     my @files;
     while (<$bzr_status_fh>) {
         chomp;
         next unless s/^ +//;
         if (! length $diff_ignore_regex ||
-            ! m/$diff_ignore_regex/o) {
+            ! m/$diff_ignore_regex/) {
             push @files, $_;
         }
     }
     close($bzr_status_fh) or subprocerr('bzr status');
+    wait_child($bzr_status_pid, cmdline => 'bzr status');
+
     if (@files) {
         error(g_('uncommitted, not-ignored changes in working directory: %s'),
               join(' ', @files));
     }
-
-    chdir $old_cwd or syserr(g_("cannot change directory to '%s'"), $old_cwd);
 
     my $tmpdir = File::Temp->newdir(
         TEMPLATE => "$dirname.bzr.XXXXXX",
@@ -149,12 +151,16 @@ sub do_build {
     push_exit_handler(sub { erasedir($tmpdir) });
     my $tardir = "$tmpdir/$dirname";
 
-    system('bzr', 'branch', $dir, $tardir);
-    subprocerr("bzr branch $dir $tardir") if $?;
+    spawn(
+        exec => [ 'bzr', 'branch', $dir, $tardir ],
+        wait_child => 1,
+    );
 
     # Remove the working tree.
-    system('bzr', 'remove-tree', $tardir);
-    subprocerr("bzr remove-tree $tardir") if $?;
+    spawn(
+        exec => [ 'bzr', 'remove-tree', $tardir ],
+        wait_child => 1,
+    );
 
     # Some branch metadata files are unhelpful.
     unlink("$tardir/.bzr/branch/branch-name",
@@ -212,15 +218,12 @@ sub do_extract {
 
     _check_workdir($newdirectory);
 
-    my $old_cwd = getcwd();
-    chdir($newdirectory)
-        or syserr(g_("cannot change directory to '%s'"), $newdirectory);
-
     # Reconstitute the working tree.
-    system('bzr', 'checkout');
-    subprocerr('bzr checkout') if $?;
-
-    chdir $old_cwd or syserr(g_("cannot change directory to '%s'"), $old_cwd);
+    spawn(
+        exec => [ 'bzr', 'checkout' ],
+        chdir => $newdirectory,
+        wait_child => 1,
+    );
 }
 
 =head1 CHANGES

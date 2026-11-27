@@ -62,7 +62,7 @@ De diffs (weergave van de verschillen) die in de bouwlogs te vinden zijn, kunnen
 
 In de meeste gevallen kan de diff rechtstreeks toegepast worden op het bestand debian/I<pakket>.symbols. Dit gezegd zijnde, zijn verdere aanpassingen meestal wel nodig: het wordt bijvoorbeeld aanbevolen om het Debian revisienummer weg te laten uit de minimale versie, zodat backports (nieuwere programmaversies die geschikt gemaakt worden voor een vroegere release) met een lager versienummer maar eenzelfde bovenstroomse versie nog steeds voldoen aan de gegenereerde afhankelijkheidsrelaties. Indien het Debian revisienummer niet weggelaten kan worden omdat het symbool echt via een Debian-specifieke aanpassing toegevoegd werd, moet men aan het versienummer het achtervoegsel ‘B<~>’ toevoegen.
 
-Vooraleer een patch toe te passen op een symboolbestand, moet de beheerder grondig controleren of dat wel correct is. Publieke symbolen worden verondersteld niet te verdwijnen. Een patch zou dus idealiter enkel nieuwe regels mogen toevoegen.
+Vooraleer een patch toe te passen op een symboolbestand, moet de beheerder grondig controleren of dat wel correct is. Publieke symbolen worden verondersteld niet te verdwijnen. Een patch zou dus idealiter alleen nieuwe regels mogen toevoegen.
 
 Merk op dat u in symboolbestanden commentaar kunt invoegen.
 
@@ -76,7 +76,7 @@ Een goed onderhouden bibliotheek heeft de volgende functionaliteit:
 
 =item *
 
-haar API is stabiel (publieke symbolen worden nooit verwijderd, enkel worden nieuwe publieke symbolen toegevoegd) en zij ondergaat enkel op een incompatibele manier veranderingen als de SONAME verandert;
+haar API is stabiel (publieke symbolen worden nooit verwijderd, alleen worden nieuwe publieke symbolen toegevoegd) en zij ondergaat alleen op een incompatibele manier veranderingen als de SONAME verandert;
 
 =item *
 
@@ -88,7 +88,7 @@ zij exporteert geen private symbolen (dergelijke symbolen kunnen de tag optional
 
 =back
 
-Bij het onderhoud van een symboolbestand is het gemakkelijk om het verschijnen en verdwijnen van symbolen op te merken. Maar het is moeilijker om incompatibele API- en ABI-wijzigingen op te merken. Daarom moet de beheerder het changelog-bestand van de toeleveraar grondig nakijken op situaties waarbij de regels van goed bibliotheekbeheer geschonden worden. Indien mogelijke problemen ontdekt worden, zou de toeleverende auteur erover ingelicht moeten worden, aangezien een reparatie op het niveau van de toeleveraar altijd te verkiezen valt boven een Debian-specifieke tijdelijke oplossing.
+Bij het onderhoud van een symboolbestand is het gemakkelijk om het verschijnen en verdwijnen van symbolen op te merken. Maar het is moeilijker om incompatibele API- en ABI-wijzigingen op te merken. Daarom moet de beheerder het bovenstrooms changelog-bestand grondig nakijken op situaties waarbij de regels van goed bibliotheekbeheer geschonden worden. Indien mogelijke problemen ontdekt worden, zou de bovenstroomse auteur erover ingelicht moeten worden, aangezien een reparatie op het bovenstrooms niveau altijd te verkiezen valt boven een Debian-specifieke tijdelijke oplossing.
 
 =head1 OPTIES
 
@@ -108,7 +108,7 @@ Definieer de pakketversie. Standaard is dat de versie die uit debian/changelog g
 
 =item B<-e>I<bibliotheekbestand>
 
-Analyseer enkel de expliciet vermelde bibliotheken in plaats van alle publieke bibliotheken te zoeken. U kunt in I<bibliotheekbestand> gebruik maken van shell-patronen met het oog op padnaamexpansie (zie de man-pagina L<File::Glob> voor details) om met één enkel argument meerdere bibliotheken aan te duiden (anders heeft u meerdere malen B<-e> nodig).
+Analyseer alleen de expliciet vermelde bibliotheken in plaats van alle publieke bibliotheken te zoeken. U kunt in I<bibliotheekbestand> gebruik maken van shell-patronen met het oog op padnaamexpansie (zie de man-pagina L<File::Glob> voor details) om met één alleen argument meerdere bibliotheken aan te duiden (anders heeft u meerdere malen B<-e> nodig).
 
 =item B<-l>I<map>
 

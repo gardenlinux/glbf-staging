@@ -40,15 +40,15 @@ Gaat na of het opgegeven proces bestaat. Indien een dergelijk proces bestaat, ge
 
 =item B<-T>, B<--status>
 
-Check for the existence of a specified process, and returns an exit status code, according to the LSB Init Script Actions
+Gaat het bestaan van een opgegeven proces na en geeft een afsluitstatuscode terug die in overeenstemming is met de LSB-acties voor initialisatiescripts (LSB Init Script Actions)
 
-Supported since version 1.16.1.
+Ondersteund sinds dpkg 1.16.1.
 
 =item B<--pidof>
 
-Check for the existence of specified processes, print their PIDs, and returns an exist status just like B<--status>.
+Gaat het bestaan van opgegeven processen na, geeft hun PID's weer en geeft een afsluitstatus terug net zoals B<--status>.
 
-Supported since version 1.23.8.
+Ondersteund sinds dpkg 1.23.8.
 
 =item B<-H>, B<--help>
 
@@ -68,15 +68,15 @@ De programmaversie tonen en afsluiten.
 
 =item B<--pid> I<pid>
 
-Check for a process with the specified I<pid>.  The I<pid> must be a number greater than 0.
+Nagaan of een proces bestaat met het opgegeven I<pid> . Het I<pid> moet een getal zijn groter dan 0.
 
-Supported since version 1.17.6.
+Ondersteund sinds dpkg 1.17.6.
 
 =item B<--ppid> I<moeder-pid>
 
-Check for a process with the specified parent pid I<ppid>.  The I<ppid> must be a number greater than 0.
+Nagaan of een proces bestaat met het opgegeven moeder-pid I<moeder-pid>. Het I<moeder-pid> moet een getal zijn groter dan 0.
 
-Supported since version 1.17.7.
+Ondersteund sinds dpkg 1.17.7.
 
 =item B<-p>, B<--pidfile> I<pid-bestand>
 
@@ -84,7 +84,7 @@ Nagaan of een proces het bestand I<pid-bestand> aangemaakt heeft.
 
 B<Opmerking>: deze vergelijkingsoptie alleen gebruiken, kan ertoe leiden dat geageerd wordt op niet-bedoelde processen in het geval het oude proces eindigde zonder dat het in staat was het I<pid-bestand> te verwijderen.
 
-B<Waarschuwing>: deze vergelijkingsoptie gebruiken met een pid-bestand dat door iedereen beschreven kan worden, of deze enkel gebruiken met een achtergronddienst die het pid-bestand wegschrijft als gebruiker zonder bijzondere rechten, zal met een foutmelding geweigerd worden (sinds versie 1.19.3) omdat het een veiligheidsrisico inhoudt. Dit is omdat elke gebruiker er naartoe kan schrijven, of omdat de inhoud van het pid-bestand niet vertrouwd kan worden als de achtergronddienst aangetast raakt, met als resultaat dat een programmauitvoerder met bijzondere rechten (zoals een init-script dat als systeembeheerder uitgevoerd wordt) op gelijk welk systeemproces kan inwerken. Het gebruik van I</dev/null> is vrijgesteld van deze controles.
+B<Waarschuwing>: deze vergelijkingsoptie gebruiken met een pid-bestand dat door iedereen beschreven kan worden, of deze alleen gebruiken met een achtergronddienst die het pid-bestand wegschrijft als gebruiker zonder bijzondere rechten, zal met een foutmelding geweigerd worden (sinds versie 1.19.3) omdat het een veiligheidsrisico inhoudt. Dit is omdat elke gebruiker er naartoe kan schrijven, of omdat de inhoud van het pid-bestand niet vertrouwd kan worden als de achtergronddienst aangetast raakt, met als resultaat dat een programmauitvoerder met bijzondere rechten (zoals een init-script dat als systeembeheerder uitgevoerd wordt) op gelijk welk systeemproces kan inwerken. Het gebruik van I</dev/null> is vrijgesteld van deze controles.
 
 =item B<-x>, B<--exec> I<programma>
 
@@ -102,7 +102,7 @@ B<Opmerking>: op de meeste systemen wordt deze informatie gehaald uit de kernel 
 
 Nagaan of er processen zijn die eigendom zijn van de gebruiker die met I<gebruikersnaam> of I<uid> opgegeven werd.
 
-B<Opmerking>: enkel deze vergelijkingsoptie gebruiken zal ertoe leiden dat geageerd wordt op alle processen die met de gebruiker overeenkomen.
+B<Opmerking>: alleen deze vergelijkingsoptie gebruiken zal ertoe leiden dat geageerd wordt op alle processen die met de gebruiker overeenkomen.
 
 =back
 
@@ -142,15 +142,15 @@ Afsluitstatus 0 teruggeven in plaats van 1 indien er geen acties ondernomen werd
 
 =item B<-q>, B<--quiet>
 
-Geen informatieve berichten weergeven; enkel foutmeldingen tonen.
+Geen informatieve berichten weergeven; alleen foutmeldingen tonen.
 
 =item B<-c>, B<--chuid> I<gebruikersnaam>|I<uid>[B<:>I<groep>|I<gid>]
 
-Naar deze gebruikersnaam/uid veranderen voordat het proces gestart wordt. U kunt ook een groep opgeven door een B<:> toe te voegen en dan de groep of gid op te geven op dezelfde manier als voor het commando L<chown(1)> (I<gebruiker>B<:>I<groep>). Indien een gebruiker opgegeven wordt zonder een groep, dan wordt voor die gebruiker zijn primaire GID gebruikt. Bij het gebruik van deze optie moet u er zich van bewust zijn dat ook de primaire en bijkomende groepen ingesteld worden, ook als de optie B<--group> niet opgegeven werd. De optie B<--group> dient enkel voor groepen waartoe de gebruiker normaal niet behoort (zoals het voor een specifiek proces instellen van een groepslidmaatschap voor algemene gebruikers zoals B<nobody>).
+Naar deze gebruikersnaam/uid veranderen voordat het proces gestart wordt. U kunt ook een groep opgeven door een B<:> toe te voegen en dan de groep of gid op te geven op dezelfde manier als voor het commando L<chown(1)> (I<gebruiker>B<:>I<groep>). Indien een gebruiker opgegeven wordt zonder een groep, dan wordt voor die gebruiker zijn primaire GID gebruikt. Bij het gebruik van deze optie moet u er zich van bewust zijn dat ook de primaire en bijkomende groepen ingesteld worden, ook als de optie B<--group> niet opgegeven werd. De optie B<--group> dient alleen voor groepen waartoe de gebruiker normaal niet behoort (zoals het voor een specifiek proces instellen van een groepslidmaatschap voor algemene gebruikers zoals B<nobody>).
 
 =item B<-r>, B<--chroot> I<hoofdmap>
 
-Change directory and chroot to I<root> before starting the process.  Note that the pidfile is also written after the chroot.
+Verander van map en chroot naar I<basismap> voordat het proces gestart wordt. Merk op dat het pid-bestand ook na het chrooten gemaakt wordt.
 
 =item B<-d>, B<--chdir> I<pad>
 
@@ -164,7 +164,7 @@ B<opmerking>: de exitstatus van een late onverwachte fout tijdens de initialisat
 
 =item B<--notify-await>
 
-Wait for the background process to send a readiness notification before considering the service started This option can only be used with B<--background>.
+Wachten tot het achtergrondproces een kennisgeving zendt dat het gereed is, vooraleer de dienst als opgestart beschouwd wordt. Deze optie kan alleen met B<--background> gebruikt worden.
 
 Dit past elementen van het 'readiness protocol' van systemd toe, zoals dit in de man-pagina L<sd_notify(3)> gespecificeerd wordt. De volgende variabelen worden ondersteund:
 
@@ -184,25 +184,25 @@ Het programma sluit af met een foutmelding. Hetzelfde doen en van de B<errno>-wa
 
 =back
 
-Supported since version 1.19.3.
+Ondersteund sinds versie 1.19.3.
 
 =item B<--notify-timeout> I<wachttijd>
 
-Set a timeout for the B<--notify-await> option.  When the timeout is reached, B<start-stop-daemon> will exit with an error code, and no readiness notification will be awaited.  The default is B<60> seconds.
+Een wachttijd instellen voor de optie B<--notify-await>. Wanneer de wachttijd verlopen is, zal B<start-stop-daemon> afsluiten met een foutmelding en zal niet gewacht worden op de kennisgeving van gereedheid. Standaard is dit B<60> seconden.
 
-Supported since version 1.19.3.
+Ondersteund sinds versie 1.19.3.
 
 =item B<-C>, B<--no-close>
 
-Do not close any file descriptor when forcing the daemon into the background.  Used for debugging purposes to see the process output, or to redirect file descriptors to log the process output.  Only relevant when using B<--background>.
+Een eventuele bestandsindicator niet sluiten bij het naar de achtergrond dwingen van de achtergronddienst. Gebruikt met het oog op debuggen om de uitvoer van het proces te zien of om bestandsindicatoren om te leiden om de procesuitvoer te loggen. Enkel relevant als B<--background> gebruikt wordt.
 
-Supported since version 1.16.5.
+Ondersteund sinds versie 1.16.5.
 
 =item B<-O>, B<--output> I<padnaam>
 
-Redirect B<stdout> and B<stderr> to I<pathname> when forcing the daemon into the background.  Only relevant when using B<--background>.
+B<stdout> en B<stderr> omleiden naar I<padnaam> wanneer de achtergronddienst naar de achtergrond gedwongen wordt. Enkel relevant bij het gebruik van B<--background>.
 
-Supported since version 1.20.6.
+Ondersteund sinds versie 1.20.6.
 
 =item B<-N>, B<--nicelevel> I<geheel-getal>
 
@@ -210,37 +210,37 @@ Dit wijzigt de prioriteit van het proces voor het gestart wordt.
 
 =item B<-P>, B<--procsched> I<beleid>B<:>I<prioriteit>
 
-This alters the process scheduler policy and priority of the process before starting it.  The priority can be optionally specified by appending a B<:> followed by the value.  The default I<priority> is 0.  The currently supported policy values are B<other>, B<fifo> and B<rr>.
+Dit wijzigt het beleid voor de procesplanner en de prioriteit van het proces voor dit gestart wordt. Facultatief kan de prioriteit opgegeven worden door een B<:>, gevolgd door de waarde, toe te voegen. De standaardI<prioriteit> is 0. De momenteel ondersteunde waarden voor beleid zijn B<other>, B<fifo> en B<rr>.
 
 Deze optie doet mogelijk niets op sommige systemen waar POSIX-procesplanning niet wordt ondersteund.
 
-Supported since version 1.15.0.
+Ondersteund sinds versie 1.15.0.
 
 =item B<-I>, B<--iosched> I<klasse>B<:>I<prioriteit>
 
-This alters the IO scheduler class and priority of the process before starting it.  The priority can be optionally specified by appending a B<:> followed by the value.  The default I<priority> is 4, unless I<class> is B<idle>, then I<priority> will always be 7.  The currently supported values for I<class> are B<idle>, B<best-effort> and B<real-time>.
+Dit wijzigt de IO-plannerklasse en prioriteit van het proces voor het gestart wordt. Facultatief kan de prioriteit opgegeven worden door een B<:>, gevolgd door de waarde, toe te voegen. De standaardI<prioriteit> is 4, tenzij I<klasse> B<idle> is. In dat geval zal I<prioriteit> steeds 7 zijn. De momenteel ondersteunde waarden voor I<klasse> zijn B<idle>, B<best-effort> en B<real-time>.
 
 Deze optie doet mogelijk niets op sommige systemen waar Linux IO-planning niet wordt ondersteund.
 
-Supported since version 1.15.0.
+Ondersteund sinds versie 1.15.0.
 
 =item B<-k>, B<--umask> I<masker>
 
-This sets the umask of the process before starting it.
+Dit stelt het umask van het proces in voor het gestart wordt.
 
-Supported since version 1.13.22.
+Ondersteund sinds versie 1.13.22.
 
 =item B<-m>, B<--make-pidfile>
 
-Wordt gebruikt bij het starten van een programma dat zijn eigen pid-bestand niet creëert. Deze optie zal B<start-stop-daemon> het bestand waarnaar met B<--pidfile> verwezen wordt, doen aanmaken en er het pid in doen plaatsen juist voor het uitvoeren van het proces. Merk op dat het bestand bij het stoppen van het programma enkel verwijderd zal worden als B<--remove-pidfile> gebruikt wordt.
+Wordt gebruikt bij het starten van een programma dat zijn eigen pid-bestand niet creëert. Deze optie zal B<start-stop-daemon> het bestand waarnaar met B<--pidfile> verwezen wordt, doen aanmaken en er het pid in doen plaatsen juist voor het uitvoeren van het proces. Merk op dat het bestand bij het stoppen van het programma alleen verwijderd zal worden als B<--remove-pidfile> gebruikt wordt.
 
-B<Opmerking>: het is mogelijk dat deze functionaliteit niet in alle gevallen werkt. Dit is in het bijzonder zo als het programma dat uitgevoerd wordt, een nieuw proces (fork) begint vanuit zijn hoofdproces. Daarom is dit gewoonlijk enkel nuttig in combinatie met de optie B<--background>.
+B<Opmerking>: het is mogelijk dat deze functionaliteit niet in alle gevallen werkt. Dit is in het bijzonder zo als het programma dat uitgevoerd wordt, een nieuw proces (fork) begint vanuit zijn hoofdproces. Daarom is dit gewoonlijk alleen nuttig in combinatie met de optie B<--background>.
 
 =item B<--remove-pidfile>
 
-Used when stopping a program that does not remove its own pid file.  This option will make B<start-stop-daemon> remove the file referenced with B<--pidfile> after terminating the process.
+Wordt gebruikt bij het stoppen van een programma dat zijn eigen pid-bestand niet verwijdert. Deze optie zal de B<start-stop-daemon> het bestand waarnaar met B<--pidfile> verwezen wordt, doen verwijderen na het beëindigen van het proces.
 
-Supported since version 1.17.19.
+Ondersteund sinds versie 1.17.19.
 
 =item B<-v>, B<--verbose>
 
@@ -270,7 +270,7 @@ Elke andere fout.
 
 =back
 
-When using the B<--status> or B<--pidof> commands, the following status codes are returned:
+Bij het gebruik van de commando's B<--status> of B<--pidof>, worden de volgende statuscodes teruggegeven:
 
 =over 
 

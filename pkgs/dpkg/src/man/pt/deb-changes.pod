@@ -70,19 +70,19 @@ Lista uma ou mais distribuições separadas por espaços onde esta versão deve 
 
 =item B<Urgency:> I<urgency> (recomendado)
 
-A urgência do envio. Os valores presentemente conhecidos, em ordem ascendente de prioridade, são:  B<low>, B<medium>, B<high>, B<critical> e B<emergency>.
+A urgência do envio. Os valores presentemente conhecidos, em ordem ascendente de prioridade, são: B<low>, B<medium>, B<high>, B<critical> e B<emergency>.
 
 =item B<Maintainer:> I<fullname-email> (necessário)
 
 Deverá estar no formato “Joe Bloggs E<lt>jbloggs@example.orgE<gt>”, e é tipicamente a pessoa que criou o pacote, e não o autor do software que foi empacotado.
 
-The format is described in L<deb-email(7)>.
+O formato está descrito em L<deb-email(7)>.
 
 =item B<Changed-By:> I<fullname-email>
 
 Deverá estar no formato “Joe Bloggs E<lt>jbloggs@example.orgE<gt>”, e é tipicamente a pessoa que preparou as alterações no pacote para este lançamento.
 
-The format is described in L<deb-email(7)>.
+O formato está descrito em L<deb-email(7)>.
 
 =item B<Description:> (recomendado)
 
@@ -100,7 +100,7 @@ Este campo indica que o envio é uma compilação de não-maintainer apenas-bin�
 
 =item B<Built-For-Profiles:> I<profile-list>
 
-This field specifies a whitespace separated list of build profile names (without exclamation marks)  that this upload was built with.
+Este campo especifica uma lista de nomes de perfis de compilação (sem pontos de exclamação) separados por espaços em branco, do que com que foi compilado este envio.
 
 =item B<Changes:> (necessário)
 

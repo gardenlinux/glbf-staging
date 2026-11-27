@@ -46,7 +46,7 @@ debian/symbols
 
 =back
 
-O principal interesse desse ficheiros é disponibilizar a versão mínima associada a cada símbolo fornecido pelas bibliotecas. Geralmente isso corresponde à primeira versão do pacote que forneceu o símbolo, mas pode ser incrementada pelo maintainer se o ABI do símbolo é extensível sem se quebrar a compatibilidade com versões anteriores. É da responsabilidade do maintainer manter esses ficheiros actualizados e precisos, mas o B<dpkg-gensymbols> ajuda com isso.
+O principal interesse desse ficheiros é disponibilizar a versão mínima associada a cada símbolo fornecido pelas bibliotecas. Geralmente isso corresponde à primeira versão do pacote que forneceu o símbolo, mas pode ser incrementada pelo maintainer se o ABI do símbolo é extensível sem se quebrar a compatibilidade com versões anteriores. É da responsabilidade do maintainer manter esses ficheiros atualizados e precisos, mas o B<dpkg-gensymbols> ajuda com isso.
 
 Quando os ficheiros de símbolos gerados diferem daqueles fornecidos pelo maintainer, B<dpkg-gensymbols> irá escrever um diff entre as duas versões. Mais ainda, se a diferença for muito significante, irá mesmo falhar (você pode personalizar quanta diferença pode ser tolerada, veja a opção B<-c>).
 
@@ -88,7 +88,7 @@ não exporta símbolos privados (tais símbolos podem ser etiquetados de opciona
 
 =back
 
-Enquanto se mantém o ficheiro symbols, é fácil percebermos o aparecimento e desaparecimento de símbolos. Mas é  mais difícil apanhar alterações de API e ABI incompatíveis. Assim o maintainer deve ler com atenção o registo de alterações do autor procurando casos onde as regras da boa gestão de bibliotecas foram quebradas. Se forem descobertos potenciais problemas, o autor original deve ser notificado pois uma correcção no autor é sempre melhor que um contorno especifico em Debian.
+Enquanto se mantém o ficheiro symbols, é fácil percebermos o aparecimento e desaparecimento de símbolos. Mas é  mais difícil apanhar alterações de API e ABI incompatíveis. Assim o maintainer deve ler com atenção o registo de alterações do autor procurando casos onde as regras da boa gestão de bibliotecas foram quebradas. Se forem descobertos potenciais problemas, o autor original deve ser notificado pois uma correção no autor é sempre melhor que um contorno especifico em Debian.
 
 =head1 OPÇÕES
 
@@ -160,7 +160,7 @@ Este valor pode ser sobreposto pela variável de ambiente B<DPKG_GENSYMBOLS_CHEC
 
 =item B<-q>
 
-Mantêm-se calado e nunca gera um diff entre o ficheiro de símbolos gerados e o ficheiro modelo usando como ponto de arranque nem mostra nenhuns avisos sobre bibliotecas novas/perdidas nem símbolos novos/perdidos. Esta opção apenas desactiva os resultados informativos mas não os próprios  testes (veja a opção B<-c>).
+Mantêm-se calado e nunca gera um diff entre o ficheiro de símbolos gerados e o ficheiro modelo usando como ponto de arranque nem mostra nenhuns avisos sobre bibliotecas novas/perdidas nem símbolos novos/perdidos. Esta opção apenas desativa os resultados informativos mas não os próprios  testes (veja a opção B<-c>).
 
 =item B<-a>I<arch>
 
@@ -168,11 +168,11 @@ Assume I<arch> como arquitectura anfitriã quando processa ficheiros de símbolo
 
 =item B<-d>
 
-Activa o modo de depuração. São mostradas numerosas mensagens para explicar o que o B<dpkg-gensymbols> faz.
+Ativa o modo de depuração. São mostradas numerosas mensagens para explicar o que o B<dpkg-gensymbols> faz.
 
 =item B<-V>
 
-Activa modo detalhado. O ficheiro de símbolos gerado contém símbolos abandonados como comentários. Mais ainda, em modo de modelo, os símbolos de padrões são seguidos de comentários que listam símbolos reais que corresponderam ao padrão.
+Ativa modo detalhado. O ficheiro de símbolos gerado contém símbolos abandonados como comentários. Mais ainda, em modo de modelo, os símbolos de padrões são seguidos de comentários que listam símbolos reais que corresponderam ao padrão.
 
 =item B<-?>, B<--help>
 
@@ -202,7 +202,7 @@ Define o modo de cor (desde dpkg 1.18.5). Os valores actualmente aceites são: B
 
 =item B<DPKG_NLS>
 
-Se definida, será usada para decidir se deve activar o Suporte a Linguagem Nativa. Também como conhecido como suporte de internacionalização (ou i18n) (desde dpkg 1.19.0). Os valores aceites são B<0> e B<1> (predefinição).
+Se definida, será usada para decidir se deve ativar o Suporte a Linguagem Nativa. Também como conhecido como suporte de internacionalização (ou i18n) (desde dpkg 1.19.0). Os valores aceites são B<0> e B<1> (predefinição).
 
 =back
 

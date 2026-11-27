@@ -47,8 +47,8 @@
 #include "method.h"
 
 static const char *const methoddirectories[] = {
-	LIBDIR "/" METHODSDIR,
-	LOCALLIBDIR "/" METHODSDIR,
+	LIBDIR "/" DPKG_LIBEXEC_METHODS_DIR,
+	LOCALLIBDIR "/" DPKG_LIBEXEC_METHODS_DIR,
 	nullptr
 };
 
@@ -112,7 +112,7 @@ lockmethod(void)
 	struct flock fl;
 
 	if (methodlockfile == nullptr)
-		methodlockfile = dpkg_db_get_path(METHLOCKFILE);
+		methodlockfile = dpkg_db_get_path(DPKG_DB_METHODS_LOCK_FILE);
 
 	if (methlockfd < 0) {
 		methlockfd = open(methodlockfile, O_RDWR|O_CREAT|O_TRUNC, 0660);

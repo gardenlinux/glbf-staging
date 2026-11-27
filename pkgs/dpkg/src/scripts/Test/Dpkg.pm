@@ -216,9 +216,13 @@ sub all_shell_files(@files_todo)
         $keep_shebang_file,
         [ qw(
             debian/tests
+            dselect/completion/bash
             lib/dpkg/t/data
+            scripts/completion/bash
             scripts/t
+            src/completion/bash
             tests
+            utils/completion/bash
         ) ],
     );
 
@@ -348,6 +352,14 @@ my @openpgp_backends = (
     {
         backend => 'sop',
         cmd => 'hop',
+        skip => sub () {
+            my $version = qx(hop version);
+            chomp $version;
+
+            # This version was buggy, see:
+            # <https://salsa.debian.org/clint/hopenpgp-tools/-/work_items/10>
+            return $version eq 'hop 0.26.1';
+        }
     },
     {
         backend => 'sop',
@@ -367,6 +379,10 @@ sub test_needs_openpgp_backend
         my $have_cmdv = $cmdv eq 'none' ? 0 : can_run($cmdv);
 
         next unless ($have_cmd || $have_cmdv);
+
+        if (exists $backend->{skip}) {
+            next if $backend->{skip}->();
+        }
 
         my $have_backend = {
             backend => $name,

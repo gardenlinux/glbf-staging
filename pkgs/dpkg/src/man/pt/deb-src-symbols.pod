@@ -64,7 +64,7 @@ Como as etiquetas de símbolos são uma extensão do formato L<deb-symbols(5)>, 
 
 =item B<optional>
 
-Um símbolo marcado como opcional pode desaparecer da biblioteca a qualquer altura e isso nunca fará o B<dpkg-gensymbols> falhar. No entanto, símbolos opcionais desaparecidos irão continuamente aparecer como MISSING no diff em cada nova revisão do pacote. Este comportamento serve como lembrete para o maintainer que tal símbolo precisa de ser removido do ficheiro de símbolos ou re-adicionado à biblioteca. Quando o símbolo opcional, que foi anteriormente declarado como MISSING, subitamente reaparece na próxima revisão, será actualizado de volta para o estado de "existente" com a sua versão mínima inalterada.
+Um símbolo marcado como opcional pode desaparecer da biblioteca a qualquer altura e isso nunca fará o B<dpkg-gensymbols> falhar. No entanto, símbolos opcionais desaparecidos irão continuamente aparecer como MISSING no diff em cada nova revisão do pacote. Este comportamento serve como lembrete para o maintainer que tal símbolo precisa de ser removido do ficheiro de símbolos ou re-adicionado à biblioteca. Quando o símbolo opcional, que foi anteriormente declarado como MISSING, subitamente reaparece na próxima revisão, será atualizado de volta para o estado de "existente" com a sua versão mínima inalterada.
 
 Esta etiqueta é útil para símbolos que são privados e para o seu desaparecimento não causar a rutura da ABI. Por exemplo, a maioria das instalações de modelos C++ caiem nesta categoria. Como qualquer outra etiqueta, esta também pode ter uma valor arbitrário: isso podia ser usado para indicar porquê o símbolo é considerado opcional.
 
@@ -74,11 +74,11 @@ Esta etiqueta é útil para símbolos que são privados e para o seu desaparecim
 
 =item B<arch-endian=>I<architecture-endianness>
 
-These tags allow one to restrict the set of architectures where the symbol is supposed to exist.  When the symbols list is updated with the symbols discovered in the library, all arch-specific symbols which do not concern the current host architecture are treated as if they did not exist.  If an arch-specific symbol matching the current host architecture does not exist in the library, normal procedures for missing symbols apply and it may cause B<dpkg-gensymbols> to fail.  On the other hand, if the arch-specific symbol is found when it was not supposed to exist (because the current host architecture is not listed in the tag or does not match the endianness and bits), it is made arch neutral (i.e. the arch, arch-bits and arch-endian tags are dropped and the symbol will appear in the diff due to this change), but it is not considered as new.
+Estas bandeiras permitem-nos restringir o conjunto de arquitecturas onde o símbolo é suposto existir. Quando a lista de símbolos é actualizada com os símbolos descobertos na biblioteca, todos os símbolos específicos de arquitectura que não dizem respeito à arquitectura da máquina actual são tratados como se não existissem. Se um símbolo específico-de-arquitectura que corresponda à arquitectura da máquina anfitriã atual não existir na biblioteca, aplica-se os procedimentos normais para símbolos em falta e isso pode causar que B<dpkg-gensymbols> falhe. Por outro lado, se o símbolo específico-de arquitectura for encontrado onde não era suporto existir (porque a arquitectura da máquina actual não está listada na etiqueta ou porque não corresponde ao endianness e bits), é tornado neutro em arquitectura (isto é, as etiquetas arch, arch-bits e arch-endian são largadas e o símbolo irá aparecer no diff devido a esta alteração), mas não é considerado como novo.
 
 Quando opera no modo predefinido não-modelo, entre os símbolos específicos de arquitectura, apenas aqueles que correspondem à arquitectura da máquina anfitriã actual são escritos no ficheiro de símbolos. Pelo contrário, quando se opera em modo de modelo, todos os símbolos específicos-de-arquitectura (incluindo aqueles de arquitecturas alienígenas) são sempre escritos no ficheiro de símbolos.
 
-O formato de I<architecture-list> é o mesmo que o usado no campo B<Build-Depends> de I<debian/control> (excepto nos parêntesis rectos []). Por exemplo, o primeiro símbolo da lista em baixo será considerado apenas nas arquitecturas arm64, any-amd64 e riscv64, o segundo apenas em arquitecturas de linux, enquanto o terceiro em todas excepto em armel.
+O formato de I<architecture-list> é o mesmo que o usado no campo B<Build-Depends> de I<debian/control> (excepto nos parêntesis retos []). Por exemplo, o primeiro símbolo da lista em baixo será considerado apenas nas arquitecturas arm64, any-amd64 e riscv64, o segundo apenas em arquitecturas de linux, enquanto o terceiro em todas excepto em armel.
 
   (arch=arm64 any-amd64 riscv64)arch_specific_symbol@Base 1.0
   (arch=linux-any)linux_specific_symbol@Base 1.0
@@ -98,11 +98,11 @@ Múltiplas restrições podem ser ligadas em corrente.
 
   (arch-bits=32|arch-endian=little)32bit_le_symbol@Base 1.0
 
-Support for tags B<arch-bits> and B<arch-endian> since dpkg 1.18.0.
+Suporte para etiquetas B<arch-bits> e B<arch-endian> desde dpkg 1.18.0.
 
 =item B<allow-internal>
 
-dpkg-gensymbols has a list of internal symbols that should not appear in symbols files as they are usually only side-effects of implementation details of the toolchain.  If for some reason, you really want one of those symbols to be included in the symbols file, you should tag the symbol with B<allow-internal>.  It can be necessary for some low level toolchain libraries like “libgcc”.
+O dpkg-gensymbols tem uma lista interna de símbolos que não devem aparecer em ficheiros de símbolos pois eles são geralmente apenas efeitos secundários de detalhes de implementação da ferramenta-cadeia. Se por alguma razão, querer realmente que um desses símbolos seja incluído no ficheiro de símbolos, deve etiquetar o símbolo com B<allow-internal>. Pode ser necessário para algumas ferramentas-cadeia de baixo nível como “libgcc”.
 
 Suportado desde dpkg 1.20.1.
 
@@ -124,9 +124,9 @@ Indica o padrão de símbolos I<regex>. Veja a sub-secção L</Usar padrões de 
 
 Ao contrário de uma especificação de símbolo standard, um padrão pode cobrir vários símbolos reais da biblioteca. B<dpkg-gensymbols> irá tentar corresponder cada padrão com cada símbolo real que I<não> tem uma contrapartida de símbolo específica definida no ficheiro de símbolos. Sempre que o primeiro padrão de correspondência é encontrado, todas as suas etiquetas e propriedades serão usadas como a especificação base do símbolo. Se nenhum dos padrões corresponder, o símbolo irá ser considerado como novo.
 
-A pattern is considered lost if it does not match any symbol in the library.  By default this will trigger a B<dpkg-gensymbols> failure under B<-c1> or higher level.  However, if the failure is undesired, the pattern may be marked with the I<optional> tag.  Then if the pattern does not match anything, it will only appear in the diff as MISSING.  Moreover, like any symbol, the pattern may be limited to the specific architectures with the I<arch> tag.  See the L</Standard symbol tags> subsection above for more information.
+Um padrão é considerado perdido se não corresponder a nenhum símbolo da biblioteca. Por predefinição isto irá despoletar que B<dpkg-gensymbols> falhe sob B<-c1> ou nível mais alto. No entanto, se a falha for indesejável, o padrão pode ser marcado com a etiqueta I<optional>. Então se o padrão não corresponder a nada, irá apenas aparecer no diff como MISSING. Além disso, como qualquer símbolo, o padrão pode ser limitado a arquitecturas específicas com a etiqueta I<arch>. Veja a sub.secção L</Etiquetas símbolo standard> em cima para mais informação.
 
-Patterns are an extension of the L<deb-symbols(5)> format hence they are only valid in symbol file templates.  Pattern specification syntax is not any different from the one of a specific symbol.  However, symbol name part of the specification serves as an expression to be matched against I<name@version> of the real symbol.  To distinguish among different pattern types, a pattern will typically be tagged with a special tag.
+Padrões são uma extensão do formato L<deb-symbols(5)> por isso eles são apenas válidos em modelos de ficheiros de símbolos. A sintaxe de especificação de padrões não é em nada diferente daquela de um símbolo específico. No entanto, a parte da especificação com o nome do símbolo serve como uma expressão para ser correspondida contra I<name@version> do símbolo real. Para se distinguir entre tipos diferentes de padrões, um padrão será tipicamente etiquetado com uma etiqueta especial.
 
 Até ao momento, B<dpkg-gensymbols> suporta três tipos de padrão básicos:
 
@@ -134,7 +134,7 @@ Até ao momento, B<dpkg-gensymbols> suporta três tipos de padrão básicos:
 
 =item B<c++>
 
-Este padrão é denotado pela etiqueta I<c++>. Corresponde apenas a símbolos C++ pelo seu nome desmutilado de símbolo (como emitido pelo utilitário L<c++filt(1)>). Este padrão é muito jeitoso para corresponder a símbolos cujos nomes mutilados podem variar por entre diferentes arquitecturas enquanto que os seus nomes desmutilados permanecem iguais. Um grupo de tais símbolos é I<non-virtual thunks> que têm embebidos desvios específicos de arquitectura nos seus nomes mutilados. Uma instância comum deste caso é um destruidor virtual que sob herança diamante precisa de um símbolo thunk não-virtual. Por exemplo, mesmo que  _ZThn8_N3NSB6ClassDD1Ev@Base em arquitecturas de 32bit provavelmente seja  _ZThn16_N3NSB6ClassDD1Ev@Base em 64bit, pode ser correspondido com um único padrão I<c++>:
+Este padrão é denotado pela etiqueta I<c++>. Corresponde apenas a símbolos C++ pelo seu nome desmutilado de símbolo (como emitido pelo utilitário L<c++filt(1)>). Este padrão é muito jeitoso para corresponder a símbolos cujos nomes mutilados podem variar por entre diferentes arquitecturas enquanto que os seus nomes desmutilados permanecem iguais. Um grupo de tais símbolos é I<non-virtual thunks> que têm embebidos desvios específicos de arquitectura nos seus nomes mutilados. Uma instância comum deste caso é um destruidor virtual que sob herança diamante precisa de um símbolo thunk não-virtual. Por exemplo, mesmo que _ZThn8_N3NSB6ClassDD1Ev@Base em arquitecturas de 32bit provavelmente seja _ZThn16_N3NSB6ClassDD1Ev@Base em 64bit, pode ser correspondido com um único padrão I<c++>:
 
  libdummy.so.1 libdummy1 #MINVER#
   [...]
@@ -145,7 +145,7 @@ O nome desmembrado em cima pode ser obtido ao executar o seguinte comando:
 
   $ echo '_ZThn8_N3NSB6ClassDD1Ev@Base' | c++filt
 
-Note that while mangled name is unique in the library by definition, this is not necessarily true for demangled names.  A couple of distinct real symbols may have the same demangled name.  For example, that's the case with non-virtual thunk symbols in complex inheritance configurations or with most constructors and destructors (since g++ typically generates two real symbols for them).  However, as these collisions happen on the ABI level, they should not degrade quality of the symbol file.
+Note que enquanto o nome mutilado é único na biblioteca por definição, isto não é necessariamente verdade para nomes não-mutilados. Um par de símbolos reais distintos podem ter o mesmo nome mutilado. Por exemplo, esse é o caso com símbolos thunk não.virtuais em configurações de herança complexa ou com a maioria dos construtores e destruidores (pois o g++ tipicamente gera dois símbolos reais para eles). No entanto, como estas colisões acontecem no nível de ABI, não devem degradar a qualidade do ficheiro de símbolos.
 
 =item B<symver>
 
@@ -159,7 +159,7 @@ Este padrão é denotado pela etiqueta I<symver>. Bibliotecas bem mantidas têm 
 
 Todos os símbolos associados com versões GLIBC_2.0 e GLIBC_2.7 irão para versões mínimas de 2.0 e 2.7 respetivamente com a excepção do símbolo access@GLIBC_2.0. O último irá tornar-se uma dependência mínima em libc6 versão 2.2 apenas de estar no escopo do padrão "(symver)GLIBC_2.0" porque símbolos específicos tomam precedência sobre padrões.
 
-Note that while old style wildcard patterns (denoted by "*@version" in the symbol name field) are still supported, they have been deprecated by new style syntax "(symver|optional)version".  For example, "*@GLIBC_2.0 2.0" should be written as "(symver|optional)GLIBC_2.0 2.0" if the same behavior is needed.
+Note que apesar de os padrões de wildcard ao estilo antigo (denotados por "*@version" no campo do nome do símbolo) ainda serem suportados, estes foram descontinuados pela nova sintaxe "(symver|optional)version". Por exemplo, "*@GLIBC_2.0 2.0" deve ser escrito como "(symver|optional)GLIBC_2.0 2.0" se for necessário o mesmo comportamento.
 
 =item B<regex>
 
@@ -182,23 +182,23 @@ irá corresponder aos símbolos "_ZN3NSA6ClassA7Private11privmethod1Ei@Base" e "
 
 Em geral, todos os padrões são divididos em dois grupos: aliases (basic I<c++> e I<symver>) e padrões genéricos (I<regex>, todas as combinações de múltiplos padrões básicos). A correspondência de padrões básicos baseados-em-alias é rápida (O(1)) enquanto que padrões genéricos são O(N) (N - contagem de padrão genérico) para cada símbolo. Assim, é recomendado não sobre-utilizar padrões genéricos.
 
-When multiple patterns match the same real symbol, aliases (first I<c++>, then I<symver>) are preferred over generic patterns.  Generic patterns are matched in the order they are found in the symbol file template until the first success.  Note, however, that manual reordering of template file entries is not recommended because B<dpkg-gensymbols> generates diffs based on the alphanumerical order of their names.
+Quando múltiplos padrões correspondem ao mesmo símbolo real, os aliases (primeiro I<c++>, depois I<symver>) são preferidos sobre padrões genéricos. Padrões genéricos são correspondidos pela ordem que são encontrados no modelo de ficheiro de símbolos até ao primeiro sucesso. Note, no entanto, esse reordenar manual das entradas no ficheiro modelo não é recomendado porque B<dpkg-gensymbols> gera diffs baseados na ordem alfanumérica dos seus nomes.
 
 =head2 Usando inclusões
 
-Quando o conjunto de símbolos exportados difere entre arquitecturas, pode tornar-se ineficiente usar um único ficheiro de símbolos. Nesses casos, uma directiva de inclusão pode provar ser útil de várias maneiras:
+Quando o conjunto de símbolos exportados difere entre arquitecturas, pode tornar-se ineficiente usar um único ficheiro de símbolos. Nesses casos, uma diretiva de inclusão pode provar ser útil de várias maneiras:
 
 =over 
 
 =item *
 
-Você pode factorizar a parte comum em algum ficheiro externo e incluir esse ficheiro no seu ficheiro I<package>.symbols.I<arch> ao usar uma directiva de inclusão como esta:
+Você pode factorizar a parte comum em algum ficheiro externo e incluir esse ficheiro no seu ficheiro I<package>.symbols.I<arch> ao usar uma diretiva de inclusão como esta:
 
  #include "I<packages>.symbols.common"
 
 =item *
 
-A directiva de inclusão pode também ser etiquetada como qualquer símbolo:
+A diretiva de inclusão pode também ser etiquetada como qualquer símbolo:
 
  (tag|...|tagN)#include "file-to-include"
 
@@ -211,7 +211,7 @@ Como resultado, todos os símbolos incluídos de I<file-to-include> serão consi
 
 =back
 
-Os ficheiros de símbolos são lidos linha a linha, e as directivas de inclusão são processadas assim que são encontradas. Isto significa que o conteúdo do ficheiro incluído pode sobrepor qualquer conteúdo que apareceu antes da directiva de inclusão e que qualquer conteúdo após a directiva pode sobrepor qualquer coisa contida no ficheiro incluído. Qualquer símbolo (ou mesmo outra directiva #include) no ficheiro incluído pode especificar etiquetas adicionais ou sobrepor valores das etiquetas herdadas e a sua especificação de etiqueta. Contudo, não existe maneira do símbolo remover qualquer das etiquetas herdadas.
+Os ficheiros de símbolos são lidos linha a linha, e as diretivas de inclusão são processadas assim que são encontradas. Isto significa que o conteúdo do ficheiro incluído pode sobrepor qualquer conteúdo que apareceu antes da diretiva de inclusão e que qualquer conteúdo após a diretiva pode sobrepor qualquer coisa contida no ficheiro incluído. Qualquer símbolo (ou mesmo outra diretiva #include) no ficheiro incluído pode especificar etiquetas adicionais ou sobrepor valores das etiquetas herdadas e a sua especificação de etiqueta. Contudo, não existe maneira do símbolo remover qualquer das etiquetas herdadas.
 
 Um ficheiro incluído pode repetir a linha de cabeçalho que contém o SONAME da biblioteca. Nesse caso, sobrepõe qualquer linha de cabeçalho lida anteriormente. No entanto, geralmente é melhor duplicar as linhas de cabeçalho. Um modo de fazer isto é o seguinte:
 

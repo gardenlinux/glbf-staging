@@ -53,23 +53,11 @@
 #include "actions.h"
 #include "security-mac.h"
 
+static const char prog_synopsis[] = N_(
+	"binary package file ownership and mode override program"
+);
 static const char printforhelp[] = N_(
 "Use --help for help about overriding file stat information.");
-
-static int
-printversion(const char *const *argv)
-{
-	printf(_("Debian %s version %s.\n"), dpkg_get_progname(),
-	       PACKAGE_RELEASE);
-
-	printf(_(
-"This is free software; see the GNU General Public License version 2 or\n"
-"later for copying conditions. There is NO warranty.\n"));
-
-	m_output(stdout, _("<standard output>"));
-
-	return 0;
-}
 
 static int
 usage(const char *const *argv)
@@ -77,6 +65,9 @@ usage(const char *const *argv)
 	printf(_(
 "Usage: %s [<option>...] <command>\n"
 	), dpkg_get_progname());
+	print_option_sep();
+
+	print_synopsis(prog_synopsis);
 	print_option_sep();
 
 	printf(_(
@@ -271,7 +262,7 @@ statdb_write(void)
 	struct fsys_hash_iter *iter;
 	struct fsys_namenode *file;
 
-	dbname = dpkg_db_get_path(STATOVERRIDEFILE);
+	dbname = dpkg_db_get_path(DPKG_DB_STATOVERRIDE_FILE);
 	dbfile = atomic_file_new(dbname, ATOMIC_FILE_BACKUP);
 	atomic_file_open(dbfile);
 
@@ -431,7 +422,7 @@ static const struct cmdinfo cmdinfos[] = {
 	ACTION("remove", 0, act_remove,    statoverride_remove),
 	ACTION("list",   0, act_listfiles, statoverride_list),
 	ACTION("help",   '?', act_help,    usage),
-	ACTION("version", 0,  act_version, printversion),
+	ACTION("version", 0,  act_version, print_version),
 
 	{ "admindir",   0,   1,  NULL,         NULL,      set_admindir, 0 },
 	{ "instdir",    0,   1,  NULL,         NULL,      set_instdir,  0 },

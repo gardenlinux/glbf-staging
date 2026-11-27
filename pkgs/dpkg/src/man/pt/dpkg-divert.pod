@@ -44,9 +44,9 @@ Lista todos os desvios, ou os que correspondem a I<glob-pattern>.
 
 =item B<--listpackage> I<file>
 
-Print the name of the package that diverts I<file>.  Prints LOCAL if I<file> is locally diverted and nothing if I<file> is not diverted.
+Escreve o nome do pacote que desvia I<file>.  Escreve LOCAL se I<file> é desviado localmente e nada se I<file> não é desviado.
 
-Supported since dpkg 1.15.0.
+Suportado desde dpkg 1.15.0.
 
 =item B<--truename> I<file>
 
@@ -64,15 +64,15 @@ Define o directório administrativo para I<directory>. A predefinição é «I<%
 
 =item B<--instdir> I<directory>
 
-Set the installation directory, which refers to the directory where packages get installed.  Defaults to «I</>» if B<DPKG_ROOT> has not been set.
+Define o directório de instalação, o que se refere ao directório onde os pacotes são instalados. A predefinição é «I</>» se B<DPKG_ROOT> não estiver definido.
 
-Supported since dpkg 1.19.2.
+Suportado desde dpkg 1.19.2.
 
 =item B<--root> I<directory>
 
-Set the root directory to B<directory>, which sets the installation directory to «I<directory>» and the administrative directory to «I<directory>B<%ADMINDIR%>» if B<DPKG_ROOT> has not been set.
+Define o directório raiz para B<directório>, o que define o directório de instalação para «I<directório>» e o directório administrativo para «I<directório>B<%ADMINDIR%>» se B<DPKG_ROOT> não estiver definido.
 
-Supported since dpkg 1.19.2.
+Suportado desde dpkg 1.19.2.
 
 =item B<--divert> I<divert-to>
 
@@ -80,7 +80,7 @@ I<divert-to> é a localização para onde as versões de I<file>, como fornecido
 
 =item B<--local>
 
-Especifica que todas as versões de pacotes deste ficheiro são desviadas. Isto significa, que não há excepções, e seja em que pacote esteja instalado, o ficheiro é desviado. Isto pode ser usado pro uma administrador para instalar uma versão modificada localmente.
+Especifica que todas as versões de pacotes deste ficheiro são desviadas. Isto significa, que não há exceções, e seja em que pacote esteja instalado, o ficheiro é desviado. Isto pode ser usado pro uma administrador para instalar uma versão modificada localmente.
 
 =item B<--package> I<package>
 
@@ -96,9 +96,9 @@ Actualmente mete o ficheiro de lado (ou para trás). B<dpkg-divert> irá abortar
 
 =item B<--no-rename>
 
-Specifies that the file should not be renamed while adding or removing the diversion into the database.  This is intended for diversions of files from the B<Essential> package set, where the temporary disappearance of the original file is not acceptable, as it can render the system non-functional.  This is the default behavior, which will change once there are no known users, but not before the dpkg 1.23.x release cycle.
+Especifica que o ficheiro não deve ser renomeado enquanto se adiciona ou remove o desvio na base de dados. Isto destina-se a desvios de ficheiros do conjunto de pacotes B<Essential>, onde o desaparecimento temporário do ficheiro original não é aceitável, pois pode tornar o sistema não-funcional. Este é o comportamento predefinido, que irá mudar assim que não existirem utilizadores conhecidos, mas não antes do ciclo de lançamento do dpkg 1.23.x.
 
-Supported since dpkg 1.19.1.
+Suportado desde dpkg 1.19.1.
 
 =item B<--test>
 
@@ -114,7 +114,7 @@ Mostra a versão e termina.
 
 =back
 
-=head1 ESTADO À SAÍDA
+=head1 ESTADO DE SAÍDA
 
 =over 
 
@@ -136,7 +136,7 @@ Erro fatal ou irrecuperável devido a utilização de linha de comandos inválid
 
 Se definido e as opções B<--instdir> ou B<--root> não foram especificadas, será usado como o directório raiz do sistema de ficheiros.
 
-Supported since dpkg 1.19.2.
+Suportado desde dpkg 1.19.2.
 
 =item B<DPKG_ADMINDIR>
 
@@ -148,19 +148,19 @@ Se definido e as opções B<--local> e B<--package> não foram especificadas, B<
 
 =item B<DPKG_DEBUG>
 
-Sets the debug mask from an octal value.  The currently accepted flags are described in the B<dpkg --debug> option, but not all these flags might have an effect on this program.
+Define a máscara de depuração a partir dum valor octal. As bandeiras presentemente aceites estão descritas na opção B<dpkg --debug>, mas nem todas estas bandeiras podem ter um efeito neste programa.
 
-Supported since dpkg 1.21.10.
+Suportado desde dpkg 1.21.10.
 
 =item B<DPKG_COLORS>
 
 Define o modo de cor. Os valores actualmente aceites são: B<auto> (predefinido), B<always> e B<never>.
 
-Supported since dpkg 1.18.5.
+Suportado desde dpkg 1.18.5.
 
 =item B<DPKG_NLS>
 
-Se definida, será usada para decidir se deve activar o Suporte a Linguagem Nativa. Também como conhecido como suporte de internacionalização (ou i18n). Os valores aceites são B<0> e B<1> (predefinição).
+Se definida, será usada para decidir se deve ativar o Suporte a Linguagem Nativa. Também como conhecido como suporte de internacionalização (ou i18n). Os valores aceites são B<0> e B<1> (predefinição).
 
 Suportado desde dpkg 1.22.7
 

@@ -38,13 +38,13 @@ O valor deste campo é o nome do pacote fonte, e tem de corresponder ao nome do 
 
 Deverá estar no formato «Joe Bloggs E<lt>jbloggs@foo.comE<gt>», e refere-se à pessoa que mantém actualmente o pacote, e não o autor do software nem ao empacotador original.
 
-The format is described in L<deb-email(7)>.
+O formato está descrito em L<deb-email(7)>.
 
 =item B<Uploaders:> I<fullname-email>
 
 Lista todos os nomes e endereços de email de co-maintainers do pacote, no mesmo formato que o campo Maintainer. Vários co-maintainers devem ser separados por uma vírgula.
 
-The format is described in L<deb-email(7)>.
+O formato está descrito em L<deb-email(7)>.
 
 =item B<Standards-Version:> I<version-string>
 
@@ -54,7 +54,7 @@ Isto documenta a versão mais recente dos standards de política da distribuiç�
 
 =item S< >I<long-description>
 
-O formato da descrição do pacote fonte é um sumário breve e curto na primeira linha (após o campo B<Description>). As linhas seguintes devem ser usadas para uma descrição longa e mais detalhada. Cada linha da descrição longa tem de ser precedida com um espaço, e as linhas em branco na descrição longa têm de conter um único ‘B<.>’  a seguir ao espaço que precede.
+O formato da descrição do pacote fonte é um sumário breve e curto na primeira linha (após o campo B<Description>). As linhas seguintes devem ser usadas para uma descrição longa e mais detalhada. Cada linha da descrição longa tem de ser precedida com um espaço, e as linhas em branco na descrição longa têm de conter um único ‘B<.>’ a seguir ao espaço que precede.
 
 =item B<Homepage:> I<url>
 
@@ -74,7 +74,7 @@ Suportado desde dpkg 1.22.7
 
 Este campo é usado para indicar se o campo B<debian/rules> requer privilégios de (fake)root para correr alguns dos seus alvos, e se sim quando.
 
-Supported since dpkg 1.19.0.
+Suportado desde dpkg 1.19.0.
 
 =over 
 
@@ -152,9 +152,9 @@ Uma lista de pacotes que precisam de estar instalados e configurados para ser po
 
 =item B<Build-Depends-Arch:> I<package-list>
 
-Same as B<Build-Depends>, but they are only needed when building the architecture dependent packages.  The B<Build-Depends> are also installed in this case.
+O mesmo que B<Build-Depends>, mas são apenas necessárias quando se compila os pacotes dependentes da arquitectura. Os B<Build-Depends> são também instalados neste caso.
 
-Supported since dpkg 1.16.4; to build with older dpkg versions, B<Build-Depends> should be used instead.
+Suportado desde dpkg 1.16.4; para compilar com versões antigas do dpkg, deve ser usado B<Build-Depends> em vez disto.
 
 =item B<Build-Depends-Indep:> I<package-list>
 
@@ -166,9 +166,9 @@ Uma lista de pacotes que não devem estar instalados quando o pacote é compilad
 
 =item B<Build-Conflicts-Arch:> I<package-list>
 
-Same as B<Build-Conflicts>, but only when building the architecture dependent packages.
+O mesmo que B<Build-Conflicts>. mas apenas quando se compila os pacotes dependentes da arquitectura.
 
-Supported since dpkg 1.16.4; to build with older dpkg versions, B<Build-Conflicts> should be used instead.
+Suportado desde dpkg 1.16.4; para compilar com versões antigas do dpkg, deve ser usado B<Build-Conflicts> em vez disto.
 
 =item B<Build-Conflicts-Indep:> I<package-list>
 
@@ -176,9 +176,9 @@ O mesmo que B<Build-Conflicts>. mas apenas quando se compila os pacotes independ
 
 =back
 
-A sintaxe dos campos B<Build-Depends>, B<Build-Depends-Arch> e B<Build-Depends-Indep> é uma lista de grupos de pacotes alternativos. Cada grupo é uma lista de pacotes separados por símbolos de barra vertica (ou “pipe”), ‘B<|>’. OS grupos estão separados por vírgulas ‘B<,>’, e podem terminar com uma vírgula final que será eliminada ao gerar os campos para L<deb-control(5)> (desde dpkg 1.10.14). As virgulas devem ler-se como “E”, e os pipes como “OU”, com os pipes a vincular com mais firmeza, Cada nome de pacote é seguido opcionalmente por um qualificador de arquitectura anexado após dois pontos ‘B<:>’, opcionalmente seguido por uma especificação de número de versão em parêntesis ‘B<(>’ e ‘B<)>’, uma especificação de arquitectura em parêntesis rectos ‘B<[>’ e ‘B<]>’, e uma fórmula de restrição consistindo de uma ou mais listas de nomes de perfis em colchetes angulares ‘B<E<lt>>’ e ‘B<E<gt>>’.
+A sintaxe dos campos B<Build-Depends>, B<Build-Depends-Arch> e B<Build-Depends-Indep> é uma lista de grupos de pacotes alternativos. Cada grupo é uma lista de pacotes separados por símbolos de barra vertica (ou “pipe”), ‘B<|>’. OS grupos estão separados por vírgulas ‘B<,>’, e podem terminar com uma vírgula final que será eliminada ao gerar os campos para L<deb-control(5)> (desde dpkg 1.10.14). As virgulas devem ler-se como “E”, e os pipes como “OU”, com os pipes a vincular com mais firmeza, Cada nome de pacote é seguido opcionalmente por um qualificador de arquitectura anexado após dois pontos ‘B<:>’, opcionalmente seguido por uma especificação de número de versão em parêntesis ‘B<(>’ e ‘B<)>’, uma especificação de arquitectura em parêntesis retos ‘B<[>’ e ‘B<]>’, e uma fórmula de restrição consistindo de uma ou mais listas de nomes de perfis em colchetes angulares ‘B<E<lt>>’ e ‘B<E<gt>>’.
 
-A sintaxe dos campos B<Build-Conflicts>, B<Build-Conflicts-Arch> e B<Build-Conflicts-Indep> é uma lista de nomes de pacotes separados por vírgulas, onde a vírgula é lida com um "E", e onde a lista por terminar com uma vírgula final que será eliminada ao se gerar os campos para L<deb-control(5)> (desde dpkg 1.10.14). Especificar pacotes alternativos usando um “pipe” não é suportado. Cada nome de pacote é opcionalmente seguido de uma especificação de número de versão em parêntesis, uma especificação de arquitectura em parêntesis rectos, e uma fórmula de restrição consistindo de um ou mais listas de nomes de perfis em colchetes angulares.
+A sintaxe dos campos B<Build-Conflicts>, B<Build-Conflicts-Arch> e B<Build-Conflicts-Indep> é uma lista de nomes de pacotes separados por vírgulas, onde a vírgula é lida com um "E", e onde a lista por terminar com uma vírgula final que será eliminada ao se gerar os campos para L<deb-control(5)> (desde dpkg 1.10.14). Especificar pacotes alternativos usando um “pipe” não é suportado. Cada nome de pacote é opcionalmente seguido de uma especificação de número de versão em parêntesis, uma especificação de arquitectura em parêntesis retos, e uma fórmula de restrição consistindo de um ou mais listas de nomes de perfis em colchetes angulares.
 
 Um nome qualificador de arquitectura pode ser um nome de arquitectura real Debian (desde dpkg 1.16.5), B<any> (desde dpkg 1.16.2) ou B<native> (desde dpkg 1.16.5). Se omitido, a predefinição para campos B<Build-Depends> é a arquitectura da máquina actual, a predefinição para campos B<Build-Conflicts> é B<any>.  Um nome de arquitectura real Debian irá corresponder exactamente essa arquitectura para esse nome de pacote,  B<any> irá corresponder a qualquer arquitectura para esse nome de pacote se o pacote estiver marcado com B<Multi-Arch: allowed>, e B<native> irá corresponder à arquitectura de compilação actual se o pacote não estiver marcado com B<Multi-Arch: foreign>.
 
@@ -186,7 +186,7 @@ Um número de versão pode começar com um ‘B<E<gt>E<gt>>’, nesse caso qualq
 
 Uma especificação de arquitectura consiste em um ou mais nomes de arquitectura, separados por espaços em branco. Pode ser adicionado no inicio de cada nome um ponto de exclamação (B<!>), o que significa "NÃO".
 
-Uma fórmula de restrição consiste em uma ou mais listas de restrições, separadas por espaços em branco. Cada lista de restrição fica dentro de colchetes angulares (B<E<lt>> e B<E<gt>>).  os itens na lista de restrição são nomes de perfis de compilação, separados por espaços em branco e pode ser prefixados com um ponto de exclamação, que significa “NÃO”. Uma fórmula de restrição representa uma expressão de forma normal disjuntiva, que é um espaço em branco dentro de colchetes angulares fechados é lida como “E”, e espaço em branco entre colchetes angulares a fechar é lido como “OU“, tal como “B<E<lt>>foo E barB<E<gt>> OU B<E<lt>>quux E bazB<E<gt>>”.
+Uma fórmula de restrição consiste em uma ou mais listas de restrições, separadas por espaços em branco. Cada lista de restrição fica dentro de colchetes angulares (B<E<lt>> e B<E<gt>>).  Os itens na lista de restrição são nomes de perfis de compilação, separados por espaços em branco e pode ser prefixados com um ponto de exclamação, que significa “NÃO”. Uma fórmula de restrição representa uma expressão de forma normal disjuntiva, que é um espaço em branco dentro de colchetes angulares fechados é lida como “E”, e espaço em branco entre colchetes angulares a fechar é lido como “OU“, tal como “B<E<lt>>foo E barB<E<gt>> OU B<E<lt>>quux E bazB<E<gt>>”.
 
 Note que as dependências de pacotes no conjunto B<build-essential> podem ser omitidas e que declarar conflitos de compilação contra elas é impossível. Uma lista desses pacotes está no pacote build-essential.
 

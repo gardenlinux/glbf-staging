@@ -152,7 +152,7 @@ Das System hat Bibliotheken, entweder statische oder Laufzeit-, unter I</usr/loc
 
 Das System kann Cross-gebaute Programme ausführen, entweder direkt oder mittels einer Emulationsschicht.
 
-Unterstützt seit Dpkg 1.21.10.
+Supported since dpkg 1.21.10.
 
 =back
 

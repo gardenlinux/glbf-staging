@@ -22,21 +22,21 @@ B<debian/shlibs>, B<debian/>I<binaire-naam>B<.shlibs>, B<DEBIAN/shlibs>
 
 =head1 BESCHRIJVING
 
-B<shlibs> files map shared library names and versions (I<SONAMEs>)  to dependencies suitable for a package control file.
+B<shlibs>-bestanden koppelen namen en versies van gedeelde bibliotheken (I<SONAMEs>) aan afhankelijkheden die geschikt zijn voor het bestand control van een pakket.
 
-A B<shlibs> file must be shipped in the same binary package as the shared libraries described within.  This is to guarantee that the mappings match the shared library being described, and so that the B<shlibs> file can be found from the package owning the shared library.
+Een B<shlibs>-bestand moet worden meegeleverd in hetzelfde binaire pakket als de gedeelde bibliotheken die erin worden beschreven. Dit is om te garanderen dat de toewijzingen overeenstemmen met de beschreven gedeelde bibliotheek, en zodat het B<shlibs>-bestand kan worden teruggevonden via het pakket dat de gedeelde bibliotheek bevat.
 
-There is one entry per line.  Blank lines are B<not> allowed.  Lines beginning with a B<#> character are considered commentary, and are ignored. All other lines must have the format:
+Er is één vermelding per regel. Lege regels zijn B<niet> toegestaan. Regels die beginnen met het teken B<#> worden als commentaar aanzien en genegeerd. Alle andere regels moeten de volgende indeling hebben:
 
 =over 
 
-[I<type>B<:>] I<bibliotheek> I<versie> I<vereisten>
+[I<type>B<:>] I<bibliotheek> I<versie> I<afhankelijkheden>
 
 =back
 
-De velden I<bibliotheek> en I<versie> worden door witruimte van elkaar gescheiden, maar het veld I<vereisten> loopt door tot het einde van de regel. Het veld I<type> is facultatief en meestal niet nodig.
+De velden I<bibliotheek> en I<versie> worden door witruimte van elkaar gescheiden, maar het veld I<afhankelijkheden> loopt door tot het einde van de regel. Het veld I<type> is facultatief en meestal niet nodig.
 
-Het veld I<vereisten> heeft dezelfde syntaxis als het veld B<Depends> in het control-bestand van een binair pakket, zie L<deb-control(5)>.
+Het veld I<afhankelijkheden> heeft dezelfde syntaxis als het veld B<Depends> in het control-bestand van een binair pakket, zie L<deb-control(5)>.
 
 =head1 SONAME-INDELINGEN
 
@@ -70,7 +70,7 @@ Het B<shlibs>-bestand voor een typisch bibliotheekpakket met als naam I<libcrunc
 
 =back
 
-De I<vereisten> moeten de meest recente versie vermelden van het pakket dat nieuwe symbolen toevoegde aan de bibliotheek. In het bovenstaande voorbeeld werden nieuwe symbolen toegevoegd in versie 1.2 van I<libcrunch>. Dit is niet de enige reden waarom het kan zijn dat vereisten scherper gesteld moeten worden.
+De I<afhankelijkheden> moeten de meest recente versie vermelden van het pakket dat nieuwe symbolen toevoegde aan de bibliotheek. In het bovenstaande voorbeeld werden nieuwe symbolen toegevoegd in versie 1.2 van I<libcrunch>. Dit is niet de enige reden waarom het kan zijn dat afhankelijkheden scherper gesteld moeten worden.
 
 =head1 ZIE OOK
 

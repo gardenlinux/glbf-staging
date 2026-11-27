@@ -60,10 +60,17 @@ use Dpkg::Vendor qw(run_vendor_hook);
 
 textdomain('dpkg-dev');
 
+my $PROG_SYNOPSIS = N_(
+    'source and binary package build driving tool'
+);
+
 sub usage {
     printf g_(
 "Usage: %s [<option>...] [--] [<filename.dsc>|<directory>]\n" .
     ''), $Dpkg::PROGNAME;
+    print_option_sep();
+
+    print_synopsis($PROG_SYNOPSIS);
     print_option_sep();
 
     printf g_(
@@ -538,7 +545,7 @@ while (@ARGV) {
     } elsif (/^-uc$/ or /^--unsigned-changes$/) {
         $signbuildinfo = 0;
         $signchanges = 0;
-    } elsif (/^-ap$/ or /^--sign-pausa$/) {
+    } elsif (/^-ap$/ or /^--sign-pause$/) {
         $signpause = 1;
     } elsif (/^-a$/ or /^--host-arch$/) {
         $host_arch = shift;
@@ -664,7 +671,8 @@ if ($check_command and not find_command($check_command)) {
     error(g_("check-command '%s' not found"), $check_command);
 }
 
-if ($signcommand and not find_command($signcommand)) {
+if ($signcommand && $signcommand ne 'auto' && $signcommand ne 'none' &&
+    ! find_command($signcommand)) {
     error(g_("sign-command '%s' not found"), $signcommand);
 }
 
@@ -782,14 +790,18 @@ push @arch_opts, ('--host-type', $host_type) if $host_type;
 push @arch_opts, ('--target-arch', $target_arch) if $target_arch;
 push @arch_opts, ('--target-type', $target_type) if $target_type;
 
-open my $arch_env, '-|', 'dpkg-architecture', '-f', @arch_opts
-    or subprocerr('dpkg-architecture');
-while (<$arch_env>) {
+my $arch_fh;
+my $arch_pid = spawn(
+    exec => [ 'dpkg-architecture', '-f', @arch_opts ],
+    to_pipe => \$arch_fh,
+);
+while (<$arch_fh>) {
     chomp;
     my ($key, $value) = split /=/, $_, 2;
     $ENV{$key} = $value;
 }
-close $arch_env or subprocerr('dpkg-architecture');
+close $arch_fh or subprocerr('dpkg-architecture');
+wait_child($arch_pid, cmdline => "dpkg-architecture -f @arch_opts");
 
 my $arch;
 if (build_has_any(BUILD_ARCH_DEP)) {

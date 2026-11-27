@@ -42,13 +42,13 @@ Não ordena as estrofes do índice. Normalmente elas estão ordenadas pelo nome 
 
 =item B<-e>, B<--extra-override> I<file>
 
-Scan I<file> to find supplementary overrides.  The file can be compressed (since dpkg 1.15.5).  See L<deb-extra-override(5)> for more information on its format.
+Sonda o I<file> para encontrar sobreposições suplementares. O ficheiro pode ser comprimido (desde dpkg 1.15.5). Veja L<deb-extra-override(5)> para mais informações sobre este formato.
 
-Supported since dpkg 1.15.4.
+Suportado desde dpkg 1.15.4.
 
 =item B<-s>, B<--source-override> I<file>
 
-Use I<file> as the source override file.  The file can be compressed (since dpkg 1.15.5).  The default is the name of the override file you specified with I<.src> appended.
+Usa I<file> como o ficheiro de sobreposição da fonte. O ficheiro pode ser comprimido (desde dpkg 1.15.5). A predefinição é o nome do ficheiro de sobreposição que você especificou com I<.src> acrescentado.
 
 O ficheiro de sobreposição de fonte está num formato diferente do ficheiro de sobreposição de binário. Contém apenas dois campos separados por espaço em branco, o primeiro é o nome do pacote fonte e o segundo é a secção. Linhas vazias e comentários são ignorados no modo normal. Se um pacote aparece em ambos ficheiros a sobreposição de fonte toma precedência para definir a secção.
 
@@ -74,13 +74,13 @@ Mostra a versão e termina.
 
 Define o modo de cor. Os valores actualmente aceites são: B<auto> (predefinido), B<always> e B<never>.
 
-Supported since dpkg 1.18.5.
+Suportado desde dpkg 1.18.5.
 
 =item B<DPKG_NLS>
 
-Se definida, será usada para decidir se deve activar o Suporte a Linguagem Nativa. Também como conhecido como suporte de internacionalização (ou i18n). Os valores aceites são B<0> e B<1> (predefinição).
+Se definida, será usada para decidir se deve ativar o Suporte a Linguagem Nativa. Também como conhecido como suporte de internacionalização (ou i18n). Os valores aceites são B<0> e B<1> (predefinição).
 
-Supported since dpkg 1.19.0.
+Suportado desde dpkg 1.19.0.
 
 =back
 

@@ -124,9 +124,9 @@ Em Debian e derivados apenas os caminhos de compilação começados com I</build
 
 =item S< >I<taint-reason-list>
 
-This folded field contains a space-separated list of non-exhaustive reason tags (formed by alphanumeric and dash characters) which identify why the current build has been tainted.
+Este campo dobrado contem uma lista separada por espaços de etiquetas de razão não-exaustiva (formadas por caracteres alfanuméricos e traços) as quais identificam porque a compilação actual foi contaminada.
 
-Supported since dpkg 1.19.5.
+Suportado desde dpkg 1.19.5.
 
 Em Debian e derivados as seguintes etiquetas de razão podem ser emitidas:
 
@@ -152,7 +152,7 @@ O sistema tem bibliotecas, sejam estáticas ou partilhadas sob I</usr/local/lib>
 
 O sistema pode executar programas de compilação cruzada, seja diretamente ou via algum tipo de emulação.
 
-Desde dpkg 1.21.10.
+Suportado desde dpkg 1.21.10.
 
 =back
 
@@ -172,7 +172,7 @@ Para as dependências que venham de campos de controle da fonte, todas as altern
 
 =item S< >I<variable-list>
 
-A lista de variáveis de ambiente que se sabe afectarem o processo de compilação do pacote, com cada variável de ambiente seguida por um sinal igual (‘=’)  e o valor da variável citando entre aspas (‘"’), e barras escapadas (‘\\’).
+A lista de variáveis de ambiente que se sabe afetarem o processo de compilação do pacote, com cada variável de ambiente seguida por um sinal igual (‘=’)  e o valor da variável citando entre aspas (‘"’), e barras escapadas (‘\\’).
 
 =back
 
