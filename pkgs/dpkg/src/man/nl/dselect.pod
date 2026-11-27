@@ -36,7 +36,7 @@ De toestand van geïnstalleerde en beschikbare pakketten bekijken,
 
 =item *
 
-Pakketselecties wijzigen en afhankelijkheden/vereisten beheren,
+Pakketselecties wijzigen en afhankelijkheden beheren,
 
 =item *
 
@@ -44,7 +44,7 @@ Nieuwe pakketten installeren of opwaarderen naar recentere versies.
 
 =back
 
-B<dselect> functioneert als een frontend voor L<dpkg(1)>, het primaire Debian gereedschap voor het behandelen van pakketten. Het maakt gebruik van het volledige scherm om een systeem ter beschikking te stellen voor het beheren van pakketselecties met een oplosser voor vereisten en tegenstrijdigheden. Indien het uitgevoerd wordt met beheerdersrechten, kunnen er pakketten mee geïnstalleerd, opgewaardeerd of verwijderd worden. Verschillende benaderingsmethodes kunnen ingesteld worden voor het ophalen van informatie over beschikbare pakketversies en voor het ophalen van installeerbare pakketten uit pakketbronnen. Afhankelijk van de gebruikte benaderingsmethode kunnen deze pakketbronnen publieke archiefservers zijn op het internet, lokale archiefservers of mediaschijven. De aanbevolen benaderingsmethode is I<apt>, welke door het pakket L<apt(8)> geleverd wordt.
+B<dselect> functioneert als een frontend voor L<dpkg(1)>, het primaire Debian gereedschap voor het behandelen van pakketten. Het maakt gebruik van het volledige scherm om een systeem ter beschikking te stellen voor het beheren van pakketselecties met een oplosser voor afhankelijkheden en conflicten. Indien het uitgevoerd wordt met beheerdersrechten, kunnen er pakketten mee geïnstalleerd, opgewaardeerd of verwijderd worden. Verschillende benaderingsmethodes kunnen ingesteld worden voor het ophalen van informatie over beschikbare pakketversies en voor het ophalen van installeerbare pakketten uit pakketbronnen. Afhankelijk van de gebruikte benaderingsmethode kunnen deze pakketbronnen publieke archiefservers zijn op het internet, lokale archiefservers of mediaschijven. De aanbevolen benaderingsmethode is I<apt>, welke door het pakket L<apt(8)> geleverd wordt.
 
 Gewoonlijk wordt B<dselect> zonder parameters gestart. Er wordt een interactief menu weergegeven dat de gebruiker een lijst met commando's biedt. Indien een commando opgegeven wordt als argument, dan wordt dat commando onmiddellijk opgestart. Er kunnen ook nog verschillende commandoregelparameters gebruikt worden om de werking van B<dselect> aan te passen of bijkomende informatie over het programma te tonen.
 
@@ -60,15 +60,15 @@ Wijzigt de map waarin de bestanden ‘I<status>’ en ‘I<available>’ van dpk
 
 =item B<--instdir> I<map>
 
-Set the installation directory, which refers to the directory where packages get installed.  Defaults to «I</>» if B<DPKG_ROOT> has not been set.
+Instellen van de installatiemap, welke verwijst naar de map waar pakketten geïnstalleerd worden. Standaard is dat «I</>» indien B<DPKG_ROOT> niet ingesteld werd.
 
-Supported since dpkg 1.21.2.
+Ondersteund sinds dpkg 1.21.2.
 
 =item B<--root> I<map>
 
-Set the root directory to I<directory>, which sets the installation directory to «I<directory>» and the administrative directory to «I<directory>%ADMINDIR%».
+De basismap instellen op B<map>, hetgeen de installatiemap instelt op «I<map>» en de administratieve map op «I<map>%ADMINDIR%».
 
-Supported since dpkg 1.21.0.
+Ondersteund sinds dpkg 1.21.0.
 
 =item B<-D>I<bestand>, B<--debug> I<bestand>
 
@@ -84,7 +84,7 @@ I<schermdeel>:[I<voorgrond>],[I<achtergrond>][:I<attr>[I<+attr>]...]
 =item B<--colour>
 I<schermdeel>:[I<voorgrond>],[I<achtergrond>][:I<attr>[I<+attr>]...]
 
-Configureert de schermkleuren. Dit werkt enkel indien uw scherm kleuren ondersteunt. Deze optie kan meermaals gebruikt worden (en wordt best gebruikt in I<dselect.cfg>). Elk gebruik wijzigt de kleur (en eventueel andere attributen) van een deel van het scherm. De delen van het scherm (van boven naar onder) zijn:
+Configureert de schermkleuren. Dit werkt alleen indien uw scherm kleuren ondersteunt. Deze optie kan meermaals gebruikt worden (en wordt best gebruikt in I<dselect.cfg>). Elk gebruik wijzigt de kleur (en eventueel andere attributen) van een deel van het scherm. De delen van het scherm (van boven naar onder) zijn:
 
 =over 
 
@@ -174,11 +174,11 @@ De bijzonderheden van het update-commando zijn afhankelijk van de implementatie 
 
 =head2 selecteren
 
-Bekijk of beheer pakketselecties en vereisten.
+Bekijk of beheer pakketselecties en afhankelijkheden.
 
 Dit is de hoofdfunctie van B<dselect>. In het selectiescherm kan de gebruiker een lijst van alle beschikbare en geïnstalleerde pakketten nakijken. Indien dit uitgevoerd wordt met beheerdersrechten, is het ook mogelijk om interactief de selectiestatus van pakketten te wijzigen. B<dselect> gaat de implicaties van deze wijzigingen na voor andere pakketten die ervan afhankelijk of ermee in tegenstrijd zijn.
 
-Indien een tegenstrijdigheid of een falende vereiste ontdekt wordt, krijgt de gebruiker een scherm voor het oplossen van vereisten aangeboden. In dat scherm wordt een lijst van tegenstrijdige of afhankelijke pakketten getoond en voor elk weergegeven pakket wordt aangegeven wat de reden is waarom het daar getoond wordt. De gebruiker kan de door B<dselect> voorgestelde suggesties toepassen, ze veranderen of alle wijzigingen intrekken, met inbegrip van die welke de onopgeloste vereisten of tegenstrijdigheden creëerden.
+Indien een conflict of een falende afhankelijkheid ontdekt wordt, krijgt de gebruiker een scherm voor het oplossen van afhankelijkheden aangeboden. In dat scherm wordt een lijst van tegenstrijdige of afhankelijke pakketten getoond en voor elk weergegeven pakket wordt aangegeven wat de reden is waarom het daar getoond wordt. De gebruiker kan de door B<dselect> voorgestelde suggesties toepassen, ze veranderen of alle wijzigingen intrekken, met inbegrip van die welke de onopgeloste afhankelijkheden of conflicten creëerden.
 
 Het gebruik van het scherm voor interactief selectiebeheer wordt hierna meer gedetailleerd uitgelegd.
 
@@ -240,7 +240,7 @@ de controle-informatie voor de beschikbare versie
 
 =back
 
-In een scherm voor het oplossen van vereisten bestaat ook de mogelijkheid om de specifieke niet-voldane vereisten of tegenstrijdigheden in verband met het pakket, die de reden zijn waarom het pakket vermeld wordt, te zien.
+In een scherm voor het oplossen van afhankelijkheden bestaat ook de mogelijkheid om de specifieke niet-voldane afhankelijkheden of conflicten in verband met het pakket, die de reden zijn waarom het pakket vermeld wordt, te zien.
 
 =head2 De pakketstatuslijst
 
@@ -303,7 +303,7 @@ Huidige en gevraagde selecties:
 
 =head2 Cursor- en schermbewegingen
 
-Men kan door de pakketselectielijst en in de schermen voor het oplossen van vereisten en tegenstrijdigheden navigeren met behulp van bewegingscommando's die aan de volgende toetsen gekoppeld zijn:
+Men kan door de pakketselectielijst en in de schermen voor het oplossen van afhankelijkheden en conflicten navigeren met behulp van bewegingscommando's die aan de volgende toetsen gekoppeld zijn:
 
 =over 
 
@@ -401,27 +401,27 @@ De gevraagde selectiestatus van individuele pakketten kan gewijzigd worden met d
 
 =back
 
-Indien de gevraagde verandering resulteert in één of meer niet-voldane vereisten of tegenstrijdigheden, zal B<dselect> de gebruiker een scherm presenteren voor het oplossen van afhankelijkheden. Dit zal hierna verder toegelicht worden.
+Indien de gevraagde verandering resulteert in één of meer niet-voldane afhankelijkheden of conflicten, zal B<dselect> de gebruiker een scherm presenteren voor het oplossen van afhankelijkheden. Dit zal hierna verder toegelicht worden.
 
 Het is ook mogelijk om deze commando's te gebruiken voor groepen pakketselecties door de cursorbalk te plaatsen op een koptekst van een groep. De exacte groepering van pakketten is afhankelijk van de huidige instellingen voor de lijstordening.
 
-Het aanbrengen van wijzigingen aan de selectie van een grote groep pakketten moet met voldoende zorg gebeuren, aangezien dit onmiddellijk een groot aantal niet-voldane vereisten en tegenstrijdigheden kan creëren. Die worden dan allemaal tegelijk opgesomd in één enkel scherm met het oog op het oplossen van afhankelijkheden, hetgeen het zeer moeilijk kan maken om ermee om te gaan. In de praktijk heeft het enkel nut om groepsactivatie of -deactivatie te gebruiken voor de instelling 'te handhaven'.
+Het aanbrengen van wijzigingen aan de selectie van een grote groep pakketten moet met voldoende zorg gebeuren, aangezien dit onmiddellijk een groot aantal niet-voldane afhankelijkheden en conflicten kan creëren. Die worden dan allemaal tegelijk opgesomd in één enkel scherm met het oog op het oplossen van afhankelijkheden, hetgeen het zeer moeilijk kan maken om ermee om te gaan. In de praktijk heeft het enkel nut om groepsactivatie of -deactivatie te gebruiken voor de instelling 'te handhaven'.
 
-=head2 Vereisten en tegenstrijdigheden oplossen
+=head2 Afhankelijkheden en conflicten oplossen
 
-Wanneer een wijzigingsverzoek resulteert in één of meer onvoldane vereisten of tegenstrijdigheden, krijgt de gebruiker een scherm gepresenteerd om de afhankelijkheden op te lossen. Eerst wordt er echter een informatief hulpscherm weergegeven.
+Wanneer een wijzigingsverzoek resulteert in één of meer onvoldane afhankelijkheden of conflicten, krijgt de gebruiker een scherm gepresenteerd om de afhankelijkheden op te lossen. Eerst wordt er echter een informatief hulpscherm weergegeven.
 
-De bovenste helft van dat scherm somt alle pakketten op die niet-voldane vereisten en tegenstrijdigheden zullen hebben ten gevolge van de gevraagde wijziging en al de pakketten waarvan de installatie een vereiste kan oplossen of waarvan een verwijdering een oplossing kan bieden voor een tegenstrijdigheid. De onderste helft toont standaard de vereisten of tegenstrijdigheden die er de oorzaak van zijn dat het momenteel geselecteerde pakket vermeld wordt.
+De bovenste helft van dat scherm somt alle pakketten op die niet-voldane afhankelijkheden en conflicten zullen hebben ten gevolge van de gevraagde wijziging en al de pakketten waarvan de installatie een vereiste kan oplossen of waarvan een verwijdering een oplossing kan bieden voor een conflict. De onderste helft toont standaard de afhankelijkheden of conflicten die er de oorzaak van zijn dat het momenteel geselecteerde pakket vermeld wordt.
 
-When the sublist of packages is displayed initially, B<dselect> may have already set the requested selection status of some of the listed packages, to resolve the depends or conflicts that caused the dependency resolution screen to be displayed.  Usually, it is best to follow up the suggestions made by B<dselect>.
+Bij de initiële weergave van de sub-lijst met pakketten, kan B<dselect> reeds voor sommige van de opgesomde pakketten de aangevraagde selectiestatus ingesteld hebben in functie van een oplossing voor de afhankelijkheid of het conflict welke leidde tot het weergeven van dit scherm, gericht op het oplossen van afhankelijkheidsproblemen. Gewoonlijk doet u er goed aan de suggesties van B<dselect> te volgen.
 
-De selectiestatus van de vermelde pakketten kan teruggedraaid worden naar de originele instelling, zoals die was vooraleer de niet-voldane vereiste of tegenstrijdigheid gecreëerd werd, door op de toets ‘B<R>’ te drukken. Door op de toets ‘B<D>’ worden de automatische suggesties teruggedraaid, maar blijft de wijziging die de aanleiding was voor het tonen van het oplossingsscherm voor afhankelijkheden, behouden op de aangevraagde toestand. Door op de toets ‘B<U>’ te drukken tenslotte, worden de selecties terug ingesteld op de automatisch gesuggereerde waarden.
+De selectiestatus van de vermelde pakketten kan teruggedraaid worden naar de originele instelling, zoals die was vooraleer de niet-voldane afhankelijkheid of conflict gecreëerd werd, door op de toets ‘B<R>’ te drukken. Door op de toets ‘B<D>’ worden de automatische suggesties teruggedraaid, maar blijft de wijziging die de aanleiding was voor het tonen van het oplossingsscherm voor afhankelijkheden, behouden op de aangevraagde toestand. Door op de toets ‘B<U>’ te drukken tenslotte, worden de selecties terug ingesteld op de automatisch gesuggereerde waarden.
 
 =head2 De gevraagde selecties effectief tot stand brengen
 
-De momenteel weergegeven reeks selecties wordt aanvaard door op B<enter> te drukken. Indien B<dselect> geen niet-voldane vereisten ontdekt die het gevolg zijn van de gevraagde selecties, dan zullen de nieuwe selecties ingesteld worden. Indien er echter wel nog niet-voldane vereisten zijn, dan zal B<dselect> de gebruiker opnieuw een scherm presenteren voor het oplossen van afhankelijkheden.
+De momenteel weergegeven reeks selecties wordt aanvaard door op B<enter> te drukken. Indien B<dselect> geen niet-voldane afhankelijkheden ontdekt die het gevolg zijn van de gevraagde selecties, dan zullen de nieuwe selecties ingesteld worden. Indien er echter wel nog niet-voldane afhankelijkheden zijn, dan zal B<dselect> de gebruiker opnieuw een scherm presenteren voor het oplossen van afhankelijkheden.
 
-Om een reeks selecties die niet-voldane vereisten of tegenstrijdigheden creëren, door te voeren en B<dselect> te dwingen ze te aanvaarden, drukt u op de toets ‘B<Q>’. Dit stelt de selecties onvoorwaardelijk in zoals ze door de gebruiker opgegeven werden. U zou dit over het algemeen niet moeten doen, tenzij u de kleine lettertjes gelezen heeft.
+Om een reeks selecties die niet-voldane afhankelijkheden of conflicten creëren, door te voeren en B<dselect> te dwingen ze te aanvaarden, drukt u op de toets ‘B<Q>’. Dit stelt de selecties onvoorwaardelijk in zoals ze door de gebruiker opgegeven werden. U zou dit over het algemeen niet moeten doen, tenzij u de kleine lettertjes gelezen heeft.
 
 Het tegenovergestelde effect, namelijk intrekken van eventuele aangevraagde selectiewijzigingen en terugkeren naar de vorige lijst met selecties, bekomt u door op de toets ‘B<X>’ of B<escape> te drukken. Door meermaals op deze toetsen te drukken kunnen eventuele misschien schadelijke wijzigingen aan de aangevraagde pakketselecties volledig ingetrokken worden en kan teruggekeerd worden tot aan de laatste effectief tot stand gebrachte instellingen.
 
@@ -449,13 +449,13 @@ Fatale of onherstelbare fout die te wijten is aan ongeldig gebruik van de comman
 
 Indien dit ingesteld is en de opties B<--instdir> of B<--root> niet opgegeven werden, zal dit gebruikt worden als de hoofdmap voor het bestandssysteem.
 
-Supported since dpkg 1.21.0.
+Ondersteund sinds dpkg 1.21.0.
 
 =item B<DPKG_ADMINDIR>
 
-If set and the B<--admindir> or B<--root> option have not been specified, it will be used as the B<dpkg> database directory.
+Indien dit ingesteld is en de opties B<--admindir> of B<--root> niet opgegeven werden, zal dit gebruikt worden als de databasemap voor B<dpkg>.
 
-Supported since dpkg 1.21.0.
+Ondersteund sinds dpkg 1.21.0.
 
 =item B<HOME>
 
@@ -473,7 +473,7 @@ Het hoofdmenu bevat geen hulp-optie.
 
 De zichtbare lijst van beschikbare pakketten kan niet gereduceerd worden.
 
-De ingebouwde benaderingsmethodes voldoen niet langer aan de huidige kwaliteitsnormen. Gebruik de benaderingsmethode die L<apt(8)> voorziet. Die is niet enkel niet defect, ze is ook veel flexibeler dan de ingebouwde benaderingsmethodes.
+De ingebouwde benaderingsmethodes voldoen niet langer aan de huidige kwaliteitsnormen. Gebruik de benaderingsmethode die L<apt(8)> voorziet. Die is niet alleen niet defect, ze is ook veel flexibeler dan de ingebouwde benaderingsmethodes.
 
 =head1 ZIE OOK
 

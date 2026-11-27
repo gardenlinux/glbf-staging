@@ -58,6 +58,10 @@ use Dpkg::Vendor qw(run_vendor_hook);
 
 textdomain('dpkg-dev');
 
+my $PROG_SYNOPSIS = N_(
+    'source package handling tool'
+);
+
 my $controlfile;
 my $changelogformat;
 
@@ -103,6 +107,10 @@ while (@ARGV && $ARGV[0] =~ m/^-/) {
         setopmode('print-format');
         # Avoid clutter on stdout.
         report_options(info_fh => \*STDERR);
+    } elsif ($arg eq '-?' or $arg eq '--help') {
+        setopmode('help');
+    } elsif ($arg eq '--version') {
+        setopmode('version');
     } else {
         push @options, $arg;
     }
@@ -220,12 +228,8 @@ while (@options) {
         $substvars->set($1, $2);
     } elsif (m/^-T(.*)$/) {
         $substvars->load($1) if -e $1;
-    } elsif (m/^-(?:\?|-help)$/) {
-        usage();
-        exit(0);
-    } elsif (m/^--version$/) {
-        print_version();
-        exit(0);
+    } elsif (m/^--robot$/) {
+        $options{robot} = 1;
     } elsif (m/^-[EW]$/) {
         # Deprecated option.
         warning(g_('-E and -W are deprecated, they are without effect'));
@@ -241,6 +245,18 @@ while (@options) {
 
 unless (defined($options{opmode})) {
     usageerr(g_('need an action option'));
+}
+
+if ($options{opmode} eq 'help') {
+    usage();
+    exit(0);
+} elsif ($options{opmode} eq 'version') {
+    if ($options{robot}) {
+        print_robot_version();
+    } else {
+        print_version();
+    }
+    exit(0);
 }
 
 if ($options{opmode} =~ /^(build|print-format|(before|after)-build|commit)$/) {
@@ -457,7 +473,8 @@ if ($options{opmode} =~ /^(build|print-format|(before|after)-build|commit)$/) {
         $fields->{'Uploaders'} = $uploaders->as_string();
 
         if (defined $maint && $uploaders->contains($maint)) {
-            warning(g_('%s field contains the maintainer address'), 'Uploaders');
+            warning(g_('%s field contains the %s field address'),
+                    'Uploaders', 'Maintainer');
         }
     }
 
@@ -655,6 +672,9 @@ sub usage {
     ''), $Dpkg::PROGNAME;
     print_option_sep();
 
+    print_synopsis($PROG_SYNOPSIS);
+    print_option_sep();
+
     printf g_(
 "Commands:\n" .
     '');
@@ -681,6 +701,14 @@ sub usage {
     print_option(g_(
 "      --commit [<dir> [<patch-name>]]\n" .
 "          Store upstream changes in a new patch.\n" .
+    ''));
+    print_option(g_(
+"  -?, --help\n" .
+"          Show this help message.\n" .
+    ''));
+    print_option(g_(
+"      --version\n" .
+"          Show the version.\n" .
     ''));
     print_option_sep();
 
@@ -790,14 +818,6 @@ sub usage {
     print_option(g_(
 "  -q\n" .
 "          Enable quiet mode, minimal output.\n" .
-    ''));
-    print_option(g_(
-"  -?, --help\n" .
-"          Show this help message.\n" .
-    ''));
-    print_option(g_(
-"      --version\n" .
-"          Show the version.\n" .
     ''));
     print_option_sep();
 

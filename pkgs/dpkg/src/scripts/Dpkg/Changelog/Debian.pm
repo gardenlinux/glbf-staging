@@ -48,7 +48,6 @@ use v5.36;
 
 use Dpkg::Gettext;
 use Dpkg::File;
-use Dpkg::Changelog;
 use Dpkg::Changelog::Entry::Debian qw(match_header match_trailer);
 
 use parent qw(Dpkg::Changelog);
@@ -166,21 +165,21 @@ sub parse {
             }
             $expect = START_CHANGES;
             @blanklines = ();
-        } elsif (m/^(?:;;\s*)?Local variables:/io) {
+        } elsif (m/^(?:;;\s*)?Local variables:/i) {
             # Save any trailing Emacs variables at end of file.
             $self->set_unparsed_tail("$_\n" . (file_slurp($fh) // ''));
             last;
-        } elsif (m/^vim:/io) {
+        } elsif (m/^vim:/i) {
             # Save any trailing Vim modelines at end of file.
             $self->set_unparsed_tail("$_\n" . (file_slurp($fh) // ''));
             last;
-        } elsif (m/^\$\w+:.*\$/o) {
+        } elsif (m/^\$\w+:.*\$/) {
             # Skip stuff that look like a RCS keyword.
             next;
-        } elsif (m/^\# /o) {
+        } elsif (m/^\# /) {
             # Skip comments, even that is not supported.
             next;
-        } elsif (m{^/\*.*\*/}o) {
+        } elsif (m{^/\*.*\*/}) {
             # More comments.
             next;
         } elsif (m/$ancient_delimiter_regex/) {

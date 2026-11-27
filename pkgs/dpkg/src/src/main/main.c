@@ -55,17 +55,17 @@
 #include "main.h"
 #include "filters.h"
 
+static const char prog_synopsis[] = N_(
+	"binary package management program"
+);
+
 static int
 printversion(const char *const *argv)
 {
 	if (f_robot) {
 		printf("%s", PACKAGE_VERSION);
 	} else {
-		printf(_("Debian '%s' package management program version %s.\n"),
-		       DPKG, PACKAGE_RELEASE);
-		printf(_(
-"This is free software; see the GNU General Public License version 2 or\n"
-"later for copying conditions. There is NO warranty.\n"));
+		print_version(argv);
 	}
 
 	m_output(stdout, _("<standard output>"));
@@ -86,6 +86,9 @@ usage(const char *const *argv)
 	printf(_(
 "Usage: %s [<option>...] <command>\n"
 	), DPKG);
+	print_option_sep();
+
+	print_synopsis(prog_synopsis);
 	print_option_sep();
 
 	printf(_(
@@ -477,6 +480,15 @@ set_no_pager(const struct cmdinfo *ci, const char *value)
 }
 
 static void
+set_no_alsoselect(const struct cmdinfo *ci, const char *value)
+{
+	warning(_("deprecated --%s option; use --%s instead"),
+	        ci->olong, "select-only");
+
+	*ci->iassignto = ci->arg_int;
+}
+
+static void
 set_filter(const struct cmdinfo *cip, const char *value)
 {
 	filter_add(value, cip->arg_int);
@@ -753,8 +765,23 @@ arch_remove(const char *const *argv)
 	return 0;
 }
 
-int
-execbackend(const char *const *argv) DPKG_ATTR_NORET;
+static int DPKG_ATTR_NORET
+execbackend(const char *const *argv)
+{
+	struct command cmd;
+
+	command_init(&cmd, cipaction->arg_ptr, NULL);
+	command_add_arg(&cmd, cipaction->arg_ptr);
+	command_add_arg(&cmd, str_fmt("--%s", cipaction->olong));
+
+	/* Explicitly separate arguments from options as any user-supplied
+	 * separator got stripped by the option parser */
+	command_add_arg(&cmd, "--");
+	command_add_argl(&cmd, (const char **)argv);
+
+	command_exec(&cmd);
+}
+
 int
 commandfd(const char *const *argv);
 
@@ -779,12 +806,12 @@ static const struct cmdinfo cmdinfos[] = {
 	ACTION( "set-selections",                  0,  act_setselections,        setselections   ),
 	ACTION( "clear-selections",                0,  act_clearselections,      clearselections ),
 	ACTIONBACKEND( "print-avail",             'p', DPKGQUERY),
-	ACTION( "update-avail",                    0,  act_avreplace,            updateavailable ),
-	ACTION( "merge-avail",                     0,  act_avmerge,              updateavailable ),
-	ACTION( "clear-avail",                     0,  act_avclear,              updateavailable ),
+	ACTION( "update-avail",                    0,  act_avreplace,            available_update ),
+	ACTION( "merge-avail",                     0,  act_avmerge,              available_update ),
+	ACTION( "clear-avail",                     0,  act_avclear,              available_clear  ),
 	ACTION( "forget-old-unavail",              0,  act_forgetold,            forgetold       ),
 	ACTION( "audit",                          'C', act_audit,                audit           ),
-	ACTION( "yet-to-unpack",                   0,  act_unpackchk,            unpackchk       ),
+	ACTION( "yet-to-unpack",                   0,  act_unpack_check,         unpack_check    ),
 	ACTIONBACKEND( "list",                    'l', DPKGQUERY),
 	ACTIONBACKEND( "search",                  'S', DPKGQUERY),
 	ACTION_MUX( "assert",                      0,  act_assert_feature,       assert_feature, &assert_feature_name),
@@ -822,10 +849,10 @@ static const struct cmdinfo cmdinfos[] = {
 	/* Alias ('G') for --refuse. */
 	{  NULL,               'G', 0, NULL,          NULL,      reset_force_option, FORCE_DOWNGRADE },
 	{ "selected-only",     'O', 0, &f_alsoselect, NULL,      NULL,    0 },
+	/* TODO: Remove -N sometime, ancient alias for -O. */
+	{ "no-also-select",    'N', 0, &f_alsoselect, NULL,      set_no_alsoselect,  0 },
 	{ "triggers",           0,  0, &f_triggers,   NULL,      NULL,    1 },
 	{ "no-triggers",        0,  0, &f_triggers,   NULL,      NULL,   -1 },
-	/* TODO: Remove ('N') sometime. */
-	{ "no-also-select",    'N', 0, &f_alsoselect, NULL,      NULL,    0 },
 	{ "skip-same-version", 'E', 0, &f_skipsame,   NULL,      NULL,    1 },
 	{ "auto-deconfigure",  'B', 0, &f_autodeconf, NULL,      NULL,    1 },
 	{ "robot",             0,   0, &f_robot,      NULL,      NULL,    1 },
@@ -849,23 +876,6 @@ static const struct cmdinfo cmdinfos[] = {
 	ACTIONBACKEND( "fsys-tarfile",	0,   BACKEND),
 	{ NULL,                0,   0, NULL,          NULL,      NULL,          0 }
 };
-
-int
-execbackend(const char *const *argv)
-{
-	struct command cmd;
-
-	command_init(&cmd, cipaction->arg_ptr, NULL);
-	command_add_arg(&cmd, cipaction->arg_ptr);
-	command_add_arg(&cmd, str_fmt("--%s", cipaction->olong));
-
-	/* Explicitly separate arguments from options as any user-supplied
-	 * separator got stripped by the option parser */
-	command_add_arg(&cmd, "--");
-	command_add_argl(&cmd, (const char **)argv);
-
-	command_exec(&cmd);
-}
 
 int
 commandfd(const char *const *argv)

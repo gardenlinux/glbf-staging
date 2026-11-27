@@ -24,7 +24,7 @@ I<bestandsnaam>B<.buildinfo>
 
 Van elke bouw van een Debian broncodepakket kan de bouwinformatie opgeslagen worden in een controlebestand B<.buildinfo>, dat een aantal velden bevat volgens de indeling L<deb822(5)>.
 
-Ieder veld begint met een markering, zoals B<Source> of B<Binary> (niet hoofdlettergevoelig), gevolgd door een dubbele punt en de tekstinhoud van het veld (hoofdlettergevoelig tenzij anders vermeld). Velden worden enkel door veldmarkeringen begrensd. De tekstinhoud van het veld kan met andere woorden verschillende regels lang zijn, maar de installatiegereedschappen zullen bij het verwerken van de tekstinhoud de regels gewoonlijk samenvoegen (behalve in het geval van de multiregel-velden B<Binary-Only-Changes>, B<Installed-Build-Depends>, B<Environment>, B<Checksums-Md5>, B<Checksums-Sha1> en B<Checksums-Sha256>; zie hierna)
+Ieder veld begint met een markering, zoals B<Source> of B<Binary> (niet hoofdlettergevoelig), gevolgd door een dubbele punt en de tekstinhoud van het veld (hoofdlettergevoelig tenzij anders vermeld). Velden worden alleen door veldmarkeringen begrensd. De tekstinhoud van het veld kan met andere woorden verschillende regels lang zijn, maar de installatiegereedschappen zullen bij het verwerken van de tekstinhoud de regels gewoonlijk samenvoegen (behalve in het geval van de multiregel-velden B<Binary-Only-Changes>, B<Installed-Build-Depends>, B<Environment>, B<Checksums-Md5>, B<Checksums-Sha1> en B<Checksums-Sha256>; zie hierna)
 
 De controle-data mogen ingesloten liggen in een OpenPGP-handtekening met ASCII-harnas volgens de specificatie RFC9580.
 
@@ -60,7 +60,7 @@ De naam van het broncodepakket. Indien de versie van het broncodepakket verschil
 
 =item B<Binary:> I<lijst-binaire-pakketten> (vereist in de context)
 
-Dit samengevouwen veld is een met een spatie gescheiden lijst van gebouwde binaire pakketten. Indien de bouw enkel de broncode betreft, dan wordt het veld weggelaten (sinds dpkg 1.20.0).
+Dit samengevouwen veld is een met een spatie gescheiden lijst van gebouwde binaire pakketten. Indien de bouw alleen de broncode betreft, dan wordt het veld weggelaten (sinds dpkg 1.20.0).
 
 =item B<Architecture:> I<arch-lijst> (verplicht)
 
@@ -90,7 +90,7 @@ Dit multiregel-veld bevat in voorkomend geval de samengevoegde tekst van het cha
 
 =item S< >I<controlegetal> I<grootte> I<bestandsnaam>
 
-Deze multiregel-velden bevatten een lijst van bestanden met voor elk van hen een controlegetal en een grootte. Deze velden hebben een identieke syntaxis en verschillen onderling enkel inzake het gebruikte algoritme voor het controlegetal: MD5 voor B<Checksums-Md5>, SHA-1 voor B<Checksums-Sha1> en SHA-256 voor B<Checksums-Sha256>.
+Deze multiregel-velden bevatten een lijst van bestanden met voor elk van hen een controlegetal en een grootte. Deze velden hebben een identieke syntaxis en verschillen onderling alleen inzake het gebruikte algoritme voor het controlegetal: MD5 voor B<Checksums-Md5>, SHA-1 voor B<Checksums-Sha1> en SHA-256 voor B<Checksums-Sha256>.
 
 B<Opmerking>: De controlegetallen MD5 en SHA-1 worden als zwak beschouwd en mogen nooit worden beschouwd als zijnde voldoende voor een veilige verificatie.
 
@@ -112,21 +112,21 @@ De datum waarop het pakket gebouwd werd. Hij moet dezelfde indeling hebben als d
 
 =item B<Build-Kernel-Version:> I<bouwkernel-versie>
 
-De uitgave en de versie (in een niet-gespecificeerde indeling) van de kernel die op het bouwsysteem functioneert. Dit veld zal enkel aanwezig zijn als het bouwprogramma er expliciet om gevraagd heeft, om het eventueel weglekken van gevoelige informatie te voorkomen.
+De uitgave en de versie (in een niet-gespecificeerde indeling) van de kernel die op het bouwsysteem functioneert. Dit veld zal alleen aanwezig zijn als het bouwprogramma er expliciet om gevraagd heeft, om het eventueel weglekken van gevoelige informatie te voorkomen.
 
 =item B<Build-Path:> I<bouwpad>
 
-Het absoluut bouwpad, wat overeenkomt met de uitgepakte broncodeboom. Dit veld is enkel aanwezig als de leverancier het toegelaten heeft aan de hand van een patroonvergelijking om het eventueel weglekken van gevoelige informatie te voorkomen.
+Het absoluut bouwpad, wat overeenkomt met de uitgepakte broncodeboom. Dit veld is alleen aanwezig als de leverancier het toegelaten heeft aan de hand van een patroonvergelijking om het eventueel weglekken van gevoelige informatie te voorkomen.
 
-Op Debian en zijn derivaten zullen enkel bouwpaden die beginnen met I</build/> aanleiding geven tot het aanmaken van dit veld.
+Op Debian en zijn derivaten zullen alleen bouwpaden die beginnen met I</build/> aanleiding geven tot het aanmaken van dit veld.
 
 =item B<Build-Tainted-By:>
 
 =item S< >I<lijst-met-bezoedelingsredenen>
 
-This folded field contains a space-separated list of non-exhaustive reason tags (formed by alphanumeric and dash characters) which identify why the current build has been tainted.
+Dit gevouwen veld bevat een niet-exhaustieve lijst, met spatie als scheidingsteken, van labels (samengesteld uit alfanumerieke tekens en gedachtestreepjes) met redenen die aanduiden waarom de huidige bouw bezoedeld werd.
 
-Supported since dpkg 1.19.5.
+Ondersteund sinds dpkg 1.19.5.
 
 Op Debian en zijn derivaten kunnen de volgende reden-labels gegeven worden:
 
@@ -152,7 +152,7 @@ Het systeem bevat statische of gedeelde bibliotheken onder I</usr/local/lib>.
 
 Het systeem kan voor andere platformen gebouwde programma's uitvoeren, hetzij rechtstreeks, hetzij via een emulatielaag.
 
-Sinds dpkg 1.21.10.
+Ondersteund sinds dpkg 1.21.10.
 
 =back
 
@@ -164,9 +164,9 @@ De lijst van geïnstalleerde en geconfigureerde pakketten die van invloed kunnen
 
 De lijst bestaat uit de naam van elk pakket, eventueel een architectuurkwalificatie voor andere architecturen, met een exacte versierestrictie, gescheiden door komma's.
 
-De lijst bevat alle essentiële pakketten, pakketten vermeld in velden B<Build-Depends>, B<Build-Depends-Arch>, B<Build-Depends-Indep> van de broncode, eventuele ingebouwde leveranciersspecifieke vereisten en al hun recursieve vereisten. Op Debian en zijn derivaten is de ingebouwde vereiste B<build-essential>.
+De lijst bevat alle essentiële pakketten, pakketten vermeld in velden B<Build-Depends>, B<Build-Depends-Arch>, B<Build-Depends-Indep> van de broncode, eventuele ingebouwde leveranciersspecifieke afhankelijkheden en al hun recursieve afhankelijkheden. Op Debian en zijn derivaten is de ingebouwde afhankelijkheid B<build-essential>.
 
-Waar het vereisten betreft die afkomstig zijn uit de controlevelden van de broncode, worden ook alle vereistenalternatieven in aanmerking genomen en alle pakketten die voorzien in de virtuele pakketten die vereist worden.
+Waar het afhankelijkheden betreft die afkomstig zijn uit de controlevelden van de broncode, worden ook alle afhankelijkheidsalternatieven in aanmerking genomen en alle pakketten die voorzien in de virtuele pakketten die vereist worden.
 
 =item B<Environment:>
 

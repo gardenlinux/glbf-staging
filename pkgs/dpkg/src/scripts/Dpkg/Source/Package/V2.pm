@@ -43,6 +43,7 @@ use File::Copy;
 
 use Dpkg::Gettext;
 use Dpkg::ErrorHandling;
+use Dpkg::IPC;
 use Dpkg::File;
 use Dpkg::Path qw(find_command);
 use Dpkg::Version;
@@ -236,19 +237,20 @@ sub do_extract {
     my $tar = Dpkg::Source::Archive->new(
         filename => File::Spec->catfile($self->{basedir}, $tarfile),
     );
-    $tar->extract($newdirectory,
-        options => [
-            '--anchored',
-            '--no-wildcards-match-slash',
-            '--exclude',
-            '*/.pc',
-            '--exclude',
-            '.pc',
-        ],
-    );
     # The ".pc" exclusion is only needed for 3.0 (quilt) and to avoid having
-    # an upstream tarball provide a directory with symlinks that would be
-    # blindly followed when applying the patches.
+    # an upstream or debian tarball provide a directory with symlinks that
+    # would be blindly followed when applying the patches.
+    my @tar_options = (
+        '--anchored',
+        '--no-wildcards-match-slash',
+        '--exclude',
+        '*/.pc',
+        '--exclude',
+        '.pc',
+    );
+    $tar->extract($newdirectory,
+        options => \@tar_options,
+    );
 
     # Extract additional orig tarballs.
     foreach my $subdir (sort keys %addonfile) {
@@ -280,6 +282,7 @@ sub do_extract {
     );
     $tar->extract($newdirectory,
         in_place => 1,
+        options => \@tar_options,
     );
 
     # Apply patches (in a separate method as it might be overridden).
@@ -516,8 +519,10 @@ sub _generate_patch {
 
     # Copy over the debian directory.
     erasedir("$tmpdir/debian");
-    system('cp', '-RPp', '--', "$dir/debian", "$tmpdir/");
-    subprocerr("cp $dir/debian $tmpdir/") if $?;
+    spawn(
+        exec => [ 'cp', '-RPp', '--', "$dir/debian", "$tmpdir/" ],
+        wait_child => 1,
+    );
 
     # Apply all patches except the last automatic one.
     $opts{skip_auto} //= 0;
@@ -829,8 +834,10 @@ sub do_commit {
     if (not $editor) {
         error(g_('cannot find an editor'));
     }
-    system($editor, $patch);
-    subprocerr($editor) if $?;
+    spawn(
+        exec => [ $editor, $patch ],
+        wait_child => 1,
+    );
     unlink($tmpdiff) or syserr(g_('cannot remove %s'), $tmpdiff);
     pop_exit_handler();
     info(g_('local changes have been recorded in a new patch: %s'), $patch);

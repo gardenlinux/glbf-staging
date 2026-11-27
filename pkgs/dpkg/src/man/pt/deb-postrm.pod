@@ -22,7 +22,7 @@ B<DEBIAN/postrm>
 
 =head1 DESCRIÇÃO
 
-Um pacote pode executar várias acções de pós-remoção via scripts de maintainer ao incluir um ficheiro executável I<postrm> no seu arquivo de controle (isto é, I<DEBIAN/postrm>) durante a criação do pacote.
+Um pacote pode executar várias ações de pós-remoção via scripts de maintainer ao incluir um ficheiro executável I<postrm> no seu arquivo de controle (isto é, I<DEBIAN/postrm>) durante a criação do pacote.
 
 O script pode ser chamado nos seguintes modos:
 
@@ -38,13 +38,13 @@ Após o pacote ser purgado.
 
 =item I<old-postrm> B<upgrade> I<new-version>
 
-Após o pacote ser actualizado.
+Após o pacote ser atualizado.
 
 =item I<new-postrm> B<failed-upgrade> I<old-version> I<new-version>
 
 Se a chamada B<upgrade> em cima falhar.
 
-Support for I<new-version> since dpkg 1.18.5.
+Suporte para I<new-version> desde dpkg 1.18.5.
 
 =item I<postrm> B<disappear> I<overwriter-package> I<overwriter-version>
 
@@ -58,13 +58,13 @@ Se I<preinst> falhar durante B<install>.
 
 Se I<preinst> falhar durante B<install> para a actualização de um pacote removido.
 
-Support for I<new-version> since dpkg 1.18.5.
+Suporte para I<new-version> desde dpkg 1.18.5.
 
 =item I<new-postrm> B<abort-upgrade> I<old-version> I<new-version>
 
 Se I<preinst> falhar durante B<upgrade>.
 
-Support for I<new-version> since dpkg 1.18.5.
+Suporte para I<new-version> desde dpkg 1.18.5.
 
 =back
 

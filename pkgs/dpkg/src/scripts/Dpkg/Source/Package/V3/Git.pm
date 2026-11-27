@@ -32,9 +32,10 @@ package Dpkg::Source::Package::V3::Git 0.02;
 
 use v5.36;
 
-use Cwd qw(abs_path getcwd);
+use Cwd qw(abs_path);
 use File::Basename;
 use File::Spec;
+use File::Copy;
 use File::Temp;
 
 use Dpkg::Gettext;
@@ -156,35 +157,55 @@ sub do_build {
 
     _check_workdir($dir);
 
-    my $old_cwd = getcwd();
-    chdir $dir or syserr(g_("cannot change directory to '%s'"), $dir);
-
     # Check for uncommitted files.
     # To support «dpkg-source -i», get a list of files equivalent to the ones
     # «git status» finds, and remove any ignored files from it.
     my @ignores = '--exclude-per-directory=.gitignore';
-    my $core_excludesfile = qx(git config --get core.excludesfile);
+    my $core_excludesfile;
+    spawn(
+        exec => [
+            'git', 'config',
+                '--get', 'core.excludesfile'
+        ],
+        chdir => $dir,
+        to_string => \$core_excludesfile,
+        wait_child => 1,
+        no_check => 1,
+    );
     chomp $core_excludesfile;
-    if (length $core_excludesfile && -e $core_excludesfile) {
+    if (length $core_excludesfile && -e "$dir/$core_excludesfile") {
         push @ignores, "--exclude-from=$core_excludesfile";
     }
-    if (-e '.git/info/exclude') {
+    if (-e "$dir/.git/info/exclude") {
         push @ignores, '--exclude-from=.git/info/exclude';
     }
-    open(my $git_ls_files_fh, '-|', 'git', 'ls-files', '--modified', '--deleted',
-         '-z', '--others', @ignores) or subprocerr('git ls-files');
+    my $git_ls_files_fh;
+    my $git_ls_files_pid = spawn(
+        exec => [
+            'git', 'ls-files',
+                '--modified',
+                '--deleted',
+                '-z',
+                '--others',
+                @ignores,
+        ],
+        chdir => $dir,
+        to_pipe => \$git_ls_files_fh,
+    );
     my @files;
     {
         local $_;
         local $/ = "\0";
         while (<$git_ls_files_fh>) {
             chomp;
-            if (! length $diff_ignore_regex || ! m/$diff_ignore_regex/o) {
+            if (! length $diff_ignore_regex || ! m/$diff_ignore_regex/) {
                 push @files, $_;
             }
         }
     }
     close($git_ls_files_fh) or subprocerr('git ls-files');
+    wait_child($git_ls_files_pid, cmdline => 'git ls-files');
+
     if (@files) {
         error(g_('uncommitted, not-ignored changes in working directory: %s'),
               join(' ', @files));
@@ -194,8 +215,6 @@ sub do_build {
     my $tmpdir;
     my $shallowfile;
     if ($self->{options}{git_depth}) {
-        chdir $old_cwd
-            or syserr(g_("cannot change directory to '%s'"), $old_cwd);
         $tmpdir = File::Temp->newdir(
             TEMPLATE => "$dirname.git.XXXXXX",
             DIR => $updir,
@@ -207,38 +226,42 @@ sub do_build {
         # create a shallow clone.
         info(g_('creating shallow clone with depth %s'),
                 $self->{options}{git_depth});
-        system(
-            'git', 'clone',
-            '--depth=' . $self->{options}{git_depth},
-            '--quiet',
-            '--bare',
-            '--end-of-options',
-            'file://' . abs_path($dir), $clone_dir
+        spawn(
+            exec => [
+                'git', 'clone',
+                    '--depth=' . $self->{options}{git_depth},
+                    '--quiet',
+                    '--bare',
+                    'file://' . abs_path($dir), $clone_dir,
+            ],
+            wait_child => 1,
         );
-        subprocerr('git clone') if $?;
-        chdir($clone_dir)
-            or syserr(g_("cannot change directory to '%s'"), $clone_dir);
-        $shallowfile = "$basenamerev.gitshallow";
-        system('cp', '-f', 'shallow', "$old_cwd/$shallowfile");
-        subprocerr("cp shallow $old_cwd/$shallowfile") if $?;
+        my $shallow_orig = "$clone_dir/shallow";
+        $shallowfile = File::Spec->catfile($self->{basedir}, "$basenamerev.gitshallow");
+        unlink $shallowfile;
+        copy($shallow_orig, $shallowfile)
+            or syserr(g_('cannot copy %s to %s'), $shallow_orig, $shallowfile);
     }
 
     # Create the git bundle.
-    my $bundlefile = "$basenamerev.git";
+    my $bundlefile = File::Spec->catfile($self->{basedir}, "$basenamerev.git");
     my @bundle_arg = $self->{options}{git_ref} ?
         (@{$self->{options}{git_ref}}) : '--all';
     info(g_('bundling: %s'), join(' ', @bundle_arg));
-    system('git', 'bundle', 'create', "$old_cwd/$bundlefile",
-           @bundle_arg,
-           # Ensure HEAD is included no matter what.
-           'HEAD',
-           # Avoids ambiguity error when referring to, for example, a debian
-           # branch.
-           '--',
+    spawn(
+        exec => [
+            'git', 'bundle', 'create', abs_path($bundlefile),
+                @bundle_arg,
+                # Ensure HEAD is included no matter what.
+                'HEAD',
+                # Avoids ambiguity error when referring to, for example, a
+                # debian branch.
+                '--',
+        ],
+        chdir => $dir,
+        wait_child => 1,
     );
-    subprocerr("git bundle create $old_cwd/$bundlefile") if $?;
 
-    chdir $old_cwd or syserr(g_("cannot change directory to '%s'"), $old_cwd);
 
     if (defined $tmpdir) {
         erasedir($tmpdir);
@@ -289,14 +312,15 @@ sub do_extract {
     # Extract git bundle.
     info(g_('cloning %s'), $bundle);
     my $bundle_path = File::Spec->catfile($self->{basedir}, $bundle);
-    system(
-        'git', 'clone',
-        '--quiet',
-        '--origin=bundle',
-        '--end-of-options',
-        $bundle_path, $newdirectory
+    spawn(
+        exec => [
+            'git', 'clone',
+                '--quiet',
+                '--origin=bundle',
+                $bundle_path, $newdirectory
+        ],
+        wait_child => 1,
     );
-    subprocerr('git bundle') if $?;
 
     if (defined $shallow) {
         # Move shallow info file into place, so git does not try to follow
@@ -304,8 +328,9 @@ sub do_extract {
         info(g_('setting up shallow clone'));
         my $shallow_orig = File::Spec->catfile($self->{basedir}, $shallow);
         my $shallow_dest = File::Spec->catfile($newdirectory, '.git', 'shallow');
-        system('cp', '-f',  $shallow_orig, $shallow_dest);
-        subprocerr('cp') if $?;
+        unlink $shallow_dest;
+        copy($shallow_orig, $shallow_dest)
+            or syserr(g_('cannot copy %s to %s'), $shallow_orig, $shallow_dest);
     }
 
     _check_workdir($newdirectory);
@@ -314,12 +339,19 @@ sub do_extract {
         my $remote = 'origin';
         my ($url, $head) = _parse_vcs_git($fields->{'Vcs-Git'});
 
-        my @git_remote_add = (qw(git -C), $newdirectory, qw(remote add));
-        push @git_remote_add, '-m', $head if defined $head;
+        my @remote_opts;
+        push @remote_opts, '-m', $head if defined $head;
 
         info(g_('setting remote %s to %s'), $remote, $url);
-        system(@git_remote_add, $remote, $url);
-        subprocerr('git remote add') if $?;
+        spawn(
+            exec => [
+                'git', 'remote', 'add',
+                    @remote_opts,
+                    $remote, $url,
+            ],
+            chdir => $newdirectory,
+            wait_child => 1,
+        );
     }
 }
 

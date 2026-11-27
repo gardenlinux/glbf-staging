@@ -40,7 +40,7 @@ Après le déclenchement des actions différées du paquet. La liste des I<noms-
 
 Si I<prerm> échoue durant B<upgrade> ou échoue après B<failed-upgrade>.
 
-=item I<ancien-postinst> B<abort-remove>
+=item I<postinst> B<abort-remove>
 
 Si I<prerm> échoue durant B<remove>.
 

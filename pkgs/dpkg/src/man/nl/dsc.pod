@@ -24,7 +24,7 @@ I<bestandsnaam>B<.dsc>
 
 Elk Debian-broncodepakket bestaat uit een .dsc-controlebestand, dat een aantal velden bevat volgens de indeling L<deb822(5)>.
 
-Ieder veld begint met een markering, zoals B<Source> of B<Binary> (niet hoofdlettergevoelig), gevolgd door een dubbele punt en de tekstinhoud van het veld (hoofdlettergevoelig tenzij anders vermeld). Velden worden enkel door veldmarkeringen begrensd. De tekstinhoud van het veld kan met andere woorden verschillende regels lang zijn, maar de installatiegereedschappen zullen bij het verwerken van de tekstinhoud de regels gewoonlijk samenvoegen (behalve in het geval van de multiregel-velden B<Package-List>, B<Files>, B<Checksums-Sha1> en B<Checksums-Sha256>; zie hierna)
+Ieder veld begint met een markering, zoals B<Source> of B<Binary> (niet hoofdlettergevoelig), gevolgd door een dubbele punt en de tekstinhoud van het veld (hoofdlettergevoelig tenzij anders vermeld). Velden worden alleen door veldmarkeringen begrensd. De tekstinhoud van het veld kan met andere woorden verschillende regels lang zijn, maar de installatiegereedschappen zullen bij het verwerken van de tekstinhoud de regels gewoonlijk samenvoegen (behalve in het geval van de multiregel-velden B<Package-List>, B<Files>, B<Checksums-Sha1> en B<Checksums-Sha256>; zie hierna)
 
 De controle-data mogen ingesloten liggen in een OpenPGP-handtekening met ASCII-harnas volgens de specificatie RFC9580.
 
@@ -70,13 +70,13 @@ De naam van de distributie waaruit dit pakket afkomstig is.
 
 Moet opgemaakt worden volgens de indeling “Joe Bloggs E<lt>jbloggs@foo.comE<gt>”, en is gewoonlijk de persoon die het pakket maakte, in tegenstelling tot de auteur van de verpakte software.
 
-The format is described in L<deb-email(7)>.
+De indeling wordt beschreven in L<deb-email(7)>.
 
 =item B<Uploaders:> I<lijst van volledige-namen-en-e-mailadressen>
 
 Somt al de namen en de e-mailadressen op van de personen die het pakket mee onderhouden volgens dezelfde indeling als van het veld B<Maintainer>. Meerdere mede-beheerders moeten onderling door een komma gescheiden worden.
 
-The format is described in L<deb-email(7)>.
+De indeling wordt beschreven in L<deb-email(7)>.
 
 =item B<Description:> I<korte-beschrijving>
 
@@ -86,7 +86,7 @@ De indeling van een pakketbeschrijving bestaat uit een beknopte korte samenvatti
 
 =item B<Homepage:> I<URL>
 
-De I<URL> van de homepage van het toeleverend project (upstream).
+De I<URL> van de homepage van het bovenstrooms project.
 
 =item B<Standards-Version:> I<versietekenreeks> (aanbevolen)
 
@@ -120,9 +120,9 @@ Dit veld declareert dat het broncodepakket de opgegeven testsuites bevat. De waa
 
 =item B<Testsuite-Triggers:> I<pakketlijst>
 
-Dit veld declareert de door komma's gescheiden unie van alle testvereisten (de velden B<Depends> uit het bestand I<debian/tests/control>), waaruit alle restricties verwijderd en alle OR-vereisten uitgevlakt werden (dit betekent omgezet naar aparte AND-relaties), uitgezonderd voor de binaire pakketten, gegenereerd door dit broncodepakket en het equivalent van zijn meta-vereiste B<@>.
+Dit veld declareert de door komma's gescheiden unie van alle testafhankelijkheden (de velden B<Depends> uit het bestand I<debian/tests/control>), waaruit alle restricties verwijderd en alle OR-afhankelijkheden uitgevlakt werden (dit betekent omgezet naar aparte AND-relaties), uitgezonderd voor de binaire pakketten, gegenereerd door dit broncodepakket en het equivalent van zijn meta-vereiste B<@>.
 
-B<Motivering>: dit veld is noodzakelijk omdat anders elk broncodepakket uitgepakt zou moeten worden om de testvereisten te kunnen achterhalen.
+B<Motivering>: dit veld is noodzakelijk omdat anders elk broncodepakket uitgepakt zou moeten worden om de testafhankelijkheden te kunnen achterhalen.
 
 =item B<Build-Depends:> I<pakketlijst>
 
@@ -191,7 +191,7 @@ Indien het binaire pakket essentieel (essential) is, zal dit trefwoord de waarde
 
 =item S< >I<controlegetal> I<grootte> I<bestandsnaam>
 
-Deze multiregel-velden bevatten een lijst van bestanden met voor elk van hen een controlegetal en een grootte. Deze velden hebben een identieke syntaxis en verschillen onderling enkel inzake het gebruikte algoritme voor het controlegetal: MD5 voor B<Files>, SHA-1 voor B<Checksums-Sha1> en SHA-256 voor B<Checksums-Sha256>.
+Deze multiregel-velden bevatten een lijst van bestanden met voor elk van hen een controlegetal en een grootte. Deze velden hebben een identieke syntaxis en verschillen onderling alleen inzake het gebruikte algoritme voor het controlegetal: MD5 voor B<Files>, SHA-1 voor B<Checksums-Sha1> en SHA-256 voor B<Checksums-Sha256>.
 
 De eerste regel van de veldwaarde (het deel dat op dezelfde regel staat als de door een dubbele punt gevolgde veldnaam) is steeds leeg. De inhoud van het veld wordt in de vervolgregels verwoord, één regel per bestand. Elke regel bestaat uit het controlegetal, een spatie, de bestandsgrootte, een spatie en de bestandsnaam.
 

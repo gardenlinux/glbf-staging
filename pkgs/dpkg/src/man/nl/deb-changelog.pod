@@ -22,7 +22,7 @@ B<debian/changelog>
 
 =head1 BESCHRIJVING
 
-Wijzigingen aan de ingepakte versie van een project worden in het changelog-bestand I<debian/changelog> toegelicht. Daar vallen in de broncode aangebrachte veranderingen ten opzichte van die van de toeleveraar onder, evenals andere wijzigingen en updates aan het pakket.
+Wijzigingen aan de ingepakte versie van een project worden in het changelog-bestand I<debian/changelog> toegelicht. Daar vallen in de broncode aangebrachte veranderingen ten opzichte van de bovenstroomse versie onder, evenals andere wijzigingen en updates aan het pakket.
 
 De indeling van het bestand I<debian/changelog> laat het gereedschap voor het bouwen van pakketten toe om uit te zoeken welke versie van het pakket gebouwd wordt en om andere release-specifieke informatie te weten te komen.
 
@@ -52,11 +52,11 @@ Zijn waarde wordt gebruikt voor het B<Urgency>-veld in het I<.changes>-bestand v
 
 =item B<binary-only>
 
-Met als waarde B<yes> wordt het gebruikt om aan te geven dat dit changelog-item betrekking heeft op een niet door de pakketbeheerder gedane upload van enkel het(de) binaire pakket(ten) (een automatisch opnieuw bouwen van het(de) binaire pakket(ten) met het changelog-item als enige aangebrachte wijziging).
+Met als waarde B<yes> wordt het gebruikt om aan te geven dat dit changelog-item betrekking heeft op een niet door de pakketbeheerder gedane upload van alleen het(de) binaire pakket(ten) (een automatisch opnieuw bouwen van het(de) binaire pakket(ten) met het changelog-item als enige aangebrachte wijziging).
 
 =back
 
-The change details may be any series of lines starting with at least two spaces (U+0020 B<SPACE>), but conventionally each change starts with an asterisk and a separating space and continuation lines are indented so as to bring them in line with the start of the text above.  Blank lines may be used here to separate groups of changes, if desired.
+De informatie over de wijzigingen kan om het even welk aantal regels beslaan die beginnen met minstens twee spaties (U+0020 B<SPACE>). Gewoonlijk begint men bij het beschrijven van een wijziging steeds met een asterisk, gevolgd door een spatie. Eventuele vervolgregels springen zo in dat ze uitgelijnd zijn met de tekst van de regel erboven. Als men dat wenst kunnen blanco regels gebruikt worden om groepen van veranderingen onderling te scheiden.
 
 Indien deze upload bugs oplost die vermeld staan in het bugvolgsysteem van de distributie, kunnen die automatisch gesloten worden op het ogenblik dat het pakket opgenomen wordt in het archief van de distributie, indien de tekenreeks:
 
@@ -78,7 +78,7 @@ Dat wil zeggen dat de tekenreks moet bestaan uit het woord B<closes:> gevolgd do
 
 Deze informatie wordt overgebracht via het veld B<Closes> in het bestand I<.changes>, waarbij, afhankelijk van de software voor archiefonderhoud, alle vermelde bugnummers automatisch gesloten kunnen worden.
 
-The maintainer name and email address used in the changelog should be the details of the person who prepared this release of the package.  They are B<not> necessarily those of the uploader or usual package maintainer.  The format for the name and email address is described in L<deb-email(7)>.  The information here will be copied to the B<Changed-By> field in the I<.changes> file, and then later might be used to send an acknowledgment when the upload has been installed in the distribution archive.
+De naam van de beheerder en het e-mailadres die in het changelog-bestand vermeld worden moeten betrekking hebben op de persoon die deze release van het pakket voorbereidde. Deze gegevens betreffen B<niet> noodzakelijk de persoon die het pakket uploadt of de persoon die het pakket gewoonlijk onderhoudt. De indeling voor de naam en het e-mailadres wordt beschreven in L<deb-email(7)>. De hier vermelde informatie wordt gekopieerd naar het veld B<Changed-By> in het bestand I<.changes> en zal later, wanneer de upload in het distributiearchief ondergebracht wordt, gebruikt worden voor het zenden van een kennisgeving.
 
 De I<datum> heeft de volgende indeling (compatibel met en met dezelfde betekenis als in RFC2822 en RFC5322, of hetgeen het commando «date -R» genereert):
 

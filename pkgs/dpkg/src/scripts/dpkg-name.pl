@@ -24,6 +24,7 @@ use List::Util qw(none);
 use File::stat ();
 use File::Basename;
 use File::Path qw(make_path);
+use File::Copy;
 
 use Dpkg ();
 use Dpkg::Gettext;
@@ -34,6 +35,10 @@ use Dpkg::Control;
 use Dpkg::Arch qw(get_host_arch);
 
 textdomain('dpkg-dev');
+
+my $PROG_SYNOPSIS = N_(
+    'binary package archive renaming tool'
+);
 
 my %options = (
     subdir => 0,
@@ -49,6 +54,9 @@ sub usage
     printf g_(
 "Usage: %s [<option>...] <file>...\n" .
     ''), $Dpkg::PROGNAME;
+    print_option_sep();
+
+    print_synopsis($PROG_SYNOPSIS);
     print_option_sep();
 
     printf g_(
@@ -197,7 +205,7 @@ sub getdir
     return $dir;
 }
 
-sub move
+sub rename_archive
 {
     my $filename = shift;
 
@@ -230,18 +238,17 @@ sub move
 
         my $newname = "$dir/$name";
 
-        my @command;
-        if ($options{symlink}) {
-            @command = qw(ln -s --);
-        } else {
-            @command = qw(mv --);
-        }
-
         if (filesame($newname, $filename)) {
             warning(g_("skipping '%s'"), $filename);
         } elsif (-f $newname and not $options{overwrite}) {
             warning(g_("cannot move '%s' to existing file"), $filename);
-        } elsif (system(@command, $filename, $newname) == 0) {
+        } elsif ($options{symlink}) {
+            unlink $newname if $options{overwrite};
+            symlink $filename, $newname
+                or syserr(g_('cannot create symbolic link %s to %s'),
+                          $filename, $newname);
+            info(g_("linked '%s' to '%s'"), basename($filename), $newname);
+        } elsif (move($filename, $newname)) {
             info(g_("moved '%s' to '%s'"), basename($filename), $newname);
         } else {
             error(g_('mkdir can be used to create directory'));
@@ -285,5 +292,5 @@ while (@ARGV) {
 @files or usageerr(g_('need at least a filename'));
 
 foreach my $file (@files) {
-    move($file);
+    rename_archive($file);
 }

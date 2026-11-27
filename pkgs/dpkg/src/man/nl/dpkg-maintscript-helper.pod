@@ -41,7 +41,7 @@ B<dpkg-maintscript-helper> I<commando> [I<parameter>...] B<--> I<beheerderscript
 
 Dit programma is ontwikkeld om uitgevoerd te worden binnenin beheerderscripts om sommige taken te verrichten die B<dpkg> (nog) niet alleen kan uitvoeren, ofwel omwille van gemaakte keuzes inzake design ofwel ten gevolge van actuele beperkingen.
 
-Many of those tasks require coordinated actions from several maintainer scripts (B<preinst>, B<postinst>, B<prerm>, B<postrm>).  To avoid mistakes the same call needs to be put in all scripts and the program will automatically adapt its behavior based on the environment variable B<DPKG_MAINTSCRIPT_NAME> and on the maintainer scripts arguments that you have to forward after a double hyphen.
+Veel van deze taken vereisen gecoördineerde actie van verschillende beheerderscripts (B<preinst>, B<postinst>, B<prerm>, B<postrm>). Om fouten te vermijden moet dezelfde aanroep in alle scripts geplaatst worden en het programma zal zijn gedrag automatisch aan passen op basis van de omgevingsvariabele B<DPKG_MAINTSCRIPT_NAME> en de argumenten van de beheerderscripts die na een dubbel koppelteken opgegeven moeten worden.
 
 Dit programma werd geïntroduceerd in dpkg 1.15.7.
 
@@ -155,9 +155,9 @@ Huidige toepassing: het script B<preinst> controleert of de map bestaat en geen 
 
 =head1 DE INTEGRATIE IN PAKKETTEN
 
-When using a packaging helper, check if it has native B<dpkg-maintscript-helper> integration, which might make your life easier. See for example L<dh_installdeb(1)>.
+Controleer bij het gebruik van een verpakkingshulpmiddel of dit beschikt over ingebouwde integratie met B<dpkg-maintscript-helper>, wat u het leven makkelijker zou maken. Zie bijvoorbeeld L<dh_installdeb(1)>.
 
-Gegeven het feit dat B<dpkg-maintscript-helper> gebruikt wordt in het script B<preinst>, houdt een onvoorwaardelijk gebruik ervan een versiegebonden voorvereiste in om te kunnen garanderen dat de benodigde versie van B<dpkg> voordien uitgepakt werd, tenzij we weten dat we upgraden vanaf een release waarin de vereiste dpkg-versie al aanwezig is. De benodigde versie hangt af van het gebruikte commando. Voor B<rm_conffile> en B<mv_conffile> is dat 1.15.7.2. Voor B<symlink_to_dir> en B<dir_to_symlink> is dat 1.17.14. Als we bijvoorbeeld ondersteuning voor B<symlink_to_dir> nodig hebben bij een upgrade van een release met een dpkg-versie ouder dan 1.17.14, dan moeten we het volgende toevoegen:
+Gegeven het feit dat B<dpkg-maintscript-helper> gebruikt wordt in het script B<preinst>, houdt een onvoorwaardelijk gebruik ervan een versiegebonden voor-afhankelijkheid in om te kunnen garanderen dat de benodigde versie van B<dpkg> voordien uitgepakt werd, tenzij we weten dat we upgraden vanaf een release waarin de afhankelijkheid dpkg-versie al aanwezig is. De benodigde versie hangt af van het gebruikte commando. Voor B<rm_conffile> en B<mv_conffile> is dat 1.15.7.2. Voor B<symlink_to_dir> en B<dir_to_symlink> is dat 1.17.14. Als we bijvoorbeeld ondersteuning voor B<symlink_to_dir> nodig hebben bij een upgrade van een release met een dpkg-versie ouder dan 1.17.14, dan moeten we het volgende toevoegen:
 
 =over 
 
@@ -165,7 +165,7 @@ Gegeven het feit dat B<dpkg-maintscript-helper> gebruikt wordt in het script B<p
 
 =back
 
-Maar in veel gevallen is de operatie die door het programma uitgevoerd wordt, niet kritiek van aard voor het pakket en in plaats van een voorafgaande vereiste te gebruiken, kunnen we ook het programma pas aanroepen als we weten dat het benodigde programma ondersteund wordt door de huidige geïnstalleerde versie van B<dpkg>:
+Maar in veel gevallen is de operatie die door het programma uitgevoerd wordt, niet kritiek van aard voor het pakket en in plaats van een voor-afhankelijkheid te gebruiken, kunnen we ook het programma pas aanroepen als we weten dat het benodigde programma ondersteund wordt door de huidige geïnstalleerde versie van B<dpkg>:
 
 =over 
 
@@ -194,7 +194,7 @@ Indien dit ingesteld werd, zal dit gebruikt worden als de datamap voor B<dpkg>.
 
 Stelt de kleurmodus in. Waarden die momenteel gebruikt mogen worden zijn: B<auto> (standaard), B<always> en B<never>.
 
-Supported since dpkg 1.19.1.
+Ondersteund sinds dpkg 1.19.1.
 
 =back
 

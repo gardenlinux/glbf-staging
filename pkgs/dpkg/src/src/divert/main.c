@@ -49,6 +49,9 @@
 #include <dpkg/db-fsys.h>
 
 
+static const char prog_synopsis[] = N_(
+	"binary package file location diversion program"
+);
 static const char printforhelp[] = N_(
 "Use --help for help about diverting files.");
 
@@ -62,26 +65,14 @@ static int opt_rename = -1;
 
 
 static int
-printversion(const char *const *argv)
-{
-	printf(_("Debian %s version %s.\n"), dpkg_get_progname(),
-	       PACKAGE_RELEASE);
-
-	printf(_(
-"This is free software; see the GNU General Public License version 2 or\n"
-"later for copying conditions. There is NO warranty.\n"));
-
-	m_output(stdout, _("<standard output>"));
-
-	return 0;
-}
-
-static int
 usage(const char *const *argv)
 {
 	printf(_(
 "Usage: %s [<option>...] <command>\n"
 	), dpkg_get_progname());
+	print_option_sep();
+
+	print_synopsis(prog_synopsis);
 	print_option_sep();
 
 	printf(_(
@@ -438,7 +429,7 @@ divertdb_write(void)
 	struct fsys_hash_iter *iter;
 	struct fsys_namenode *namenode;
 
-	dbname = dpkg_db_get_path(DIVERSIONSFILE);
+	dbname = dpkg_db_get_path(DPKG_DB_DIVERSIONS_FILE);
 
 	file = atomic_file_new(dbname, ATOMIC_FILE_BACKUP);
 	atomic_file_open(file);
@@ -903,7 +894,7 @@ static const struct cmdinfo cmdinfos[] = {
 	ACTION("listpackage", 0, 0, diversion_listpackage),
 	ACTION("truename",    0, 0, diversion_truename),
 	ACTION("help",        '?', 0, usage),
-	ACTION("version",     0,   0, printversion),
+	ACTION("version",     0,   0, print_version),
 
 	{ "admindir",   0,   1,  NULL,         NULL,      set_admindir, 0 },
 	{ "instdir",    0,   1,  NULL,         NULL,      set_instdir,  0 },

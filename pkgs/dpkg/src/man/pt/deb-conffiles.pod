@@ -22,7 +22,7 @@ B<DEBIAN/conffiles>
 
 =head1 DESCRIÇÃO
 
-Um pacote declara a lista de conffiles ao incluir um ficheiro I<conffiles> no seu arquivo de controlo (isto é,  I<DEBIAN/conffiles>) durante a criação do pacote.
+Um pacote declara a lista de conffiles ao incluir um ficheiro I<conffiles> no seu arquivo de controlo (isto é, I<DEBIAN/conffiles>) durante a criação do pacote.
 
 Este ficheiro contém uma lista de ficheiros, um por linha, com uma bandeira inicial opcional separada por espaço em branco. Os conffiles têm de estar listados com nomes de caminho absolutos. Os espaços em branco finais serão cortados, mas linhas vazias ou só com espaços em branco não são aceites.
 

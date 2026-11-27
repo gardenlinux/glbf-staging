@@ -26,7 +26,7 @@ Een pakket declareert de MD5-frommels voor de inhoud van het pakketbestand door 
 
 Dit bestand bevat een lijst van MD5-frommels (als 32 niet-hoofdlettergevoelige hexadecimale tekens), gevolgd door twee spaties (U+0020 B<SPACE>) en de absolute padnaam van een gewoon bestand, één per regel.
 
-Slashes (U+002F B</>) achteraan de padnaam worden verwijderd. Spaties achteraan of lege regels of regels met enkel spaties worden niet aanvaard.
+Slashes (U+002F B</>) achteraan de padnaam worden verwijderd. Spaties achteraan of lege regels of regels met alleen spaties worden niet aanvaard.
 
 Als het controlebestand niet bestaat in het binaire pakket, zal L<dpkg(1)> de overeenkomstige informatie genereren bij het uitpakken (sinds B<dpkg> 1.16.3).
 

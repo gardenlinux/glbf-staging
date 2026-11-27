@@ -54,13 +54,13 @@ De versie tonen en afsluiten.
 
 Stelt de kleurmodus in. Waarden die momenteel gebruikt mogen worden zijn: B<auto> (standaard), B<always> en B<never>.
 
-Supported since dpkg 1.18.5.
+Ondersteund sinds dpkg 1.18.5.
 
 =item B<DPKG_NLS>
 
 Indien dit ingesteld is, zal het gebruikt worden om te beslissen over het activeren van moedertaalondersteuning, ook gekend als internationaliseringsondersteuning (of i18n). Geldige waarden zijn: B<0> and B<1> (standaard).
 
-Supported since dpkg 1.19.0.
+Ondersteund sinds dpkg 1.19.0.
 
 =back
 

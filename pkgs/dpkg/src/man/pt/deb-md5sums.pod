@@ -22,7 +22,7 @@ B<DEBIAN/md5sums>
 
 =head1 DESCRIÇÃO
 
-Um pacote declara os resumos MD5 para o conteúdo do ficheiro pacote ao incluir um ficheiro I<md5sums> no seu arquivo de controlo (isto é, I<DEBIAN/md5sums> durante a criação do pacote). Este ficheiro é usado para verificação de integridade e objectivos de de-duplicação, e não para nenhum tipo de objectivo de segurança.
+Um pacote declara os resumos MD5 para o conteúdo do ficheiro pacote ao incluir um ficheiro I<md5sums> no seu arquivo de controlo (isto é, I<DEBIAN/md5sums> durante a criação do pacote). Este ficheiro é usado para verificação de integridade e objetivos de de-duplicação, e não para nenhum tipo de objectivo de segurança.
 
 Este ficheiro contém uma lista de resumos MD5 (como 32 caracteres hexadecimais sensíveis a minúsculas/maiúsculas) seguido de dois espaços (U+0020 B<SPACE>) e o caminho absoluto dum ficheiro simples, um por cada linha.
 

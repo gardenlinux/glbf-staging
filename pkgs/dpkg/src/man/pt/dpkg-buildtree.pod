@@ -36,11 +36,11 @@ Remove todos os artefactos gerados durante uma compilação pelas várias ferram
 
 =item B<is-rootless>
 
-Checks whether the build tree can be built with no root privileges.
+Verifica se a árvore de compilação pode ser compilada sem privilégios de root.
 
 Este comando pode ser usado em segurança mesmo com versões onde o comando ainda não estava disponível pois a predefinição será a histórica onde root era requerido.
 
-Supported since dpkg 1.22.12.
+Suportado desde dpkg 1.22.12.
 
 =item B<--help>
 
@@ -62,7 +62,7 @@ Define o modo de cor. Os valores actualmente aceites são: B<auto> (predefinido)
 
 =item B<DPKG_NLS>
 
-Se definida, será usada para decidir se deve activar o Suporte a Linguagem Nativa. Também como conhecido como suporte de internacionalização (ou i18n). Os valores aceites são B<0> e B<1> (predefinição).
+Se definida, será usada para decidir se deve ativar o Suporte a Linguagem Nativa. Também como conhecido como suporte de internacionalização (ou i18n). Os valores aceites são B<0> e B<1> (predefinição).
 
 =back
 

@@ -42,20 +42,16 @@
 #include <dpkg/db-fsys.h>
 #include <dpkg/options.h>
 
+static const char prog_synopsis[] = N_(
+	"package management root directory aware pathname resolving tool"
+);
 static const char printforhelp[] = N_(
 "Use --help for help about this utility.");
 
 static void DPKG_ATTR_NORET
 printversion(const struct cmdinfo *cip, const char *value)
 {
-	printf(_("Debian %s version %s.\n"), dpkg_get_progname(),
-	       PACKAGE_RELEASE);
-
-	printf(_(
-"This is free software; see the GNU General Public License version 2 or\n"
-"later for copying conditions. There is NO warranty.\n"));
-
-	m_output(stdout, _("<standard output>"));
+	print_version(NULL);
 
 	exit(0);
 }
@@ -67,6 +63,9 @@ usage(const struct cmdinfo *cip, const char *value)
 "Usage: %s [<option>...] <pathname>\n"
 "       %s <command>\n"
 	), dpkg_get_progname(), dpkg_get_progname());
+	print_option_sep();
+
+	print_synopsis(prog_synopsis);
 	print_option_sep();
 
 	printf(_(

@@ -42,7 +42,7 @@ Os ficheiros existentes serão sobrescritos se tiverem o mesmo nome que o nome d
 
 =item B<-s>, B<--subdir> [I<dir>]
 
-Files will be moved into a subdirectory.  If the directory given as argument exists the files will be moved into that directory otherwise the name of the target directory is extracted from the section field in the control part of the package.  The target directory will be «unstable/binary-I<architecture>/I<section>».  If the section is not found in the control, then B<no-section> is assumed, and in this case, as well as for sections B<contrib>, B<non-free-firmware> and B<non-free> the target directory is «I<section>/binary-I<architecture>».  The section field is not required so a lot of packages will find their way to the B<no-section> area.
+Os ficheiros serão movidos para um sub-directório. Se o directório dado como argumento existir, os ficheiros serão movidos para esse directório, caso contrário, o nome do directório alvo é extraído do campo section na parte de controlo do pacote. O directório alvo irá ser «unstable/binary-I<architecture>/I<section>».  Se a secção não for encontrada no controlo, então é assumido B<no-section>, e neste caso, assim como para secções B<contrib>, B<non-free-firmware> e B<non-free> o directório alvo é «I<section>/binary-I<architecture>».  O campo section não é necessário, assim muitos pacotes irão encontrar o seu caminho até à área B<no-section>.
 
 B<Aviso>: Use esta opção com cuidado, ela faz porcaria.
 
@@ -74,13 +74,13 @@ Define a arquitectura da máquina anfitriã. Isto afecta o nome de arquitectura 
 
 Define o modo de cor. Os valores actualmente aceites são: B<auto> (predefinido), B<always> e B<never>.
 
-Supported since dpkg 1.18.5.
+Suportado desde dpkg 1.18.5.
 
 =item B<DPKG_NLS>
 
-Se definida, será usada para decidir se deve activar o Suporte a Linguagem Nativa. Também como conhecido como suporte de internacionalização (ou i18n). Os valores aceites são B<0> e B<1> (predefinição).
+Se definida, será usada para decidir se deve ativar o Suporte a Linguagem Nativa. Também como conhecido como suporte de internacionalização (ou i18n). Os valores aceites são B<0> e B<1> (predefinição).
 
-Supported since dpkg 1.19.0.
+Suportado desde dpkg 1.19.0.
 
 =back
 
