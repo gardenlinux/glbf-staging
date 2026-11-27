@@ -60,13 +60,16 @@
 
 #include "actions.h"
 
+static const char prog_synopsis[] = N_(
+	"binary package database query program"
+);
 static const char *opt_showformat = "${binary:Package}\t${Version}\n";
 
 static int opt_loadavail = 0;
 
 static int
 pkg_array_match_patterns(struct pkg_array *array,
-                         pkg_array_visitor_func *pkg_visitor, void *pkg_data,
+                         pkg_visitor_func *pkg_visitor, void *pkg_data,
                          const char *const *argv)
 {
 	int argc, i, ip, *found;
@@ -272,14 +275,12 @@ list_format_print_header(struct list_format *fmt)
 }
 
 static void
-pkg_array_list_item(struct pkg_array *array, struct pkginfo *pkg,
-                    void *pkg_data)
+pkg_array_list_item(struct pkginfo *pkg, void *pkg_data)
 {
 	struct list_format *fmt = pkg_data;
 	int l;
 	const char *pdesc;
 
-	list_format_init(fmt, array);
 	list_format_print_header(fmt);
 
 	pdesc = pkg_synopsis(pkg, &l);
@@ -312,6 +313,8 @@ listpackages(const char *const *argv)
 	pkg_array_sort(&array, pkg_sorter_by_nonambig_name_arch);
 
 	memset(&fmt, 0, sizeof(fmt));
+
+	list_format_init(&fmt, &array);
 
 	pager = pager_spawn(_("showing package list on pager"));
 
@@ -610,15 +613,7 @@ list_files(const char *const *argv)
 }
 
 static void
-pkg_array_load_db_fsys(struct pkg_array *array, struct pkginfo *pkg,
-                       void *pkg_data)
-{
-	ensure_packagefiles_available(pkg);
-}
-
-static void
-pkg_array_show_item(struct pkg_array *array, struct pkginfo *pkg,
-                    void *pkg_data)
+pkg_array_show_item(struct pkginfo *pkg, void *pkg_data)
 {
 	struct pkg_format_node *fmt = pkg_data;
 
@@ -666,7 +661,7 @@ showpackages(const char *const *argv)
 		}
 	} else {
 		if (fmt_needs_db_fsys)
-			pkg_array_foreach(&array, pkg_array_load_db_fsys, NULL);
+			pkg_array_foreach(&array, pkg_files_load_pkg, NULL);
 		misses = pkg_array_match_patterns(&array, pkg_array_show_item,
 		                                  fmt, argv);
 	}
@@ -850,25 +845,14 @@ set_no_pager(const struct cmdinfo *ci, const char *value)
 }
 
 static int
-printversion(const char *const *argv)
-{
-	printf(_("Debian %s package management program query tool version %s.\n"),
-	       DPKGQUERY, PACKAGE_RELEASE);
-	printf(_(
-"This is free software; see the GNU General Public License version 2 or\n"
-"later for copying conditions. There is NO warranty.\n"));
-
-	m_output(stdout, _("<standard output>"));
-
-	return 0;
-}
-
-static int
 usage(const char *const *argv)
 {
 	printf(_(
 "Usage: %s [<option>...] <command>\n"
 	), DPKGQUERY);
+	print_option_sep();
+
+	print_synopsis(prog_synopsis);
 	print_option_sep();
 
 	printf(_(
@@ -982,7 +966,7 @@ static const struct cmdinfo cmdinfos[] = {
 	ACTION( "control-list",                    0,  act_controllist,   control_list    ),
 	ACTION( "control-show",                    0,  act_controlshow,   control_show    ),
 	ACTION( "help",                           '?', act_help,          usage           ),
-	ACTION( "version",                         0,  act_version,       printversion    ),
+	ACTION( "version",                         0,  act_version,       print_version    ),
 
 	{ "admindir",   0,   1, NULL, NULL,        set_admindir, 0 },
 	{ "root",       0,   1, NULL, NULL,        set_root, 0   },

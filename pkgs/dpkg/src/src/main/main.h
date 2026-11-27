@@ -113,7 +113,9 @@ wanttoinstall(struct pkginfo *pkg);
 int
 forgetold(const char *const *argv);
 int
-updateavailable(const char *const *argv);
+available_update(const char *const *argv);
+int
+available_clear(const char *const *argv);
 
 /* from enquiry.c */
 
@@ -122,7 +124,7 @@ extern const char *assert_feature_name;
 int
 audit(const char *const *argv);
 int
-unpackchk(const char *const *argv);
+unpack_check(const char *const *argv);
 int
 assert_feature(const char *const *argv);
 int

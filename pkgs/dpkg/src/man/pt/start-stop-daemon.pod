@@ -40,15 +40,15 @@ Verifica a existência de um processo especificado. Se tal processo existir, B<s
 
 =item B<-T>, B<--status>
 
-Check for the existence of a specified process, and returns an exit status code, according to the LSB Init Script Actions
+Verifica a existência de um processo especificado, e devolve um código de estado de saída, de acordo com as Ações do Script Init do LSB (desde versão 1.16.1).
 
-Supported since version 1.16.1.
+Suportado desde versão 1.16.1.
 
 =item B<--pidof>
 
-Check for the existence of specified processes, print their PIDs, and returns an exist status just like B<--status>.
+Verifica a existência dos processos especificados, escreve os seus PIDs, e retorna um estado de saída tal como B<--status>.
 
-Supported since version 1.23.8.
+Suportado desde versão 1.23.8.
 
 =item B<-H>, B<--help>
 
@@ -68,21 +68,21 @@ Mostra a versão do programa e termina.
 
 =item B<--pid> I<pid>
 
-Check for a process with the specified I<pid>.  The I<pid> must be a number greater than 0.
+Verifica por um processo com o I<pid> especificado. O I<pid> tem de ser um número maior que 0.
 
-Supported since version 1.17.6.
+Suportado desde versão 1.17.6.
 
 =item B<--ppid> I<ppid>
 
-Check for a process with the specified parent pid I<ppid>.  The I<ppid> must be a number greater than 0.
+Verifica por um processo com o I<ppid> (pid pai) especificado. O I<ppid> tem de ser um número maior que 0.
 
-Supported since version 1.17.7.
+Suportado desde versão 1.17.7.
 
 =item B<-p>, B<--pidfile> I<pidfile>
 
 Verifica se um processo criou o ficheiro I<pidfile>.
 
-B<Nota>: Usar esta opção de correspondência sozinha pode causar que se actue em processos intencionalmente, se o processo antigo terminou sem ser capaz de remover o seu I<pidfile>.
+B<Nota>: Usar esta opção de correspondência sozinha pode causar que se atue em processos intencionalmente, se o processo antigo terminou sem ser capaz de remover o seu I<pidfile>.
 
 B<Aviso>: Usar esta opção de correspondência com um pidfile gravável mundialmente ou usa-la sozinha com um daemon que escreve o pidfile como um utilizador sem privilégios (não-root) irá ser recusada com um erro (desde versão 1.19.3) pois isto é um risco de segurança, porque ou o utilizador consegue escrever nele, ou se o daemon ficar comprometido, não se pode confiar no conteúdo do pidfile, e depois um programa privilegiado (tal como um script de init corrido como root) acabaria a actuar em qualquer processo do sistema. Usar I</dev/null> está isento destas verificações.
 
@@ -102,7 +102,7 @@ B<Nota>: Na maioria dos sistemas esta informação é obtida a partir do nome de
 
 Verifica por processos cujo dono é o utilizador especificado por I<username> ou I<uid>.
 
-B<Nota>: usar só esta opção de correspondência irá causar com que seja actuado em todos os processos que correspondem ao utilizador.
+B<Nota>: usar só esta opção de correspondência irá causar com que seja atuado em todos os processos que correspondem ao utilizador.
 
 =back
 
@@ -120,7 +120,7 @@ Com B<--stop>, especifica o sinal a enviar aos processos a serem parados (predef
 
 =item B<-R>, B<--retry> I<timeout>|I<schedule>
 
-Com B<--stop>, especifica que B<start-stop-daemon> deve verificar se o(s) processo(s) terminam mesmo. Irá verificar repetidamente se qualquer processo correspondente está a correr, até que nenhum esteja. Se os processos não terminarem irá então tomar mais acções como determinado pelo agendamento.
+Com B<--stop>, especifica que B<start-stop-daemon> deve verificar se o(s) processo(s) terminam mesmo. Irá verificar repetidamente se qualquer processo correspondente está a correr, até que nenhum esteja. Se os processos não terminarem irá então tomar mais ações como determinado pelo agendamento.
 
 Se for especificado I<timeout> em vez de I<schedule>, então agenda I<signal>B</>I<timeout>B</KILL/>I<timeout> é usada, onde I<signal> é o sinal especificado com B<--signal>.
 
@@ -134,7 +134,7 @@ Com B<--start>, inicia o processo especificado por I<nome-de-caminho>. Se não e
 
 =item B<-t>, B<--test>
 
-Escreve as acções que seriam tomadas e define valores de retorno apropriados, mas não toma nenhuma acção.
+Escreve as ações que seriam tomadas e define valores de retorno apropriados, mas não toma nenhuma acção.
 
 =item B<-o>, B<--oknodo>
 
@@ -150,7 +150,7 @@ Muda para este nome-utilizador/uid antes de arrancar o processo. Você também p
 
 =item B<-r>, B<--chroot> I<root>
 
-Change directory and chroot to I<root> before starting the process.  Note that the pidfile is also written after the chroot.
+Muda directório e chroot para I<root> antes de iniciar o processo. Note que o pidfile é também escrito após o chroot.
 
 =item B<-d>, B<--chdir> I<path>
 
@@ -164,7 +164,7 @@ B<Nota>: O estado de saída de uma falha inesperada tardia durante o processo de
 
 =item B<--notify-await>
 
-Wait for the background process to send a readiness notification before considering the service started This option can only be used with B<--background>.
+Espera pelo processo nos bastidores que envie uma notificação de prontidão antes de considerar o serviço arrancado.  Esta opção só pode ser usada com B<--background>.
 
 Isto implementa partes do protocolo de prontidão do systemd, como especificado no manual L<sd_notify(3)>.  As seguintes variáveis são suportadas:
 
@@ -184,25 +184,25 @@ O programa está a terminar com um erro. Faça o mesmo e escreva a string amiga-
 
 =back
 
-Supported since version 1.19.3.
+Suportado desde versão 1.19.3.
 
 =item B<--notify-timeout> I<timeout>
 
-Set a timeout for the B<--notify-await> option.  When the timeout is reached, B<start-stop-daemon> will exit with an error code, and no readiness notification will be awaited.  The default is B<60> seconds.
+Define o tempo limite para a opção B<--notify-await>. Quando o tempo limite é atingido, o B<start-stop-daemon> irá terminar com um código de erro, e não é esperada nenhuma notificação de prontidão. A predefinição é de B<60> segundos.
 
-Supported since version 1.19.3.
+Suportado desde versão 1.19.3.
 
 =item B<-C>, B<--no-close>
 
-Do not close any file descriptor when forcing the daemon into the background.  Used for debugging purposes to see the process output, or to redirect file descriptors to log the process output.  Only relevant when using B<--background>.
+Não fecha nenhum descritor de ficheiro quando força o daemon para os bastidores. Usado para objetivos de depuração para ver o resultado dos processos, ou para redirecionar os descritores de ficheiros para registar o resultado dos processos. Apenas relevante quando se usa B<--background>.
 
-Supported since version 1.16.5.
+Suportado desde versão 1.16.5.
 
 =item B<-O>, B<--output> I<pathname>
 
-Redirect B<stdout> and B<stderr> to I<pathname> when forcing the daemon into the background.  Only relevant when using B<--background>.
+Redireciona B<stdout> e B<stderr> para I<pathname> quando força o daemon a funcionar em segundo plano. Apenas relevante quando se usa B<--background>.
 
-Supported since version 1.20.6.
+Suportado desde versão 1.20.6.
 
 =item B<-N>, B<--nicelevel> I<int>
 
@@ -210,25 +210,25 @@ Isto altera a prioridade do processo antes de o iniciar.
 
 =item B<-P>, B<--procsched> I<policy>B<:>I<priority>
 
-This alters the process scheduler policy and priority of the process before starting it.  The priority can be optionally specified by appending a B<:> followed by the value.  The default I<priority> is 0.  The currently supported policy values are B<other>, B<fifo> and B<rr>.
+Isto altera a política de agendamento de processos e a prioridade dos processos antes de os iniciar. A prioridade pode ser opcionalmente especificada ao anexar um B<:> seguido de um valor. A predefinição de I<priority> é 0. Os valores de política actualmente suportados são B<other>, B<fifo> e B<rr>.
 
 Esta opção pode não fazer anda em alguns sistemas, onde o agendamento de processos POSIX não é suportado.
 
-Supported since version 1.15.0.
+Suportado desde versão 1.15.0.
 
 =item B<-I>, B<--iosched> I<class>B<:>I<priority>
 
-This alters the IO scheduler class and priority of the process before starting it.  The priority can be optionally specified by appending a B<:> followed by the value.  The default I<priority> is 4, unless I<class> is B<idle>, then I<priority> will always be 7.  The currently supported values for I<class> are B<idle>, B<best-effort> and B<real-time>.
+Isto altera a classe de agendamento IO e a prioridade dos processos antes de os iniciar. A prioridade pode ser opcionalmente especificada ao anexar um B<:> seguido de um valor. A predefinição de I<priority> é 4, a menos que I<class> seja B<idle>, então I<priority> será sempre 7. Os valores actualmente suportados para I<class> são B<idle>, B<best-effort> e B<real-time>.
 
 Esta opção pode não fazer anda em alguns sistemas, onde o agendamento de processos Linux IO não é suportado.
 
-Supported since version 1.15.0.
+Suportado desde versão 1.15.0.
 
 =item B<-k>, B<--umask> I<mask>
 
-This sets the umask of the process before starting it.
+Isto define a umask do processo antes de o iniciar.
 
-Supported since version 1.13.22.
+Suportado desde versão 1.13.22.
 
 =item B<-m>, B<--make-pidfile>
 
@@ -238,9 +238,9 @@ B<Nota>: Esta funcionalidade pode não funcionar em todos os casos. Mais notavel
 
 =item B<--remove-pidfile>
 
-Used when stopping a program that does not remove its own pid file.  This option will make B<start-stop-daemon> remove the file referenced with B<--pidfile> after terminating the process.
+Usado para parar um programa que não remove o seu próprio ficheiro pid. Esta opção irá fazer o B<start-stop-daemon> remover o ficheiro referenciado com B<--pidfile> após terminar o processo.
 
-Supported since version 1.17.19.
+Suportado desde versão 1.17.19.
 
 =item B<-v>, B<--verbose>
 
@@ -248,7 +248,7 @@ Escreve mensagens de informação detalhadas.
 
 =back
 
-=head1 ESTADO À SAÍDA
+=head1 ESTADO DE SAÍDA
 
 =over 
 
@@ -270,7 +270,7 @@ Qualquer outro erro.
 
 =back
 
-When using the B<--status> or B<--pidof> commands, the following status codes are returned:
+Quando se usa os comandos B<--status> ou B<--pidof>, são devolvidos os seguintes códigos de estado:
 
 =over 
 

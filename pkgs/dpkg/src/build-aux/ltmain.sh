@@ -31,7 +31,7 @@
 
 PROGRAM=libtool
 PACKAGE=libtool
-VERSION="2.6.2 Debian-2.6.2-2"
+VERSION="2.6.2 Debian-2.6.2-3"
 package_revision=2.6.2
 
 
@@ -2218,7 +2218,7 @@ func_version ()
 	year=`date +%Y`
 
 	cat <<EOF
-$progname $scriptversion Debian-2.6.2-2
+$progname $scriptversion Debian-2.6.2-3
 Copyright (C) $year Free Software Foundation, Inc.
 License GPLv2+: GNU GPL version 2 or later <https://gnu.org/licenses/gpl.html>
 This is free software: you are free to change and redistribute it.
@@ -2328,7 +2328,7 @@ include the following information:
        compiler:       $LTCC
        compiler flags: $LTCFLAGS
        linker:         $LD (gnu? $with_gnu_ld)
-       version:        $progname $scriptversion Debian-2.6.2-2
+       version:        $progname $scriptversion Debian-2.6.2-3
        automake:       `($AUTOMAKE --version) 2>/dev/null |$SED 1q`
        autoconf:       `($AUTOCONF --version) 2>/dev/null |$SED 1q`
 

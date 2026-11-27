@@ -24,7 +24,7 @@ B<DEBIAN/control>
 
 Elk binair Debian-pakket bevat een B<control>-bestand in zijn B<control>-element en zijn L<deb822(5)>-indeling is een gedeelte van het controlebestand B<debian/control> in Debian-bronpakketten, zie L<deb-src-control(5)>.
 
-Dit bestand bevat een aantal velden. Ieder veld begint met een markering, zoals B<Package> of B<Version> (niet hoofdlettergevoelig), gevolgd door een dubbele punt en de tekstinhoud van het veld (hoofdlettergevoelig tenzij anders vermeld). Velden worden enkel door veldmarkeringen begrensd. De tekstinhoud van het veld kan met andere woorden verschillende regels lang zijn, maar de installatiegereedschappen zullen bij het verwerken van de tekstinhoud de regels gewoonlijk samenvoegen (behalve voor het veld B<Description>; zie hierna).
+Dit bestand bevat een aantal velden. Ieder veld begint met een markering, zoals B<Package> of B<Version> (niet hoofdlettergevoelig), gevolgd door een dubbele punt en de tekstinhoud van het veld (hoofdlettergevoelig tenzij anders vermeld). Velden worden alleen door veldmarkeringen begrensd. De tekstinhoud van het veld kan met andere woorden verschillende regels lang zijn, maar de installatiegereedschappen zullen bij het verwerken van de tekstinhoud de regels gewoonlijk samenvoegen (behalve voor het veld B<Description>; zie hierna).
 
 =head1 VELDEN
 
@@ -48,7 +48,7 @@ B<Opmerking>: Bij sommige leveranciers is dpkg zo aangepast dat authentieke bron
 
 Moet opgemaakt worden volgens de indeling “Joe Bloggs E<lt>jbloggs@foo.comE<gt>”, en is gewoonlijk de persoon die het pakket maakte, in tegenstelling tot de auteur van de verpakte software.
 
-The format is described in L<deb-email(7)>.
+De indeling wordt beschreven in L<deb-email(7)>.
 
 =item B<Description:> I<korte-beschrijving> (aanbevolen)
 
@@ -74,17 +74,17 @@ Bij benadering de totale grootte van de door het pakket geïnstalleerde bestande
 
 =item B<Protected:> B<yes>|B<no>
 
-Meestal is dit veld enkel nodig als het antwoord B<yes> is. Het geeft een pakket aan dat doorgaans vereist is voor het correct opstarten van het systeem of gebruikt wordt voor aangepaste systeem-lokale metapakketten. L<dpkg(1)> of om het even welk ander installatiegereedschap zal niet toestaan dat een pakket van het type B<Protected> verwijderd wordt (tenminste niet zonder dat één van de forceeropties gebruikt wordt).
+Meestal is dit veld alleen nodig als het antwoord B<yes> is. Het geeft een pakket aan dat doorgaans vereist is voor het correct opstarten van het systeem of gebruikt wordt voor aangepaste systeem-lokale metapakketten. L<dpkg(1)> of om het even welk ander installatiegereedschap zal niet toestaan dat een pakket van het type B<Protected> verwijderd wordt (tenminste niet zonder dat één van de forceeropties gebruikt wordt).
 
 Ondersteund sinds dpkg 1.20.1.
 
 =item B<Essential:> B<yes>|B<no>
 
-Meestal is dit veld enkel nodig als het antwoord B<yes> is. Het geeft een pakket aan dat vereist is voor het verpakkingssysteem, voor de goede werking van het systeem in het algemeen of tijdens het opstarten (hoewel dit laatste in plaats daarvan zou moeten worden omgezet naar het veld B<Protected>). L<dpkg(1)> of om het even welk ander installatiegereedschap zal niet toestaan dat een pakket van het type B<Essential> verwijderd wordt (tenminste niet zonder dat één van de forceeropties gebruikt wordt).
+Meestal is dit veld alleen nodig als het antwoord B<yes> is. Het geeft een pakket aan dat vereist is voor het verpakkingssysteem, voor de goede werking van het systeem in het algemeen of tijdens het opstarten (hoewel dit laatste in plaats daarvan zou moeten worden omgezet naar het veld B<Protected>). L<dpkg(1)> of om het even welk ander installatiegereedschap zal niet toestaan dat een pakket van het type B<Essential> verwijderd wordt (tenminste niet zonder dat één van de forceeropties gebruikt wordt).
 
 =item B<Build-Essential:> B<yes>|B<no>
 
-Meestal is dit veld enkel nodig als het antwoord B<yes> is en het wordt gewoonlijk ingevoegd door de archiefsoftware. Het duidt een pakket aan dat vereist is voor het bouwen van andere pakketten.
+Meestal is dit veld alleen nodig als het antwoord B<yes> is en het wordt gewoonlijk ingevoegd door de archiefsoftware. Het duidt een pakket aan dat vereist is voor het bouwen van andere pakketten.
 
 =item B<Architecture:> B<all>|I<arch> (verplicht)
 
@@ -106,7 +106,7 @@ De I<URL> van het opvolgingssysteem voor bugs van dit pakket. De indeling die mo
 
 =item B<Homepage:> I<URL>
 
-De I<URL> van de homepage van het toeleverend project (upstream).
+De I<URL> van de homepage van het bovenstrooms project.
 
 =item B<Tag:> I<lijst-van-markeringen>
 
@@ -124,15 +124,15 @@ Dit is de standaardwaarde als dit veld weggelaten werd. Dit veld toevoegen met e
 
 =item B<same>
 
-Dit pakket is co-installeerbaar met zichzelf, maar het kan niet gebruikt worden om te voldoen aan een vereiste van een pakket dat tot een andere architectuur behoort.
+Dit pakket is co-installeerbaar met zichzelf, maar het kan niet gebruikt worden om te voldoen aan een afhankelijkheid van een pakket dat tot een andere architectuur behoort.
 
 =item B<foreign>
 
-Dit pakket is niet co-installeerbaar met zichzelf, maar het mag wel de toestemming krijgen om te voldoen aan een architectuurkwalificatieloze vereiste van een pakket dat tot een andere architectuur behoort (indien een vereiste wel een expliciete architectuurkwalificatie heeft, wordt de waarde B<foreign> genegeerd).
+Dit pakket is niet co-installeerbaar met zichzelf, maar het mag wel de toestemming krijgen om te voldoen aan een architectuurkwalificatieloze afhankelijkheid van een pakket dat tot een andere architectuur behoort (indien een afhankelijkheid wel een expliciete architectuurkwalificatie heeft, wordt de waarde B<foreign> genegeerd).
 
 =item B<allowed>
 
-Dit laat pakketten die dit pakket als vereiste hebben (reverse-dependencies) toe om in hun B<Depends>-veld aan te geven dat ze dit pakket ook van een andere architectuur aanvaarden door bij de pakketnaam de kwalificatie B<:any> te vermelden. Anders blijft dit zonder effect.
+Dit laat pakketten die van dit pakket afhankelijk zijn (reverse-dependencies) toe om in hun B<Depends>-veld aan te geven dat ze dit pakket ook van een andere architectuur aanvaarden door bij de pakketnaam de kwalificatie B<:any> te vermelden. Anders blijft dit zonder effect.
 
 =back
 
@@ -198,29 +198,29 @@ Dit is een lijst met pakketten waarvoor dit pakket uitbreidingen biedt. Het is v
 
 =item B<Provides:> I<pakketlijst>
 
-Dit is een lijst van virtuele pakketten waarin door dit pakket voorzien wordt. Gewoonlijk wordt dit gebruikt in het geval meerdere pakketten dezelfde dienst leveren. Bijvoorbeeld kunnen sendmail en exim beide als mailserver fungeren en daarom voorzien zij in een gemeenschappelijk pakket (“mail-transport-agent”) waarvan andere pakketten afhankelijk kunnen zijn. Dit laat sendmail of exim toe om te fungeren als een geldige optie om aan die vereiste te voldoen. Hierdoor is het voor pakketten die een mailserver nodig hebben niet nodig om van alle mailservers de pakketnaam te kennen en ze, gescheiden door een ‘B<|>’, allemaal te vermelden in een lijst.
+Dit is een lijst van virtuele pakketten waarin door dit pakket voorzien wordt. Gewoonlijk wordt dit gebruikt in het geval meerdere pakketten dezelfde dienst leveren. Bijvoorbeeld kunnen sendmail en exim beide als mailserver fungeren en daarom voorzien zij in een gemeenschappelijk pakket (“mail-transport-agent”) waarvan andere pakketten afhankelijk kunnen zijn. Dit laat sendmail of exim toe om te fungeren als een geldige optie om aan die afhankelijkheid te voldoen. Hierdoor is het voor pakketten die een mailserver nodig hebben niet nodig om van alle mailservers de pakketnaam te kennen en ze, gescheiden door een ‘B<|>’, allemaal te vermelden in een lijst.
 
 =back
 
-The syntax of B<Provides> is a list of package names, separated by commas (and optional whitespace).  An optional architecture qualifier can also be appended to the package name with the same syntax as above.  If omitted, the default is the current binary package architecture.  An optional exact (equal to) version can also be given with the same syntax as above (since dpkg 1.17.11).
+De syntaxis van B<Provides> is een lijst van pakketnamen door komma's (en facultatieve witruimte) van elkaar gescheiden. Facultatief kan ook een architectuurkwalificatie toegevoegd worden aan de pakketnaam volgens dezelfde syntaxis als hierboven beschreven werd. Indien dit weggelaten werd, wordt standaard de architectuur genomen van het huidige binaire pakket. Facultatief kan ook een exact (is gelijk aan) versienummer opgegeven worden volgens dezelfde syntaxis als hierboven beschreven werd (sinds dpkg 1.17.11).
 
 =over 
 
 =item B<Built-Using:> I<pakketlijst>
 
-Dit veld van vereisten vermeldt extra broncodepakketten die gebruikt werden bij het bouwen van dit binaire pakket, om te beantwoorden aan de licentievoorwaarden. Dit is een indicatie voor de software voor archiefonderhoud dat deze extra broncodepakketten behouden moeten blijven zolang dit binaire pakket gehandhaafd wordt. Dit veld moet bestaan uit een met komma's gescheiden lijst van namen van broncodepakketten met een strikte ‘B<=>’ versierelatie tussen haakjes. Merk op dat de software voor archiefonderhoud niet geneigd zal zijn om een upload te aanvaarden van een pakket dat verklaart een B<Built-Using>-relatie te hebben waaraan in het archief niet voldaan kan worden.
+Dit veld van afhankelijkheden vermeldt extra broncodepakketten die gebruikt werden bij het bouwen van dit binaire pakket, om te beantwoorden aan de licentievoorwaarden. Dit is een indicatie voor de software voor archiefonderhoud dat deze extra broncodepakketten behouden moeten blijven zolang dit binaire pakket gehandhaafd wordt. Dit veld moet bestaan uit een met komma's gescheiden lijst van namen van broncodepakketten met een strikte ‘B<=>’ versierelatie tussen haakjes. Merk op dat de software voor archiefonderhoud niet geneigd zal zijn om een upload te aanvaarden van een pakket dat verklaart een B<Built-Using>-relatie te hebben waaraan in het archief niet voldaan kan worden.
 
 =item B<Static-Built-Using:> I<pakketlijst>
 
-Dit veld van vereisten vermeldt extra broncodepakketten die gebruikt werden bij het bouwen van dit binaire pakket, voor statische bouwdoeleinden (bijvoorbeeld linken naar statische bibliotheken, compilaties voor brongecentreerde talen zoals Go of Rust, gebruik van C/C++ bibliotheken met enkel headers, injecteren van datablobs in code, enz.) Dit is nuttig om bij te houden of dit pakket eventueel opnieuw moet worden gebouwd wanneer bronpakketten die hier worden vermeld, zijn bijgewerkt, bijvoorbeeld vanwege beveiligingsupdates. Dit veld moet bestaan uit een met komma's gescheiden lijst van namen van broncodepakketten met een strikte ‘B<=>’ versierelatie tussen haakjes.
+Dit veld van afhankelijkheden vermeldt extra broncodepakketten die gebruikt werden bij het bouwen van dit binaire pakket, voor statische bouwdoeleinden (bijvoorbeeld linken naar statische bibliotheken, compilaties voor brongecentreerde talen zoals Go of Rust, gebruik van C/C++ bibliotheken met alleen headers, injecteren van datablobs in code, enz.) Dit is nuttig om bij te houden of dit pakket eventueel opnieuw moet worden gebouwd wanneer bronpakketten die hier worden vermeld, zijn bijgewerkt, bijvoorbeeld vanwege beveiligingsupdates. Dit veld moet bestaan uit een met komma's gescheiden lijst van namen van broncodepakketten met een strikte ‘B<=>’ versierelatie tussen haakjes.
 
 Ondersteund sinds dpkg 1.21.3.
 
 =item B<Built-For-Profiles:> I<profiel-lijst> (verouderd)
 
-This field used to specify a whitespace separated list of build profile names (without exclamation marks)  that this binary packages was built with.  The information previously found in this field can now be found in the B<.buildinfo> file, which supersedes it.
+Dit veld werd vroeger gebruikt om een lijst van door spaties van elkaar gescheiden bouwprofielnamen (zonder uitroepingstekens) op te sommen waarmee deze binaire pakketten gebouwd werden. De informatie die vroeger in dit veld te vinden was, kan nu gevonden worden in het bestand B<.buildinfo> dat het vervangt.
 
-Supported since dpkg 1.17.2.  Obsolete since dpkg 1.18.19.
+Ondersteund sinds dpkg 1.17.2. Verouderd sinds dpkg 1.18.19.
 
 =item B<Auto-Built-Package:> I<lijst-met-redenen>
 

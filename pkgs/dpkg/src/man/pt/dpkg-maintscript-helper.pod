@@ -41,7 +41,7 @@ B<dpkg-maintscript-helper> I<command> [I<parameter>...] B<--> I<maint-script-par
 
 Este programa destina-se a ser corrido dentro de scripts de maintainer para conseguir algumas tarefas que o B<dpkg> (ainda) não pode lidar nativamente seja por limitações de desenho ou devido a limitações actuais,
 
-Many of those tasks require coordinated actions from several maintainer scripts (B<preinst>, B<postinst>, B<prerm>, B<postrm>).  To avoid mistakes the same call needs to be put in all scripts and the program will automatically adapt its behavior based on the environment variable B<DPKG_MAINTSCRIPT_NAME> and on the maintainer scripts arguments that you have to forward after a double hyphen.
+Muitas destas tarefas requerem ações coordenadas dos vários scripts de maintainer (B<preinst>, B<postinst>, B<prerm>, B<postrm>). Para evitar enganos a mesma chamada precisa simplesmente de englobar todos os scripts e o programa irá automaticamente adaptar o seu comportamento baseado na variável de ambiente B<DPKG_MAINTSCRIPT_NAME> e nos argumentos dos scripts do maintainer que você tem de reencaminhar após um duplo hífen.
 
 Este programa foi introduzido no dpkg 1.15.7.
 
@@ -51,9 +51,9 @@ Este programa foi introduzido no dpkg 1.15.7.
 
 =item I<prior-version>
 
-Define a versão mais recente do pacote cuja actualização deverá despoletar a operação. É importante calcular I<prior-version> correctamente para que as operações sejam correctamente executadas mesmo que o utilizador recompile o pacote com uma versão local. Se I<prior-version> estiver vazio ou omitido, então a operação é tentada a cada actualização (nora: é mais seguro fornecer a versão e ter a operação tentada apenas uma vez).
+Define a versão mais recente do pacote cuja actualização deverá despoletar a operação. É importante calcular I<prior-version> corretamente para que as operações sejam corretamente executadas mesmo que o utilizador recompile o pacote com uma versão local. Se I<prior-version> estiver vazio ou omitido, então a operação é tentada a cada actualização (nora: é mais seguro fornecer a versão e ter a operação tentada apenas uma vez).
 
-Se o conffile não tem sido enviado por várias versões, e você está agora a modificar os scripts do maintainer para limpar o ficheiro obsoleto, I<prior-version> deve ser baseado na versão do pacote que está agora a preparar, e não a primeira versão do pacote onde faltou o conffile. Isto aplica-se a todas as outras acções do mesmo modo.
+Se o conffile não tem sido enviado por várias versões, e você está agora a modificar os scripts do maintainer para limpar o ficheiro obsoleto, I<prior-version> deve ser baseado na versão do pacote que está agora a preparar, e não a primeira versão do pacote onde faltou o conffile. Isto aplica-se a todas as outras ações do mesmo modo.
 
 Por exemplo, para um conffile removido na versão B<2.0-1> de um pacote, I<prior-version> deve ser definido para B<2.0-1~>. Isto irá fazer com que o conffile seja removido mesmo que o utilizador recompile a versão anterior B<1.0-1> como B<1.0-1local1>. Ou um pacote que mude um caminho de um link simbólico (enviado na versão  B<1.0-1>) para um directório (enviado na versão B<2.0-1>), mas apenas executando a mudança real nos scripts do maintainer na versão B<3.0-1>, deve definir I<prior-version> para B<3.0-1~>.
 
@@ -155,7 +155,7 @@ Implementação actual: o B<preinst> verifica se o directório existe, não cont
 
 =head1 INTEGRAÇÃO EM PACOTES
 
-When using a packaging helper, check if it has native B<dpkg-maintscript-helper> integration, which might make your life easier. See for example L<dh_installdeb(1)>.
+Quando usar um ajudante de empacotamento, verifique se ele tem integração com B<dpkg-maintscript-helper> nativa, o que pode tornar a sua vida mais fácil. Veja por exemplo L<dh_installdeb(1)>.
 
 Dado que B<dpkg-maintscript-helper> é usado no B<preinst>, usa-lo incondicionalmente requer uma pré-dependência versionada para assegurar que a versão requerida do B<dpkg> já foi desempacotada antes, a menos que saibamos que estamos a atualizar a partir de um lançamento onde a versão de dpkg requerida vai ser satisfeita.  A versão requerida depende do comando usado, para B<rm_conffile> e B<mv_conffile> é 1.15.7.2, para B<symlink_to_dir> e B<dir_to_symlink> é 1.17.14.  Por exemplo, se nós requerermos suporte para B<symlink_to_dir> ao atualizar a partir dum lançamento que tinha uma versão de dpkg anterior a 1.17.14, nós iremos precisar de adicionar:
 
@@ -194,7 +194,7 @@ Se definido, será usado como o directório de dados do B<dpkg>.
 
 Define o modo de cor. Os valores actualmente aceites são: B<auto> (predefinido), B<always> e B<never>.
 
-Supported since dpkg 1.19.1.
+Suportado desde dpkg 1.19.1.
 
 =back
 

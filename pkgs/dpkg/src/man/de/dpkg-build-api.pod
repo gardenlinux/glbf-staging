@@ -39,7 +39,9 @@ Diese Stufe ist noch in Entwicklung und kann nicht mittels Baubhängigkeiten erk
 
 =item v1
 
-Dies ist die empfohlene Stufe. Seit Dpkg 1.22.0.
+This is the recommended level.
+
+Supported since dpkg 1.22.0.
 
 Änderungen gegenüber v0 sind:
 

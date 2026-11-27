@@ -32,19 +32,19 @@ Dit bestand bevat tenminste twee onderdelen, gescheiden door een witregel. Het e
 
 =item B<Source:> I<broncodepakket-naam> (verplicht)
 
-De waarde van dit veld is de naam van het broncodepakket en moet overeenkomen met de naam van het broncodepakket in het bestand debian/changelog. Een pakketnaam mag enkel bestaan uit kleine letters (a-z), cijfers (0-9), plussen (+) en minnen (-) en punten (.). Pakketnamen moeten minstens twee tekens lang zijn en moeten met een alfanumeriek teken (a-z0-9) in kleine letter beginnen.
+De waarde van dit veld is de naam van het broncodepakket en moet overeenkomen met de naam van het broncodepakket in het bestand debian/changelog. Een pakketnaam mag alleen bestaan uit kleine letters (a-z), cijfers (0-9), plussen (+) en minnen (-) en punten (.). Pakketnamen moeten minstens twee tekens lang zijn en moeten met een alfanumeriek teken (a-z0-9) in kleine letter beginnen.
 
 =item B<Maintainer:> I<volledige-naam-en-e-mail> (aanbevolen)
 
 Moet volgens de indeling «Joe Bloggs E<lt>jbloggs@foo.comE<gt>» opgemaakt zijn en verwijzen naar de persoon die momenteel het pakket onderhoudt, in tegenstelling tot de auteur van de software of de originele verpakker ervan.
 
-The format is described in L<deb-email(7)>.
+De indeling wordt beschreven in L<deb-email(7)>.
 
 =item B<Uploaders:> I<volledige-naam-en-e-mailadres>
 
 Somt al de namen en de e-mailadressen op van de personen die het pakket mee onderhouden volgens dezelfde indeling als van het veld B<Maintainer>. Meerdere mede-beheerders moeten onderling door een komma gescheiden worden.
 
-The format is described in L<deb-email(7)>.
+De indeling wordt beschreven in L<deb-email(7)>.
 
 =item B<Standards-Version:> I<versietekenreeks>
 
@@ -58,7 +58,7 @@ De indeling van een pakketbeschrijving bestaat uit een beknopte korte samenvatti
 
 =item B<Homepage:> I<URL>
 
-De URL van de homepage van het toeleverend project (upstream).
+De URL van de homepage van het bovenstrooms project.
 
 =item B<Bugs:> I<URL>
 
@@ -74,7 +74,7 @@ Ondersteund sinds dpkg 1.22.7.
 
 Dit veld wordt gebruikt om aan te geven of het bestand B<debian/rules> voorrechten van (fake)root nodig heeft om sommige van zijn targets uit te voeren, en zo ja wanneer.
 
-Supported since dpkg 1.19.0.
+Ondersteund sinds dpkg 1.19.0.
 
 =over 
 
@@ -148,31 +148,31 @@ Hoe deze waarden worden toegepast, hangt af van het specifieke distributiebeleid
 
 =item B<Build-Depends:> I<pakketlijst>
 
-Een lijst van pakketten die geïnstalleerd en geconfigureerd moeten zijn om het pakket uit de broncode te kunnen bouwen. Aan deze vereisten moet voldaan zijn bij het bouwen van binaire architectuurafhankelijke of architectuuronafhankelijke pakketten en broncodepakketten. Een vereiste vermelden in dit veld heeft niet exact hetzelfde effect als ze zowel in B<Build-Depends-Arch> als in B<Build-Depends-Indep> vermelden, aangezien ook voldaan moet zijn aan de vereiste voor het bouwen van het broncodepakket.
+Een lijst van pakketten die geïnstalleerd en geconfigureerd moeten zijn om het pakket uit de broncode te kunnen bouwen. Aan deze afhankelijkheden moet voldaan zijn bij het bouwen van binaire architectuurafhankelijke of architectuuronafhankelijke pakketten en broncodepakketten. Een vereiste vermelden in dit veld heeft niet exact hetzelfde effect als ze zowel in B<Build-Depends-Arch> als in B<Build-Depends-Indep> vermelden, aangezien ook voldaan moet zijn aan de vereiste voor het bouwen van het broncodepakket.
 
 =item B<Build-Depends-Arch:> I<pakketlijst>
 
-Same as B<Build-Depends>, but they are only needed when building the architecture dependent packages.  The B<Build-Depends> are also installed in this case.
+Hetzelfde als B<Build-Depends>, maar ze zijn alleen nodig bij het bouwen van de architectuurafhankelijke pakketten. In dit geval worden ook de pakketten uit B<Build-Depends> geïnstalleerd.
 
-Supported since dpkg 1.16.4; to build with older dpkg versions, B<Build-Depends> should be used instead.
+Ondersteund sinds dpkg 1.16.4; om met oudere versies van dpkg pakketten te bouwen moet in plaats daarvan B<Build-Depends> gebruikt worden.
 
 =item B<Build-Depends-Indep:> I<pakketlijst>
 
-Hetzelfde als B<Build-Depends>, maar ze zijn enkel nodig bij het bouwen van de architectuuronafhankelijke pakketten. In dit geval worden ook de pakketten uit B<Build-Depends> geïnstalleerd.
+Hetzelfde als B<Build-Depends>, maar ze zijn alleen nodig bij het bouwen van de architectuuronafhankelijke pakketten. In dit geval worden ook de pakketten uit B<Build-Depends> geïnstalleerd.
 
 =item B<Build-Conflicts:> I<pakketlijst>
 
-Een lijst van pakketten die niet geïnstalleerd mogen zijn bij het bouwen van het pakket, bijvoorbeeld omdat ze interfereren met het gebruikte bouwsysteem. Een afhankelijkheidsrelatie opnemen in deze lijst heeft hetzelfde effect als ze zowel in B<Build-Conflicts-Arch> als in B<Build-Conflicts-Indep> opnemen, met het bijkomende effect dat ze ook gebruikt wordt als enkel het broncodepakket gebouwd wordt.
+Een lijst van pakketten die niet geïnstalleerd mogen zijn bij het bouwen van het pakket, bijvoorbeeld omdat ze interfereren met het gebruikte bouwsysteem. Een afhankelijkheidsrelatie opnemen in deze lijst heeft hetzelfde effect als ze zowel in B<Build-Conflicts-Arch> als in B<Build-Conflicts-Indep> opnemen, met het bijkomende effect dat ze ook gebruikt wordt als alleen het broncodepakket gebouwd wordt.
 
 =item B<Build-Conflicts-Arch:> I<pakketlijst>
 
-Same as B<Build-Conflicts>, but only when building the architecture dependent packages.
+Hetzelfde als B<Build-Conflicts>, maar alleen bij het bouwen van de architectuurafhankelijke pakketten.
 
-Supported since dpkg 1.16.4; to build with older dpkg versions, B<Build-Conflicts> should be used instead.
+Ondersteund sinds dpkg 1.16.4; om met oudere versies van dpkg pakketten te bouwen moet in plaats daarvan B<Build-Conflicts> gebruikt worden.
 
 =item B<Build-Conflicts-Indep:> I<pakketlijst>
 
-Hetzelfde als B<Build-Conflicts>, maar enkel bij het bouwen van de architectuuronafhankelijke pakketten.
+Hetzelfde als B<Build-Conflicts>, maar alleen bij het bouwen van de architectuuronafhankelijke pakketten.
 
 =back
 
@@ -188,7 +188,7 @@ Een architectuuraanduiding bestaat uit één of meer architectuurnamen, onderlin
 
 Een restrictieformule bestaat uit één of meer restrictielijsten, onderling gescheiden door witruimte. Elke restrictielijst staat tussen punthaakjes (B<E<lt>> en B<E<gt>>). De items in de restrictielijst zijn bouwprofielnamen, onderling gescheiden door witruimte, en kunnen voorafgegaan worden door een uitroepteken (B<!>), hetgeen de betekenis heeft van “NOT” (niet). Een restrictieformule heeft de verschijningsvorm van een expressie in disjunctieve normaalvorm, dat wil zeggen dat witruimte binnen de punthaakjes wordt gelezen als “AND” en witruimte tussen de punthaakjes wordt gelezen als “OR“, zoals “B<E<lt>>foo AND barB<E<gt>> OR B<E<lt>>quux AND bazB<E<gt>>”.
 
-Merk op dat de vermelding dat pakketten vereist worden die behoren tot de categorie B<build-essential>, weggelaten kan worden en dat het onmogelijk is om tegenover dergelijke pakketten een bouwtegenstrijdigheid te formuleren. Een lijst van deze pakketten is te vinden in het pakket build-essential.
+Merk op dat de vermelding dat pakketten vereist worden die behoren tot de categorie B<build-essential>, weggelaten kan worden en dat het onmogelijk is om tegenover dergelijke pakketten een bouwconflict te formuleren. Een lijst van deze pakketten is te vinden in het pakket build-essential.
 
 =head1 VELDEN BINAIR PAKKET
 
@@ -218,7 +218,7 @@ Dit veld geeft de condities aan waaronder dit binaire pakket al dan niet te bouw
 
 Indien een onderdeel over een binair pakket dit veld niet bevat, dan betekent dit impliciet dat het te bouwen is met alle bouwprofielen (met inbegrip van helemaal geen).
 
-Met andere woorden, indien aan jet onderdeel over een binair pakket een niet-leeg B<Build-Profiles>-veld toegevoegd is, dan wordt dat binair pakket gegenereerd indien en enkel indien de conditie die uitgedrukt wordt door de expressie in conjunctieve normaalvorm als waar geëvalueerd wordt.
+Met andere woorden, indien aan jet onderdeel over een binair pakket een niet-leeg B<Build-Profiles>-veld toegevoegd is, dan wordt dat binair pakket gegenereerd indien en alleen indien de conditie die uitgedrukt wordt door de expressie in conjunctieve normaalvorm als waar geëvalueerd wordt.
 
 =item B<Protected:> B<yes>|B<no>
 

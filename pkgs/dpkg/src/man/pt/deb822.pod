@@ -66,7 +66,7 @@ Em espaço em branco não pode aparecer dentro de nomes (de pacotes, arquitectur
 
 A presença de objectivo de um campo, e a sintaxe do seu valor pode diferir entre os tipos de ficheiros de controle.
 
-Os nomes dos campos não são sensíveis a maiúsculas/minúsculas, mas é usual capitalizar os nomes dos campos usando misturas como mostrado em baixo. Os valores do campos são sensíveis a  maiúsculas/minúsculas excepto se a descrição do campo diga o contrário.
+Os nomes dos campos não são sensíveis a maiúsculas/minúsculas, mas é usual capitalizar os nomes dos campos usando misturas como mostrado em baixo. Os valores do campos são sensíveis a maiúsculas/minúsculas excepto se a descrição do campo diga o contrário.
 
 Separadores de estrofes (linhas vazias) e linhas consistindo apenas de U+0020 B<SPACE> e U+0009 B<TAB>, não são permitidos dentro de valores de campo ou entre campos. Linhas vazias em valores de campo são normalmente escapadas ao representa-las por um U+0020 B<SPACE> seguido de um ponto (U+002E ‘B<.>’).
 

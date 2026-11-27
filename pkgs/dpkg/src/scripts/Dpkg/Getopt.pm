@@ -41,7 +41,9 @@ our @EXPORT = qw(
     format_option_spec
     format_option_parts
     print_option
+    print_robot_version
     print_version
+    print_synopsis
 );
 
 use Exporter qw(import);
@@ -149,9 +151,19 @@ sub print_option($desc_fmt, @args)
     printf format_option_spec($spec) . "\n$help";
 }
 
+sub print_robot_version()
+{
+    printf '%s', $Dpkg::PROGVERSION;
+}
+
 sub print_version()
 {
     printf g_("%s version %s\n"), $Dpkg::PROGNAME, $Dpkg::PROGVERSION;
+}
+
+sub print_synopsis($prog_synopsis)
+{
+    printf g_("Synopsis: %s\n"), gettext($prog_synopsis);
 }
 
 =head1 CHANGES

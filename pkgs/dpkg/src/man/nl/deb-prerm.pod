@@ -40,13 +40,13 @@ Voor een opwaardering.
 
 Indien de hiervoor vermelde B<upgrade> mislukt.
 
-Support for I<new-version> since dpkg 1.18.5.
+Ondersteuning voor I<nieuwe-versie> sinds dpkg 1.18.5.
 
 =item I<prerm> B<deconfigure> B<in-favour> I<nieuw-pakket> I<nieuwe-versie>
 
 =item S< >[ B<removing> I<oud-pakket> I<oude-versie> ]
 
-Vooraleer het pakket gedeconfigureerd wordt terwijl een vereiste wegens een conflict vervangen wordt.
+Vooraleer het pakket gedeconfigureerd wordt terwijl een afhankelijkheid wegens een conflict vervangen wordt.
 
 =item I<prerm> B<remove> B<in-favour> I<nieuw-pakket> I<nieuwe-versie>
 

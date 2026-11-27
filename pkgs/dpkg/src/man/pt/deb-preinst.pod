@@ -22,7 +22,7 @@ B<DEBIAN/preinst>
 
 =head1 DESCRIÇÃO
 
-Um pacote pode executar várias acções de pré-instalação via scripts do maintainer, ao incluir um ficheiro executável I<preinst> no seu arquivo de controle (isto é, I<DEBIAN/preinst>( durante a criação do pacote.
+Um pacote pode executar várias ações de pré-instalação via scripts do maintainer, ao incluir um ficheiro executável I<preinst> no seu arquivo de controle (isto é, I<DEBIAN/preinst>( durante a criação do pacote.
 
 O script pode ser chamado nos seguintes modos:
 
@@ -34,15 +34,15 @@ Antes do pacote ser instalado.
 
 =item I<new-preinst> B<install> I<old-version> I<new-version>
 
-Antes de um pacote removido ser actualizado.
+Antes de um pacote removido ser atualizado.
 
-Support for I<new-version> since dpkg 1.18.5.
+Suporte para I<new-version> desde dpkg 1.18.5.
 
 =item I<new-preinst> B<upgrade> I<old-version> I<new-version>
 
-Antes do pacote ser actualizado.
+Antes do pacote ser atualizado.
 
-Support for I<new-version> since dpkg 1.18.5.
+Suporte para I<new-version> desde dpkg 1.18.5.
 
 =item I<old-preinst> B<abort-upgrade> I<new-version>
 

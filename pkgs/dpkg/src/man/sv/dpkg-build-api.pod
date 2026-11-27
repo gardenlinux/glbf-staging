@@ -39,7 +39,9 @@ Denna nivå är fortfarande under utveckling, och kan inte anges via byggberoend
 
 =item v1
 
-Detta är den rekommenderade nivån. Sedan dpkg 1.22.0.
+This is the recommended level.
+
+Supported since dpkg 1.22.0.
 
 Ändringar sedan v0 är:
 

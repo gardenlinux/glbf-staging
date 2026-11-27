@@ -39,7 +39,9 @@ Este nível ainda está em desenvolvimento, e não pode ser declarado via build-
 
 =item v1
 
-Este é o nível recomendado. Desde dpkg 1.22.0.
+This is the recommended level.
+
+Suportado desde dpkg 1.22.0.
 
 As alterações a partir de v0 são:
 

@@ -274,6 +274,40 @@ dpkg_db_get_path(const char *pathpart);
 
 /*** from dbmodify.c ***/
 
+/* Database files and directories. */
+
+#define DPKG_DB_LOCK_FILE		"lock"
+#define DPKG_DB_FRONTEND_LOCK_FILE	"lock-frontend"
+
+#define DPKG_DB_ARCH_FILE		"arch"
+#define DPKG_DB_ARCH_NATIVE_FILE	"arch-native"
+
+#define DPKG_DB_STATUS_FILE		"status"
+#define DPKG_DB_AVAIL_FILE		"available"
+#define DPKG_DB_DIVERSIONS_FILE		"diversions"
+#define DPKG_DB_STATOVERRIDE_FILE	"statoverride"
+
+#define DPKG_DB_UPDATES_DIR		"updates"
+#define DPKG_DB_INFO_DIR		"info"
+
+#define DPKG_DB_TRIGGERS_DIR		"triggers"
+#define DPKG_DB_TRIGGERS_FILE_FILE	"File"
+#define DPKG_DB_TRIGGERS_DEFERRED_FILE	"Unincorp"
+#define DPKG_DB_TRIGGERS_LOCK_FILE	"Lock"
+
+#define DPKG_DB_PARTS_DIR		"parts"
+#define DPKG_DB_REASSEMBLE_TMPFILE	"reassemble" DEBEXT
+
+#define DPKG_DB_METHODS_DIR		"methods"
+#define DPKG_DB_METHODS_LOCK_FILE	"methlock"
+#define DPKG_DB_METHODS_STATE_FILE	"cmethopt"
+
+#define DPKG_DB_CONTROL_TMPDIR		"tmp.ci"
+#define DPKG_DB_IMPORTANT_TMPFILE	"tmp.i"
+#define DPKG_DB_IMPORTANT_MAXLEN	10
+#define DPKG_DB_IMPORTANT_FMT		"%04d"
+#define DPKG_DB_MAX_UPDATES		250
+
 enum DPKG_ATTR_ENUM_FLAGS modstatdb_rw {
 	msdbrw_unset			= -1,
 

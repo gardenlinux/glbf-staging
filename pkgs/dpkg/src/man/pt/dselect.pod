@@ -36,7 +36,7 @@ Visualizar o estado dos pacotes instalados e disponíveis,
 
 =item *
 
-Alterar selecções de pacotes e gerir dependências,
+Alterar seleções de pacotes e gerir dependências,
 
 =item *
 
@@ -44,9 +44,9 @@ Instalar novos pacotes ou actualiza-los para novas versões.
 
 =back
 
-B<dselect> opera como um front-end para o L<dpkg(1)>, a ferramenta de baixo nível de manuseamento de pacotes de Debian. Apresenta um gestor de selecção de pacotes de ecrã-total com ferramenta de resolver dependências e conflitos de pacotes. Quando corrido com privilégios de administrador, os pacotes podem ser instalados, actualizados ou removidos. Podem ser configurados vários métodos de acesso para obter informação da versão dos pacotes disponíveis e instaláveis dos repositórios de pacotes. Dependendo do método de acesso usado, estes repositórios podem ser servidores de arquivo público na internet, servidores de arquivo local ou discos de media. O método de acesso recomendado é o I<apt>, o qual é fornecido pelo pacote L<apt(8)>.
+B<dselect> opera como um front-end para o L<dpkg(1)>, a ferramenta de baixo nível de manuseamento de pacotes de Debian. Apresenta um gestor de seleção de pacotes de ecrã-total com ferramenta de resolver dependências e conflitos de pacotes.  Quando corrido com privilégios de administrador, os pacotes podem ser instalados, atualizados ou removidos. Podem ser configurados vários métodos de acesso para obter informação da versão dos pacotes disponíveis e instaláveis dos repositórios de pacotes. Dependendo do método de acesso usado, estes repositórios podem ser servidores de arquivo público na internet, servidores de arquivo local ou discos de media. O método de acesso recomendado é o I<apt>, o qual é fornecido pelo pacote L<apt(8)>.
 
-Normalmente o B<dselect> é invocado sem parâmetros. Um menu interactivo é apresentado, oferecendo uma lista de comandos ao utilizador. Se um comando for dado como um argumento, então esse comando é arrancado imediatamente. Estão ainda disponíveis vários parâmetros de linha de comandos para modificar o comportamento de funcionamento do B<dselect> ou mostrar informação adicional acerca do programa.
+Normalmente o B<dselect> é invocado sem parâmetros. Um menu interativo é apresentado, oferecendo uma lista de comandos ao utilizador. Se um comando for dado como um argumento, então esse comando é arrancado imediatamente. Estão ainda disponíveis vários parâmetros de linha de comandos para modificar o comportamento de funcionamento do B<dselect> ou mostrar informação adicional acerca do programa.
 
 =head1 OPÇÕES
 
@@ -60,15 +60,15 @@ Muda o directório onde os ficheiros ‘I<status>’, ‘I<available>’ e semel
 
 =item B<--instdir> I<directory>
 
-Set the installation directory, which refers to the directory where packages get installed.  Defaults to «I</>» if B<DPKG_ROOT> has not been set.
+Define o directório de instalação, o que se refere ao directório onde os pacotes são instalados. A predefinição é «I</>» se B<DPKG_ROOT> não estiver definido.
 
-Supported since dpkg 1.21.2.
+Suportado desde dpkg 1.21.2.
 
 =item B<--root> I<directory>
 
-Set the root directory to I<directory>, which sets the installation directory to «I<directory>» and the administrative directory to «I<directory>%ADMINDIR%».
+Define o directório raiz para I<directory>, o que define o directório de instalação para «I<directory>» e o directório administrativo para «I<directory>%ADMINDIR%».
 
-Supported since dpkg 1.21.0.
+Suportado desde dpkg 1.21.0.
 
 =item B<-D>I<file>, B<--debug> I<file>
 
@@ -102,7 +102,7 @@ A lista de pacotes com deslocamento (e também algum texto de ajuda).
 
 =item B<listsel>
 
-O item seleccionado na lista.
+O item selecionado na lista.
 
 =item B<pkgstate>
 
@@ -114,7 +114,7 @@ Na lista de pacotes, o texto que indica o estado actual do pacote actualmente se
 
 =item B<infohead>
 
-A linha de cabeçalho que mostra o estado do pacote actualmente seleccionado.
+A linha de cabeçalho que mostra o estado do pacote actualmente selecionado.
 
 =item B<infodesc>
 
@@ -154,7 +154,7 @@ Escreve informação de versão e termina com sucesso.
 
 =head1 COMANDOS
 
-Quando o B<dselect> é iniciado pode executar os seguintes comandos, seja directamente se foi especificado na linha de comandos ou ao questionar o utilizador com um menu de comandos disponíveis se corrido em modo interactivo:
+Quando o B<dselect> é iniciado pode executar os seguintes comandos, seja directamente se foi especificado na linha de comandos ou ao questionar o utilizador com um menu de comandos disponíveis se corrido em modo interativo:
 
 =head2 access
 
@@ -174,21 +174,21 @@ Detalhes do comando de actualização dependem da implementação do método de 
 
 =head2 select
 
-Ver ou gerir selecções de pacotes e dependências.
+Ver ou gerir seleções de pacotes e dependências.
 
-Esta é a função principal do B<dselect>. no ecrã de selecção, o utilizador pode rever uma lista de todos os pacotes disponíveis e instalados. Quando corre com privilégios de administrador, é também possível alterar o estado da selecção de pacotes interactivamente. B<dselect> acompanha as implicações destas alterações com outros pacotes que dependem ou criam conflitos.
+Esta é a função principal do B<dselect>. no ecrã de seleção, o utilizador pode rever uma lista de todos os pacotes disponíveis e instalados. Quando corre com privilégios de administrador, é também possível alterar o estado da seleção de pacotes interativamente. B<dselect> acompanha as implicações destas alterações com outros pacotes que dependem ou criam conflitos.
 
 Quando é detetado um conflito ou falha de dependências, é mostrado ao utilizador um sub-ecrã de resolução de dependências. Neste ecrã, é mostrada uma lista de pacotes em conflito ou dependentes, e para cada pacote listado, é mostrada a razão de este estar na lista. O utilizador pode aplicar as sugestões propostas pelo B<dselect>, sobrepor-las, ou retroceder todas as alterações, incluindo aquelas que criaram as dependências ou conflitos não resolvidos.
 
-O uso do ecrã de gestão de selecção de pacotes interactiva está explicado com mais detalhes em baixo.
+O uso do ecrã de gestão de seleção de pacotes interativa está explicado com mais detalhes em baixo.
 
 =head2 install
 
 Instala os pacotes selecionados.
 
-O método de acesso configurado irá obter pacotes instaláveis ou actualizáveis a partir dos repositórios relevantes e instalar estes usando o B<dpkg>. Dependendo da implementação do método de acesso, todos os pacotes podem ser pré-obtidos antes da instalação, ou obtidos quando necessários. Alguns métodos de acesso podem também remover pacotes que foram marcados para remoção.
+O método de acesso configurado irá obter pacotes instaláveis ou atualizáveis a partir dos repositórios relevantes e instalar estes usando o B<dpkg>. Dependendo da implementação do método de acesso, todos os pacotes podem ser pré-obtidos antes da instalação, ou obtidos quando necessários. Alguns métodos de acesso podem também remover pacotes que foram marcados para remoção.
 
-Se ocorrer um erro durante a instalação, é normalmente aconselhável repetir a instalação. Na maioria dos casos, os problemas irão desaparecer ou ser resolvidos. Se os problemas persistirem ou a execução da instalação foi incorrecta, por favor investigue as causas e circunstâncias, e preencha um relatório de bug no sistema de acompanhamento de bugs de Debian. As instruções em como fazer isto podem ser encontradas em L<https://bugs.debian.org/> ou ao ler a documentação para L<bug(1)> ou L<reportbug(1)>, se esta estiver instalada.
+Se ocorrer um erro durante a instalação, é normalmente aconselhável repetir a instalação. Na maioria dos casos, os problemas irão desaparecer ou ser resolvidos. Se os problemas persistirem ou a execução da instalação foi incorreta, por favor investigue as causas e circunstâncias, e preencha um relatório de bug no sistema de acompanhamento de bugs de Debian. As instruções em como fazer isto podem ser encontradas em L<https://bugs.debian.org/> ou ao ler a documentação para L<bug(1)> ou L<reportbug(1)>, se esta estiver instalada.
 
 Detalhes do comando de instalação dependem da implementação do método de acesso. Pode ser requerida a atenção do utilizador e entradas deste durante a instalação., configuração ou remoção de pacotes. Isto depende dos scripts de maintainer no pacote. Alguns pacotes fazem uso da biblioteca L<debconf(1)>, permitindo configurações de instalação mais flexíveis ou mesmo automatizadas.
 
@@ -206,7 +206,7 @@ Termina o B<dselect>.
 
 Termina o programa com código de erro zero (com sucesso).
 
-=head1 GESTÃO DE SELECÇÕES DE PACOTES
+=head1 GESTÃO DE SELEÇÕES DE PACOTES
 
 =head2 Introdução
 
@@ -216,13 +216,13 @@ A menos que o B<dselect> seja corrido em modo de esperto ou imediato, é primeir
 
 =head2 Disposição do ecrã
 
-O ecrã de selecção está por predefinição dividido em metade de topo e de fundo. A metade do topo mostra uma lista de pacotes. Uma barra de cursor pode seleccionar um pacote individual, ou um grupo de pacotes, se aplicável, ao seleccionar o cabeçalho do grupo. A metade do fundo o ecrã mostra alguns detalhes acerca do pacote actualmente seleccionado na metade de topo do ecrã. O tipo de detalhes que é mostrado pode variar.
+O ecrã de seleção está por predefinição dividido em metade de topo e de fundo. A metade do topo mostra uma lista de pacotes. Uma barra de cursor pode seleccionar um pacote individual, ou um grupo de pacotes, se aplicável, ao seleccionar o cabeçalho do grupo. A metade do fundo o ecrã mostra alguns detalhes acerca do pacote actualmente selecionado na metade de topo do ecrã. O tipo de detalhes que é mostrado pode variar.
 
 Pressionando a tecla ‘B<I>’ altera entre amostragem de ecrã total da lista de pacotes, e visão alargada dos detalhes do pacote, ou o ecrã dividido igualmente.
 
 =head2 Vista de detalhes de pacote
 
-A vista de detalhes do pacote por predefinição mostra a descrição extensa do pacote que está actualmente seleccionado na lista de estados de pacotes. O tipo de detalhes pode ser comutado ao pressionar a tecla ‘B<i>’. Isto alterna entre:
+A vista de detalhes do pacote por predefinição mostra a descrição extensa do pacote que está actualmente selecionado na lista de estados de pacotes. O tipo de detalhes pode ser comutado ao pressionar a tecla ‘B<i>’. Isto alterna entre:
 
 =over 
 
@@ -244,11 +244,11 @@ Num ecrã de resolução de dependência, há também a possibilidade de visuali
 
 =head2 Lista de estados dos pacotes
 
-O ecrã de selecção principal mostra uma lista de todos os pacotes conhecidos ao sistema de gestão de pacotes Debian. Isto inclui pacotes instalados no sistema e pacotes conhecidos a partir da base de dados de pacotes disponíveis.
+O ecrã de seleção principal mostra uma lista de todos os pacotes conhecidos ao sistema de gestão de pacotes Debian. Isto inclui pacotes instalados no sistema e pacotes conhecidos a partir da base de dados de pacotes disponíveis.
 
 Para cada pacote, a lista mostra o estado do pacote, prioridade, secção, arquitectura instalada e disponível, versões instalada e disponível, o nome do pacote, e a sua descrição curta, tudo numa linha. Ao pressionar a tecla ‘B<A>’, o mostrador da arquitectura instalada e disponível pode ser comutado entre ligado e desligado. Ao pressionar a tecla ‘B<V>’, o mostrador da versão instalada e disponível pode ser ligado e desligado. Ao pressionar a tecla ‘B<v>’, o mostrador do estado do pacote por ser comutado entre detalhado e abreviado. A amostragem abreviada é a predefinida.
 
-A indicação de estado abreviado consiste de quatro partes: uma bandeira de erro, o qual deve normalmente estar limpa, o estado actual, o estado da última selecção e o estado da selecção actual. Os dois primeiros estão relacionados com o actual estado do pacote, o segundo par são sobre as selecções feitas pelo utilizador.
+A indicação de estado abreviado consiste de quatro partes: uma bandeira de erro, o qual deve normalmente estar limpa, o estado actual, o estado da última seleção e o estado da seleção actual. Os dois primeiros estão relacionados com o actual estado do pacote, o segundo par são sobre as seleções feitas pelo utilizador.
 
 Estes são os significados das abreviaturas de códigos indicadores de estado de pacotes:
 
@@ -282,7 +282,7 @@ Estado de instalação:
 
 =back
 
-Selecções actuais e requisitadas:
+Seleções actuais e requisitadas:
 
 =over 
 
@@ -302,7 +302,7 @@ Selecções actuais e requisitadas:
 
 =head2 Cursor e movimento do ecrã
 
-A lista de selecção de pacotes e os ecrãs de resolução de conflitos de dependências podem ser navegados usando comandos de movimento mapeados às seguintes teclas:
+A lista de seleção de pacotes e os ecrãs de resolução de conflitos de dependências podem ser navegados usando comandos de movimento mapeados às seguintes teclas:
 
 =over 
 
@@ -378,9 +378,9 @@ A ordenação da lista pode ser variada ao pressionar as teclas ‘B<o>’ e ‘
 
 Onde não listado em cima explicitamente, a ordem alfabética é usada como a chave se sub-ordenação final.
 
-=head2 Alterar selecções
+=head2 Alterar seleções
 
-O estado de selecção requerido de pacotes individuais pode ser alterado com os seguintes comandos:
+O estado de seleção requerido de pacotes individuais pode ser alterado com os seguintes comandos:
 
 =over 
 
@@ -402,31 +402,31 @@ O estado de selecção requerido de pacotes individuais pode ser alterado com os
 
 Quando o pedido de alteração resulta em uma ou mais dependências não satisfeitas ou conflitos, o B<dselect> questiona o utilizador com um ecrã de resolução de dependências. Isto será melhor explicado em baixo.
 
-É também possível aplicar estes comandos a selecções de grupos de pacotes, ao apontar a barra de cursor ao cabeçalho do grupo. O agrupamento exacto de pacotes está dependente das definições actuais de ordenação da lista.
+É também possível aplicar estes comandos a seleções de grupos de pacotes, ao apontar a barra de cursor ao cabeçalho do grupo. O agrupamento exacto de pacotes está dependente das definições actuais de ordenação da lista.
 
-Deve ser tomado o cuidado apropriado quando se alteram grandes grupos de selecções, porque isto pode instantaneamente criar grandes números de dependências ou conflitos não resolvidos, todos os quais irão ser listados nu ecrã de resolução de dependências, tornando isso de lide muito difícil. Na prática, apenas as operações de manter e não-manter são úteis quando aplicadas a grupos.
+Deve ser tomado o cuidado apropriado quando se alteram grandes grupos de seleções, porque isto pode instantaneamente criar grandes números de dependências ou conflitos não resolvidos, todos os quais irão ser listados nu ecrã de resolução de dependências, tornando isso de lide muito difícil. Na prática, apenas as operações de manter e não-manter são úteis quando aplicadas a grupos.
 
 =head2 Resolver dependências e conflitos
 
 Quando o pedido de alteração resulta em uma ou mais dependências ou conflitos não satisfeitos, o B<dselect> questiona o utilizador com um ecrã de resolução de dependências. No entanto, primeiro é mostrado um ecrã de ajuda informativo.
 
-A metade do topo deste ecrã lista todos os pacotes que irão ter dependências ou conflitos por resolver, como resultado da alteração pedida, e todos os pacotes cuja instalação pode resolver alguma destas dependências ou cuja remoção pode resolver algum destes conflitos. A metade de baixo por predefinição mostra as dependências ou conflitos que fazem com que o pacote seleccionado esteja na lista.
+A metade do topo deste ecrã lista todos os pacotes que irão ter dependências ou conflitos por resolver, como resultado da alteração pedida, e todos os pacotes cuja instalação pode resolver alguma destas dependências ou cuja remoção pode resolver algum destes conflitos.  A metade de baixo por predefinição mostra as dependências ou conflitos que fazem com que o pacote selecionado esteja na lista.
 
-When the sublist of packages is displayed initially, B<dselect> may have already set the requested selection status of some of the listed packages, to resolve the depends or conflicts that caused the dependency resolution screen to be displayed.  Usually, it is best to follow up the suggestions made by B<dselect>.
+Quando a sub-lista de pacote é mostrada inicialmente, o B<dselect> pode já ter definido o estado de seleção requerido de alguns dos pacotes listados, para resolver as dependências ou conflitos que causaram que o ecrã de resolução de dependências fosse mostrado. Geralmente, é melhor seguir as sugestões feitas pelo B<dselect>.
 
-O estado de selecção dos pacotes listados pode ser revertido às definições originais, como estavam antes de serem criadas as dependências e conflitos não resolvidos, ao pressionar a tecla ‘B<R>’. Ao pressionar a tecla ‘B<D>’, as sugestões automáticas são reiniciadas, mas a alteração que provocou o ecrã de resolução de dependência é mantido como requisitado. Finalmente, ao pressionar B<U>’, as selecções são de novo definidas para os valores da sugestão automática.
+O estado de seleção dos pacotes listados pode ser revertido às definições originais, como estavam antes de serem criadas as dependências e conflitos não resolvidos, ao pressionar a tecla ‘B<R>’. Ao pressionar a tecla ‘B<D>’, as sugestões automáticas são reiniciadas, mas a alteração que provocou o ecrã de resolução de dependência é mantido como requisitado. Finalmente, ao pressionar B<U>’, as seleções são de novo definidas para os valores da sugestão automática.
 
-=head2 Estabelecendo as selecções necessárias
+=head2 Estabelecendo as seleções necessárias
 
-Ao pressionar B<enter>, o conjunto actual de selecções é aceite. Se o B<dselect> não detectar dependências não resolvidas com resultado das selecções requeridas, as novas selecções serão definidas. No entanto, se existir algumas dependências não resolvida, o B<dselect> irá de novo questionar o utilizador com um ecrã de resolução de dependência.
+Ao pressionar B<enter>, o conjunto actual de seleções é aceite. Se o B<dselect> não detetar dependências não resolvidas com resultado das seleções requeridas, as novas seleções serão definidas. No entanto, se existir algumas dependências não resolvida, o B<dselect> irá de novo questionar o utilizador com um ecrã de resolução de dependência.
 
-Para alterar um conjunto de selecções  que criam dependências e conflitos não resolvidos e forçar o B<dselect> a aceita-las, pressione a tecla 'B<Q>’. Isto define as selecções como especificadas pelo utilizador, incondicionalmente. De modo geral, não faça isto a menos que tenha lido as letras pequenas.
+Para alterar um conjunto de seleções  que criam dependências e conflitos não resolvidos e forçar o B<dselect> a aceita-las, pressione a tecla 'B<Q>’. Isto define as seleções como especificadas pelo utilizador, incondicionalmente. De modo geral, não faça isto a menos que tenha lido as letras pequenas.
 
-O efeito oposto, para voltar atrás em quaisquer alterações requisitadas de selecções e regressar à lista de selecções anterior, pode fazê-lo ao pressionar as teclas 'B<X>’ ou B<escape>. Ao pressionar repetidamente estas teclas, quaisquer alterações possivelmente prejudiciais à selecção de pacotes requerida pode ser puxada atrás completamente até à última definição estabelecida.
+O efeito oposto, para voltar atrás em quaisquer alterações requisitadas de seleções e regressar à lista de seleções anterior, pode fazê-lo ao pressionar as teclas 'B<X>’ ou B<escape>. Ao pressionar repetidamente estas teclas, quaisquer alterações possivelmente prejudiciais à seleção de pacotes requerida pode ser puxada atrás completamente até à última definição estabelecida.
 
-Se você estabeleceu algumas definições por engano e deseja reverter todas as selecções para o que está actualmente instalado no sistema, pressione a tecla ‘B<C>’. Isto é de certa maneira semelhante a usar o comando unhold em todos os pacotes, mas fornece um botão de pânico mais óbvio em casos que o utilizador pressionou B<enter> por acidente.
+Se você estabeleceu algumas definições por engano e deseja reverter todas as seleções para o que está actualmente instalado no sistema, pressione a tecla ‘B<C>’. Isto é de certa maneira semelhante a usar o comando unhold em todos os pacotes, mas fornece um botão de pânico mais óbvio em casos que o utilizador pressionou B<enter> por acidente.
 
-=head1 ESTADO À SAÍDA
+=head1 ESTADO DE SAÍDA
 
 =over 
 
@@ -448,13 +448,13 @@ Erro fatal ou irrecuperável devido a utilização de linha de comandos inválid
 
 Se definido e as opções B<--instdir> ou B<--root> não foram especificadas, será usado como o directório raiz do sistema de ficheiros.
 
-Supported since dpkg 1.21.0.
+Suportado desde dpkg 1.21.0.
 
 =item B<DPKG_ADMINDIR>
 
-If set and the B<--admindir> or B<--root> option have not been specified, it will be used as the B<dpkg> database directory.
+Se definido e a opção B<--admindir> ou B<--root> não foi especificada, será usado como o directório de base de dados do B<dpkg>.
 
-Supported since dpkg 1.21.0.
+Suportado desde dpkg 1.21.0.
 
 =item B<HOME>
 
@@ -464,7 +464,7 @@ Se definido, o B<dselect> irá usa-lo como o directório de onde ler o ficheiro 
 
 =head1 BUGS
 
-A interface de selecção de pacotes The B<dselect> é confusa para alguns novos utilizadores. Alegadamente, até faz desenvolvedores de kernel experientes chorarem.
+A interface de seleção de pacotes The B<dselect> é confusa para alguns novos utilizadores. Alegadamente, até faz desenvolvedores de kernel experientes chorarem.
 
 A documentação está escassa.
 

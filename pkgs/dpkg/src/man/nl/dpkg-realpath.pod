@@ -22,7 +22,7 @@ B<dpkg-realpath> [I<optie>...] I<padnaam>
 
 =head1 BESCHRIJVING
 
-B<dpkg-realpath> is a tool to resolve a pathname, that takes the L<dpkg(1)> root directory into account, either implicitly from the B<DPKG_ROOT> environment variable or from the command-line B<--root> or B<--instdir> options, and returns an absolute I<pathname> relative to the root directory.  The root directory must not be prefixed to the I<pathname> to be resolved.
+B<dpkg-realpath> is een hulpmiddel om een padnaam op te zoeken, die rekening houdt met de L<dpkg(1)>-hoofdmap, ofwel impliciet vanuit de omgevingsvariabele B<DPKG_ROOT> of vanuit de commandoregelopties B<--root> of B<--instdir>, en een absolute I<padnaam> terugkeert, relatief ten opzichte van de hoofdmap. De hoofdmap mag niet aan de op te zoeken I<padnaam> voorafgaan.
 
 Dit is bedoeld om te worden gebruikt door andere B<dpkg>-hulpprogramma's of door scripts van beheerders in plaats van L<realpath(1)> of L<readlink(1)> te gebruiken om conforme padnamen te bekomen, aangezien deze laatste commando's geen dergelijke conformering ondersteunen ten opzichte van een andere hoofdmap dan F</>.
 
@@ -34,9 +34,9 @@ Dit programma werd geïntroduceerd in dpkg 1.20.1.
 
 =item B<-z>, B<--zero>
 
-Use a NUL byte to end output lines instead of a new line character.
+Een NULL-byte gebruiken om uitvoerregels te beëindigen in plaats van een regeleindeteken.
 
-Supported since dpkg 1.20.6.
+Ondersteund sinds dpkg 1.20.6.
 
 =item B<--instdir> I<map>
 

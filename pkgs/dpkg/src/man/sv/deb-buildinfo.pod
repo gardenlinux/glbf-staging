@@ -152,7 +152,7 @@ Systemet har bibliotek, antingen statiska eller delade, under I</usr/local/lib>.
 
 Systemet kan köra korskompilerade program, antingen direkt eller via ett emuleringslager.
 
-Stöds sedan dpkg 1.21.10.
+Supported since dpkg 1.21.10.
 
 =back
 

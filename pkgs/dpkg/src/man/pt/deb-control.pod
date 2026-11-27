@@ -48,7 +48,7 @@ B<Nota>: Em alguns fornecedores, o dpkg foi feito para permitir fontes nativas c
 
 Deverá estar no formato "Joe Bloggs E<lt>jbloggs@foo.comE<gt>", e é tipicamente a pessoa que criou o pacote, e não o autor do software que foi empacotado.
 
-The format is described in L<deb-email(7)>.
+O formato está descrito em L<deb-email(7)>.
 
 =item B<Description:> I<short-description> (recomendado)
 
@@ -74,13 +74,13 @@ O tamanho total aproximado dos ficheiros instalados pelo pacote, em unidades KiB
 
 =item B<Protected:> B<yes>|B<no>
 
-Este campo normalmente não é necessário quando a resposta é B<yes>. Ele indica um pacote que é necessário principalmente para o arranque correcto do sistema ou usado para meta-pacotes personalizados locais-do-sistema. O L<dpkg(1)> ou qualquer outra ferramenta de instalação não irá permitir que um pacote B<Protected> seja removido (pelo menos não sem usar uma das opções de forçar).
+Este campo normalmente não é necessário quando a resposta é B<yes>. Ele indica um pacote que é necessário principalmente para o arranque correto do sistema ou usado para meta-pacotes personalizados locais-do-sistema. O L<dpkg(1)> ou qualquer outra ferramenta de instalação não irá permitir que um pacote B<Protected> seja removido (pelo menos não sem usar uma das opções de forçar).
 
 Suportado desde dpkg 1.20.1.
 
 =item B<Essential:> B<yes>|B<no>
 
-Este campo normalmente não é necessário quando a resposta é B<sim>. Ele indica um pacote que é necessário para o sistema de empacotamento, para a operação correcta do sistema no geral ou durante o arranque (apesar do último dever ser convertido para o campo B<Protected> em vez deste). O L<dpkg(1)> ou qualquer outra ferramenta de instalação não irá permitir que um pacote <Essential> seja removido (pelo menos não sem usar uma das opções de forçar).
+Este campo normalmente não é necessário quando a resposta é B<sim>. Ele indica um pacote que é necessário para o sistema de empacotamento, para a operação correta do sistema no geral ou durante o arranque (apesar do último dever ser convertido para o campo B<Protected> em vez deste). O L<dpkg(1)> ou qualquer outra ferramenta de instalação não irá permitir que um pacote <Essential> seja removido (pelo menos não sem usar uma das opções de forçar).
 
 =item B<Build-Essential:> B<yes>|B<no>
 
@@ -202,7 +202,7 @@ Isto é uma lista de pacotes virtuais que este fornece. Geralmente sito é usado
 
 =back
 
-The syntax of B<Provides> is a list of package names, separated by commas (and optional whitespace).  An optional architecture qualifier can also be appended to the package name with the same syntax as above.  If omitted, the default is the current binary package architecture.  An optional exact (equal to) version can also be given with the same syntax as above (since dpkg 1.17.11).
+A sintaxe de B<Provides> é uma lista de nomes de pacotes, separados por vírgulas (e opcionalmente por espaços em branco). Um qualificador opcional de arquitectura pode também ser anexado ao nome do pacote com a mesma sintaxe de em cima. Se omitido, a predefinição é a arquitectura do pacote binário actual. Uma versão exacta (igual a) opcional pode também ser dada com a mesma sintaxe de em cima (desde dpkg 1.17.11).
 
 =over 
 
@@ -212,19 +212,19 @@ Este campo de dependência lista pacotes fonte extra que foram usados durante a 
 
 =item B<Static-Built-Using:> I<package-list>
 
-Este campo de dependência lista pacotes fonte extra que foram usados durante a compilação deste pacote binário, para objectivos de compilação estática (por exemplo vincular contra bibliotecas estáticas. compilações para linguagens centradas-na-fonte tais como Go ou Rust, utilização de bibliotecas C/C++ apenas-cabeçalho, injectar bolhas de dados em código, etc.).  Isto é útil para seguir se este pacote pode precisar de ser recompilado quando os pacotes fonte listados aqui forem actualizados, por exemplo devido a actualizações de segurança. Este campo tem de ser uma lista separada por vírgulas de nomes de pacotes fonte com relacionamentos estritos de versão ‘B<=>’ fechados dentro de parênteses.
+Este campo de dependência lista pacotes fonte extra que foram usados durante a compilação deste pacote binário, para objetivos de compilação estática (por exemplo vincular contra bibliotecas estáticas. compilações para linguagens centradas-na-fonte tais como Go ou Rust, utilização de bibliotecas C/C++ apenas-cabeçalho, injectar bolhas de dados em código, etc.).  Isto é útil para seguir se este pacote pode precisar de ser recompilado quando os pacotes fonte listados aqui forem atualizados, por exemplo devido a actualizações de segurança. Este campo tem de ser uma lista separada por vírgulas de nomes de pacotes fonte com relacionamentos estritos de versão ‘B<=>’ fechados dentro de parênteses.
 
 Suportado desde dpkg 1.21.3.
 
 =item B<Built-For-Profiles:> I<profile-list> (obsoleto)
 
-This field used to specify a whitespace separated list of build profile names (without exclamation marks)  that this binary packages was built with.  The information previously found in this field can now be found in the B<.buildinfo> file, which supersedes it.
+Este campo era usado para especificar uma lista de nomes de perfis de compilação (sem pontos de exclamação) separados por espaços com o que este pacote binário foi compilado. A informação antes encontrada neste campo pode agora ser encontrada no ficheiro B<.buildinfo>, que o suplanta.
 
-Supported since dpkg 1.17.2.  Obsolete since dpkg 1.18.19.
+Suportado desde dpkg 1.17.2.  Obsoleto desde dpkg 1.18.19.
 
 =item B<Auto-Built-Package:> I<reason-list>
 
-Esta campo especifica uma lista de razões separadas por espaços de porquê este pacote foi auto-gerado. OS pacotes binários marcados com este campo não irão aparecer no ficheiro de controle fonte modelo I<debian/control>. A única razão usada actualmente é B<debug-symbols>.
+Esta campo especifica uma lista de razões separadas por espaços de porquê este pacote foi auto-gerado. Os pacotes binário marcados com este campo não irão aparecer no ficheiro de controle fonte modelo I<debian/control>. A única razão usada actualmente é B<debug-symbols>.
 
 =item B<Build-Ids:> I<elf-build-id-list>
 

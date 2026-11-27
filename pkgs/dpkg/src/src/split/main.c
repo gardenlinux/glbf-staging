@@ -44,20 +44,9 @@
 
 #include "dpkg-split.h"
 
-static int
-printversion(const char *const *argv)
-{
-	printf(_("Debian '%s' package split/join tool; version %s.\n"),
-	       SPLITTER, PACKAGE_RELEASE);
-
-	printf(_(
-"This is free software; see the GNU General Public License version 2 or\n"
-"later for copying conditions. There is NO warranty.\n"));
-
-	m_output(stdout, _("<standard output>"));
-
-	return 0;
-}
+static const char prog_synopsis[] = N_(
+	"binary package archive split/join tool"
+);
 
 static int
 usage(const char *const *argv)
@@ -65,6 +54,9 @@ usage(const char *const *argv)
 	printf(_(
 "Usage: %s [<option>...] <command>\n"
 	), SPLITTER);
+	print_option_sep();
+
+	print_synopsis(prog_synopsis);
 	print_option_sep();
 
 	printf(_(
@@ -125,7 +117,7 @@ usage(const char *const *argv)
 "      --depotdir <directory>\n"
 "          Change the archive parts queue directory.\n"
 	));
-	print_option_def(ADMINDIR "/" PARTSDIR);
+	print_option_def(ADMINDIR "/" DPKG_DB_PARTS_DIR);
 	print_option(_(
 "      --admindir <directory>\n"
 "          Change the database directory.\n"
@@ -199,7 +191,7 @@ static const struct cmdinfo cmdinfos[] = {
 	ACTION("listq",   'l',  0,  do_queue),
 	ACTION("discard", 'd',  0,  do_discard),
 	ACTION("help",    '?',  0,  usage),
-	ACTION("version",  0,   0,  printversion),
+	ACTION("version",  0,   0,  print_version),
 
 	{ "admindir",      0,   1,  NULL, NULL,             set_admindir,   0   },
 	{ "root",          0,   1,  NULL, NULL,             set_root,       0   },
@@ -224,7 +216,7 @@ main(int argc, const char *const *argv)
 	      dpkg_fsys_get_dir(), dpkg_db_get_dir());
 
 	if (opt_depotdir == NULL)
-		opt_depotdir = dpkg_db_get_path(PARTSDIR);
+		opt_depotdir = dpkg_db_get_path(DPKG_DB_PARTS_DIR);
 
 	if (!cipaction)
 		badusage(_("need an action option"));

@@ -45,21 +45,10 @@
 
 #include "dpkg-deb.h"
 
+static const char prog_synopsis[] = N_(
+	"binary package archive backend tool"
+);
 const char *opt_showformat = "${Package}\t${Version}\n";
-
-static int
-printversion(const char *const *argv)
-{
-	printf(_("Debian '%s' package archive backend version %s.\n"),
-	       BACKEND, PACKAGE_RELEASE);
-	printf(_(
-"This is free software; see the GNU General Public License version 2 or\n"
-"later for copying conditions. There is NO warranty.\n"));
-
-	m_output(stdout, _("<standard output>"));
-
-	return 0;
-}
 
 static int
 usage(const char *const *argv)
@@ -67,6 +56,9 @@ usage(const char *const *argv)
 	printf(_(
 "Usage: %s [<option>...] <command>\n"
 	), BACKEND);
+	print_option_sep();
+
+	print_synopsis(prog_synopsis);
 	print_option_sep();
 
 	printf(_(
@@ -343,7 +335,7 @@ static const struct cmdinfo cmdinfos[] = {
 	ACTION("fsys-tarfile",  0,   0, do_fsystarfile),
 	ACTION("show",          'W', 0, do_showinfo),
 	ACTION("help",          '?', 0, usage),
-	ACTION("version",       0,   0, printversion),
+	ACTION("version",       0,   0, print_version),
 
 	{ "deb-format",    0,   1, NULL,           NULL,         set_deb_format   },
 	{ "debug",         'D', 0, &opt_debug,     NULL,         NULL,          1 },

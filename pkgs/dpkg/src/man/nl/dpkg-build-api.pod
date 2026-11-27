@@ -27,7 +27,7 @@ Het API-niveau van de dpkg-bouw van het broncodepakket definieert voor broncodep
 
 Deze interfaces kunnen dan op een geleidelijke manier worden aangewend door pakketten en kunnen gemakkelijker worden uitgefaseerd dan het geval is met globale gedragswijzigingen.
 
-De declaratie van dit API-niveau gebeurt via bouwvereisten in een van de velden B<Build-Depends>, B<Build-Depends-Indep> of B<Build-Depends-Arch>, of via de omgevingsvariabele B<DPKG_BUILD_API>, die deze zal overschrijven als beide aanwezig zijn, en een waarschuwing kan geven als ze verschillend zijn.
+De declaratie van dit API-niveau gebeurt via bouwafhankelijkheden in een van de velden B<Build-Depends>, B<Build-Depends-Indep> of B<Build-Depends-Arch>, of via de omgevingsvariabele B<DPKG_BUILD_API>, die deze zal overschrijven als beide aanwezig zijn, en een waarschuwing kan geven als ze verschillend zijn.
 
 =head1 API-NIVEAUS
 
@@ -35,11 +35,13 @@ De declaratie van dit API-niveau gebeurt via bouwvereisten in een van de velden 
 
 =item v2
 
-Dit niveau is nog in ontwikkeling en kan niet worden gedeclareerd via bouwvereisten.
+Dit niveau is nog in ontwikkeling en kan niet worden gedeclareerd via bouwafhankelijkheden.
 
 =item v1
 
-Dit is het aanbevolen niveau. Sinds dpkg 1.22.0.
+This is the recommended level.
+
+Ondersteund sinds dpkg 1.22.0.
 
 Wijzigingen ten opzichte van v0 zijn:
 

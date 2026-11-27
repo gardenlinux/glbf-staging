@@ -40,7 +40,7 @@ Efter att paketet utlösts. Listan över blankstegsavdelade I<utlösarnamn> sän
 
 Om I<prerm> misslyckas vid B<upgrade> (uppgradering) eller misslyckas vid B<failed-upgrade> (misslyckad uppgradering).
 
-=item I<gammal-postinst> B<abort-remove>
+=item I<postinst> B<abort-remove>
 
 Om I<prerm> misslyckas vid B<remove> (borttagning).
 
